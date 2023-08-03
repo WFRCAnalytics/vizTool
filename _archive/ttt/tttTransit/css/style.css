@@ -1,0 +1,17 @@
+.claro .dijitSelect .dijitButtonText {
+    text-align: left;
+}
+
+.claro .dijitSelectLabel {
+    width: 200px;
+    overflow: hidden;
+}
+
+.claro .dijitMultiSelect .dijitButtonText {
+    text-align: left;
+}
+
+.claro .dijitMultiSelectLabel {
+    width: 200px;
+    overflow: hidden;
+}

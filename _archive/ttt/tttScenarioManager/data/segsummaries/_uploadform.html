@@ -1,0 +1,53 @@
+
+<style>  
+   body {
+     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+   }
+</style>
+<html>
+<head></head>
+<body>
+<hr/>
+<p>Upload segment sumary file:</p>
+<form enctype="multipart/form-data" method="post" action="_upload.php">
+<input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
+<table>
+    <tr>
+        <td>
+            User Name: 
+        </td>
+        <td>
+            <input type="text" name="username" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Upload Key:
+        </td>
+        <td>
+            <input type="text" name="uploadkey" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Scenario Name:
+        </td>
+        <td>
+            <input type="text" name="scenarioname" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            SegSummary: 
+        </td>
+        <td>
+            <input type="file" name="fileToUpload" />
+        </td>
+    </tr>
+</table>
+<br/>
+<input type="submit" name="submit" value="Upload" />
+</form>
+
+</body>
+</html>

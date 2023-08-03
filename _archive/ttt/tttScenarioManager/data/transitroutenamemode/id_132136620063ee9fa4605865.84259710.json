@@ -1,0 +1,514 @@
+{
+ "schema":{
+  "fields":[
+   {
+    "name":"value",
+    "type":"string"
+   },
+   {
+    "name":"mode",
+    "type":"integer"
+   },
+   {
+    "name":"label",
+    "type":"string"
+   }
+  ],
+  "primaryKey":[
+   "value"
+  ],
+  "pandas_version":"0.20.0"
+ },
+ "data":[
+  {
+   "value":"BE630",
+   "mode":4,
+   "label":"630 - Brigham City-Ogden Comm"
+  },
+  {
+   "value":"DA605F",
+   "mode":4,
+   "label":"F605 - Bountiful - Centerville Flex"
+  },
+  {
+   "value":"DA626",
+   "mode":4,
+   "label":"626 - West Roy - Clearfield Station"
+  },
+  {
+   "value":"DA640",
+   "mode":4,
+   "label":"640 - Layton Hills Mall - WSU Ogden Camp"
+  },
+  {
+   "value":"MAG_028",
+   "mode":4,
+   "label":"Santaquin_Exp"
+  },
+  {
+   "value":"SL011F",
+   "mode":4,
+   "label":"F011 - 11th Ave Flex"
+  },
+  {
+   "value":"SL031",
+   "mode":4,
+   "label":"031 - 3100 South"
+  },
+  {
+   "value":"SL202F",
+   "mode":4,
+   "label":"F202 - Bingham Junction Flex"
+  },
+  {
+   "value":"SL223",
+   "mode":4,
+   "label":"223 - 2300 East-Holladay Blvd"
+  },
+  {
+   "value":"SL232F",
+   "mode":4,
+   "label":"F232 - 3200 W Flex"
+  },
+  {
+   "value":"SL236",
+   "mode":4,
+   "label":"236 - 3600 West"
+  },
+  {
+   "value":"SL248",
+   "mode":4,
+   "label":"248 - 4800 West"
+  },
+  {
+   "value":"SL453F",
+   "mode":4,
+   "label":"F453 - Tooele-SLC Flex"
+  },
+  {
+   "value":"SL455",
+   "mode":4,
+   "label":"455 - UofU-Davis County-Weber State University"
+  },
+  {
+   "value":"SL509",
+   "mode":4,
+   "label":"509 - 900 W Shuttle"
+  },
+  {
+   "value":"SL513",
+   "mode":4,
+   "label":"513 - Industrial Business Park Shuttle"
+  },
+  {
+   "value":"SL514F",
+   "mode":4,
+   "label":"F514 - Jordan Gateway Flex"
+  },
+  {
+   "value":"SL525F",
+   "mode":4,
+   "label":"F525 - Midvale Flex"
+  },
+  {
+   "value":"SL570F",
+   "mode":4,
+   "label":"F570 - 7000 S Flex"
+  },
+  {
+   "value":"UT805",
+   "mode":4,
+   "label":"805 - Santaquin-Payson-Spanish Fork-Provo Station-UVU"
+  },
+  {
+   "value":"UT821",
+   "mode":4,
+   "label":"821 - South County - Provo Station"
+  },
+  {
+   "value":"UT821.1",
+   "mode":4,
+   "label":"821 - South County - Provo Station - 2023 5 Yr"
+  },
+  {
+   "value":"UT822",
+   "mode":4,
+   "label":"822 - South Utah County-BYU-UVU Limited"
+  },
+  {
+   "value":"UT823",
+   "mode":4,
+   "label":"832 - Springville"
+  },
+  {
+   "value":"UT831",
+   "mode":4,
+   "label":"831 - Provo Grandview"
+  },
+  {
+   "value":"UT833",
+   "mode":4,
+   "label":"833 - Airport - Provo Station"
+  },
+  {
+   "value":"UT834",
+   "mode":4,
+   "label":"834 - Riverwoods - Provo Station"
+  },
+  {
+   "value":"UT862",
+   "mode":4,
+   "label":"862 - Orem East-West"
+  },
+  {
+   "value":"UT864",
+   "mode":4,
+   "label":"864 - Lehi Station - Thanksgiving Point"
+  },
+  {
+   "value":"UT871",
+   "mode":4,
+   "label":"871 - Tech Corridor Rail Connector"
+  },
+  {
+   "value":"WE601",
+   "mode":4,
+   "label":"601 - Ogden Trolley"
+  },
+  {
+   "value":"WE604",
+   "mode":4,
+   "label":"604 - West Ogden"
+  },
+  {
+   "value":"WE606",
+   "mode":4,
+   "label":"606 - Enable Industries-Monroe Blvd"
+  },
+  {
+   "value":"WE607",
+   "mode":4,
+   "label":"607 - Southern Weber"
+  },
+  {
+   "value":"WE609",
+   "mode":4,
+   "label":"609 - Ogden - Farmington via US-89"
+  },
+  {
+   "value":"WE614",
+   "mode":4,
+   "label":"614 - Monroe Blvd - West"
+  },
+  {
+   "value":"WE615",
+   "mode":4,
+   "label":"615 - Harrison"
+  },
+  {
+   "value":"WE618F",
+   "mode":4,
+   "label":"F618 - Ogden BDO Flex"
+  },
+  {
+   "value":"WE620F",
+   "mode":4,
+   "label":"F620 - West Haven Flex"
+  },
+  {
+   "value":"WE627",
+   "mode":4,
+   "label":"627 - WSU Davis-DTC"
+  },
+  {
+   "value":"WE628",
+   "mode":4,
+   "label":"628 - Midtown Trolley"
+  },
+  {
+   "value":"WE638F",
+   "mode":4,
+   "label":"F638 - The Brigham City"
+  },
+  {
+   "value":"WE667",
+   "mode":4,
+   "label":"667 - Lagoon\/Station Park Shuttle"
+  },
+  {
+   "value":"WFRC_001",
+   "mode":4,
+   "label":"WFRC_001 - 1300So"
+  },
+  {
+   "value":"WFRC_017",
+   "mode":4,
+   "label":"WFRC_017 - BRT_2700W_T"
+  },
+  {
+   "value":"WFRC_023",
+   "mode":4,
+   "label":"WFRC_023 - BRT104th_2"
+  },
+  {
+   "value":"WFRC_024",
+   "mode":4,
+   "label":"WFRC_024 - BRT123RD_A"
+  },
+  {
+   "value":"WFRC_032",
+   "mode":4,
+   "label":"WFRC_032 - BRTNRedwd_T"
+  },
+  {
+   "value":"WFRC_034",
+   "mode":4,
+   "label":"WFRC_034 - BRTRdwd_South"
+  },
+  {
+   "value":"WFRC_037",
+   "mode":4,
+   "label":"WFRC_037 - Cedar_Exp"
+  },
+  {
+   "value":"WFRC_040",
+   "mode":4,
+   "label":"WFRC_040 - ClearRoyWest"
+  },
+  {
+   "value":"WFRC_054",
+   "mode":4,
+   "label":"WFRC_054 - MTTrolley"
+  },
+  {
+   "value":"WFRC_078",
+   "mode":4,
+   "label":"WFRC_078 - ShldSego_3"
+  },
+  {
+   "value":"MAG_005",
+   "mode":5,
+   "label":"Core_CedarLehi"
+  },
+  {
+   "value":"MAG_006",
+   "mode":5,
+   "label":"Core_Maple"
+  },
+  {
+   "value":"MAG_007",
+   "mode":5,
+   "label":"Core_Nebo"
+  },
+  {
+   "value":"SL001",
+   "mode":5,
+   "label":"001 - 100 South"
+  },
+  {
+   "value":"WFRC_002",
+   "mode":5,
+   "label":"WFRC_002 - 1700So"
+  },
+  {
+   "value":"WFRC_005",
+   "mode":5,
+   "label":"WFRC_005 - 300W"
+  },
+  {
+   "value":"WFRC_006",
+   "mode":5,
+   "label":"WFRC_006 - 3900S"
+  },
+  {
+   "value":"WFRC_008",
+   "mode":5,
+   "label":"WFRC_008 - 500E_2"
+  },
+  {
+   "value":"WFRC_009",
+   "mode":5,
+   "label":"WFRC_009 - 5400S"
+  },
+  {
+   "value":"WFRC_010",
+   "mode":5,
+   "label":"WFRC_010 - 7800FtUn_3"
+  },
+  {
+   "value":"WFRC_012",
+   "mode":5,
+   "label":"WFRC_012 - 900E_2"
+  },
+  {
+   "value":"WFRC_013",
+   "mode":5,
+   "label":"WFRC_013 - 900So"
+  },
+  {
+   "value":"WFRC_025",
+   "mode":5,
+   "label":"WFRC_025 - BRT1300E_T"
+  },
+  {
+   "value":"WFRC_026",
+   "mode":5,
+   "label":"WFRC_026 - BRT3533S_Core"
+  },
+  {
+   "value":"WFRC_028",
+   "mode":5,
+   "label":"WFRC_028 - BRT56_R"
+  },
+  {
+   "value":"WFRC_029",
+   "mode":5,
+   "label":"WFRC_029 - BRT62S_T1"
+  },
+  {
+   "value":"WFRC_030",
+   "mode":5,
+   "label":"WFRC_030 - BRTFTHLWA_N"
+  },
+  {
+   "value":"WFRC_033",
+   "mode":5,
+   "label":"WFRC_033 - BRTNSDA_R"
+  },
+  {
+   "value":"WFRC_035",
+   "mode":5,
+   "label":"WFRC_035 - BRTRdwd_T"
+  },
+  {
+   "value":"WFRC_036",
+   "mode":5,
+   "label":"WFRC_036 - BRTWash_R"
+  },
+  {
+   "value":"WFRC_039",
+   "mode":5,
+   "label":"WFRC_039 - Clear"
+  },
+  {
+   "value":"WFRC_048",
+   "mode":5,
+   "label":"WFRC_048 - FthlDr2100"
+  },
+  {
+   "value":"WFRC_049",
+   "mode":5,
+   "label":"WFRC_049 - HinckleyUnion"
+  },
+  {
+   "value":"WFRC_050",
+   "mode":5,
+   "label":"WFRC_050 - LakePark"
+  },
+  {
+   "value":"WFRC_051",
+   "mode":5,
+   "label":"WFRC_051 - LittleCott"
+  },
+  {
+   "value":"WFRC_053",
+   "mode":5,
+   "label":"WFRC_053 - MidValCon"
+  },
+  {
+   "value":"WFRC_074",
+   "mode":5,
+   "label":"WFRC_074 - PlsntClear"
+  },
+  {
+   "value":"WFRC_080",
+   "mode":5,
+   "label":"WFRC_080 - Sline_Mill"
+  },
+  {
+   "value":"WFRC_081",
+   "mode":5,
+   "label":"WFRC_081 - SoJoSandyC"
+  },
+  {
+   "value":"WFRC_082",
+   "mode":5,
+   "label":"WFRC_082 - StGrid_2"
+  },
+  {
+   "value":"WE472X",
+   "mode":6,
+   "label":"472X - Ogden - Salt Lake Express"
+  },
+  {
+   "value":"WE473X",
+   "mode":6,
+   "label":"473X - SLC - Ogden Hwy 89 Express"
+  },
+  {
+   "value":"701_Blue",
+   "mode":7,
+   "label":"701 - TRAX Blue Line"
+  },
+  {
+   "value":"703_Red",
+   "mode":7,
+   "label":"703 - TRAX Red Line"
+  },
+  {
+   "value":"704_Green",
+   "mode":7,
+   "label":"704 - TRAX Green Line"
+  },
+  {
+   "value":"720_SLine",
+   "mode":7,
+   "label":"720 - S-Line"
+  },
+  {
+   "value":"WFRC_055",
+   "mode":7,
+   "label":"WFRC_055 - Orange"
+  },
+  {
+   "value":"WFRC_076",
+   "mode":7,
+   "label":"WFRC_076 - RGRANSUG_U"
+  },
+  {
+   "value":"750_FR",
+   "mode":8,
+   "label":"750 - FrontRunner"
+  },
+  {
+   "value":"MAG_002",
+   "mode":9,
+   "label":"BRT_VinOrm"
+  },
+  {
+   "value":"UT830X.1",
+   "mode":9,
+   "label":"830X - UVX Airport"
+  },
+  {
+   "value":"WE603",
+   "mode":9,
+   "label":"603 - Weber State University-McKay Dee"
+  },
+  {
+   "value":"WFRC_003",
+   "mode":9,
+   "label":"WFRC_003 - 200So_2"
+  },
+  {
+   "value":"WFRC_038",
+   "mode":9,
+   "label":"WFRC_038 - CG_BRT_S1"
+  },
+  {
+   "value":"WFRC_083",
+   "mode":9,
+   "label":"WFRC_083 - StGrid_2_BRT"
+  }
+ ]
+}
