@@ -1,1 +1,1 @@
-# TDM-Viz-Tool
+# TDM-vizTool
