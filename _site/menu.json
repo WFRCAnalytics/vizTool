@@ -1,0 +1,57 @@
+[
+    {
+      "id": "scenarioMenu",
+      "text": "Scenario Manager",
+      "icon": "sm-icon",
+      "submenu": [
+        {
+          "id": "subItem1",
+          "text": "Sub Item 1",
+          "type": "button"
+        },
+        {
+          "id": "subItem2",
+          "text": "Sub Item 2",
+          "type": "select",
+          "options": ["Option 1", "Option 2"]
+        }
+      ]
+    },
+    {
+      "id": "zoneMenu",
+      "text": "Zones",
+      "submenu": [
+        {
+          "id": "zonalSubItem1",
+          "text": "Zonal Sub Item 1",
+          "type": "radio",
+          "options": ["Option A", "Option B"]
+        }
+      ]
+    },
+    {
+      "id": "odMenu",
+      "text": "Origin-Destinations",
+      "submenu": [
+        {
+          "id": "zonalSubItem1",
+          "text": "Zonal Sub Item 1",
+          "type": "radio",
+          "options": ["Option A", "Option B"]
+        }
+      ]
+    },
+    {
+      "id": "segmentsMenu",
+      "text": "Segments",
+      "submenu": [
+        {
+          "id": "zonalSubItem1",
+          "text": "Zonal Sub Item 1",
+          "type": "radio",
+          "options": ["Option A", "Option B"]
+        }
+      ]
+    }
+    // ... other main menu items
+  ]

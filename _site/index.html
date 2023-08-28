@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <title>TDM vizTool</title>
+
+        <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
+        <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script src="https://js.arcgis.com/4.27/"></script>
+        <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <script src="scripts.js"></script>
+    </head>
+    <body>
+        <calcite-shell>
+            <calcite-navigation slot="header">
+                <calcite-navigation-logo slot="logo" heading="Wastach Front Travel Demand Model vizTool"
+                    description="Visualizing and comparing model data"></calcite-navigation-logo>
+                    <calcite-menu slot="content-end">
+                        <calcite-menu-item text="Scenario Manager" icon-start="workflow-manager-server" text-enabled></calcite-menu-item>
+                        <calcite-menu-item text="Zonal Data" icon-start="layer-polygon" text-enabled></calcite-menu-item>
+                        <calcite-menu-item text="Origin-Destination Data" icon-start="grid" text-enabled></calcite-menu-item>
+                        <calcite-menu-item text="Segment Data" icon-start="line-straight" text-enabled></calcite-menu-item>
+                    </calcite-menu>
+                </calcite-navigation>
+            </calcite-navigation>
+            <div id="main">
+                <div id="mainSidebar">
+                    <div id="sidebarContent"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div>
+                </div>
+                <div id="mainMap">
+                    <div id="mapView"></div>
+                </div>
+            </div>
+            
+
+        </calcite-shell>
+    </body>
+</html>
