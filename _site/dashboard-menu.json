@@ -56,6 +56,13 @@
                 "type": "select",
                 "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
                 "selectedOption": "Chimichanga"
+            },
+            {
+                "id": "zonalSubItem4",
+                "text": "Taco Cart Options",
+                "type": "checkbox",
+                "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                "selectedOption": "Chimichanga"
             }
         ]
     }
