@@ -2,6 +2,11 @@ import http.server
 import webbrowser
 import threading
 import traceback
+import subprocess
+
+# Function to open Chrome in incognito mode and open the site
+def open_chrome_incognito(url):
+    subprocess.Popen(["C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", "--incognito", url])
 
 # Start the server in a separate thread
 def start_server():
@@ -13,9 +18,10 @@ def start_server():
         print("Error starting the server:")
         traceback.print_exc()
 
-# Open the browser after the server has started
+# Open Chrome in incognito mode and the server has started
 def open_browser():
-    webbrowser.open("http://localhost:8000/viztool-index.html")
+    url = "http://localhost:8000/viztool-index.html"
+    open_chrome_incognito(url)
 
 # Start the server and open the browser concurrently
 threading.Thread(target=start_server).start()
