@@ -235,7 +235,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
   });
 
   async function fetchMenuData() {
-    const response = await fetch('menu.json');
+    const response = await fetch('viztool-menu.json');
     const data = await response.json();
     return data;
   }
