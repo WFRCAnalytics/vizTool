@@ -44,11 +44,18 @@
                 "selectedOption": "Zone Option B"
             },
             {
-                "id": "zonalSubItem1",
+                "id": "zonalSubItem2",
                 "text": "Zone Options Group 2",
                 "type": "radio",
                 "options": ["Zone Option A", "Zone Option B"],
                 "selectedOption": "Zone Option A"
+            },
+            {
+                "id": "zonalSubItem3",
+                "text": "Taco Cart Options",
+                "type": "select",
+                "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                "selectedOption": "Chimichanga"
             }
         ]
     }
