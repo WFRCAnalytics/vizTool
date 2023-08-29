@@ -1,57 +1,55 @@
 [
     {
-      "id": "scenarioMenu",
-      "text": "Scenario Manager",
-      "icon": "sm-icon",
-      "submenu": [
-        {
-          "id": "subItem1",
-          "text": "Sub Item 1",
-          "type": "button"
-        },
-        {
-          "id": "subItem2",
-          "text": "Sub Item 2",
-          "type": "select",
-          "options": ["Option 1", "Option 2"]
-        }
-      ]
+        "id": "menuSegments",
+        "text": "Segment Data",
+        "iconStart": "line-straight",
+        "sidebarItems": [
+            {
+                "id": "segmentSubItem1",
+                "text": "Roadway Attribute",
+                "type": "radio",
+                "options": ["Lanes",
+                            "Daily Volume",
+                            "AM Period Speeds as % Free Flow",
+                            "PM Period Speeds as % Free Flow",
+                            "Daily Trucks",
+                            "Daily % Trucks"],
+                "selectedOption": "Daily Volume"
+            } 
+        ]
     },
     {
-      "id": "zoneMenu",
-      "text": "Zones",
-      "submenu": [
-        {
-          "id": "zonalSubItem1",
-          "text": "Zonal Sub Item 1",
-          "type": "radio",
-          "options": ["Option A", "Option B"]
-        }
-      ]
-    },
-    {
-      "id": "odMenu",
-      "text": "Origin-Destinations",
-      "submenu": [
-        {
-          "id": "zonalSubItem1",
-          "text": "Zonal Sub Item 1",
-          "type": "radio",
-          "options": ["Option A", "Option B"]
-        }
-      ]
-    },
-    {
-      "id": "segmentsMenu",
-      "text": "Segments",
-      "submenu": [
-        {
-          "id": "zonalSubItem1",
-          "text": "Zonal Sub Item 1",
-          "type": "radio",
-          "options": ["Option A", "Option B"]
-        }
-      ]
+        "id": "menusOds",
+        "text": "OD Data",
+        "iconStart": "grid",
+        "sidebarItems": [
+            {
+                "id": "odSubItem1",
+                "text": "OD Sub Item 1",
+                "type": "radio",
+                "options": ["Option A", "Option B"],
+                "selectedOption": "Option B"
+            }
+        ]
+    },{
+        "id": "menuZones",
+        "text": "Zone Data",
+        "iconStart": "layer-polygon",
+        "sidebarItems": [
+            {
+                "id": "zonalSubItem1",
+                "text": "Zone Options Group 1",
+                "type": "select",
+                "options": ["Zone Option A", "Zone Option B"],
+                "selectedOption": "Zone Option B"
+            },
+            {
+                "id": "zonalSubItem1",
+                "text": "Zone Options Group 2",
+                "type": "radio",
+                "options": ["Zone Option A", "Zone Option B"],
+                "selectedOption": "Zone Option A"
+            }
+        ]
     }
-    // ... other main menu items
-  ]
+]
