@@ -1,4 +1,17 @@
 @echo off
-start /b C:\Users\cday\AppData\Local\ESRI\conda\envs\arcgispro-py3-geopandas\python.exe _start-viztool-server.py
-REM set url=http://localhost:8000
-REM start /b "" "C:\Program Files\Google\Chrome\Application\chrome.exe" %url%
+
+rem Set the name of the Python script
+set script=_start-viztool-server.py
+
+rem Find the Python executable in the PATH
+for /f %%i in ('where python') do set python_exec=%%i
+
+rem Check if Python executable was found
+if not defined python_exec (
+    echo Python executable not found in PATH.
+    pause
+    exit /b 1
+)
+
+rem Start the Python script using the found Python executable
+start /b %python_exec% %script%
