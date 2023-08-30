@@ -14,17 +14,10 @@ class SidebarItem {
       let title = document.createElement("calcite-label");  // Create a new div element
       title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
       container.appendChild(title);  // Append the new element to the container
-      
-      if (this.type === "radio") {
-        this.createRadioButtons(container);
 
-      } else if (this.type === "checkbox") {
-        this.createCheckBoxes(container)
-        
-      } else if (this.type === "select") {
-        this.createSelect(container)
-      }
-      
+      // Call a type-specific rendering method
+      this.renderType(container);
+          
       let space = document.createElement("calcite-label");  // Create a new div element
       space.innerHTML = "<br/>";  // Set its innerHTML
       container.appendChild(space);  // Append the new element to the container
@@ -32,9 +25,27 @@ class SidebarItem {
       return container;
     }
 
-    
+
     getSelectedOption() {
       return this.selectedOption;
+    }
+
+        // Render type-specific content
+    renderType(container) {
+        switch (this.type) {
+            case "radio":
+                this.createRadioButtons(container);
+                break;
+            case "checkbox":
+                this.createCheckBoxes(container);
+                break;
+            case "select":
+                this.createSelect(container);
+                break;
+            // Add more cases for other types as needed
+            default:
+                console.warn(`Unsupported item type: ${this.type}`);
+        }
     }
 
     createRadioButtons(container) {
