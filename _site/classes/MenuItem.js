@@ -1,9 +1,10 @@
 class MenuItem {
-    constructor(id, text, iconStart, sidebarContent) {
+    constructor(id, text, iconStart, sidebarContent, templateContent) {
       this.menuItemId = id;
       this.menuItemText = text;
       this.menuItemIconStart = iconStart;
       this.sidebarContent = sidebarContent;
+      this.templateContent = templateContent;
     }
 
     createMenuItemElement() {
@@ -26,6 +27,7 @@ class MenuItem {
           });
           
           menuItemInstance.populateSidebar();  // Use the saved instance context here as well
+          menuItemInstance.populateMainContent(menuItemInstance.templateContent);
       });
   
       return mainMenuItem;
@@ -40,4 +42,11 @@ class MenuItem {
       // Set the focus to the sidebar
       sidebar.focus();
     }
+
+    populateMainContent(templateContentItem) {
+      const targetElement = document.querySelector('#mainContent');
+      targetElement.innerHTML = templateContentItem; 
+
+    }
+
   }

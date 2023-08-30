@@ -27,10 +27,11 @@ calcite-navigation-logo::slotted(span) { /* Just an example, might not work with
     overflow: auto;
 }
 
-#mainMap {
-    display: flex; /* Enables flexbox layout */
-    flex-grow: 1; /* Allows the children to take up equal space */
-    /* Add additional styles as needed, such as padding or borders */
+#mainContent {
+    /* Main content styles */
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #mapView {

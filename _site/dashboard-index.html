@@ -17,13 +17,14 @@
         <script src="classes/SidebarItem.js"></script>
         <script src="classes/SidebarContent.js"></script>
         <script src="classes/MenuItem.js"></script>
+        <script src="classes/MainContent.js"></script>
         <script src="dashboard-scripts.js"></script>
     </head>
     <body>
         <calcite-shell>
             <calcite-navigation slot="header">
                 <calcite-navigation-logo slot="logo" heading="Wastach Front Travel Demand Model Dashboard"
-                    description="Visualizing and comparing model data"></calcite-navigation-logo>
+                    description="Visualizing model data"></calcite-navigation-logo>
                     <calcite-menu slot="content-start">
                     </calcite-menu>
                 </calcite-navigation>
@@ -32,23 +33,15 @@
                 <div id="mainSidebar">
                     <div id="sidebarContent" tabindex="0"><p>Welcome to the TDM Dashboard.</p><p>Please select what content you want to view.</p></div>
                 </div>
-                <div id="mainMap">
-                    <div id="mapView">
-                        <div id="overlay">
-                            <div class="overlay-header">
-                                <span><b>Scenario Manager</b></span>
-                                <button id="toggleOverlay">Collapse</button>
-                            </div>
-                            <div class="overlay-content">
-                                This is a custom overlay with more information.
-                                <!-- Your overlay content here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--<div id="mainView">
+                    <div id="mainContent"><p>Dashboard will display here.</p>
+                        <div id="mainMap"><div id="mapView"></div></div>
+                    </div> 
+                </div>-->
+                <div id="mainContent">
+                    <h2>Chart Content</h2><div class="chart">Chart goes here</div>
+                </div> 
             </div>
-            
-
         </calcite-shell>
     </body>
 </html>

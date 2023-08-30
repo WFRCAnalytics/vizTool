@@ -26,16 +26,16 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
-  document.getElementById('toggleOverlay').addEventListener('click', function() {
-    var overlay = document.getElementById('overlay');
-    if (overlay.classList.contains('collapsed')) {
-      overlay.classList.remove('collapsed');
-      this.innerText = 'Collapse';
-    } else {
-      overlay.classList.add('collapsed');
-      this.innerText = 'Expand';
-    }
-  });
+  //document.getElementById('toggleOverlay').addEventListener('click', function() {
+  //  var overlay = document.getElementById('overlay');
+  //  if (overlay.classList.contains('collapsed')) {
+  //    overlay.classList.remove('collapsed');
+  //    this.innerText = 'Collapse';
+  //  } else {
+  //    overlay.classList.add('collapsed');
+  //    this.innerText = 'Expand';
+  //  }
+  //});
 
   const map = new Map({
     basemap: "gray-vector" // Basemap layerSegments service
@@ -54,8 +54,15 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     return data;
   }
 
+  async function fetchTemplateData() {
+    const response = await fetch('dashboard-templates.json');
+    const data = await response.json();
+    return data;
+  }
+
   async function createMenuStructure() {
     const menuData = await fetchMenuData();
+    const templateData = await fetchTemplateData();
 
     const mainMenuItems = menuData.map(menuItemData => {
 
@@ -69,9 +76,16 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       });
     
       menuItemData.sidebarItems = convertedSidebarItems;
-  
       const sidebarContent = new SidebarContent(menuItemData.text, menuItemData.sidebarItems);
-      return new MenuItem(menuItemData.id, menuItemData.text, menuItemData.iconStart, sidebarContent);
+
+      const templateContent = templateData.find(t => t.id === menuItemData.id);
+      var templateContentItem = '';
+      if (templateContent !== null){
+        templateContentItem = templateContent.template.content;
+      }
+      console.log(templateContent);
+      
+      return new MenuItem(menuItemData.id, menuItemData.text, menuItemData.iconStart, sidebarContent, templateContentItem);
 
     });
 

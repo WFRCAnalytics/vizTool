@@ -19,7 +19,7 @@
         ]
     },
     {
-        "id": "menusOds",
+        "id": "menuOds",
         "text": "OD Data",
         "iconStart": "grid",
         "sidebarItems": [
