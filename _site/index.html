@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <title>TDM vizTool</title>
+
+        <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
+        <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.8.0/calcite.css" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script src="https://js.arcgis.com/4.27/"></script>
+        <script type="module" src="https://js.arcgis.com/calcite-components/1.8.0/calcite.esm.js"></script>
+        <link rel="stylesheet" href="styles.css">
+
+        <script src="classes/map-sidebar-item.js"></script>
+        <script src="classes/submenu-item.js"></script>
+        <script src="classes/menu-item.js"></script>
+        <script src="scripts.js"></script>
+    </head>
+    <body>
+        <calcite-shell>
+            <calcite-navigation slot="header">
+                <calcite-navigation-logo slot="logo" heading="vizTool" description="WF TDM"></calcite-navigation-logo>
+                <calcite-menu slot="content-start"></calcite-menu>
+                <calcite-navigation slot="navigation-secondary">
+                    <calcite-menu slot="content-start"></calcite-menu>
+                </calcite-navigation>
+                <calcite-navigation-user slot="user" full-name="vizWhiz" username="vizWhiz"></calcite-navigation-user>                    
+            </calcite-navigation>
+            <div id="main"></div>
+        </calcite-shell>
+    </body>
+</html>
