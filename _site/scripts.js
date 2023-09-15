@@ -90,6 +90,27 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     });
 
     init();
+
+    document.getElementById("fileInput").addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+  
+          reader.onload = function(e) {
+              const fileContents = e.target.result;
+  
+              // Assuming you have an element with the ID "fileContents" to display the content
+              const fileContentsElement = document.getElementById("fileContents");
+  
+              // Display the file contents in the specified element
+              if (fileContentsElement) {
+                  fileContentsElement.textContent = fileContents;
+              }
+          };
+  
+          reader.readAsText(file);
+      }
+  });
   }
 
   fetch('templates.json')
