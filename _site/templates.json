@@ -13,6 +13,6 @@
   },
   {
       "templateType": "vizLog",
-      "layoutDivs": "<div id=\"mainVizTrends\">HERE ARE SOME LOGS</div>"
+      "layoutDivs": "<body><h1>Text File Contents</h1><input type=\"file\" id=\"fileInput\" accept=\".txt\"><pre id=\"fileContents\"></pre><script src=\"display_text_file.js\"></script></body>"
   }
 ]
