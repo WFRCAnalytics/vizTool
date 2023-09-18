@@ -13,6 +13,9 @@
   },
   {
       "templateType": "vizLog",
-      "layoutDivs": "<body><h1>Text File Contents</h1><input type=\"file\" id=\"fileInput\" accept=\".txt\"><pre id=\"fileContents\"></pre><script src=\"display_text_file.js\"></script></body>"
+      "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainLog\" style=\"white-space: pre-line;\"><div id=\"fileContents\"></div></div></div>"
+
   }
+
+
 ]

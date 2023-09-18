@@ -6,6 +6,7 @@ class SubmenuItem {
     this.submenuIconStart = data.submenuIconStart;
     this.submenuTemplate = data.submenuTemplate;
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
+    this.textFile = data.textFile;
   }
 
   generateIdFromText(text) {
@@ -41,9 +42,33 @@ class SubmenuItem {
         selectedTemplate.hidden = false;
         // ... (Any additional specific logic for the template type)
       }
-      //submenuItemInstance.populateSidebar();  // Use the saved instance context here as well
+      submenuItemInstance.populateText();  // Use the saved instance context here as well
       //submenuItemInstance.populateMainContent(submenuItemInstance.templateContent);
     });
     return submenuItem;
+  }
+
+  populateText(){
+    
+    // Specify the file path
+    const filePath = this.textFile;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const fileContents = e.target.result;
+        const fileContentsElement = document.getElementById("fileContents");
+        if (fileContentsElement) {
+            fileContentsElement.textContent = fileContents;
+        }
+    };
+
+    fetch(filePath)
+        .then(response => response.blob())
+        .then(blob => {
+            reader.readAsText(blob);
+        })
+        .catch(error => {
+            console.error("Error reading file:", error);
+        });
   }
 }
