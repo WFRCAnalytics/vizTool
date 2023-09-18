@@ -31,7 +31,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
 
 
   async function fetchMenuData() {
-    const response = await fetch('menu.json');
+    const response = await fetch('config.json');
     const data = await response.json();
     return data;
   }
@@ -82,13 +82,92 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       basemap: "gray-vector" // Basemap layerSegments service
     });
   
-    view = new MapView({
+    
+    const view = new MapView({
       map: map,
       center: [-111.8910, 40.7608], // Longitude, latitude
       zoom: 10, // Zoom level
       container: "mapView" // Div element
     });
 
+
+    // ADD GEOJSONS
+    
+    const geojsonCities = new GeoJSONLayer({
+      url: "data/city.geojson",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+          color: [0, 0, 0, 0],  // transparent fill
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 4,
+            color: [255, 255, 255]
+          }
+        }
+      }
+    });
+    map.add(geojsonCities);
+
+    const geojsonCitiesWhite = new GeoJSONLayer({
+      url: "data/city.geojson",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+          color: [0, 0, 0, 0],  // transparent fill
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 1,
+            color: [100, 100, 100]
+          }
+        }
+      }
+    });  
+    map.add(geojsonCitiesWhite);
+
+    const geojsonSegments = new GeoJSONLayer({
+      url: "data/segments.geojson",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: 'simple-line',
+          color: [0, 0, 255],
+          width: 2
+        }
+      }
+    });  
+    map.add(geojsonSegments);
+
+    // Define the layer selection widget
+    const layerList = new LayerList({
+      view: view,
+      // Optional: Specify the title for the widget
+      container: document.createElement('div'),
+      // Optional: Expand the widget by default
+      listItemCreatedFunction: function(event) {
+        const item = event.item;
+        item.panel = {
+          content: 'legend',
+          open: true
+        };
+      }
+    });
+
+    // Add the widget to the top-right corner of the view
+    view.ui.add(layerList, {
+      position: 'bottom-left'
+    });
+
+    // add basemap toggle
+    const basemapToggle = new BasemapToggle({
+      view: view,
+      nextBasemap: "arcgis-imagery"
+    });
+    
+    view.ui.add(basemapToggle,"bottom-right");
+
+
+    // initialize map
     init();
   }
 

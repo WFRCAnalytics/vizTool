@@ -1,0 +1,476 @@
+[
+    {
+        "menuText": "Points",
+        "menuIconStart": "bullet-point",
+        "modelEntitys": [
+            {
+                "submenuText": "Nodes",
+                "submenuIconStart": "bullet-point",
+                "submenuTemplate": "vizMap"
+            },
+            {
+                "submenuText": "Special Generators",
+                "submenuIconStart": "urban-model",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Special Generator Attributes",
+                        "type": "radio",
+                        "options": ["Volume", "P/A Ratio"],
+                        "selectedOption": "Volume"
+                    }
+                ]
+            },
+            {
+                "submenuText": "Externals",
+                "submenuIconStart": "",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "External Data",
+                        "type": "radio",
+                        "options": ["Volume", "P/A Ratio"],
+                        "selectedOption": "Volume"
+                    },
+                    {
+                        "text": "Year Filter",
+                        "type": "select",
+                        "options": [
+                                    {"value":2019,"label":"2019"},
+                                    {"value":2023,"label":"2023"},
+                                    {"value":2032,"label":"2032"},
+                                    {"value":2042,"label":"2042"},
+                                    {"value":2050,"label":"2050"}
+                                   ],
+                        "selectedOption": 2050
+                    }
+                ]
+            },
+            {
+                "submenuText": "Stations",
+                "submenuIconStart": "take-pedestrian-ramp",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Station Data",
+                        "type": "radio",
+                        "options": ["Boardings","Alightings"],
+                        "selectedOption": "Boardings"
+                    },
+                    {
+                        "text": "Orientation Selection",
+                        "type": "radio",
+                        "options": ["Origin-Destination",
+                                    "Production-Attraction"],
+                        "selectedOption": "Origin-Destination"
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Peak"    , true],
+                                    ["Off-Peak", true]]
+                    },
+                    {
+                        "text": "Transit Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Heirarchical Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Route Filter",
+                        "type": "select",
+                        "options": [
+                                    {"value":"all","label":"All Routes" }, {"value":"BE630","label":"630 - Brigham City-Ogden Comm" }, {"value":"DA605F","label":"F605 - Bountiful - Centerville Flex" }, {"value":"DA626","label":"626 - West Roy - Clearfield Station" }, {"value":"DA640","label":"640 - Layton Hills Mall - WSU Ogden Camp" }, {"value":"MAG_028","label":"Santaquin_Exp" }, {"value":"SL011F","label":"F011 - 11th Ave Flex" }, {"value":"SL017","label":"017 - 1700 South" }, {"value":"SL031","label":"031 - 3100 South" }, {"value":"SL039","label":"039 - 3900 South" }, {"value":"SL062","label":"062 - 6200 South" }, {"value":"SL201","label":"201 - State Street South" }, {"value":"SL202F","label":"F202 - Bingham Junction Flex" }, {"value":"SL213","label":"213 - 1300 East-1100 East" }, {"value":"SL223","label":"223 - 2300 East-Holladay Blvd" }, {"value":"SL232F","label":"F232 - 3200 W Flex" }, {"value":"SL236","label":"236 - 3600 West" }, {"value":"SL248","label":"248 - 4800 West" }, {"value":"SL307X","label":"307X - Cottonwood Heights Fast Bus" }, {"value":"SL313X","label":"313X - South Valley \/ UofU Fast Bus" }, {"value":"SL320X","label":"320 - Highland Drive Fast Bus" }, {"value":"SL354X","label":"354X - Sandy - UofU Fast Bus" }, {"value":"SL453F","label":"F453 - Tooele-SLC Flex" }, {"value":"SL455","label":"455 - UofU-Davis County-Weber State University" }, {"value":"SL470","label":"470 - Ogden-Salt Lake Intercity" }, {"value":"SL471","label":"471 - Centerville" }, {"value":"SL509","label":"509 - 900 W Shuttle" }, {"value":"SL513","label":"513 - Industrial Business Park Shuttle" }, {"value":"SL514F","label":"F514 - Jordan Gateway Flex" }, {"value":"SL525F","label":"F525 - Midvale Flex" }, {"value":"SL570F","label":"F570 - 7000 S Flex" }, {"value":"SL578F","label":"F578 - 7800 S Flex" }, {"value":"SL590F","label":"F590 - 9000 S Flex" }, {"value":"TO454","label":"454 - Grantsville - Salt Lake" }, {"value":"UT805","label":"805 - Santaquin-Payson-Spanish Fork-Provo Station-UVU" }, {"value":"UT821","label":"821 - South County - Provo Station" }, {"value":"UT821.1","label":"821 - South County - Provo Station - 2023 5 Yr" }, {"value":"UT822","label":"822 - South Utah County-BYU-UVU Limited" }, {"value":"UT823","label":"832 - Springville" }, {"value":"UT831","label":"831 - Provo Grandview" }, {"value":"UT833","label":"833 - Airport - Provo Station" }, {"value":"UT834","label":"834 - Riverwoods - Provo Station" }, {"value":"UT841","label":"841 - Orem Central Station" }, {"value":"UT862","label":"862 - Orem East-West" }, {"value":"UT864","label":"864 - Lehi Station - Thanksgiving Point" }, {"value":"UT871","label":"871 - Tech Corridor Rail Connector" }, {"value":"WE600","label":"600 - Ogden - Farmington via Roy" }, {"value":"WE601","label":"601 - Ogden Trolley" }, {"value":"WE604","label":"604 - West Ogden" }, {"value":"WE606","label":"606 - Enable Industries-Monroe Blvd" }, {"value":"WE607","label":"607 - Southern Weber" }, {"value":"WE609","label":"609 - Ogden - Farmington via US-89" }, {"value":"WE612","label":"612 - Washington Blvd" }, {"value":"WE614","label":"614 - Monroe Blvd - West" }, {"value":"WE615","label":"615 - Harrison" }, {"value":"WE618F","label":"F618 - Ogden BDO Flex" }, {"value":"WE620F","label":"F620 - West Haven Flex" }, {"value":"WE627","label":"627 - WSU Davis-DTC" }, {"value":"WE628","label":"628 - Midtown Trolley" }, {"value":"WE638F","label":"F638 - The Brigham City" }, {"value":"WE667","label":"667 - Lagoon\/Station Park Shuttle" }, {"value":"WFRC_037","label":"WFRC_037 - Cedar_Exp" }, {"value":"MAG_005","label":"Core_CedarLehi" }, {"value":"MAG_006","label":"Core_Maple" }, {"value":"MAG_007","label":"Core_Nebo" }, {"value":"SL001","label":"001 - 100 South" }, {"value":"WFRC_005","label":"WFRC_005 - 300W" }, {"value":"WFRC_008","label":"WFRC_008 - 500E_2" }, {"value":"WFRC_009","label":"WFRC_009 - 5400S" }, {"value":"WFRC_012","label":"WFRC_012 - 900E_2" }, {"value":"WFRC_013","label":"WFRC_013 - 900So" }, {"value":"WFRC_026","label":"WFRC_026 - BRT3533S_Core" }, {"value":"WFRC_028","label":"WFRC_028 - BRT56_R" }, {"value":"WFRC_030","label":"WFRC_030 - BRTFTHLWA_N" }, {"value":"WFRC_033","label":"WFRC_033 - BRTNSDA_R" }, {"value":"WFRC_035","label":"WFRC_035 - BRTRdwd_T" }, {"value":"WFRC_048","label":"WFRC_048 - FthlDr2100" }, {"value":"WFRC_051","label":"WFRC_051 - LittleCott" }, {"value":"WFRC_053","label":"WFRC_053 - MidValCon" }, {"value":"WFRC_084","label":"WFRC_084 - StGrid_2_Core" }, {"value":"SL672X","label":"672X - Riverdale Express" }, {"value":"SL673X","label":"673X - South Weber Express" }, {"value":"701_Blue","label":"701 - TRAX Blue Line" }, {"value":"703_Red","label":"703 - TRAX Red Line" }, {"value":"704_Green","label":"704 - TRAX Green Line" }, {"value":"720_SLine","label":"720 - S-Line" }, {"value":"750_FR","label":"750 - FrontRunner" }, {"value":"UT830X","label":"830X - UVX" }, {"value":"UT830X.1","label":"830X - UVX Airport" }, {"value":"WE603","label":"603 - Weber State University-McKay Dee" }, {"value":"WFRC_003","label":"WFRC_003 - 200So_2" }, {"value":"WFRC_038","label":"WFRC_038 - CG_BRT_S1" } ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "menuText": "Segments",
+        "menuIconStart": "line-straight",
+        "modelEntitys": [
+            {
+                "submenuText": "Roadway Segments",
+                "submenuIconStart": "line-straight",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Roadway Segment Attribute",
+                        "type": "radio",
+                        "options": ["Lanes",
+                                    "Daily Volume",
+                                    "AM Period Speeds as % Free Flow",
+                                    "PM Period Speeds as % Free Flow",
+                                    "Daily Trucks",
+                                    "Daily % Trucks"],
+                        "selectedOption": "Daily Volume"
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Peak"    , true],
+                                    ["Off-Peak", true]]
+                    },
+                    {
+                        "text": "Household Life Cycle Filter",
+                        "type": "checkbox",
+                        "options": [["Life Cycle 1", true],
+                                    ["Life Cycle 2", true],
+                                    ["Life Cycle 3", true]]
+                    },
+                    {
+                        "text": "Number of Workers Filter",
+                        "type": "checkbox",
+                        "options": [["No Workers", true],
+                                    ["1 Worker"  , true],
+                                    ["2+ Workers", true]]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true],
+                                    ["IX", true]],
+                        "selectedOption": "Daily Volume"
+                    }
+                ]
+            },
+            {
+                "submenuText": "Transit Segments",
+                "submenuIconStart": "line-straight",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Transit Segment Attribute",
+                        "type": "radio",
+                        "options": ["Number of Routes",
+                                    "Average Speed",
+                                    "Average Headway",
+                                    "Total Riders",
+                                    "Total Boardings per Mile",
+                                    "Walk Boardings per Mile",
+                                    "Drive Boardings per Mile"],
+                        "selectedOption": "Number of Routes"
+                    },
+                    {
+                        "text": "Orientation Filter",
+                        "type": "radio",
+                        "options": ["Origin-Destination",
+                                    "Production-Attraction"],
+                        "selectedOption": "Origin-Destination"
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Peak"    , true],
+                                    ["Off-Peak", true]]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true],
+                                    ["IX", true]],
+                        "selectedOption": "Daily Volume"
+                    },
+                    {
+                        "text": "Household Life Cycle Filter",
+                        "type": "checkbox",
+                        "options": [["Life Cycle 1", true],
+                                    ["Life Cycle 2", true],
+                                    ["Life Cycle 3", true]]
+                    },
+                    {
+                        "text": "Number of Workers Filter",
+                        "type": "checkbox",
+                        "options": [["No Workers", true],
+                                    ["1 Worker"  , true],
+                                    ["2+ Workers", true]]
+                    },
+                    {
+                        "text": "Transit Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Heirarchical Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Route Filter",
+                        "type": "select",
+                        "options": [
+                                    {"value":"all","label":"All Routes" }, {"value":"BE630","label":"630 - Brigham City-Ogden Comm" }, {"value":"DA605F","label":"F605 - Bountiful - Centerville Flex" }, {"value":"DA626","label":"626 - West Roy - Clearfield Station" }, {"value":"DA640","label":"640 - Layton Hills Mall - WSU Ogden Camp" }, {"value":"MAG_028","label":"Santaquin_Exp" }, {"value":"SL011F","label":"F011 - 11th Ave Flex" }, {"value":"SL017","label":"017 - 1700 South" }, {"value":"SL031","label":"031 - 3100 South" }, {"value":"SL039","label":"039 - 3900 South" }, {"value":"SL062","label":"062 - 6200 South" }, {"value":"SL201","label":"201 - State Street South" }, {"value":"SL202F","label":"F202 - Bingham Junction Flex" }, {"value":"SL213","label":"213 - 1300 East-1100 East" }, {"value":"SL223","label":"223 - 2300 East-Holladay Blvd" }, {"value":"SL232F","label":"F232 - 3200 W Flex" }, {"value":"SL236","label":"236 - 3600 West" }, {"value":"SL248","label":"248 - 4800 West" }, {"value":"SL307X","label":"307X - Cottonwood Heights Fast Bus" }, {"value":"SL313X","label":"313X - South Valley \/ UofU Fast Bus" }, {"value":"SL320X","label":"320 - Highland Drive Fast Bus" }, {"value":"SL354X","label":"354X - Sandy - UofU Fast Bus" }, {"value":"SL453F","label":"F453 - Tooele-SLC Flex" }, {"value":"SL455","label":"455 - UofU-Davis County-Weber State University" }, {"value":"SL470","label":"470 - Ogden-Salt Lake Intercity" }, {"value":"SL471","label":"471 - Centerville" }, {"value":"SL509","label":"509 - 900 W Shuttle" }, {"value":"SL513","label":"513 - Industrial Business Park Shuttle" }, {"value":"SL514F","label":"F514 - Jordan Gateway Flex" }, {"value":"SL525F","label":"F525 - Midvale Flex" }, {"value":"SL570F","label":"F570 - 7000 S Flex" }, {"value":"SL578F","label":"F578 - 7800 S Flex" }, {"value":"SL590F","label":"F590 - 9000 S Flex" }, {"value":"TO454","label":"454 - Grantsville - Salt Lake" }, {"value":"UT805","label":"805 - Santaquin-Payson-Spanish Fork-Provo Station-UVU" }, {"value":"UT821","label":"821 - South County - Provo Station" }, {"value":"UT821.1","label":"821 - South County - Provo Station - 2023 5 Yr" }, {"value":"UT822","label":"822 - South Utah County-BYU-UVU Limited" }, {"value":"UT823","label":"832 - Springville" }, {"value":"UT831","label":"831 - Provo Grandview" }, {"value":"UT833","label":"833 - Airport - Provo Station" }, {"value":"UT834","label":"834 - Riverwoods - Provo Station" }, {"value":"UT841","label":"841 - Orem Central Station" }, {"value":"UT862","label":"862 - Orem East-West" }, {"value":"UT864","label":"864 - Lehi Station - Thanksgiving Point" }, {"value":"UT871","label":"871 - Tech Corridor Rail Connector" }, {"value":"WE600","label":"600 - Ogden - Farmington via Roy" }, {"value":"WE601","label":"601 - Ogden Trolley" }, {"value":"WE604","label":"604 - West Ogden" }, {"value":"WE606","label":"606 - Enable Industries-Monroe Blvd" }, {"value":"WE607","label":"607 - Southern Weber" }, {"value":"WE609","label":"609 - Ogden - Farmington via US-89" }, {"value":"WE612","label":"612 - Washington Blvd" }, {"value":"WE614","label":"614 - Monroe Blvd - West" }, {"value":"WE615","label":"615 - Harrison" }, {"value":"WE618F","label":"F618 - Ogden BDO Flex" }, {"value":"WE620F","label":"F620 - West Haven Flex" }, {"value":"WE627","label":"627 - WSU Davis-DTC" }, {"value":"WE628","label":"628 - Midtown Trolley" }, {"value":"WE638F","label":"F638 - The Brigham City" }, {"value":"WE667","label":"667 - Lagoon\/Station Park Shuttle" }, {"value":"WFRC_037","label":"WFRC_037 - Cedar_Exp" }, {"value":"MAG_005","label":"Core_CedarLehi" }, {"value":"MAG_006","label":"Core_Maple" }, {"value":"MAG_007","label":"Core_Nebo" }, {"value":"SL001","label":"001 - 100 South" }, {"value":"WFRC_005","label":"WFRC_005 - 300W" }, {"value":"WFRC_008","label":"WFRC_008 - 500E_2" }, {"value":"WFRC_009","label":"WFRC_009 - 5400S" }, {"value":"WFRC_012","label":"WFRC_012 - 900E_2" }, {"value":"WFRC_013","label":"WFRC_013 - 900So" }, {"value":"WFRC_026","label":"WFRC_026 - BRT3533S_Core" }, {"value":"WFRC_028","label":"WFRC_028 - BRT56_R" }, {"value":"WFRC_030","label":"WFRC_030 - BRTFTHLWA_N" }, {"value":"WFRC_033","label":"WFRC_033 - BRTNSDA_R" }, {"value":"WFRC_035","label":"WFRC_035 - BRTRdwd_T" }, {"value":"WFRC_048","label":"WFRC_048 - FthlDr2100" }, {"value":"WFRC_051","label":"WFRC_051 - LittleCott" }, {"value":"WFRC_053","label":"WFRC_053 - MidValCon" }, {"value":"WFRC_084","label":"WFRC_084 - StGrid_2_Core" }, {"value":"SL672X","label":"672X - Riverdale Express" }, {"value":"SL673X","label":"673X - South Weber Express" }, {"value":"701_Blue","label":"701 - TRAX Blue Line" }, {"value":"703_Red","label":"703 - TRAX Red Line" }, {"value":"704_Green","label":"704 - TRAX Green Line" }, {"value":"720_SLine","label":"720 - S-Line" }, {"value":"750_FR","label":"750 - FrontRunner" }, {"value":"UT830X","label":"830X - UVX" }, {"value":"UT830X.1","label":"830X - UVX Airport" }, {"value":"WE603","label":"603 - Weber State University-McKay Dee" }, {"value":"WFRC_003","label":"WFRC_003 - 200So_2" }, {"value":"WFRC_038","label":"WFRC_038 - CG_BRT_S1" } ]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true]],
+                        "selectedOption": "Daily Volume"
+                    }
+                ]
+            },
+            {
+                "submenuText": "Access/Egress Links",
+                "submenuIconStart": "line-straight",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Access/Egress Attribute",
+                        "type": "radio",
+                        "options": ["Number of Riders",
+                                    "Access/Egress Speed",
+                                    "Access/Egress Distance",
+                                    "Total Riders"],
+                        "selectedOption": "Number of Routes"
+                    },
+                    {
+                        "text": "Orientation Filter",
+                        "type": "radio",
+                        "options": ["Origin-Destination",
+                                    "Production-Attraction"],
+                        "selectedOption": "Origin-Destination"
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Peak"    , true],
+                                    ["Off-Peak", true]]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true],
+                                    ["IX", true]],
+                        "selectedOption": "Daily Volume"
+                    },
+                    {
+                        "text": "Household Life Cycle Filter",
+                        "type": "checkbox",
+                        "options": [["Life Cycle 1", true],
+                                    ["Life Cycle 2", true],
+                                    ["Life Cycle 3", true]]
+                    },
+                    {
+                        "text": "Number of Workers Filter",
+                        "type": "checkbox",
+                        "options": [["No Workers", true],
+                                    ["1 Worker"  , true],
+                                    ["2+ Workers", true]]
+                    },
+                    {
+                        "text": "Transit Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Heirarchical Modes Filter",
+                        "type": "checkbox",
+                        "options": [["Local Bus"        , true],
+                                    ["Core Route"       , true],
+                                    ["Express Bus"      , true],
+                                    ["Bus Rapid Transit", true],
+                                    ["Light Rail"       , true],
+                                    ["Commuter Rail"    , true]]
+                    },
+                    {
+                        "text": "Route Filter",
+                        "type": "select",
+                        "options": [
+                                    {"value":"all","label":"All Routes" }, {"value":"BE630","label":"630 - Brigham City-Ogden Comm" }, {"value":"DA605F","label":"F605 - Bountiful - Centerville Flex" }, {"value":"DA626","label":"626 - West Roy - Clearfield Station" }, {"value":"DA640","label":"640 - Layton Hills Mall - WSU Ogden Camp" }, {"value":"MAG_028","label":"Santaquin_Exp" }, {"value":"SL011F","label":"F011 - 11th Ave Flex" }, {"value":"SL017","label":"017 - 1700 South" }, {"value":"SL031","label":"031 - 3100 South" }, {"value":"SL039","label":"039 - 3900 South" }, {"value":"SL062","label":"062 - 6200 South" }, {"value":"SL201","label":"201 - State Street South" }, {"value":"SL202F","label":"F202 - Bingham Junction Flex" }, {"value":"SL213","label":"213 - 1300 East-1100 East" }, {"value":"SL223","label":"223 - 2300 East-Holladay Blvd" }, {"value":"SL232F","label":"F232 - 3200 W Flex" }, {"value":"SL236","label":"236 - 3600 West" }, {"value":"SL248","label":"248 - 4800 West" }, {"value":"SL307X","label":"307X - Cottonwood Heights Fast Bus" }, {"value":"SL313X","label":"313X - South Valley \/ UofU Fast Bus" }, {"value":"SL320X","label":"320 - Highland Drive Fast Bus" }, {"value":"SL354X","label":"354X - Sandy - UofU Fast Bus" }, {"value":"SL453F","label":"F453 - Tooele-SLC Flex" }, {"value":"SL455","label":"455 - UofU-Davis County-Weber State University" }, {"value":"SL470","label":"470 - Ogden-Salt Lake Intercity" }, {"value":"SL471","label":"471 - Centerville" }, {"value":"SL509","label":"509 - 900 W Shuttle" }, {"value":"SL513","label":"513 - Industrial Business Park Shuttle" }, {"value":"SL514F","label":"F514 - Jordan Gateway Flex" }, {"value":"SL525F","label":"F525 - Midvale Flex" }, {"value":"SL570F","label":"F570 - 7000 S Flex" }, {"value":"SL578F","label":"F578 - 7800 S Flex" }, {"value":"SL590F","label":"F590 - 9000 S Flex" }, {"value":"TO454","label":"454 - Grantsville - Salt Lake" }, {"value":"UT805","label":"805 - Santaquin-Payson-Spanish Fork-Provo Station-UVU" }, {"value":"UT821","label":"821 - South County - Provo Station" }, {"value":"UT821.1","label":"821 - South County - Provo Station - 2023 5 Yr" }, {"value":"UT822","label":"822 - South Utah County-BYU-UVU Limited" }, {"value":"UT823","label":"832 - Springville" }, {"value":"UT831","label":"831 - Provo Grandview" }, {"value":"UT833","label":"833 - Airport - Provo Station" }, {"value":"UT834","label":"834 - Riverwoods - Provo Station" }, {"value":"UT841","label":"841 - Orem Central Station" }, {"value":"UT862","label":"862 - Orem East-West" }, {"value":"UT864","label":"864 - Lehi Station - Thanksgiving Point" }, {"value":"UT871","label":"871 - Tech Corridor Rail Connector" }, {"value":"WE600","label":"600 - Ogden - Farmington via Roy" }, {"value":"WE601","label":"601 - Ogden Trolley" }, {"value":"WE604","label":"604 - West Ogden" }, {"value":"WE606","label":"606 - Enable Industries-Monroe Blvd" }, {"value":"WE607","label":"607 - Southern Weber" }, {"value":"WE609","label":"609 - Ogden - Farmington via US-89" }, {"value":"WE612","label":"612 - Washington Blvd" }, {"value":"WE614","label":"614 - Monroe Blvd - West" }, {"value":"WE615","label":"615 - Harrison" }, {"value":"WE618F","label":"F618 - Ogden BDO Flex" }, {"value":"WE620F","label":"F620 - West Haven Flex" }, {"value":"WE627","label":"627 - WSU Davis-DTC" }, {"value":"WE628","label":"628 - Midtown Trolley" }, {"value":"WE638F","label":"F638 - The Brigham City" }, {"value":"WE667","label":"667 - Lagoon\/Station Park Shuttle" }, {"value":"WFRC_037","label":"WFRC_037 - Cedar_Exp" }, {"value":"MAG_005","label":"Core_CedarLehi" }, {"value":"MAG_006","label":"Core_Maple" }, {"value":"MAG_007","label":"Core_Nebo" }, {"value":"SL001","label":"001 - 100 South" }, {"value":"WFRC_005","label":"WFRC_005 - 300W" }, {"value":"WFRC_008","label":"WFRC_008 - 500E_2" }, {"value":"WFRC_009","label":"WFRC_009 - 5400S" }, {"value":"WFRC_012","label":"WFRC_012 - 900E_2" }, {"value":"WFRC_013","label":"WFRC_013 - 900So" }, {"value":"WFRC_026","label":"WFRC_026 - BRT3533S_Core" }, {"value":"WFRC_028","label":"WFRC_028 - BRT56_R" }, {"value":"WFRC_030","label":"WFRC_030 - BRTFTHLWA_N" }, {"value":"WFRC_033","label":"WFRC_033 - BRTNSDA_R" }, {"value":"WFRC_035","label":"WFRC_035 - BRTRdwd_T" }, {"value":"WFRC_048","label":"WFRC_048 - FthlDr2100" }, {"value":"WFRC_051","label":"WFRC_051 - LittleCott" }, {"value":"WFRC_053","label":"WFRC_053 - MidValCon" }, {"value":"WFRC_084","label":"WFRC_084 - StGrid_2_Core" }, {"value":"SL672X","label":"672X - Riverdale Express" }, {"value":"SL673X","label":"673X - South Weber Express" }, {"value":"701_Blue","label":"701 - TRAX Blue Line" }, {"value":"703_Red","label":"703 - TRAX Red Line" }, {"value":"704_Green","label":"704 - TRAX Green Line" }, {"value":"720_SLine","label":"720 - S-Line" }, {"value":"750_FR","label":"750 - FrontRunner" }, {"value":"UT830X","label":"830X - UVX" }, {"value":"UT830X.1","label":"830X - UVX Airport" }, {"value":"WE603","label":"603 - Weber State University-McKay Dee" }, {"value":"WFRC_003","label":"WFRC_003 - 200So_2" }, {"value":"WFRC_038","label":"WFRC_038 - CG_BRT_S1" } ]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true]],
+                        "selectedOption": "Daily Volume"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "menuText": "Routes/Paths",
+        "menuIconStart": "conditional-rules-path",
+        "modelEntitys": [
+            {
+                "submenuText": "Transit Routes",
+                "submenuIconStart": "conditional-rules-path",
+                "submenuTemplate": "vizTableMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "OD Sub Item 1",
+                        "type": "radio",
+                        "options": ["Option A", "Option B"],
+                        "selectedOption": "Option B"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "menuText": "Origin-Destinations",
+        "menuIconStart": "grid",
+        "modelEntitys": [
+            {
+                "submenuText": "OD Stuff",
+                "submenuIconStart" : "",
+                "submenuTemplate": "vizMatrix"
+            }
+        ]
+    },
+    {
+        "menuText": "Zones",
+        "menuIconStart": "layer-polygon",
+        "modelEntitys":[
+            {
+                "submenuText": "Hexagons",
+                "submenuIconStart" : "transverse-hexagon",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Zone Options Group 1",
+                        "type": "select",
+                        "options": ["Zone Option A", "Zone Option B"],
+                        "selectedOption": "Zone Option B"
+                    },
+                    {
+                        "text": "Zone Options Group 2",
+                        "type": "radio",
+                        "options": ["Zone Option A", "Zone Option B"],
+                        "selectedOption": "Zone Option A"
+                    },
+                    {
+                        "text": "Taco Cart Options",
+                        "type": "select",
+                        "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                        "selectedOption": "Chimichanga"
+                    }
+                ]
+            },
+            {
+                "submenuText": "HOT Zones",
+                "submenuIconStart" : "car",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": []
+            },
+            {
+                "submenuText": "Parking Zones",
+                "submenuIconStart" : "credits",
+                "submenuTemplate": "vizMap",
+                "mapSidebarItems": [
+                    {
+                        "text": "Zone Options Group 1",
+                        "type": "select",
+                        "options": ["Zone Option A", "Zone Option B"],
+                        "selectedOption": "Zone Option B"
+                    },
+                    {
+                        "text": "Zone Options Group 2",
+                        "type": "radio",
+                        "options": ["Zone Option A", "Zone Option B"],
+                        "selectedOption": "Zone Option A"
+                    },
+                    {
+                        "text": "Taco Cart Options",
+                        "type": "select",
+                        "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                        "selectedOption": "Chimichanga"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "menuText": "Trends",
+        "menuIconStart": "graph-line-series",
+        "modelEntitys": [
+            {
+                "submenuText": "Traffic Trends",
+                "submenuIconStart": "",
+                "submenuTemplate": "vizTrends"
+            },
+            {
+                "submenuText": "Transit Trends",
+                "submenuIconStart": "",
+                "submenuTemplate": "vizTrends"
+            }
+        ]
+    },
+    {
+        "menuText": "Model Logs",
+        "menuIconStart": "access-string-results",
+        "modelEntitys": [
+            {
+                "submenuText": "Run Time",
+                "submenuIconStart": "",
+                "submenuTemplate": "vizLog"
+            },
+            {
+                "submenuText": "Flags",
+                "submenuIconStart": "",
+                "submenuTemplate": "vizLog"
+            }
+        ]
+    },
+    {
+        "menuText": "Scenarios",
+        "menuIconStart": "data-folder",
+        "modelEntitys": [
+            {
+                "submenuText": "Scenario Manager",
+                "submenuIconStart": "data-folder",
+                "submenuTemplate": "vizScenarios"
+            }
+        ]
+    }
+]

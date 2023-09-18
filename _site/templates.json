@@ -1,7 +1,7 @@
 [
   {
       "templateType": "vizMap",
-      "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainMap\"><div id=\"mapView\"><div id=\"overlay\"><div class=\"overlay-header\"><span><b>Scenario Manager</b></span><button id=\"toggleOverlay\">Collapse</button></div><div class=\"overlay-content\">This is a custom overlay with more information.<!-- Your overlay content here --></div></div></div></div></div>"
+      "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainMap\"><div id=\"mapView\"><div id=\"overlay\"><div class=\"overlay-header\"><span><b>Scenario Selection</b></span><button id=\"toggleOverlay\">Collapse</button></div><div class=\"overlay-content\">This is a custom overlay with more information.<br/><select><option value=\"option1\">Option 1</option><option value=\"option2\">Option 2</option><option value=\"option3\">Option 3</option></select></div></div></div></div></div>"
   },
   {
       "templateType": "vizTrends",
