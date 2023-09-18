@@ -43,6 +43,12 @@
     flex-wrap: wrap;
 }
 
+#mainLog {
+    /* Main content styles */
+    flex-grow: 1;
+    white-space: pre-line; /* Prevent text from wrapping */
+}
+
 #mapView {
     flex-grow: 1;
     height: 100%;
