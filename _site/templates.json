@@ -14,11 +14,6 @@
   {
       "templateType": "vizLog",
       "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainLog\" style=\"white-space: pre-line;\"><div id=\"fileContents\"></div></div></div>"
-
-  }
-
-
-<<<<<<< HEAD
   },
   {
       "templateType": "vizScenarios",
@@ -26,13 +21,6 @@
   },
   {
       "templateType": "vizTableMap",
-      "layoutDivs": "<div id=\"mainVizTrends\" style=\"padding-left: 15px;\"><h1>Table with Map Inset</h1></div><div id=\"mainVizMap\"><div id=\"halfTable\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"halfMap\"><div id=\"mapView\"><div id=\"overlay\"><div class=\"overlay-header\"><span><b>Scenario Selection</b></span><button id=\"toggleOverlay\">Collapse</button></div><div class=\"overlay-content\">This is a custom overlay with more information.<br/><select><option value=\"option1\">Option 1</option><option value=\"option2\">Option 2</option><option value=\"option3\">Option 3</option></select></div></div></div></div></div>"
-      }
-=======
-      "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainLog\" style=\"white-space: pre-line;\"><div id=\"fileContents\"></div></div></div>"
-
+      "layoutDivs": "<div id=\"mainVizTableMap\" style=\"padding-left: 15px;\"><h1>Table with Map Inset</h1></div><div id=\"mainVizTableMap\"><div id=\"halfTable\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"halfMap\"><div id=\"mapView2\"><div id=\"overlay\"><div class=\"overlay-header\"><span><b>Scenario Selection</b></span><button id=\"toggleOverlay\">Collapse</button></div><div class=\"overlay-content\">This is a custom overlay with more information.<br/><select><option value=\"option1\">Option 1</option><option value=\"option2\">Option 2</option><option value=\"option3\">Option 3</option></select></div></div></div></div></div>"
   }
-
-
->>>>>>> main
 ]

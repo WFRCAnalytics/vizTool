@@ -447,18 +447,20 @@
         ]
     },
     {
-        "menuText": "Model Logs",
+        "menuText": "Model Log",
         "menuIconStart": "access-string-results",
         "modelEntitys": [
             {
-                "submenuText": "Run Time",
+                "submenuText": "Logs",
                 "submenuIconStart": "",
-                "submenuTemplate": "vizLog"
+                "submenuTemplate": "vizLog",
+                "textFile": "_Log/Log - v9_SE19_Net19.txt"
             },
             {
-                "submenuText": "Flags",
+                "submenuText": "Run Time",
                 "submenuIconStart": "",
-                "submenuTemplate": "vizLog"
+                "submenuTemplate": "vizLog",
+                "textFile": "_Log/RunTime - v9_SE19_Net19.txt"
             }
         ]
     },

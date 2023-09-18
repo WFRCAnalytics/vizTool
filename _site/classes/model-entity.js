@@ -6,6 +6,7 @@ class modelEntity {
     this.submenuIconStart = data.submenuIconStart;
     this.submenuTemplate = data.submenuTemplate;
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
+    this.textFile = data.textFile;
   }
 
   generateIdFromText(text) {
@@ -42,6 +43,7 @@ class modelEntity {
         // ... (Any additional specific logic for the template type)
       }
       modelEntityInstance.populateSidebar();  // Use the saved instance context here as well
+      modelEntityInstance.populateText();  // Use the saved instance context here as well
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
     });
     return modelEntity;
@@ -71,7 +73,6 @@ class modelEntity {
 
   }
 
-}
   populateText(){
     
     // Specify the file path
@@ -86,13 +87,12 @@ class modelEntity {
         }
     };
     fetch(filePath)
-
         .then(response => response.blob())
         .then(blob => {
             reader.readAsText(blob);
         })
         .catch(error => {
             console.error("Error reading file:", error);
-  }
         });
-      submenuItemInstance.populateText();  // Use the saved instance context here as well
+  }
+}

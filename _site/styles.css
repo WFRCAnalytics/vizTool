@@ -61,6 +61,12 @@
     height: 100%;
 }
 
+#mainLog {
+    /* Main content styles */
+    flex-grow: 1;
+    white-space: pre-line; /* Prevent text from wrapping */
+}
+
 #overlay {
     position: absolute;
     top: 10px;
