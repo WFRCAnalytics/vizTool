@@ -15,7 +15,7 @@ class MapSidebarItem {
   // Render the item based on its type
   render() {
     const container = document.createElement('div');
-    container.className = 'sidebar-item';
+    container.className = 'map-sidebar-item';
     
     let title = document.createElement("calcite-label");  // Create a new div element
     title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
@@ -42,7 +42,7 @@ class MapSidebarItem {
         this.createRadioButtons(container);
         break;
       case "checkbox":
-        this.createCheckBoxes(container);
+        this.createCheckboxes(container);
         break;
       case "select":
         this.createSelect(container);
@@ -85,35 +85,31 @@ class MapSidebarItem {
     });
   }
 
-  createCheckBoxes(container) {
+  createCheckboxes(container) {
     this.options.forEach((option, index) => {
 
       // create checkboxes
-      var checkBoxLabel = document.createElement("calcite-label");
-      checkBoxLabel.setAttribute('layout', 'inline');
-      checkBoxLabel.classList.add('pointer-cursor');
+      var checkboxLabel = document.createElement("calcite-label");
+      checkboxLabel.setAttribute('layout', 'inline');
+      checkboxLabel.classList.add('pointer-cursor');
 
-      var checkBox = document.createElement("calcite-checkbox");
-      checkBox.name = this.id;
-      checkBox.value = option;
+      var checkbox = document.createElement("calcite-checkbox");
 
-      // Optionally, select the first checkbox by default
-      if (option === this.selectedOption) {
-        checkBox.checked = true;
-      }
+      checkbox.checked = option[1];
+
       // Listen for changes to the checkbox
-      checkBox.addEventListener("change", function (e) {
+      checkbox.addEventListener("change", function (e) {
         // to make sure the checkbox is the is the actual element
-        const checkBox = e.currentTarget; // or e.target.closest('input[type="checkbox"]')
+        const checkbox = e.currentTarget; // or e.target.closest('input[type="checkbox"]')
         // update renderer with value of checkbox
         console.log(this.id + ':' + this.name + ' checkbox change')
       });    
 
       // Nest the checkbox directly inside the calcite-label
-      checkBoxLabel.appendChild(checkBox);
-      checkBoxLabel.appendChild(document.createTextNode(option || option));
+      checkboxLabel.appendChild(checkbox);
+      checkboxLabel.appendChild(document.createTextNode(option[0] || option[0]));
 
-      container.appendChild(checkBoxLabel);
+      container.appendChild(checkboxLabel);
 
     });
   }
@@ -122,10 +118,10 @@ class MapSidebarItem {
     const select = document.createElement('calcite-select');
     this.options.forEach(option => {
       const optionEl = document.createElement('calcite-option');
-      optionEl.value = option;
-      optionEl.textContent = option;
+      optionEl.value = option.value;
+      optionEl.textContent = option.label;
       
-      if (option === this.selectedOption) {
+      if (option.value === this.selectedOption) {
         optionEl.setAttribute('selected', 'true'); // This will select the option
       }
       select.appendChild(optionEl);

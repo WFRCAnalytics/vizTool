@@ -4,7 +4,7 @@ class MenuItem {
     this.id = this.generateIdFromText(data.menuText);
     this.menuText = data.menuText;
     this.menuIconStart = data.menuIconStart;
-    this.submenuItems = (data.submenuItems || []).map(item => new SubmenuItem(item));
+    this.modelEntitys = (data.modelEntitys || []).map(item => new modelEntity(item));
   }
 
   generateIdFromText(text) {
@@ -30,7 +30,7 @@ class MenuItem {
             }
         });
         
-        menuItemInstance.populateSubmenu();  // Use the saved instance context here as well
+        menuItemInstance.populatemodEnt();  // Use the saved instance context here as well
         //menuItemInstance.populateMainContent(menuItemInstance.templateContent);
     });
 
@@ -38,15 +38,15 @@ class MenuItem {
 
   }
 
-  populateSubmenu() {
+  populatemodEnt() {
     const secondaryMenu = document.querySelector('calcite-navigation[slot="navigation-secondary"] > calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
     secondaryMenu.innerHTML = '';
 
     // Render each menu item and log (or insert into the DOM)
-    this.submenuItems.forEach(submenuItem => {
-      secondaryMenu.appendChild(submenuItem.createSubmenuItemElement());
+    this.modelEntitys.forEach(modelEntity => {
+      secondaryMenu.appendChild(modelEntity.createModelEntityElement());
     });
   }
   

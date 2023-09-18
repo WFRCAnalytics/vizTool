@@ -9,10 +9,10 @@
     margin-left: 20px;
     border-left: 1px dashed black;
 }
-.sidebar-item {
+.map-sidebar-item {
     padding: 3px;
-    margin-left: 40px;
-    font-style: italic;
+    margin-left: 5px;
+    /*font-style: italic;*/
 }
 
 .template.hidden {
@@ -31,6 +31,13 @@
 
 #mainSidebar {
     width: 300px; /* or any other value */
+    padding: 15px;
+    height: calc(100vh - 104px);
+    overflow: auto;
+}
+
+#halfTable {
+    width: 50%; /* or any other value */
     padding: 15px;
     height: calc(100vh - 104px);
     overflow: auto;
