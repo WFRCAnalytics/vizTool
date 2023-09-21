@@ -39,6 +39,11 @@
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
 }
+#matrixMainDisplay {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: row; /* Places children in a row */
+    flex-grow: 1; /* Allows the container to take up available space */
+}
 
 /* SIDEBARS */
 #mainSidebar {
@@ -56,47 +61,52 @@
 #trendSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 144px);
     overflow: auto;
 }
-
-
-#halfTable {
-    width: 50%; /* or any other value */
+#matrixSidebar {
+    width: 300px; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 144px);
     overflow: auto;
 }
 
-#mainMap {
+ /* MAIN CONTENT */
+ #mainMap {
     /* Main content styles */
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
 }
-
 #mainLog {
     /* Main content styles */
     flex-grow: 1;
     white-space: pre-line; /* Prevent text from wrapping */
 }
-
 #mainTrend {
     /* Main content styles */
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
 }
+#mainMatrix {
+    /* Main content styles */
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 
 #mapView {
     flex-grow: 1;
     height: 100%;
 }
 
-#mainLog {
-    /* Main content styles */
-    flex-grow: 1;
-    white-space: pre-line; /* Prevent text from wrapping */
+#halfTable {
+    width: 50%; /* or any other value */
+    padding: 15px;
+    height: calc(100vh - 104px);
+    overflow: auto;
 }
 
 #overlay {
