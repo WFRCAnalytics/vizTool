@@ -118,7 +118,7 @@
                 "submenuText": "Roadway Segments",
                 "submenuIconStart": "line-straight",
                 "submenuTemplate": "vizMap",
-                "showLayers": ["Segments","Municipalities"],
+                "showLayers": ["Segments"],
                 "mapSidebarItems": [
                     {
                         "text": "Roadway Segment Attribute",
@@ -167,6 +167,7 @@
                 "submenuText": "Transit Segments",
                 "submenuIconStart": "line-straight",
                 "submenuTemplate": "vizMap",
+                "showLayers": ["Segments"],
                 "mapSidebarItems": [
                     {
                         "text": "Transit Segment Attribute",
@@ -372,7 +373,7 @@
         "menuIconStart": "grid",
         "modelEntitys": [
             {
-                "submenuText": "OD Stuff",
+                "submenuText": "Loaded Network Skims",
                 "submenuIconStart" : "",
                 "submenuTemplate": "vizMatrix",
                 "mapSidebarItems": [
@@ -396,7 +397,7 @@
         "menuIconStart": "layer-polygon",
         "modelEntitys":[
             {
-                "submenuText": "Hexagons",
+                "submenuText": "Hex Grid",
                 "submenuIconStart" : "transverse-hexagon",
                 "submenuTemplate": "vizMap",
                 "showLayers": ["HexGrid"],
@@ -436,12 +437,14 @@
                 "submenuText": "HOT Zones",
                 "submenuIconStart" : "car",
                 "submenuTemplate": "vizMap",
+                "showLayers": ["Toll Zones"],
                 "mapSidebarItems": []
             },
             {
                 "submenuText": "Parking Zones",
                 "submenuIconStart" : "credits",
                 "submenuTemplate": "vizMap",
+                "showLayers": "Parking",
                 "mapSidebarItems": [
                     {
                         "text": "Parking Zone Options Group 1",

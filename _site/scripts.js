@@ -82,7 +82,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     map = new Map({
       basemap: "gray-vector" // Basemap layerSegments service
     });
-  
     
     const view = new MapView({
       map: map,
@@ -107,6 +106,40 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });
     map.add(geojsonSegments);
+    
+    const geojsonParking = new GeoJSONLayer({
+      url: "data/parking.geojson",
+      title: "Parking",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+          color: [255, 120, 120],  // transparent fill
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 0,
+            color: [0, 0, 0, 0]
+          }
+        }
+      }
+    });
+    map.add(geojsonParking);
+    
+    const geojsonTollz = new GeoJSONLayer({
+      url: "data/tollz.geojson",
+      title: "Toll Zones",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+          color: [120, 255, 120],  // transparent fill
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 0,
+            color: [0, 0, 0, 0]
+          }
+        }
+      }
+    });
+    map.add(geojsonTollz);
     
     const geojsonHexGrid = new GeoJSONLayer({
       url: "data/hexgrid.geojson",
@@ -142,25 +175,25 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     });
     map.add(geojsonCities);
 
-    // Define the layer selection widget
-    const layerList = new LayerList({
-      view: view,
-      // Optional: Specify the title for the widget
-      container: document.createElement('div'),
-      // Optional: Expand the widget by default
-      listItemCreatedFunction: function(event) {
-        const item = event.item;
-        item.panel = {
-          content: 'legend',
-          open: true
-        };
-      }
-    });
-
-    // Add the widget to the top-right corner of the view
-    view.ui.add(layerList, {
-      position: 'bottom-left'
-    });
+//    // Define the layer selection widget
+//    const layerList = new LayerList({
+//      view: view,
+//      // Optional: Specify the title for the widget
+//      container: document.createElement('div'),
+//      // Optional: Expand the widget by default
+//      listItemCreatedFunction: function(event) {
+//        const item = event.item;
+//        item.panel = {
+//          content: 'legend',
+//          open: true
+//        };
+//      }
+//    });
+//
+//    // Add the widget to the top-right corner of the view
+//    view.ui.add(layerList, {
+//      position: 'bottom-left'
+//    });
 
     // add basemap toggle
     const basemapToggle = new BasemapToggle({

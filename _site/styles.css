@@ -44,6 +44,11 @@
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
 }
+#mainVizTableMap {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: row; /* Places children in a row */
+    flex-grow: 1; /* Allows the container to take up available space */
+}
 
 /* SIDEBARS */
 #mainSidebar {
@@ -72,7 +77,7 @@
 }
 
  /* MAIN CONTENT */
- #mainMap {
+#mainMap {
     /* Main content styles */
     flex-grow: 1;
     display: flex;
@@ -126,8 +131,15 @@
 #halfTable {
     width: 50%; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 144px);
     overflow: auto;
+}
+
+#halfMap {
+    /* Main content styles */
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #overlay {
