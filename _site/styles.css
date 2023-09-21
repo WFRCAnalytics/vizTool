@@ -146,11 +146,11 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255);
     padding: 10px;
     border-radius: 5px;
     z-index: 1000;
-    width: 300px;
+    width: 320px;
     max-height: 1000px; /* or a value bigger than your content's height */
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Added opacity for smoother collapse */
     overflow: hidden;
