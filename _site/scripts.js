@@ -95,6 +95,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     
     const geojsonSegments = new GeoJSONLayer({
       url: "data/segments.geojson",
+      title: "Segments",
       renderer: {
         type: "simple",  // autocasts as new SimpleRenderer()
         symbol: {
@@ -104,39 +105,41 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
         }
       }
     });
-
     map.add(geojsonSegments);
-    const geojsonCities = new GeoJSONLayer({
-      url: "data/city.geojson",
+    
+    const geojsonHexGrid = new GeoJSONLayer({
+      url: "data/hexgrid.geojson",
+      title: "Hex Grid",
       renderer: {
         type: "simple",  // autocasts as new SimpleRenderer()
         symbol: {
           type: "simple-fill",  // autocasts as new SimpleFillSymbol()
           color: [0, 0, 0, 0],  // transparent fill
           outline: {  // autocasts as new SimpleLineSymbol()
-            width: 4,
-            color: [255, 255, 255]
+            width: 0.5,
+            color: [120, 120, 120]
+          }
+        }
+      }
+    });
+    map.add(geojsonHexGrid);
+
+    const geojsonCities = new GeoJSONLayer({
+      url: "data/city.geojson",
+      title: "Municipalities",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+          color: [0, 0, 0, 0],  // transparent fill
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 3,
+            color: [50, 50, 50]
           }
         }
       }
     });
     map.add(geojsonCities);
-
-    const geojsonCitiesWhite = new GeoJSONLayer({
-      url: "data/city.geojson",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [0, 0, 0, 0],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 1,
-            color: [100, 100, 100]
-          }
-        }
-      }
-    });  
-    map.add(geojsonCitiesWhite);
 
     // Define the layer selection widget
     const layerList = new LayerList({
