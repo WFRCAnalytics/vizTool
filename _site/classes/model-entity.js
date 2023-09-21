@@ -105,21 +105,24 @@ class modelEntity {
     // Specify the file path
     const imagePath = this.pngFile;
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const imageData = e.target.result;
-        const imageElement = document.getElementById("imageElement");
-        if (imageElement) {
-            imageElement.src = imageData;
-        }
-    };
     fetch(imagePath)
-        .then(response => response.blob())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.blob();
+        })
         .then(blob => {
-            reader.readAsDataURL(blob); // Read as data URL
+            const imageURL = URL.createObjectURL(blob); // Create a URL for the blob
+            const imgHTML = `<img src="${imageURL}" alt="Image Placeholder">`;
+
+            const imageElement = document.getElementById("imageElement");
+            if (imageElement) {
+                imageElement.innerHTML = imgHTML; // Set the HTML content
+            }
         })
         .catch(error => {
-            console.error("Error reading file:", error);
+            console.error("Error fetching or displaying image:", error);
         });
 }
 
