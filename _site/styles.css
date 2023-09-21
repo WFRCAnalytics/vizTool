@@ -38,14 +38,14 @@
 #mainSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 144px);
     overflow: auto;
 }
 
 #logSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 104px);
+    height: calc(100vh - 144px);
     overflow: auto;
 }
 
