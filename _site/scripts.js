@@ -93,6 +93,19 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
 
     // ADD GEOJSONS
     
+    const geojsonSegments = new GeoJSONLayer({
+      url: "data/segments.geojson",
+      renderer: {
+        type: "simple",  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: 'simple-line',
+          color: [150, 150, 200],
+          width: 1
+        }
+      }
+    });
+
+    map.add(geojsonSegments);
     const geojsonCities = new GeoJSONLayer({
       url: "data/city.geojson",
       renderer: {
@@ -124,19 +137,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });  
     map.add(geojsonCitiesWhite);
-
-    const geojsonSegments = new GeoJSONLayer({
-      url: "data/segments.geojson",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: 'simple-line',
-          color: [0, 0, 255],
-          width: 2
-        }
-      }
-    });  
-    map.add(geojsonSegments);
 
     // Define the layer selection widget
     const layerList = new LayerList({

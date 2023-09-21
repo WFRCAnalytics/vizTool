@@ -81,6 +81,8 @@ class modelEntity {
     // Specify the file path
     const filePath = this.textFile;
 
+    if (typeof filePath==='undefined') return;
+
     const reader = new FileReader();
     reader.onload = function (e) {
         const fileContents = e.target.result;
