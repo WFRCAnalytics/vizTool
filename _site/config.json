@@ -373,7 +373,20 @@
             {
                 "submenuText": "OD Stuff",
                 "submenuIconStart" : "",
-                "submenuTemplate": "vizMatrix"
+                "submenuTemplate": "vizMatrix",
+                "mapSidebarItems": [
+                    {
+                        "text": "Display",
+                        "type": "radio",
+                        "options": ["Trips",
+                                    "Delay",
+                                    "Free Flow Time",
+                                    "Congested Time",
+                                    "Generalized Cost",
+                                    "Transit Cost"],
+                        "selectedOption": "Delay"
+                    }
+                ]
             }
         ]
     },

@@ -109,9 +109,6 @@ class modelEntity {
 
     fetch(imagePath)
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
             return response.blob();
         })
         .then(blob => {
@@ -136,6 +133,8 @@ class modelEntity {
         return '#sidebarContent';
     } else if (submenuTemplate === 'vizTrends') {
         return '#trendSidebarContent'
+    } else if(submenuTemplate === 'vizMatrix') {
+        return '#matrixSidebarContent'
     }
 
 }
