@@ -7,6 +7,7 @@ class modelEntity {
     this.submenuTemplate = data.submenuTemplate;
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
     this.textFile = data.textFile;
+    this.pngFile = data.pngFile;
   }
 
   generateIdFromText(text) {
@@ -44,7 +45,8 @@ class modelEntity {
       }
       const sidebarSelect = modelEntityInstance.getSidebarSelector(modelEntityInstance.submenuTemplate)
       modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
-      modelEntityInstance.populateText();  // Use the saved instance context here as well
+      modelEntityInstance.populateText();
+      modelEntityInstance.populateImage();
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
     });
     return modelEntity;
@@ -97,12 +99,37 @@ class modelEntity {
         });
   }
 
+  populateImage() {
+    // Specify the file path
+    const imagePath = this.pngFile;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const imageData = e.target.result;
+        const imageElement = document.getElementById("imageElement");
+        if (imageElement) {
+            imageElement.src = imageData;
+        }
+    };
+    fetch(imagePath)
+        .then(response => response.blob())
+        .then(blob => {
+            reader.readAsDataURL(blob); // Read as data URL
+        })
+        .catch(error => {
+            console.error("Error reading file:", error);
+        });
+}
+
 
   getSidebarSelector(submenuTemplate) {
     if (submenuTemplate === 'vizLog') {
         return '#logSidebarContent';
-    } else {
+    } else if (submenuTemplate === 'vizMap') {
         return '#sidebarContent';
+    } else if (submenuTemplate === 'vizTrends') {
+        return '#trendSidebarContent'
     }
+
 }
 }

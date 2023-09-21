@@ -442,7 +442,50 @@
             {
                 "submenuText": "Transit Trends",
                 "submenuIconStart": "",
-                "submenuTemplate": "vizTrends"
+                "submenuTemplate": "vizTrends",
+                "mapSidebarItems": [
+                    {
+                        "text": "Display",
+                        "type": "radio",
+                        "options": ["Trips",
+                                    "Boardings"],
+                        "selectedOption": "Trips"
+                    },
+                    {
+                        "text": "Mode Group",
+                        "type": "checkbox",
+                        "options": [["Total", true],
+                                    ["Non-Motorized", false],
+                                    ["Walk", false],
+                                    ["Bike", false],
+                                    ["Auto", false],
+                                    ["SchoolBus", false],
+                                    ["Transit", false],
+                                    ["Local Bus", false],
+                                    ["Core Bus", false],
+                                    ["Express Bus", false],
+                                    ["Bus-Rapid Transit", false],
+                                    ["Light-Rail Transit", false],
+                                    ["Commuter-Rail Transit", false]]
+                    },
+                    {
+                        "text": "Purpose",
+                        "type": "checkbox",
+                        "options": [["HBC", true ],
+                                    ["HBO", false ],
+                                    ["HBS", false ],
+                                    ["HBW", true ],
+                                    ["NHB", false ]]
+                    },
+                    {
+                        "text": "Periods",
+                        "type": "checkbox",
+                        "options": [["Off-Peak", true],
+                                    ["Peak", true],
+                                    ["Daily", false]]
+                    }
+                ],
+                "pngFile": "_Trends/trips.png" 
             }
         ]
     },
