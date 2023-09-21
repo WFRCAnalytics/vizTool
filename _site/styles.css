@@ -96,6 +96,27 @@
     flex-wrap: wrap;
 }
 
+/* CSS code to add borders to the table and cells */
+#matrixTable {
+    border-collapse: collapse; /* Collapse borders */
+    width: 100%; /* Optional: Set the width of the table */
+}
+
+#matrixTable th,
+#matrixTable td {
+    border: 1px solid #ddd; /* Add a 1px solid gray border to table cells */
+    padding: 8px; /* Optional: Add padding to cells for spacing */
+    text-align: center; /* Optional: Center align cell content */
+}
+.header-row {
+    font-weight: bold; /* Make the text bold */
+    background-color: #f2f2f2; /* Optional: Add a background color */
+}
+.row-header th {
+    font-weight: bold;
+    background-color: #f2f2f2;
+}
+
 
 #mapView {
     flex-grow: 1;
