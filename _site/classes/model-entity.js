@@ -105,6 +105,8 @@ class modelEntity {
     // Specify the file path
     const imagePath = this.pngFile;
 
+    if (typeof imagePath==='undefined') return;
+
     fetch(imagePath)
         .then(response => {
             if (!response.ok) {

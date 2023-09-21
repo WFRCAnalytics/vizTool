@@ -4,11 +4,6 @@
         "menuIconStart": "bullet-point",
         "modelEntitys": [
             {
-                "submenuText": "Nodes",
-                "submenuIconStart": "bullet-point",
-                "submenuTemplate": "vizMap"
-            },
-            {
                 "submenuText": "Special Generators",
                 "submenuIconStart": "urban-model",
                 "submenuTemplate": "vizMap",
@@ -16,8 +11,19 @@
                     {
                         "text": "Special Generator Attributes",
                         "type": "radio",
-                        "options": ["Volume", "P/A Ratio"],
+                        "options": ["Raw Producations", "Raw Attractions", "Balanced Productions", "Balanced Attractions"],
                         "selectedOption": "Volume"
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["Home-Based Work", true],
+                                    ["Home-Based Shopping", true],
+                                    ["Home-Based Other", true],
+                                    ["Home-Based School-Primary", true],
+                                    ["Home-Based School-Secondary", true],
+                                    ["Home-Based College", true],
+                                    ["IX", true]]
                     }
                 ]
             },
@@ -152,8 +158,7 @@
                                     ["Home-Based Other", true],
                                     ["Home-Based School-Primary", true],
                                     ["Home-Based School-Secondary", true],
-                                    ["IX", true]],
-                        "selectedOption": "Daily Volume"
+                                    ["IX", true]]
                     }
                 ]
             },
@@ -382,6 +387,12 @@
                 "submenuTemplate": "vizMap",
                 "mapSidebarItems": [
                     {
+                        "text": "Hex Attributes",
+                        "type": "radio",
+                        "options": ["Population","Households","Employment"],
+                        "selectedOption": "Population"
+                    },
+                    {
                         "text": "Zone Options Group 1",
                         "type": "select",
                         "options": [{"value": "Zone Option A", "label": "Zone Option A"},
@@ -391,8 +402,7 @@
                     {
                         "text": "Zone Options Group 2",
                         "type": "radio",
-                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
-                        {"value": "Zone Option B", "label": "Zone Option B"}],
+                        "options": ["Zone Option A", "Zone Option B"],
                         "selectedOption": "Zone Option A"
                     },
                     {
@@ -428,8 +438,7 @@
                     {
                         "text": "Parking Zone Options Group 2",
                         "type": "radio",
-                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
-                        {"value": "Zone Option B", "label": "Zone Option B"}],
+                        "options": ["Zone Option A", "Zone Option B"],
                         "selectedOption": "Zone Option A"
                     },
                     {
