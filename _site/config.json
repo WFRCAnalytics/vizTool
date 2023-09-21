@@ -118,6 +118,7 @@
                 "submenuText": "Roadway Segments",
                 "submenuIconStart": "line-straight",
                 "submenuTemplate": "vizMap",
+                "showLayers": ["Segments","Municipalities"],
                 "mapSidebarItems": [
                     {
                         "text": "Roadway Segment Attribute",
@@ -398,6 +399,7 @@
                 "submenuText": "Hexagons",
                 "submenuIconStart" : "transverse-hexagon",
                 "submenuTemplate": "vizMap",
+                "showLayers": ["HexGrid"],
                 "mapSidebarItems": [
                     {
                         "text": "Hex Attributes",

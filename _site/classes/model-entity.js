@@ -8,6 +8,7 @@ class modelEntity {
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
+    this.showLayers = data.showLayers || [];
   }
 
   generateIdFromText(text) {
@@ -47,11 +48,28 @@ class modelEntity {
       modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
       modelEntityInstance.populateText();
       modelEntityInstance.populateImage();
+      modelEntityInstance.updateLayerVisibility();
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
+
+
     });
     return modelEntity;
   }
   
+  updateLayerVisibility() {
+    // Loop through each layer in the map
+    map.layers.forEach(layer => {
+      // Check if the layer's id (or name, or other unique identifier) is in the showLayers list
+      if (this.showLayers.includes(layer.title)) {
+        // Show the layer if it's in the list
+        layer.visible = true;
+      } else {
+        // Hide the layer if it's not in the list
+        layer.visible = false;
+      }
+    });
+  }
+
   populateSidebar(sidebarSelect) {
 
     const container = document.createElement('div');

@@ -1,4 +1,5 @@
 let globalTemplates = [];
+let map;
 
 require(["esri/config",
          "esri/Map",
@@ -78,7 +79,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });
 
-    const map = new Map({
+    map = new Map({
       basemap: "gray-vector" // Basemap layerSegments service
     });
   
@@ -109,7 +110,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     
     const geojsonHexGrid = new GeoJSONLayer({
       url: "data/hexgrid.geojson",
-      title: "Hex Grid",
+      title: "HexGrid",
       renderer: {
         type: "simple",  // autocasts as new SimpleRenderer()
         symbol: {
