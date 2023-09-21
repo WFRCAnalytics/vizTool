@@ -374,7 +374,7 @@
         "modelEntitys": [
             {
                 "submenuText": "Loaded Network Skims",
-                "submenuIconStart" : "",
+                "submenuIconStart" : "bring-forward",
                 "submenuTemplate": "vizMatrix",
                 "mapSidebarItems": [
                     {
@@ -479,7 +479,7 @@
         "modelEntitys": [
             {
                 "submenuText": "Traffic Trends",
-                "submenuIconStart": "",
+                "submenuIconStart": "banana",
                 "submenuTemplate": "vizTrends",
                 "mapSidebarItems": [
                     {
@@ -523,7 +523,7 @@
             },
             {
                 "submenuText": "Transit Trends",
-                "submenuIconStart": "",
+                "submenuIconStart": "graph-line-series",
                 "submenuTemplate": "vizTrends",
                 "mapSidebarItems": [
                     {
@@ -577,7 +577,7 @@
         "modelEntitys": [
             {
                 "submenuText": "Logs",
-                "submenuIconStart": "",
+                "submenuIconStart": "form-dropdown",
                 "submenuTemplate": "vizLog",
                 "mapSidebarItems": [
                     {
@@ -597,7 +597,7 @@
             },
             {
                 "submenuText": "Run Time",
-                "submenuIconStart": "",
+                "submenuIconStart": "running",
                 "submenuTemplate": "vizLog",
                 "mapSidebarItems": [
                     {
