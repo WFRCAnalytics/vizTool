@@ -453,12 +453,94 @@
             {
                 "submenuText": "Traffic Trends",
                 "submenuIconStart": "",
-                "submenuTemplate": "vizTrends"
+                "submenuTemplate": "vizTrends",
+                "mapSidebarItems": [
+                    {
+                        "text": "Display",
+                        "type": "radio",
+                        "options": ["Trips",
+                                     "VMT",
+                                     "VHT"],
+                        "selectedOption": "Trips"
+                    },
+                    {
+                        "text": "Mode Filter",
+                        "type": "checkbox",
+                        "options": [["Total", true],
+                                    ["Drive Alone", false],
+                                    ["Share2", false],
+                                    ["Share3P", false],
+                                    ["Light Trucks", false],
+                                    ["Medium Trucks", false],
+                                    ["Heavy Tructs", false]]
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Off-Peak", false],
+                                    ["Peak", true],
+                                    ["Daily", false]]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["HBC", true ],
+                                    ["HBO", false ],
+                                    ["HBS", false ],
+                                    ["HBW", false ],
+                                    ["NHB", false ]]
+                    }
+                    
+                ],
+                "pngFile": "_Trends/traffic.png" 
             },
             {
                 "submenuText": "Transit Trends",
                 "submenuIconStart": "",
-                "submenuTemplate": "vizTrends"
+                "submenuTemplate": "vizTrends",
+                "mapSidebarItems": [
+                    {
+                        "text": "Display",
+                        "type": "radio",
+                        "options": ["Trips",
+                                    "Boardings"],
+                        "selectedOption": "Trips"
+                    },
+                    {
+                        "text": "Mode Filter",
+                        "type": "checkbox",
+                        "options": [["Total", true],
+                                    ["Non-Motorized", false],
+                                    ["Walk", false],
+                                    ["Bike", false],
+                                    ["Auto", false],
+                                    ["SchoolBus", false],
+                                    ["Transit", false],
+                                    ["Local Bus", false],
+                                    ["Core Bus", false],
+                                    ["Express Bus", false],
+                                    ["Bus-Rapid Transit", false],
+                                    ["Light-Rail Transit", false],
+                                    ["Commuter-Rail Transit", false]]
+                    },
+                    {
+                        "text": "Time of Day Filter",
+                        "type": "checkbox",
+                        "options": [["Off-Peak", true],
+                                    ["Peak", true],
+                                    ["Daily", false]]
+                    },
+                    {
+                        "text": "Trip Purpose Filter",
+                        "type": "checkbox",
+                        "options": [["HBC", true ],
+                                    ["HBO", false ],
+                                    ["HBS", false ],
+                                    ["HBW", true ],
+                                    ["NHB", false ]]
+                    }
+                ],
+                "pngFile": "_Trends/transit.png" 
             }
         ]
     },

@@ -23,31 +23,43 @@
     cursor: pointer;
 }
 
+/* MAIN DISPLAYS */
 #mainVizMap {
     display: flex; /* Enables flexbox layout */
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
 }
-
-#logVizMap {
+#logMainDisplay {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: row; /* Places children in a row */
+    flex-grow: 1; /* Allows the container to take up available space */
+}
+#trendMainDisplay {
     display: flex; /* Enables flexbox layout */
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
 }
 
+/* SIDEBARS */
 #mainSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
     height: calc(100vh - 144px);
     overflow: auto;
 }
-
 #logSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
     height: calc(100vh - 144px);
     overflow: auto;
 }
+#trendSidebar {
+    width: 300px; /* or any other value */
+    padding: 15px;
+    height: calc(100vh - 104px);
+    overflow: auto;
+}
+
 
 #halfTable {
     width: 50%; /* or any other value */
@@ -67,6 +79,13 @@
     /* Main content styles */
     flex-grow: 1;
     white-space: pre-line; /* Prevent text from wrapping */
+}
+
+#mainTrend {
+    /* Main content styles */
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #mapView {

@@ -7,6 +7,7 @@ class modelEntity {
     this.submenuTemplate = data.submenuTemplate;
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
     this.textFile = data.textFile;
+    this.pngFile = data.pngFile;
   }
 
   generateIdFromText(text) {
@@ -44,7 +45,8 @@ class modelEntity {
       }
       const sidebarSelect = modelEntityInstance.getSidebarSelector(modelEntityInstance.submenuTemplate)
       modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
-      modelEntityInstance.populateText();  // Use the saved instance context here as well
+      modelEntityInstance.populateText();
+      modelEntityInstance.populateImage();
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
     });
     return modelEntity;
@@ -99,12 +101,40 @@ class modelEntity {
         });
   }
 
+  populateImage() {
+    // Specify the file path
+    const imagePath = this.pngFile;
+
+    fetch(imagePath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const imageURL = URL.createObjectURL(blob); // Create a URL for the blob
+            const imgHTML = `<img src="${imageURL}" alt="Image Placeholder">`;
+
+            const imageElement = document.getElementById("imageElement");
+            if (imageElement) {
+                imageElement.innerHTML = imgHTML; // Set the HTML content
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching or displaying image:", error);
+        });
+}
+
 
   getSidebarSelector(submenuTemplate) {
     if (submenuTemplate === 'vizLog') {
         return '#logSidebarContent';
-    } else {
+    } else if (submenuTemplate === 'vizMap') {
         return '#sidebarContent';
+    } else if (submenuTemplate === 'vizTrends') {
+        return '#trendSidebarContent'
     }
+
 }
 }
