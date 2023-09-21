@@ -13,7 +13,7 @@
   },
   {
       "templateType": "vizLog",
-      "layoutDivs": "<div id=\"mainVizMap\"><div id=\"mainSidebar\"><div id=\"sidebarContent\" tabindex=\"0\"><p>Welcome to the vizTool.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainLog\" style=\"white-space: pre-line;\"><div id=\"fileContents\"></div></div></div>"
+      "layoutDivs": "<div id=\"logVizMap\"><div id=\"logSidebar\"><div id=\"logSidebarContent\" tabindex=\"0\"><p>Welcome to the model logs.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainLog\" style=\"white-space: pre-line;\"><div id=\"fileContents\"></div></div></div>"
   },
   {
       "templateType": "vizScenarios",

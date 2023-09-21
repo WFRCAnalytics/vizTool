@@ -29,7 +29,20 @@
     flex-grow: 1; /* Allows the container to take up available space */
 }
 
+#logVizMap {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: row; /* Places children in a row */
+    flex-grow: 1; /* Allows the container to take up available space */
+}
+
 #mainSidebar {
+    width: 300px; /* or any other value */
+    padding: 15px;
+    height: calc(100vh - 104px);
+    overflow: auto;
+}
+
+#logSidebar {
     width: 300px; /* or any other value */
     padding: 15px;
     height: calc(100vh - 104px);

@@ -447,19 +447,47 @@
         ]
     },
     {
-        "menuText": "Model Log",
+        "menuText": "Model Logs",
         "menuIconStart": "access-string-results",
         "modelEntitys": [
             {
                 "submenuText": "Logs",
                 "submenuIconStart": "",
                 "submenuTemplate": "vizLog",
+                "mapSidebarItems": [
+                    {
+                        "text": "Logs",
+                        "type": "radio",
+                        "options": ["General Variables",
+                                    "Demographic Summary",
+                                    "Network Processing",
+                                    "Household Disaggregation",
+                                    "Trip Generation",
+                                    "Trip Distribution",
+                                    "Mode Choice"],
+                        "selectedOption": "General Variables"
+                    }
+                ],
                 "textFile": "_Log/Log - v9_SE19_Net19.txt"
             },
             {
                 "submenuText": "Run Time",
                 "submenuIconStart": "",
                 "submenuTemplate": "vizLog",
+                "mapSidebarItems": [
+                    {
+                        "text": "Run Time",
+                        "type": "radio",
+                        "options": ["Input Processing",
+                                    "Household Disaggregation",
+                                    "Trip Generation",
+                                    "Trip Distribution",
+                                    "Mode Choice",
+                                    "Highway Assignment",
+                                    "Post Processing"],
+                        "selectedOption": "Input Processing"
+                    }
+                ],
                 "textFile": "_Log/RunTime - v9_SE19_Net19.txt"
             }
         ]

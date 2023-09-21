@@ -42,14 +42,15 @@ class modelEntity {
         selectedTemplate.hidden = false;
         // ... (Any additional specific logic for the template type)
       }
-      modelEntityInstance.populateSidebar();  // Use the saved instance context here as well
+      const sidebarSelect = modelEntityInstance.getSidebarSelector(modelEntityInstance.submenuTemplate)
+      modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
       modelEntityInstance.populateText();  // Use the saved instance context here as well
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
     });
     return modelEntity;
   }
   
-  populateSidebar() {
+  populateSidebar(sidebarSelect) {
 
     const container = document.createElement('div');
     
@@ -64,7 +65,7 @@ class modelEntity {
     container.appendChild(titleEl);
     container.appendChild(sidebarContainer);
     
-    const sidebar = document.querySelector('#sidebarContent');
+    const sidebar = document.querySelector(sidebarSelect);
     // You might have to modify the next line based on the structure of your SidebarContent class.
     sidebar.innerHTML = ''; // clear existing content
     sidebar.appendChild(container);
@@ -95,4 +96,13 @@ class modelEntity {
             console.error("Error reading file:", error);
         });
   }
+
+
+  getSidebarSelector(submenuTemplate) {
+    if (submenuTemplate === 'vizLog') {
+        return '#logSidebarContent';
+    } else {
+        return '#sidebarContent';
+    }
+}
 }
