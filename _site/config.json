@@ -33,16 +33,20 @@
                         "selectedOption": "Volume"
                     },
                     {
-                        "text": "Year Filter",
-                        "type": "select",
-                        "options": [
-                                    {"value":2019,"label":"2019"},
-                                    {"value":2023,"label":"2023"},
-                                    {"value":2032,"label":"2032"},
-                                    {"value":2042,"label":"2042"},
-                                    {"value":2050,"label":"2050"}
-                                   ],
-                        "selectedOption": 2050
+                        "text": "Vehicle Type",
+                        "type": "checkbox",
+                        "options": [["Passenger Cars", true],
+                                    ["Light Trucks"  , true],
+                                    ["Medium Trucks" , true],
+                                    ["Heavy Trucks"  , true]]
+                    },
+                    {
+                        "text": "Time of Day",
+                        "type": "checkbox",
+                        "options": [["AM", true],
+                                    ["MD", true],
+                                    ["PM", true],
+                                    ["EV", true]]
                     }
                 ]
             },
@@ -380,19 +384,25 @@
                     {
                         "text": "Zone Options Group 1",
                         "type": "select",
-                        "options": ["Zone Option A", "Zone Option B"],
+                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
+                                    {"value": "Zone Option B", "label": "Zone Option B"}],
                         "selectedOption": "Zone Option B"
                     },
                     {
                         "text": "Zone Options Group 2",
                         "type": "radio",
-                        "options": ["Zone Option A", "Zone Option B"],
+                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
+                        {"value": "Zone Option B", "label": "Zone Option B"}],
                         "selectedOption": "Zone Option A"
                     },
                     {
                         "text": "Taco Cart Options",
                         "type": "select",
-                        "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                        "options": [{"value": "Burrito"     , "label": "Burrito"    },
+                                    {"value": "Taco"        , "label": "Taco"       },
+                                    {"value": "Empanada"    , "label": "Empanada"   },
+                                    {"value": "Chimichanga" , "label": "Chimichanga"},
+                                    {"value": "Quesadilla"  , "label": "Quesadilla" }],
                         "selectedOption": "Chimichanga"
                     }
                 ]
@@ -409,21 +419,27 @@
                 "submenuTemplate": "vizMap",
                 "mapSidebarItems": [
                     {
-                        "text": "Zone Options Group 1",
+                        "text": "Parking Zone Options Group 1",
                         "type": "select",
-                        "options": ["Zone Option A", "Zone Option B"],
+                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
+                                    {"value": "Zone Option B", "label": "Zone Option B"}],
                         "selectedOption": "Zone Option B"
                     },
                     {
-                        "text": "Zone Options Group 2",
+                        "text": "Parking Zone Options Group 2",
                         "type": "radio",
-                        "options": ["Zone Option A", "Zone Option B"],
+                        "options": [{"value": "Zone Option A", "label": "Zone Option A"},
+                        {"value": "Zone Option B", "label": "Zone Option B"}],
                         "selectedOption": "Zone Option A"
                     },
                     {
-                        "text": "Taco Cart Options",
+                        "text": "Parking Lot Taco Cart Options",
                         "type": "select",
-                        "options": ["Burrito", "Taco", "Empanada", "Chimichanga", "Quesadilla"],
+                        "options": [{"value": "Burrito"     , "label": "Burrito"    },
+                                    {"value": "Taco"        , "label": "Taco"       },
+                                    {"value": "Empanada"    , "label": "Empanada"   },
+                                    {"value": "Chimichanga" , "label": "Chimichanga"},
+                                    {"value": "Quesadilla"  , "label": "Quesadilla" }],
                         "selectedOption": "Chimichanga"
                     }
                 ]
