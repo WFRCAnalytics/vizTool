@@ -171,7 +171,8 @@ class modelEntity {
     }
 
     const table = document.getElementById('matrixTable');
-
+    table.innerHTML = '';
+    
     // Create the header row for columns on row 1
     const headerRow = table.insertRow(0); // Insert at row 0
     headerRow.classList.add('header-row');
