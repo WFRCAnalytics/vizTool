@@ -11,7 +11,7 @@
                     {
                         "text": "Special Generator Attributes",
                         "type": "radio",
-                        "options": ["Raw Producations", "Raw Attractions", "Balanced Productions", "Balanced Attractions"],
+                        "options": ["Productions", "Attractions"],
                         "selectedOption": "Volume"
                     },
                     {
