@@ -1,0 +1,16 @@
+[
+    { "mdlVersion": "v900", "scnGroup": "Base"     , "scnYear": "2019"},
+    { "mdlVersion": "v900", "scnGroup": "Base"     , "scnYear": "2023"},
+    { "mdlVersion": "v900", "scnGroup": "TIP"      , "scnYear": "2028"},
+    { "mdlVersion": "v900", "scnGroup": "RTP"      , "scnYear": "2032"},
+    { "mdlVersion": "v900", "scnGroup": "RTP"      , "scnYear": "2042"},
+    { "mdlVersion": "v900", "scnGroup": "RTP"      , "scnYear": "2050"},
+    { "mdlVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": "2032"},
+    { "mdlVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": "2042"},
+    { "mdlVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": "2050"},
+    { "mdlVersion": "v900", "scnGroup": "Needs"    , "scnYear": "2032"},
+    { "mdlVersion": "v900", "scnGroup": "Needs"    , "scnYear": "2042"},
+    { "mdlVersion": "v900", "scnGroup": "Needs"    , "scnYear": "2050"},
+    { "mdlVersion": "v900", "scnGroup": "Needs"    , "scnYear": "2042"},
+    { "mdlVersion": "v900", "scnGroup": "Needs MAG", "scnYear": "2050"}
+]
