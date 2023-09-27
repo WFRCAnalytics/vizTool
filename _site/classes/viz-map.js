@@ -4,5 +4,4 @@ class MapFeature {
         this.scenarioBase = data.valueBase;
         this.scenarioComp = data.valueComp;
     }
-
 }
