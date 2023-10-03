@@ -1,5 +1,12 @@
 [
     {
+        "scenarioDetails" : [
+            {
+                "modVersion" : "v900",
+                "scnGroup"   : "BY",
+                "scnYear"    : 2019
+            }
+        ],
         "attributes": [
             {
                 "aCode" : "aVMT",
