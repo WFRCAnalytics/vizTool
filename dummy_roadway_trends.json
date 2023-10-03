@@ -1,0 +1,63 @@
+[
+    {
+        "attributes": [
+            {
+                "aCode" : "aVMT",
+                "aName" : "Vehicle Miles Traveled",
+                "filterGroup": "fTod"
+            },
+            {
+                "aCode" : "aLaneMiles",
+                "aName" : "Lane Miles",
+                "filterGroup": "fTod"
+            }
+        ],
+        "filterGroups": [
+            {
+                "filterGroup" : "fTod",
+                "filterOptions" : ["DY","AM","MD","PM","EV"], 
+                "filterOptionData" : [
+                    {
+                        "filterSelection" : "DY",
+                        "filterSelectionData" : [
+                            {
+                                "0006_146.9": {"aVMT":500,"aLanesMile":2.5}
+                            },
+                            {
+                                "0006_148.9": {"aVMT":600,"aLanesMile":1.3}
+                            },
+                            {
+                                "0006_150.9": {"aVMT":800,"aLanesMile":2.2}
+                            },
+                            {
+                                "0006_152.9": {"aVMT":750,"aLanesMile":1.1}
+                            },
+                            {
+                                "0006_154.9": {"aVMT":400,"aLanesMile":0.5}
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "aggregations" : [
+            {
+                "0006_146.9": {"CO_FIPS": 35, "MPO": "WFRC", "smallArea": 27, "distMedium":2,"projId":5}
+            },
+            {
+                "0006_148.9": {"CO_FIPS": 35, "MPO": "WFRC", "smallArea": 27, "distMedium":2,"projId":5}
+            },
+            {
+                "0006_150.9": {"CO_FIPS": 35, "MPO": "WFRC", "smallArea": 27, "distMedium":2,"projId":null}
+            },
+            {
+                "0006_152.9": {"CO_FIPS": 35, "MPO": "WFRC", "smallArea": 27, "distMedium":2,"projId":3}
+            },
+            {
+                "0006_154.9": {"CO_FIPS": 35, "MPO": "WFRC", "smallArea": 27, "distMedium":2,"projId":null}
+            }
+        ]
+
+    }
+]
+
