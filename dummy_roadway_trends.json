@@ -22,10 +22,10 @@
         "filterGroups": [
             {
                 "filterGroup" : "fTod",
-                "filterOptions" : ["DY","AM","MD","PM","EV"], 
+                "filterOptions" : [["DY","AM","MD","PM","EV"]], 
                 "filterOptionData" : [
                     {
-                        "filterSelection" : "DY",
+                        "filterSelection" : [{"fTod":"DY"}],
                         "filterSelectionData" : [
                             {
                                 "0006_146.9": {"aVMT":500,"aLaneMiles":2.5}
