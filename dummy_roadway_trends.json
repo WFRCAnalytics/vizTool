@@ -21,7 +21,7 @@
         ],
         "filterGroups": [
             {
-                "filterGroup" : "fTod",
+                "filterGroup" : [["fTod"]],
                 "filterOptions" : [["DY","AM","MD","PM","EV"]], 
                 "filterOptionData" : [
                     {
