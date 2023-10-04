@@ -146,6 +146,23 @@ th, td {
     flex-wrap: wrap;
 }
 
+/* Apply styles to the canvas element */
+canvas {
+    width: 100%; /* Make the canvas fill its parent container */
+    height: 200px; /* Set a fixed height for the canvas */
+    border: 1px solid #ccc; /* Add a border to the canvas */
+}
+
+/* Apply styles to the container element holding the canvas */
+#chartContainer {
+    width: 80%; /* Set the width of the container */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Add some padding around the container */
+    background-color: #f9f9f9; /* Set a background color for the container */
+    border-radius: 10px; /* Add border-radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
+
 #overlay {
     position: absolute;
     top: 10px;

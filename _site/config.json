@@ -519,7 +519,8 @@
                     }
                     
                 ],
-                "pngFile": "_Trends/traffic.png" 
+                "pngFile": "_Trends/traffic.png",
+                "chartData": "dummy_roadway_trends.json"
             },
             {
                 "submenuText": "Transit Trends",

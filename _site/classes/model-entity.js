@@ -8,6 +8,7 @@ class modelEntity {
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
+    this.chartData = data.chartData;
     this.showLayers = data.showLayers || [];
   }
 
@@ -47,8 +48,9 @@ class modelEntity {
       const sidebarSelect = modelEntityInstance.getSidebarSelector(modelEntityInstance.submenuTemplate)
       modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
       modelEntityInstance.populateText();
-      modelEntityInstance.populateImage();
+      //modelEntityInstance.populateImage();
       modelEntityInstance.displayJSONData();
+      modelEntityInstance.createAvmtChart();
       modelEntityInstance.updateLayerVisibility();
       //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
 
@@ -203,6 +205,74 @@ class modelEntity {
         }
     }
 }
+
+    createAvmtChart() {
+      console.log('Creating the chart...');
+      // Specify the file path
+      const chartDataPath = this.chartData; //'dummy_roadway_trends.json'
+    
+      if (typeof chartDataPath === 'undefined') return;
+    
+      fetch(chartDataPath)
+          .then(response => response.json())
+          .then(data => {
+              // Create chart container dynamically
+              const chartContainer = document.createElement('div');
+              chartContainer.id = 'chartContainer'; // Set the id for the chart container
+          
+              const labels = [];
+              const avmtData = [];
+          
+              data.forEach(item => {
+                  item.filterGroups.forEach(filterGroup => {
+                      filterGroup.filterOptionData.forEach(filterSelection => {
+                        filterSelection.filterSelectionData.forEach(data => {
+                          Object.keys(data).forEach(segId => {
+                              labels.push(segId);
+                              avmtData.push(data[segId].aVMT);
+                          });
+                      });
+                    });
+                  });
+              });
+            
+              const canvas = document.createElement('canvas'); // Create a canvas element for the chart
+              const ctx = canvas.getContext('2d');
+            
+              new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: labels,
+                      datasets: [{
+                          label: 'AVMT Data',
+                          data: avmtData,
+                          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                          borderColor: 'rgba(75, 192, 192, 1)',
+                          borderWidth: 1
+                      }]
+                  },
+                  options: {
+                      scales: {
+                          y: {
+                              beginAtZero: true
+                          }
+                      }
+                  }
+              });
+            
+              // Append the canvas to the provided container
+              chartContainer.appendChild(canvas);
+            
+              // Append the chart container to the specified element in HTML
+              const chartElement = document.getElementById('mainTrend');
+              if (chartElement) {
+                  chartElement.appendChild(chartContainer);
+              }
+          })
+          .catch(error => {
+              console.error('Error fetching or displaying data:', error);
+          });
+    }
 
 
 
