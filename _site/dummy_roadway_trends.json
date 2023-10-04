@@ -4,17 +4,24 @@
         "scnGroup"   : "BY",
         "scnYear"    : 2019
     },
-    "attributes":
+    "attributes":[
         {
-            "aVMT": {
-                "aName" : "Vehicle Miles Traveled",
-                "filterGroup": "fTod"    
-            },
-            "aLaneMiles": {
-                "aName" : "Lane Miles",
-                "filterGroup": "fTod"
-            }
+            "aCode" : "aVMT",
+            "aName" : "Vehicle Miles Traveled",
+            "filterGroup": "fTod"    
         },
+        {
+            "aCode" : "aLaneMiles",
+            "aName" : "Lane Miles",
+            "filterGroup": "fTod"
+        }
+    ],
+    "filters": [
+        {
+            "fCode" : "fTod",
+            "fName" : "Time of Day"
+        }
+    ],
     "filterGroups": {
         "filterGroup" : ["fTod"],
         "filterOptions" : [["DY","AM","MD","PM","EV"]], 
