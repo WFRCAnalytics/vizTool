@@ -213,65 +213,62 @@ class modelEntity {
     
       if (typeof chartDataPath === 'undefined') return;
     
-      fetch(chartDataPath)
-          .then(response => response.json())
-          .then(data => {
-              // Create chart container dynamically
-              const chartContainer = document.createElement('div');
-              chartContainer.id = 'chartContainer'; // Set the id for the chart container
+        fetch(chartDataPath)
+        .then(response => response.json())
+        .then(data => {
+            // Create chart container dynamically
+            const chartContainer = document.createElement('div');
+            chartContainer.id = 'chartContainer'; // Set the id for the chart container
+        
+            const labels = [];
+            const avmtData = [];
+        
+            // Extract data from the JSON structure
+            const filterSelectionData = data.filterGroups.filterOptionData.filterSelectionData;
+            Object.keys(filterSelectionData).forEach(segId => {
+                const avmtValue = filterSelectionData[segId].aVMT;
+                labels.push(segId);
+                avmtData.push(avmtValue);
+            });
           
-              const labels = [];
-              const avmtData = [];
+            // Create canvas and chart
+            const canvas = document.createElement('canvas');
+            canvas.width = 400; // Set the width of the canvas
+            canvas.height = 400; // Set the height of the canvas
+            chartContainer.appendChild(canvas); // Append canvas to chart container
           
-              data.forEach(item => {
-                  item.filterGroups.forEach(filterGroup => {
-                      filterGroup.filterOptionData.forEach(filterSelection => {
-                        filterSelection.filterSelectionData.forEach(data => {
-                          Object.keys(data).forEach(segId => {
-                              labels.push(segId);
-                              avmtData.push(data[segId].aVMT);
-                          });
-                      });
-                    });
-                  });
-              });
-            
-              const canvas = document.createElement('canvas'); // Create a canvas element for the chart
-              const ctx = canvas.getContext('2d');
-            
-              new Chart(ctx, {
-                  type: 'bar',
-                  data: {
-                      labels: labels,
-                      datasets: [{
-                          label: 'AVMT Data',
-                          data: avmtData,
-                          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                          borderColor: 'rgba(75, 192, 192, 1)',
-                          borderWidth: 1
-                      }]
-                  },
-                  options: {
-                      scales: {
-                          y: {
-                              beginAtZero: true
-                          }
-                      }
-                  }
-              });
-            
-              // Append the canvas to the provided container
-              chartContainer.appendChild(canvas);
-            
-              // Append the chart container to the specified element in HTML
-              const chartElement = document.getElementById('mainTrend');
-              if (chartElement) {
-                  chartElement.appendChild(chartContainer);
-              }
-          })
-          .catch(error => {
-              console.error('Error fetching or displaying data:', error);
-          });
+            // Append the chart container to the specified element in HTML
+            const chartElement = document.getElementById('mainTrend');
+            if (chartElement) {
+                chartElement.appendChild(chartContainer);
+            }
+          
+            // Create Chart.js chart
+            const ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'AVMT Data',
+                        data: avmtData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching or displaying data:', error);
+        });
     }
 
 
