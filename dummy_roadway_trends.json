@@ -8,32 +8,36 @@
         {
             "aCode" : "aVMT",
             "aName" : "Vehicle Miles Traveled",
-            "filterGroup": "fTod"    
+            "filterGroup": "fTod"
         },
         {
             "aCode" : "aLaneMiles",
             "aName" : "Lane Miles",
-            "filterGroup": "fTod"
+            "filterGroup": "fDir"
         }
     ],
     "filters": [
         {
             "fCode" : "fTod",
-            "fName" : "Time of Day"
+            "fName" : "Time of Day",
+            "fWidget" : "select",
+            "fOptions" : ["DY","AM","MD","PM","EV"]
         }
     ],
-    "filterGroups": {
-        "filterGroup" : ["fTod"],
-        "filterOptions" : [["DY","AM","MD","PM","EV"]], 
-        "filterOptionData" : {
-            "filterSelection" : [{"fTod":"DY"}],
-            "filterSelectionData" : {
-                "0006_146.9": {"aVMT":500,"aLaneMiles":2.5},
-                "0006_148.9": {"aVMT":600,"aLaneMiles":1.3},
-                "0006_150.9": {"aVMT":800,"aLaneMiles":2.2},
-                "0006_152.9": {"aVMT":750,"aLaneMiles":1.1},
-                "0006_154.9": {"aVMT":400,"aLaneMiles":0.5}
-            }
+    "data": {
+        "DY" : {
+            "0006_146.9": {"aVMT":500,"aLaneMiles":2.5},
+            "0006_148.9": {"aVMT":600,"aLaneMiles":1.3},
+            "0006_150.9": {"aVMT":800,"aLaneMiles":2.2},
+            "0006_152.9": {"aVMT":750,"aLaneMiles":1.1},
+            "0006_154.9": {"aVMT":400,"aLaneMiles":0.5}
+        },
+        "AM" : {
+            "0006_146.9": {"aVMT":50,"aLaneMiles":2.5},
+            "0006_148.9": {"aVMT":60,"aLaneMiles":1.3},
+            "0006_150.9": {"aVMT":80,"aLaneMiles":2.2},
+            "0006_152.9": {"aVMT":75,"aLaneMiles":1.1},
+            "0006_154.9": {"aVMT":40,"aLaneMiles":0.5}
         }
     },
     "aggregations" : {
