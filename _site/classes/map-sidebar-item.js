@@ -1,13 +1,14 @@
 // Class for Sidebar Item
 class MapSidebarItem {
-  constructor(data) {
+  constructor(data, parentEntity) {
       this.id = this.generateIdFromText(data.text);
       this.text = data.text;
       this.type = data.type;
       this.options = data.options;
       this.selectedOption = data.selectedOption;
+      this.parentEntity = parentEntity; // store the reference to the parent
   }
-  
+
   generateIdFromText(text) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
@@ -70,11 +71,14 @@ class MapSidebarItem {
       }
 
       // Listen for changes to the radio buttons
-      radioButton.addEventListener("change", (e) => {
+      radioButton.addEventListener("calciteRadioButtonChange", (e) => {
         // to make sure the radio button is the is the actual element
         const radioButton = e.currentTarget; // or e.target.closest('input[type="radioButton"]')
+        const displayName = radioButton.value;
         // Update renderer with value of radio button
-        console.log(this.id + ':' + radioButton.name + ' radio button change');
+        console.log(this.id + ':' + displayName + ' radio button change');
+
+        this.parentEntity.createAvmtChart(displayName);
       });
 
       // Nest the radio button directly inside the calcite-label

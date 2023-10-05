@@ -5,7 +5,7 @@ class modelEntity {
     this.submenuText = data.submenuText;
     this.submenuIconStart = data.submenuIconStart;
     this.submenuTemplate = data.submenuTemplate;
-    this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item));
+    this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item,this));
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
     this.chartData = data.chartData;
@@ -206,71 +206,84 @@ class modelEntity {
     }
 }
 
-    createAvmtChart() {
-      console.log('Creating the chart...');
-      // Specify the file path
-      const chartDataPath = this.chartData; //'dummy_roadway_trends.json'
-    
-      if (typeof chartDataPath === 'undefined') return;
-    
-        fetch(chartDataPath)
-        .then(response => response.json())
-        .then(data => {
-            // Create chart container dynamically
-            const chartContainer = document.createElement('div');
-            chartContainer.id = 'chartContainer'; // Set the id for the chart container
-        
-            const labels = [];
-            const avmtData = [];
-        
-            // Extract data from the JSON structure
-            const filterSelectionData = data.filterGroups.filterOptionData.filterSelectionData;
-            Object.keys(filterSelectionData).forEach(segId => {
-                const avmtValue = filterSelectionData[segId].aVMT;
-                labels.push(segId);
-                avmtData.push(avmtValue);
-            });
-          
-            // Create canvas and chart
-            const canvas = document.createElement('canvas');
-            canvas.width = 400; // Set the width of the canvas
-            canvas.height = 400; // Set the height of the canvas
-            chartContainer.appendChild(canvas); // Append canvas to chart container
-          
-            // Append the chart container to the specified element in HTML
-            const chartElement = document.getElementById('mainTrend');
-            if (chartElement) {
-                chartElement.appendChild(chartContainer);
-            }
-          
-            // Create Chart.js chart
-            const ctx = canvas.getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'AVMT Data',
-                        data: avmtData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching or displaying data:', error);
-        });
+createAvmtChart(displayName = 'VMT') { //set default to 'VMT'
+  console.log('Creating the chart...');
+  console.log("Selected radio button option under 'Display':", displayName);
+
+  // Specify the file path
+  const chartDataPath = this.chartData; //'dummy_roadway_trends.json'
+
+  if (typeof chartDataPath === 'undefined') return;
+
+  fetch(chartDataPath)
+      .then(response => response.json())
+      .then(data => {
+          const labels = [];
+          const chartData = [];
+
+          // Extract data from the JSON structure based on the displayName
+          Object.keys(data.filterGroups.filterOptionData.filterSelectionData).forEach(segId => {
+              const selectedValue = this.getChartData(displayName, data.filterGroups.filterOptionData.filterSelectionData[segId]);
+              if (selectedValue !== null) {
+                  labels.push(segId);
+                  chartData.push(selectedValue);
+              }
+          });
+
+          // Create chart container dynamically
+          const chartContainer = document.createElement('div');
+          chartContainer.id = 'chartContainer'; // Set the id for the chart container
+
+          // Create canvas and chart
+          const canvas = document.createElement('canvas');
+          canvas.width = 400; // Set the width of the canvas
+          canvas.height = 400; // Set the height of the canvas
+          chartContainer.appendChild(canvas); // Append canvas to chart container
+
+          // Append the chart container to the specified element in HTML
+          const chartElement = document.getElementById('mainTrend');
+          chartElement.innerHTML = '';
+          if (chartElement) {
+              chartElement.appendChild(chartContainer);
+          }
+
+          // Create Chart.js chart
+          const ctx = canvas.getContext('2d');
+          new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: labels,
+                  datasets: [{
+                      label: displayName + ' Data',
+                      data: chartData,
+                      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                      borderColor: 'rgba(75, 192, 192, 1)',
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  }
+              }
+          });
+      })
+      .catch(error => {
+          console.error('Error fetching or displaying data:', error);
+      });
     }
 
+  getChartData(displayName, filterSelectionData) {
+      if (displayName === 'VMT') {
+          return filterSelectionData.aVMT;
+      } else if (displayName === 'Lane Miles') {
+          return filterSelectionData.aLaneMiles;
+      }
+      // Handle other display names if needed
+      return null;
+  }
 
 
   getSidebarSelector(submenuTemplate) {

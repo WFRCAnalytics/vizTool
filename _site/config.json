@@ -485,10 +485,9 @@
                     {
                         "text": "Display",
                         "type": "radio",
-                        "options": ["Trips",
-                                     "VMT",
-                                     "VHT"],
-                        "selectedOption": "Trips"
+                        "options": ["VMT",
+                                    "Lane Miles"],
+                        "selectedOption": "VMT"
                     },
                     {
                         "text": "Mode Filter",
