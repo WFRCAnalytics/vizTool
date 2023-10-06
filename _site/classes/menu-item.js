@@ -4,7 +4,7 @@ class MenuItem {
     this.id = this.generateIdFromText(data.menuText);
     this.menuText = data.menuText;
     this.menuIconStart = data.menuIconStart;
-    this.modelEntitys = (data.modelEntitys || []).map(item => new modelEntity(item));
+    this.modelEntitys = (data.modelEntitys || []).map(item => new ModelEntity(item));
   }
 
   generateIdFromText(text) {

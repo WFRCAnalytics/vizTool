@@ -123,19 +123,45 @@
                     {
                         "text": "Roadway Segment Attribute",
                         "type": "radio",
-                        "options": ["Lanes",
-                                    "Daily Volume",
-                                    "AM Period Speeds as % Free Flow",
-                                    "PM Period Speeds as % Free Flow",
-                                    "Daily Trucks",
-                                    "Daily % Trucks"],
-                        "selectedOption": "Daily Volume"
+                        "options": [["aLanes"  , "Lanes"                     ],
+                                    ["aFt"     , "Functional Type"           ],
+                                    ["aFtClass", "Functional Class"          ],
+                                    ["aCap1HL" , "Capacity per Hour per Lane"], 
+                                    ["aFfSpd"  , "Free-flow Speed"           ],
+                                    ["aVol"    , "Volume"                    ],
+                                    ["aSpd"    , "Speed"                     ],
+                                    ["aVc"     , "Volume-to-Capacity Ratio"  ]],
+                        "selectedOption": "aLanes"
                     },
                     {
+                        "id"  : "fDir",
+                        "text": "Direction",
+                        "type": "select",
+                        "options": [{"value":"DT", "label":"Both Directions"},
+                                    {"value":"D1", "label":"NB/EB"          },
+                                    {"value":"D2", "label":"SB/WB"          }],
+                        "selectedOption": "DT"
+                    },
+                    {
+                        "id"  : "fTod",
                         "text": "Time of Day Filter",
-                        "type": "checkbox",
-                        "options": [["Peak"    , true],
-                                    ["Off-Peak", true]]
+                        "type": "select",
+                        "options": [{"value":"DY", "label":"Daily"         },
+                                    {"value":"AM", "label":"AM Period"     },
+                                    {"value":"MD", "label":"Midday Period" },
+                                    {"value":"PM", "label":"PM Period"     },
+                                    {"value":"EV", "label":"Evening Period"}],
+                        "selectedOption": "DY"
+                    },
+                    {
+                        "id"  : "fVeh",
+                        "text": "Vehicle Type",
+                        "type": "select",
+                        "options": [{"value":"All", "label":"All Vehicles" },
+                                    {"value":"LT" , "label":"Light Trucks" },
+                                    {"value":"MD" , "label":"Medium Trucks"},
+                                    {"value":"HV" , "label":"Heavy Trucks" }],
+                        "selectedOption": "All"
                     },
                     {
                         "text": "Household Life Cycle Filter",

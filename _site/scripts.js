@@ -1,5 +1,10 @@
 let globalTemplates = [];
+let dataScenarios = [];
 let map;
+let geojsonSegments;
+let view;
+let layerDisplay;
+let dummyFeature;
 
 require(["esri/config",
          "esri/Map",
@@ -10,22 +15,19 @@ require(["esri/config",
          "esri/widgets/Home",
          "esri/widgets/Search",
          "esri/layers/TileLayer",
-         "esri/Graphic",
          "esri/geometry/Point",
          "esri/geometry/Polygon",
          "esri/geometry/Polyline",
          "esri/layers/FeatureLayer",
          "esri/widgets/LayerList",
-         "esri/renderers/ClassBreaksRenderer",
-         "esri/renderers/UniqueValueRenderer",
-         "esri/renderers/SimpleRenderer",
          "esri/widgets/Legend",
          "esri/PopupTemplate",
          "esri/symbols/TextSymbol",
          "esri/rest/support/Query",
-         "esri/WebMap"
+         "esri/WebMap",
+         "esri/PopupTemplate"
         ],
-function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, Search, TileLayer, Graphic, Point, Polygon, Polyline, FeatureLayer, LayerList, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, Legend, PopupTemplate, TextSymbol, Query, WebMap) {
+function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, Search, TileLayer, Point, Polygon, Polyline, FeatureLayer, LayerList, Legend, PopupTemplate, TextSymbol, Query, WebMap, PopupTemplate) {
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
@@ -33,13 +35,24 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
 
   async function fetchMenuData() {
     const response = await fetch('config.json');
-    const data = await response.json();
-    return data;
+    const dataMenu = await response.json();
+    return dataMenu;
+  }
+
+  async function fetchScenarioData() {
+    const response = await fetch('scenarios.json');
+    const dataScenario = await response.json();
+    return dataScenario;
+  }
+
+  async function loadScenarios() {
+    const jsonScenario = await fetchScenarioData();
+    dataScenarios = jsonScenario.map(item => new Scenario(item));
   }
 
   async function loadMenuAndItems() {
-    const menuJson = await fetchMenuData();
-    const menuData = menuJson.map(item => new MenuItem(item));
+    const jsonMenu = await fetchMenuData();
+    const dataMenu = jsonMenu.map(item => new MenuItem(item));
     
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
 
@@ -47,13 +60,14 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     calciteMenu.innerHTML = '';
 
     // Render each menu item and log (or insert into the DOM)
-    menuData.forEach(menuItem => {
+    dataMenu.forEach(menuItem => {
       calciteMenu.appendChild(menuItem.createMenuItemElement());
     });
   }
 
   async function init() {
     const menuStructure = await loadMenuAndItems();
+    await loadScenarios();
   }
 
   function populateTemplates() {
@@ -83,17 +97,51 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       basemap: "gray-vector" // Basemap layerSegments service
     });
     
-    const view = new MapView({
+    view = new MapView({
       map: map,
       center: [-111.8910, 40.7608], // Longitude, latitude
       zoom: 10, // Zoom level
-      container: "mapView" // Div element
+      container: "mapView", // Div element
+      popup: {
+        // Popup properties here if any customizations are needed
+      }
     });
+    
+    // Dummy polyline feature connecting Salt Lake City and Provo
+    dummyFeature = {
+      geometry: {
+        type: "polyline",
+        paths: [
+          [-111.8910, 40.7608], // Salt Lake City
+          [-111.8911, 40.7609]  // Provo
+        ],
+        spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+      },
+      attributes: {
+        SEGID: 0, // Unique ID, using "SEGID" as the objectIdField
+        // ... add other attribute fields if necessary
+        displayValue: 0 // Assuming you want a displayValue, you can set any initial value
+      }
+    };
+
+    let features = [dummyFeature]; // This will be populated with graphics
+
+    layerDisplay = new FeatureLayer({
+      source: features,  // Now contains the dummyFeature
+      objectIdField: "SEGID",
+      fields: [
+        // ... your other fields
+        { name: "SEGID", type: "oid" },  // Object ID field
+        { name: "displayValue", type: "double" } // Assuming 'displayValue' is a type of double
+      ]
+    });
+
+    map.add(layerDisplay);  // Assuming 'map' is your Map instance
 
 
     // ADD GEOJSONS
     
-    const geojsonSegments = new GeoJSONLayer({
+    geojsonSegments = new GeoJSONLayer({
       url: "data/segments.geojson",
       title: "Segments",
       renderer: {
@@ -201,7 +249,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       nextBasemap: "arcgis-imagery"
     });
     
-    view.ui.add(basemapToggle,"bottom-right");
+    view.ui.add(basemapToggle,"bottom-left");
 
 
     // initialize map

@@ -1,13 +1,14 @@
 // Class for Sidebar Item
 class MapSidebarItem {
-  constructor(data) {
+  constructor(data, parent) {
       this.id = this.generateIdFromText(data.text);
       this.text = data.text;
       this.type = data.type;
       this.options = data.options;
       this.selectedOption = data.selectedOption;
+      this.parentEntity = parent;
   }
-  
+
   generateIdFromText(text) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
@@ -51,6 +52,10 @@ class MapSidebarItem {
       default:
         console.warn(`Unsupported item type: ${this.type}`);
     }
+
+    if (parent.submenuTemplate=="vizMap") {
+      parent.updateMapCallback();
+    }
   }
 
   createRadioButtons(container) {
@@ -62,24 +67,28 @@ class MapSidebarItem {
 
       var radioButton = document.createElement("calcite-radio-button");
       radioButton.name = this.id;
-      radioButton.value = option;
+      radioButton.value = option[0];
 
       // Optionally, select the first radio button by default
-      if (option === this.selectedOption) {
+      if (option[0] === this.selectedOption) {
         radioButton.checked = true;
       }
 
       // Listen for changes to the radio buttons
-      radioButton.addEventListener("change", (e) => {
+      radioButton.addEventListener("calciteRadioButtonChange", (e) => {
         // to make sure the radio button is the is the actual element
         const radioButton = e.currentTarget; // or e.target.closest('input[type="radioButton"]')
+        const displayName = radioButton.value;
         // Update renderer with value of radio button
-        console.log(this.id + ':' + radioButton.name + ' radio button change');
+        console.log(this.id + ':' + displayName + ' radio button change');
+
+        this.parentEntity.updateMap(displayName);
+
       });
 
       // Nest the radio button directly inside the calcite-label
       radioButtonLabel.appendChild(radioButton);
-      radioButtonLabel.appendChild(document.createTextNode(option || option));
+      radioButtonLabel.appendChild(document.createTextNode(option[1]));
 
       container.appendChild(radioButtonLabel);
     });
