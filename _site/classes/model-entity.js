@@ -10,8 +10,9 @@ require([
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
-  "esri/renderers/UniqueValueRenderer"
-], function(Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, UniqueValueRenderer) {
+  "esri/renderers/UniqueValueRenderer",
+  "esri/rest/support/Query"
+], function(Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, UniqueValueRenderer, Query) {
   // Now you can use Graphic inside this callback function
 
   class ModelEntity {
@@ -45,13 +46,24 @@ require([
         this.updateMap(displayName); // Assuming updateMap is a method of ModelEntity class
       };
   
-      document.getElementById('selectModBase').addEventListener('change', updateMapCallback);
-      document.getElementById('selectGrpBase').addEventListener('change', updateMapCallback);
-      document.getElementById('selectYearBase').addEventListener('change', updateMapCallback);
+      document.getElementById('selectModMain').addEventListener('change', updateMapCallback);
+      document.getElementById('selectGrpMain').addEventListener('change', updateMapCallback);
+      document.getElementById('selectYearMain').addEventListener('change', updateMapCallback);
       
       document.getElementById('selectModComp').addEventListener('change', updateMapCallback);
       document.getElementById('selectGrpComp').addEventListener('change', updateMapCallback);
       document.getElementById('selectYearComp').addEventListener('change', updateMapCallback);
+
+      // Get all radio buttons with the name "rcPcOption"
+      var radioButtons = document.querySelectorAll('input[name="rcPcOption"]');
+
+      // Assuming this is inside a class or object with a method named updateMapCallback
+      radioButtons.forEach(function(radio) {
+        radio.addEventListener('change', (event) => {  // Arrow function here
+            console.log(event.target.value);
+            updateMapCallback;
+        });
+      });
 
     }
 
@@ -271,19 +283,19 @@ require([
       }
 
       // Get values from the select widgets
-      let modVersionValueBase = document.getElementById('selectModBase').value;
-      let scnGroupValueBase = document.getElementById('selectGrpBase').value;
-      let scnYearValueBase = parseInt(document.getElementById('selectYearBase').value, 10); // Assuming it's a number
+      let modVersionValueMain = document.getElementById('selectModMain').value;
+      let scnGroupValueMain = document.getElementById('selectGrpMain').value;
+      let scnYearValueMain = parseInt(document.getElementById('selectYearMain').value, 10); // Assuming it's a number
 
       // Use the obtained values in the find method
-      let scenarioBase = dataScenarios.find(scenario => 
-          scenario.modVersion === modVersionValueBase && 
-          scenario.scnGroup === scnGroupValueBase && 
-          scenario.scnYear === scnYearValueBase
+      let scenarioMain = dataScenarios.find(scenario => 
+          scenario.modVersion === modVersionValueMain && 
+          scenario.scnGroup === scnGroupValueMain && 
+          scenario.scnYear === scnYearValueMain
       );
 
       // get segment data give the filter
-      const segDataBase = scenarioBase.roadwaySegData.data[_filter]
+      const segDataMain = scenarioMain.roadwaySegData.data[_filter]
 
       // Get values from the select widgets
       let modVersionValueComp = document.getElementById('selectModComp').value;
@@ -299,9 +311,11 @@ require([
 
       let mode = 'base'; //default is base
 
+      var segDataComp = [];
+
       if (scenarioComp !== undefined) {
         mode = 'compare';
-        const segDataComp = scenarioComp.roadwaySegData.data[_filter]
+        segDataComp = scenarioComp.roadwaySegData.data[_filter]
       }
 
       // Reinitialize the layer with the current features array
@@ -321,8 +335,13 @@ require([
         objectIdField: "SEGID",
         fields: [
           // ... your other fields
-          { name: "SEGID", type: "oid" },  // Object ID field
-          { name: "dVal", type: dValFieldType, alias: aCode }
+          { name: "SEGID"    , type: "oid" },  // Object ID field
+          { name: "dVal"     , type: dValFieldType, alias: aCode },
+          { name: "SmallArea", type: "string"},
+          { name: "DMED_NAME", type: "string"},
+          { name: "DLRG_NAME", type: "string"},
+          { name: "DISTANCE" , type: "double"}
+
         ],
         popupTemplate: {
           title: "Segment Details",
@@ -452,15 +471,15 @@ require([
         let rendererCap_Change = new ClassBreaksRenderer({
           field: "dVal",
           classBreakInfos: [
-            { minValue: -999999, maxValue:    -2501, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "Less than -25,000"  },
-            { minValue:   -2500, maxValue:    -1001, symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "-25,000 to -10,000" },
-            { minValue:   -1000, maxValue:     -501, symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "-10,000 to -5,000"  },
-            { minValue:    -500, maxValue:     -101, symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "-5,000 to -1,000"   },
-            { minValue:    -100, maxValue:       99, symbol: new SimpleLineSymbol({ color: aCR_Change9[4], width: 0.3125 }), label: "-1,000 to +1,000"   },
-            { minValue:     100, maxValue:      499, symbol: new SimpleLineSymbol({ color: aCR_Change9[5], width: 0.6250 }), label: "+1,000 to +5,000"   },
-            { minValue:     500, maxValue:      999, symbol: new SimpleLineSymbol({ color: aCR_Change9[6], width: 1.2500 }), label: "+5,000 to +10,000"  },
-            { minValue:    1000, maxValue:     2499, symbol: new SimpleLineSymbol({ color: aCR_Change9[7], width: 2.5000 }), label: "+10,000 to +25,000" },
-            { minValue:    2500, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[8], width: 5.0000 }), label: "More than +25,000"  }
+            { minValue:    2500, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[8], width: 5.0000 }), label: "More than +2500"},
+            { minValue:    1000, maxValue:     2499, symbol: new SimpleLineSymbol({ color: aCR_Change9[7], width: 2.5000 }), label: "+1000 to +2500" },
+            { minValue:     500, maxValue:      999, symbol: new SimpleLineSymbol({ color: aCR_Change9[6], width: 1.2500 }), label: "+500 to +1000"  },
+            { minValue:     100, maxValue:      499, symbol: new SimpleLineSymbol({ color: aCR_Change9[5], width: 0.6250 }), label: "+100 to +500"   },
+            { minValue:    -100, maxValue:       99, symbol: new SimpleLineSymbol({ color: aCR_Change9[4], width: 0.3125 }), label: "-100 to +100"   },
+            { minValue:    -500, maxValue:     -101, symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "-100 to -500"   },
+            { minValue:   -1000, maxValue:     -501, symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "-500 to -1000"  },
+            { minValue:   -2500, maxValue:    -1001, symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "-1000 to -2500" },
+            { minValue: -999999, maxValue:    -2501, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "Less than -2500"},
           ]
         });
 
@@ -483,15 +502,15 @@ require([
         let rendererSpd_Change = new ClassBreaksRenderer({
           field: "dVal",
           classBreakInfos: [
-            { minValue:    -9999, maxValue:   -25.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "Less than -25,000"  },
-            { minValue:   -25.00, maxValue:   -10.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "-25,000 to -10,000" },
-            { minValue:   -10.00, maxValue:    -5.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "-10,000 to -5,000"  },
-            { minValue:    -5.00, maxValue:    -2.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "-5,000 to -1,000"   },
-            { minValue:    -2.00, maxValue:     2.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[4], width: 0.3125 }), label: "-1,000 to +1,000"   },
-            { minValue:     2.01, maxValue:     5.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[5], width: 0.6250 }), label: "+1,000 to +5,000"   },
-            { minValue:     5.01, maxValue:    10.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[6], width: 1.2500 }), label: "+5,000 to +10,000"  },
-            { minValue:    10.01, maxValue:    24.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[7], width: 2.5000 }), label: "+10,000 to +25,000" },
-            { minValue:    24.01, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[8], width: 5.0000 }), label: "More than +25,000"  }
+            { minValue:    25.01, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "More than 25 mph" },
+            { minValue:    10.01, maxValue:    25.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "+10 to +25 mph"   },
+            { minValue:     5.01, maxValue:    10.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "+5 to +10 mph"    },
+            { minValue:     2.01, maxValue:     5.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "+2 to +5 mph"     },
+            { minValue:    -2.00, maxValue:     2.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[4], width: 0.3125 }), label: "-2 to +2 mph"     },
+            { minValue:    -5.00, maxValue:    -2.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[5], width: 0.6250 }), label: "-2 to -5 mph"     },
+            { minValue:   -10.00, maxValue:    -5.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[6], width: 1.2500 }), label: "-5 to -10 mph"    },
+            { minValue:   -25.00, maxValue:   -10.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[7], width: 2.5000 }), label: "-10 to -25 mph"   },
+            { minValue:    -9999, maxValue:   -25.01, symbol: new SimpleLineSymbol({ color: aCR_Change9[8], width: 5.0000 }), label: "Less than -25 mph"}
           ]
         });
 
@@ -517,21 +536,48 @@ require([
             else if (v>=2.0) { return 'class_b0'; } 
           `,
           uniqueValueInfos: [
-            { value: "class_00", label: "Less than 0.7", symbol: new SimpleLineSymbol({ color: aCGrYl[0], width: 0.25}) },
-            { value: "class_01", label: "0.7 to 0.8"   , symbol: new SimpleLineSymbol({ color: aCGrYl[1], width: 2.50}) },
-            { value: "class_02", label: "0.8 to 0.9"   , symbol: new SimpleLineSymbol({ color: aCGrYl[2], width: 3.00}) },
-            { value: "class_03", label: "0.9 to 1.0"   , symbol: new SimpleLineSymbol({ color: aCGrYl[3], width: 3.50}) },
-            { value: "class_r0", label: "1.0 to 1.1"   , symbol: new SimpleLineSymbol({ color: aCReds[0], width: 4.00}) },
-            { value: "class_r1", label: "1.1 to 1.2"   , symbol: new SimpleLineSymbol({ color: aCReds[1], width: 4.50}) },
-            { value: "class_r2", label: "1.2 to 1.3"   , symbol: new SimpleLineSymbol({ color: aCReds[2], width: 5.00}) },
-            { value: "class_r3", label: "1.3 to 1.4"   , symbol: new SimpleLineSymbol({ color: aCReds[3], width: 5.50}) },
-            { value: "class_r4", label: "1.4 to 1.5"   , symbol: new SimpleLineSymbol({ color: aCReds[4], width: 6.00}) },
-            { value: "class_r5", label: "1.5 to 1.6"   , symbol: new SimpleLineSymbol({ color: aCReds[5], width: 6.50}) },
-            { value: "class_r6", label: "1.6 to 1.7"   , symbol: new SimpleLineSymbol({ color: aCReds[6], width: 7.00}) },
-            { value: "class_r7", label: "1.7 to 1.8"   , symbol: new SimpleLineSymbol({ color: aCReds[7], width: 7.50}) },
-            { value: "class_r8", label: "1.8 to 1.9"   , symbol: new SimpleLineSymbol({ color: aCReds[8], width: 8.00}) },
-            { value: "class_r9", label: "1.9 to 2.0"   , symbol: new SimpleLineSymbol({ color: aCReds[9], width: 8.50}) },
-            { value: "class_b0", label: "More than 2.0", symbol: new SimpleLineSymbol({ color: sCBlack  , width: 9.00}) }]
+            { value: "class_00", symbol: new SimpleLineSymbol({ color: aCGrYl[0], width: 0.25}), label: "Less than 0.7" },
+            { value: "class_01", symbol: new SimpleLineSymbol({ color: aCGrYl[1], width: 2.50}), label: "0.7 to 0.8"    },
+            { value: "class_02", symbol: new SimpleLineSymbol({ color: aCGrYl[2], width: 3.00}), label: "0.8 to 0.9"    },
+            { value: "class_03", symbol: new SimpleLineSymbol({ color: aCGrYl[3], width: 3.50}), label: "0.9 to 1.0"    },
+            { value: "class_r0", symbol: new SimpleLineSymbol({ color: aCReds[0], width: 4.00}), label: "1.0 to 1.1"    },
+            { value: "class_r1", symbol: new SimpleLineSymbol({ color: aCReds[1], width: 4.50}), label: "1.1 to 1.2"    },
+            { value: "class_r2", symbol: new SimpleLineSymbol({ color: aCReds[2], width: 5.00}), label: "1.2 to 1.3"    },
+            { value: "class_r3", symbol: new SimpleLineSymbol({ color: aCReds[3], width: 5.50}), label: "1.3 to 1.4"    },
+            { value: "class_r4", symbol: new SimpleLineSymbol({ color: aCReds[4], width: 6.00}), label: "1.4 to 1.5"    },
+            { value: "class_r5", symbol: new SimpleLineSymbol({ color: aCReds[5], width: 6.50}), label: "1.5 to 1.6"    },
+            { value: "class_r6", symbol: new SimpleLineSymbol({ color: aCReds[6], width: 7.00}), label: "1.6 to 1.7"    },
+            { value: "class_r7", symbol: new SimpleLineSymbol({ color: aCReds[7], width: 7.50}), label: "1.7 to 1.8"    },
+            { value: "class_r8", symbol: new SimpleLineSymbol({ color: aCReds[8], width: 8.00}), label: "1.8 to 1.9"    },
+            { value: "class_r9", symbol: new SimpleLineSymbol({ color: aCReds[9], width: 8.50}), label: "1.9 to 2.0"    },
+            { value: "class_b0", symbol: new SimpleLineSymbol({ color: sCBlack  , width: 9.00}), label: "More than 2.0" }]
+        });
+
+        // HARDCODED FT!! !UPDATE! // HARDCODED FT!! !UPDATE!// HARDCODED FT!! !UPDATE!// HARDCODED FT!! !UPDATE!
+        let rendererVc_Change = new UniqueValueRenderer({
+          valueExpression: `
+            var v  = $feature.dVal;
+            if      (v<=-1.00) { return 'class_1'; } 
+            else if (v< -0.50) { return 'class_2'; } 
+            else if (v< -0.15) { return 'class_3'; } 
+            else if (v< -0.05) { return 'class_4'; } 
+            else if (v<  0.05) { return 'class_5'; } 
+            else if (v<  0.15) { return 'class_6'; } 
+            else if (v<  0.50) { return 'class_7'; } 
+            else if (v<  1.00) { return 'class_8'; } 
+            else               { return 'class_9'; }
+            
+          `,
+          uniqueValueInfos: [
+            { value: "class_9", symbol: new SimpleLineSymbol({ color: aCR_Change9[8], width: 5.0000 }), label: "More than +1.00"},
+            { value: "class_8", symbol: new SimpleLineSymbol({ color: aCR_Change9[7], width: 2.5000 }), label: "+0.50 to +1.00" },
+            { value: "class_7", symbol: new SimpleLineSymbol({ color: aCR_Change9[6], width: 1.2500 }), label: "+0.15 to +0.50" },
+            { value: "class_6", symbol: new SimpleLineSymbol({ color: aCR_Change9[5], width: 0.6250 }), label: "+0.05 to +0.15" },
+            { value: "class_5", symbol: new SimpleLineSymbol({ color: aCR_Change9[4], width: 0.3125 }), label: "-0.05 to +0.05" },
+            { value: "class_4", symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "-0.05 to -0.15" },
+            { value: "class_3", symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "-0.05 to -0.15" },
+            { value: "class_2", symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "-0.15 to -0.50" },
+            { value: "class_1", symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "More than -1.00"}]
         });
 
         //Lanes Renderers
@@ -825,7 +871,7 @@ require([
               renderer = rendererCap_Change;
               break;
             case 'aVc' :
-              //renderer = rendererVc_Change;
+              renderer = rendererVc_Change;
               break;
             case 'aVol':
               renderer = rendererVol_Change;
@@ -870,6 +916,105 @@ require([
       
       };
 
+      const updateAggTable = (layer) => {
+
+        // Query the features
+        var query = new Query();
+        query.where = "1=1"; // Get all features. Adjust if you need a different condition.
+        query.returnGeometry = false; // We don't need geometries for aggregation.
+        query.outFields = ["SmallArea", "dVal", "DISTANCE"];
+    
+        layer.queryFeatures(query).then(function(results) {
+            var aggregatedData = {};
+            var distances = {}; // For storing distances
+            var aggregatedDataDividedByDistance = {};
+            
+            results.features.forEach(function(feature) {
+                var small_area = feature.attributes.SmallArea;
+                var dVal_distance = feature.attributes.dVal * feature.attributes.DISTANCE;
+            
+                // Check if small_area already exists in the objects
+                if (aggregatedData[small_area]) {
+                    aggregatedData[small_area] += dVal_distance;
+                    distances[small_area] += feature.attributes.DISTANCE;
+                } else {
+                    aggregatedData[small_area] = dVal_distance;
+                    distances[small_area] = feature.attributes.DISTANCE;
+                }
+            });
+            
+            // Calculate aggregatedDataDividedByDistance for each small_area
+            for (var smallAreaKey in aggregatedData) {
+                aggregatedDataDividedByDistance[smallAreaKey] = aggregatedData[smallAreaKey] / distances[smallAreaKey];
+            }
+            
+            // Do something with the aggregatedData...
+            console.log(aggregatedDataDividedByDistance);
+            //table.style.fontSize = "0.8em"; // For smaller text
+
+            // Create a new table element
+            var table = document.createElement("table");
+            
+            // Create the table header
+            var thead = table.createTHead();
+            var headerRow = thead.insertRow();
+            var th1 = document.createElement("th");
+            th1.textContent = "SmallArea";
+            headerRow.appendChild(th1);
+            var th2 = document.createElement("th");
+            th2.textContent = "";
+            switch(aCode) {
+              case 'aLanes':
+                th2.textContent = "Lane Miles";
+                break;
+              case 'aFt':
+                th2.textContent = "FT x Distance";
+                break;
+              case 'aFtClass':
+                th2.textContent = "ERROR";
+                break;
+              case 'aCap1HL':
+                th2.textContent = "Cap x Distance";
+                break;
+              case 'aVc' :
+                th2.textContent = "VC x Distance";
+                break;
+              case 'aVol':
+                th2.textContent = "VMT";
+                break;
+              case 'aSpd':
+              case 'aFfSpd':
+                th2.textContent = "Spd x Distance";
+                break;
+            }
+            headerRow.appendChild(th2);
+
+            const formatNumber = (num) => {
+              return num.toLocaleString('en-US', {
+                minimumFractionDigits: 1, 
+                maximumFractionDigits: 1 
+              });
+            }
+
+            // Populate the table with data
+            for (var smallArea in aggregatedData) {
+              var row = table.insertRow();
+              var cell1 = row.insertCell();
+              cell1.textContent = smallArea;
+              var cell2 = row.insertCell();
+              //cell2.style.textAlign = "right"; // Right-justify the text
+              cell2.textContent = formatNumber(aggregatedData[smallArea]);
+            }
+
+            // Append the table to the container div
+            var container = document.getElementById("tableContainer");
+            container.innerHTML = '';
+            container.appendChild(table);
+
+        }).catch(function(error) {
+            console.error("There was an error: ", error);
+        });
+      }
 
       geojsonSegments.when(() => {
         geojsonSegments.queryFeatures().then((result) => {
@@ -877,13 +1022,45 @@ require([
 
           result.features.forEach((feature) => {
             // Get SEGID from the feature's attributes
-            var segId = feature.attributes.SEGID;
+            const _segId = feature.attributes.SEGID;
 
-            // If there's a display value for the given SEGID in the segDataBase object, set it
-            if (segDataBase[segId]) {
+            var _valueMain = 0;
+            var _valueComp = 0;
+            var _valueDisp = 0;
+
+            // main value
+            if (segDataMain!=='none') {
+              if (segDataMain[_segId]!==undefined){
+                _valueMain = segDataMain[_segId][aCode]
+              }
+            }
+
+            // comp value
+            if (segDataComp!=='none') {
+              if (segDataComp[_segId]!==undefined) {
+              _valueComp = segDataComp[_segId][aCode]
+              }
+            }
+
+            var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
+            var curPCOption = selectedRadio ? selectedRadio.value : null;
+
+            // calculate final display value based on selection (absolute or change)
+            try {
+              if (curPCOption=='abs') { // absolute change
+              _valueDisp = _valueMain - _valueComp;
+              } else if (curPCOption=='pct') { // percent change
+                if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+              }
+            } catch(err) {
+              _valueDisp = _valueMain;
+            }
+            
+            // If there's a display value for the given SEGID in the segDataMain object, set it
+            if (segDataMain[_segId]) {
               let attributes = {
                 ...feature.attributes,
-                dVal: segDataBase[segId][aCode]  // Add the dVal to attributes
+                dVal: _valueDisp  // Add the dVal to attributes
               };
 
               // Create a new graphic with the updated attributes
@@ -908,6 +1085,10 @@ require([
                 console.log("Number of features added:", editsResult.addFeatureResults.length);
                 // Call this AFTER adding graphics to the feature layer
                 setRendererAndLegend(aCode);
+                
+                // update agg table
+                updateAggTable(layerDisplay);
+
               } else {
                 console.log("No features were added.");
               }
@@ -922,6 +1103,7 @@ require([
       });
 
     }
+
   
   
     getSidebarSelector(submenuTemplate) {

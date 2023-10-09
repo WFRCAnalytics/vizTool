@@ -154,7 +154,7 @@ th, td {
     padding: 10px;
     border-radius: 5px;
     z-index: 1000;
-    width: 320px;
+    width: 350px;
     max-height: 1000px; /* or a value bigger than your content's height */
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Added opacity for smoother collapse */
     overflow: hidden;

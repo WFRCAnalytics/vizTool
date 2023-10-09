@@ -135,7 +135,7 @@
                     },
                     {
                         "id"  : "fDir",
-                        "text": "Direction",
+                        "text": "Filter Direction",
                         "type": "select",
                         "options": [{"value":"DT", "label":"Both Directions"},
                                     {"value":"D1", "label":"NB/EB"          },
@@ -144,7 +144,7 @@
                     },
                     {
                         "id"  : "fTod",
-                        "text": "Time of Day Filter",
+                        "text": "Filter Time of Day",
                         "type": "select",
                         "options": [{"value":"DY", "label":"Daily"         },
                                     {"value":"AM", "label":"AM Period"     },
@@ -155,7 +155,7 @@
                     },
                     {
                         "id"  : "fVeh",
-                        "text": "Vehicle Type",
+                        "text": "Filter Vehicle Type",
                         "type": "select",
                         "options": [{"value":"All", "label":"All Vehicles" },
                                     {"value":"LT" , "label":"Light Trucks" },
@@ -164,29 +164,43 @@
                         "selectedOption": "All"
                     },
                     {
-                        "text": "Household Life Cycle Filter",
-                        "type": "checkbox",
-                        "options": [["Life Cycle 1", true],
-                                    ["Life Cycle 2", true],
-                                    ["Life Cycle 3", true]]
+                        "id"  : "aggNumerator",
+                        "text": "Report by",
+                        "type": "select",
+                        "options": [{"value":"SEGID"  , "label":"Segment"        },
+                                    {"value":"CORID"  , "label":"Corridor"       },
+                                    {"value":"PROJ"   , "label":"RTP Project"    },
+                                    {"value":"SAREA"  , "label":"Small Area"     },
+                                    {"value":"MDIST"  , "label":"Medium District"},
+                                    {"value":"LDIST"  , "label":"Large District" },
+                                    {"value":"CO_FIPS", "label":"County"         },
+                                    {"value":"MPO"    , "label":"MPO"            }],
+                        "selectedOption": "SAREA"
                     },
                     {
-                        "text": "Number of Workers Filter",
-                        "type": "checkbox",
-                        "options": [["No Workers", true],
-                                    ["1 Worker"  , true],
-                                    ["2+ Workers", true]]
+                        "id"  : "aggDenominator",
+                        "text": "Normalize by",
+                        "type": "select",
+                        "options": [{"value":"NONE"    , "label":"No Normalization"     },
+                                    {"value":"DEVACRES", "label":"Developable Acres"    },
+                                    {"value":"ACRES"   , "label":"Total Acres"          },
+                                    {"value":"TOTHH"   , "label":"Total Households"     },
+                                    {"value":"TOTPOP"  , "label":"HH Population"        },
+                                    {"value":"TOTEMP"  , "label":"Typical Employment"   },
+                                    {"value":"RETEMP"  , "label":"Retail Employment"    },
+                                    {"value":"OTHEMP"  , "label":"Other Employment"     },
+                                    {"value":"INDEMP"  , "label":"Industrial Employment"}],
+                        "selectedOption": "NONE"
                     },
                     {
-                        "text": "Trip Purpose Filter",
-                        "type": "checkbox",
-                        "options": [["Home-Based Work", true],
-                                    ["Home-Based Shopping", true],
-                                    ["Home-Based Other", true],
-                                    ["Home-Based School-Primary", true],
-                                    ["Home-Based School-Secondary", true],
-                                    ["IX", true]]
+                        "id": "tableContainer",
+                        "text": "Aggregated Results",
+                        "type": "html",
+                        "content": "<div id=\"tableContainer\"></div>"
+
                     }
+
+                    
                 ]
             },
             {

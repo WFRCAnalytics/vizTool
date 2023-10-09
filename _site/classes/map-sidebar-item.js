@@ -6,6 +6,7 @@ class MapSidebarItem {
       this.type = data.type;
       this.options = data.options;
       this.selectedOption = data.selectedOption;
+      this.content = data.content;
       this.parentEntity = parent;
   }
 
@@ -49,6 +50,17 @@ class MapSidebarItem {
         this.createSelect(container);
         break;
       // Add more cases for other types as needed
+      case "html":
+
+        function stringToHTML(htmlString) {
+          var template = document.createElement('template');
+          template.innerHTML = htmlString.trim(); // Remove potential leading/trailing whitespace
+          return template.content.firstChild;
+        }
+        
+        var node = stringToHTML(this.content);
+        container.appendChild(node);
+        break;
       default:
         console.warn(`Unsupported item type: ${this.type}`);
     }

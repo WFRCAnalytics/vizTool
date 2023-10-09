@@ -142,7 +142,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     // ADD GEOJSONS
     
     geojsonSegments = new GeoJSONLayer({
-      url: "data/segments.geojson",
+      url: "data/segmentsWithAggFields.geojson",
       title: "Segments",
       renderer: {
         type: "simple",  // autocasts as new SimpleRenderer()
