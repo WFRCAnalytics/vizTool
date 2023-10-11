@@ -1,4 +1,5 @@
 let legend;
+let widget;
 
 require([
   "esri/Graphic",
@@ -26,59 +27,47 @@ require([
       this.pngFile = data.pngFile;
       this.showLayers = data.showLayers || [];
       
-      // Initialize GraphicsLayer for this entity /// DO WE NEED THIS ANYMORE??
-      this.featureLayer = new FeatureLayer();
-      
       if (this.submenuTemplate==="vizMap" & this.id==="roadway-segments") {
         this.initListeners();
       }
     }
-
+    
     initListeners() {
-      // Extracting the `selectedOption` from the `mapSidebarItem` with the `id` "roadway-segment-attribute"
-      const getRoadwaySegmentsSelectedOption = () => {
-        const roadwaySegmentItem = this.mapSidebarItems.find(item => item.id === 'roadway-segment-attribute');
-        return roadwaySegmentItem ? roadwaySegmentItem.selectedOption : null;
-      };
-  
-      const updateMapCallback = () => {
-        const displayName = getRoadwaySegmentsSelectedOption();
-        this.updateMap(displayName); // Assuming updateMap is a method of ModelEntity class
-      };
-  
-      document.getElementById('selectModMain').addEventListener('change', updateMapCallback);
-      document.getElementById('selectGrpMain').addEventListener('change', updateMapCallback);
-      document.getElementById('selectYearMain').addEventListener('change', updateMapCallback);
+      console.log('initListeners');
       
-      document.getElementById('selectModComp').addEventListener('change', updateMapCallback);
-      document.getElementById('selectGrpComp').addEventListener('change', updateMapCallback);
-      document.getElementById('selectYearComp').addEventListener('change', updateMapCallback);
+      document.getElementById('selectModMain').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectGrpMain').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectYearMain').addEventListener('change', this.updateMap.bind(this));
+      
+      document.getElementById('selectModComp').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectGrpComp').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectYearComp').addEventListener('change', this.updateMap.bind(this));
 
       // Get all radio buttons with the name "rcPcOption"
       var radioButtons = document.querySelectorAll('input[name="rcPcOption"]');
 
-      // Assuming this is inside a class or object with a method named updateMapCallback
+      // Assuming this is inside a class or object with a method named this.updateMap()
       radioButtons.forEach(function(radio) {
         radio.addEventListener('change', (event) => {  // Arrow function here
             console.log(event.target.value);
-            updateMapCallback;
+            this.updateMap();
         });
       });
-
-    }
-
-    // Add the graphics layer to a map
-    addLayerToMap(map) {
-      map.add(this.graphicsLayer);
-
     }
     
+    afterSidebarUpdate() {
+      console.log('afterSidebarUpdate');
+      this.updateMap();
+      this.updateFilters();
+      this.updateAggregations();
+    }
 
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
     createModelEntityElement() {
+      console.log('createModelEntityElement');
       const modelEntity = document.createElement('calcite-menu-item');
       modelEntity.setAttribute('id', this.id);
       modelEntity.setAttribute('text', this.submenuText);
@@ -115,8 +104,6 @@ require([
         modelEntityInstance.updateLayerVisibility();
         //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
 
-        modelEntityInstance.addLayerToMap(map);
-
       });
       return modelEntity;
     }
@@ -150,6 +137,10 @@ require([
       container.appendChild(titleEl);
       container.appendChild(sidebarContainer);
       
+      this.updateMap();
+      this.updateFilters();
+      this.updateAggregations();
+
       const sidebar = document.querySelector(sidebarSelect);
       // You might have to modify the next line based on the structure of your SidebarContent class.
       sidebar.innerHTML = ''; // clear existing content
@@ -268,18 +259,213 @@ require([
       }
     }
   
-    updateMap(aCode) {
-      console.log('updateMap aCode:' + aCode)
+    updateFilters() {
+      console.log('updateFilters');
+
+      var aCode = "";
+
+      if (this.mapSidebarItems && this.mapSidebarItems.length > 0) {
+        aCode = this.mapSidebarItems[0].selectedOption;
+        console.log(aCode);
+      } else {
+        console.error('mapSidebarItems is empty or not defined.');
+        return;
+      }
+
+
+      if (document.getElementById('fVeh_container') === null || typeof document.getElementById('fVeh_container') === 'undefined') {
+        return;
+      }
+    
+      // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
+      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
+        document.getElementById('fDir_container').style.display = 'block';
+        document.getElementById('fVeh_container').style.display = 'none';
+        document.getElementById('fTod_container').style.display = 'none';
+      } else if (aCode === 'aVol') {
+        document.getElementById('fDir_container').style.display = 'block';
+        document.getElementById('fVeh_container').style.display = 'block';
+        document.getElementById('fTod_container').style.display = 'block';
+      } else if (['aVc', 'aSpd'].includes(aCode)) {
+        document.getElementById('fDir_container').style.display = 'block';
+        document.getElementById('fVeh_container').style.display = 'none';
+        document.getElementById('fTod_container').style.display = 'block';
+      }
+    }
+
+    updateAggregations() {
+      console.log('updateAggregations');
+      
+      const aggNumeratorSelect = document.getElementById('aggNumerator');
+
+      if (aggNumeratorSelect === null || typeof aggNumeratorSelect === 'undefined') {
+        return;
+      }
+    
+
+      const selectedOption = aggNumeratorSelect.querySelector('calcite-option[selected]');
+      
+      var aggNumeratorContent = "";
+
+      if (selectedOption) {
+        aggNumeratorContent = selectedOption.textContent || selectedOption.innerText;
+        console.log(aggNumeratorContent); // Outputs the text content of the selected option
+      } else {
+        console.error('No option selected in aggNumerator.');
+      }
+
+      const aggDenominatorInput = document.getElementById('aggDenominator');
+
+      // get aggregation numberator
+      const aggNumerator = selectedOption.value;
+      const aggDenominator = aggDenominatorInput.value;
+
+      // Query the features
+      var query = new Query();
+      query.where = "1=1"; // Get all features. Adjust if you need a different condition.
+      query.returnGeometry = false; // We don't need geometries for aggregation.
+      query.outFields = [aggNumerator, "dVal", "DISTANCE"];
+  
+      layerDisplay.queryFeatures(query).then(function(results) {
+        var sumDistXVal  = {};
+        var sumDist      = {}; // For storing distances
+        var aggDistWtVal = {};
+        
+        results.features.forEach(function(feature) {
+          var agg = feature.attributes[aggNumerator];
+          var distxval = feature.attributes.dVal * feature.attributes.DISTANCE;
+          var dist = feature.attributes.DISTANCE;
+      
+          // Check if agg already exists in the objects
+          if (sumDistXVal[agg]) {
+            sumDistXVal[agg] += distxval;
+            sumDist    [agg] += dist;
+          } else {
+            sumDistXVal[agg] = distxval;
+            sumDist    [agg] = dist;
+          }
+        });
+        
+        // Calculate aggDistWtVal for each key
+        for (var key in sumDistXVal) {
+          aggDistWtVal[key] = sumDistXVal[key] / sumDist[key];
+        }
+        
+                        
+        // Sort the keys based on their values in aggDistWtVal in descending order
+        var sortedKeys = Object.keys(aggDistWtVal).sort(function(a, b) {
+          return aggDistWtVal[b] - aggDistWtVal[a];
+        });
+
+        // Construct a new object with sorted keys
+        var sortedAggDistWtVal = {};
+        for (var i = 0; i < sortedKeys.length; i++) {
+          sortedAggDistWtVal[sortedKeys[i]] = aggDistWtVal[sortedKeys[i]];
+        }
+
+        // Do something with the aggDistWtVal...
+        console.log(aggDistWtVal);
+        //table.style.fontSize = "0.8em"; // For smaller text
+
+        // Create a new table element
+        var table = document.createElement("table");
+        
+        // Create the table header
+        var thead = table.createTHead();
+        var headerRow = thead.insertRow();
+        var th1 = document.createElement("th");
+        th1.textContent = aggNumeratorContent;
+        headerRow.appendChild(th1);
+        var th2 = document.createElement("th");
+        th2.textContent = "";
+        //switch(aCode) {
+        //  case 'aLanes':
+        //    th2.textContent = "Lane Miles";
+        //    break;
+        //  case 'aFt':
+        //    th2.textContent = "FT x Distance";
+        //    break;
+        //  case 'aFtClass':
+        //    th2.textContent = "ERROR";
+        //    break;
+        //  case 'aCap1HL':
+        //    th2.textContent = "Cap x Distance";
+        //    break;
+        //  case 'aVc' :
+        //    th2.textContent = "VC x Distance";
+        //    break;
+        //  case 'aVol':
+        //    th2.textContent = "VMT";
+        //    break;
+        //  case 'aSpd':
+        //  case 'aFfSpd':
+        //    th2.textContent = "Spd x Distance";
+        //    break;
+        //}
+        headerRow.appendChild(th2);
+
+        const formatNumber = (num) => {
+          return num.toLocaleString('en-US', {
+            minimumFractionDigits: 1, 
+            maximumFractionDigits: 1 
+          });
+        }
+
+        // Populate the table with data
+        for (var key in sortedAggDistWtVal) {
+          var row = table.insertRow();
+          var cell1 = row.insertCell();
+          cell1.textContent = key;
+          var cell2 = row.insertCell();
+          //cell2.style.textAlign = "right"; // Right-justify the text
+          cell2.textContent = formatNumber(sortedAggDistWtVal[key]);
+        }
+
+        // Append the table to the container div
+        var container = document.getElementById("tableContainer");
+        container.innerHTML = '';
+        container.appendChild(table);
+
+      }).catch(function(error) {
+          console.error("There was an error: ", error);
+      });
+
+    }
+
+    updateMap() {
+      console.log('updateMap');
+      
+      // Reinitialize the layer with the current features array
+      map.remove(layerDisplay);
+
+      var aCode = "";
+
+      if (this.mapSidebarItems && this.mapSidebarItems.length > 0) {
+        aCode = this.mapSidebarItems[0].selectedOption;
+        console.log(aCode);
+      } else {
+        console.error('mapSidebarItems is empty or not defined.');
+        return;
+      }
   
       let _filter;
 
+      var _fDirItem = this.mapSidebarItems.find(item => item.id === "fDir");
+      var _fDir = _fDirItem ? _fDirItem.selectedOption : "";
+
+      var _fVehItem = this.mapSidebarItems.find(item => item.id === "fVeh");
+      var _fVeh = _fVehItem ? _fVehItem.selectedOption : "";
+
+      var _fTodItem = this.mapSidebarItems.find(item => item.id === "fTod");
+      var _fTod = _fTodItem ? _fTodItem.selectedOption : "";
+
       // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
       if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
-          _filter = "DT";
+        _filter = _fDir;
       } else if (aCode === 'aVol') {
-          _filter = "DT_All_DY";
+        _filter = _fDir + '_' + _fVeh + '_' + _fTod;
       } else if (['aVc', 'aSpd'].includes(aCode)) {
-          _filter = "DT_PM";
+        _filter = _fDir + '_' + _fTod;
       }
 
       // Get values from the select widgets
@@ -289,10 +475,15 @@ require([
 
       // Use the obtained values in the find method
       let scenarioMain = dataScenarios.find(scenario => 
-          scenario.modVersion === modVersionValueMain && 
-          scenario.scnGroup === scnGroupValueMain && 
-          scenario.scnYear === scnYearValueMain
+        scenario.modVersion === modVersionValueMain && 
+        scenario.scnGroup === scnGroupValueMain && 
+        scenario.scnYear === scnYearValueMain
       );
+
+      
+      if (typeof scenarioMain === 'undefined') {
+        return;
+      }
 
       // get segment data give the filter
       const segDataMain = scenarioMain.roadwaySegData.data[_filter]
@@ -302,24 +493,28 @@ require([
       let scnGroupValueComp = document.getElementById('selectGrpComp').value;
       let scnYearValueComp = parseInt(document.getElementById('selectYearComp').value, 10); // Assuming it's a number
 
+
+
       // Use the obtained values in the find method
       let scenarioComp = dataScenarios.find(scenario => 
-          scenario.modVersion === modVersionValueComp && 
-          scenario.scnGroup === scnGroupValueComp && 
-          scenario.scnYear === scnYearValueComp
+        scenario.modVersion === modVersionValueComp && 
+        scenario.scnGroup === scnGroupValueComp && 
+        scenario.scnYear === scnYearValueComp
       );
+
 
       let mode = 'base'; //default is base
 
       var segDataComp = [];
 
-      if (scenarioComp !== undefined) {
+      if (typeof scenarioComp !== 'undefined') {
         mode = 'compare';
-        segDataComp = scenarioComp.roadwaySegData.data[_filter]
+        segDataComp = scenarioComp.roadwaySegData.data[_filter];
       }
 
-      // Reinitialize the layer with the current features array
-      map.remove(layerDisplay);
+      if (mode==='base' && (modVersionValueComp !== "none" || scnGroupValueComp !== "none" || document.getElementById('selectYearComp').value !== "none")) {
+        return;
+      }
 
       let dValFieldType;
 
@@ -502,7 +697,7 @@ require([
         let rendererSpd_Change = new ClassBreaksRenderer({
           field: "dVal",
           classBreakInfos: [
-            { minValue:    25.01, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "More than 25 mph" },
+            { minValue:    25.01, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: aCR_Change9[0], width: 5.0000 }), label: "More than +25 mph" },
             { minValue:    10.01, maxValue:    25.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[1], width: 2.5000 }), label: "+10 to +25 mph"   },
             { minValue:     5.01, maxValue:    10.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[2], width: 1.2500 }), label: "+5 to +10 mph"    },
             { minValue:     2.01, maxValue:     5.00, symbol: new SimpleLineSymbol({ color: aCR_Change9[3], width: 0.6250 }), label: "+2 to +5 mph"     },
@@ -537,9 +732,9 @@ require([
           `,
           uniqueValueInfos: [
             { value: "class_00", symbol: new SimpleLineSymbol({ color: aCGrYl[0], width: 0.25}), label: "Less than 0.7" },
-            { value: "class_01", symbol: new SimpleLineSymbol({ color: aCGrYl[1], width: 2.50}), label: "0.7 to 0.8"    },
-            { value: "class_02", symbol: new SimpleLineSymbol({ color: aCGrYl[2], width: 3.00}), label: "0.8 to 0.9"    },
-            { value: "class_03", symbol: new SimpleLineSymbol({ color: aCGrYl[3], width: 3.50}), label: "0.9 to 1.0"    },
+            { value: "class_01", symbol: new SimpleLineSymbol({ color: "#39FF14", width: 1.00}), label: "0.7 to 0.8"    },
+            { value: "class_02", symbol: new SimpleLineSymbol({ color: "#FFFC00", width: 2.00}), label: "0.8 to 0.9"    },
+            { value: "class_03", symbol: new SimpleLineSymbol({ color: "#FF6A00", width: 3.50}), label: "0.9 to 1.0"    },
             { value: "class_r0", symbol: new SimpleLineSymbol({ color: aCReds[0], width: 4.00}), label: "1.0 to 1.1"    },
             { value: "class_r1", symbol: new SimpleLineSymbol({ color: aCReds[1], width: 4.50}), label: "1.1 to 1.2"    },
             { value: "class_r2", symbol: new SimpleLineSymbol({ color: aCReds[2], width: 5.00}), label: "1.2 to 1.3"    },
@@ -916,105 +1111,9 @@ require([
       
       };
 
-      const updateAggTable = (layer) => {
+      
 
-        // Query the features
-        var query = new Query();
-        query.where = "1=1"; // Get all features. Adjust if you need a different condition.
-        query.returnGeometry = false; // We don't need geometries for aggregation.
-        query.outFields = ["SmallArea", "dVal", "DISTANCE"];
-    
-        layer.queryFeatures(query).then(function(results) {
-            var aggregatedData = {};
-            var distances = {}; // For storing distances
-            var aggregatedDataDividedByDistance = {};
-            
-            results.features.forEach(function(feature) {
-                var small_area = feature.attributes.SmallArea;
-                var dVal_distance = feature.attributes.dVal * feature.attributes.DISTANCE;
-            
-                // Check if small_area already exists in the objects
-                if (aggregatedData[small_area]) {
-                    aggregatedData[small_area] += dVal_distance;
-                    distances[small_area] += feature.attributes.DISTANCE;
-                } else {
-                    aggregatedData[small_area] = dVal_distance;
-                    distances[small_area] = feature.attributes.DISTANCE;
-                }
-            });
-            
-            // Calculate aggregatedDataDividedByDistance for each small_area
-            for (var smallAreaKey in aggregatedData) {
-                aggregatedDataDividedByDistance[smallAreaKey] = aggregatedData[smallAreaKey] / distances[smallAreaKey];
-            }
-            
-            // Do something with the aggregatedData...
-            console.log(aggregatedDataDividedByDistance);
-            //table.style.fontSize = "0.8em"; // For smaller text
-
-            // Create a new table element
-            var table = document.createElement("table");
-            
-            // Create the table header
-            var thead = table.createTHead();
-            var headerRow = thead.insertRow();
-            var th1 = document.createElement("th");
-            th1.textContent = "SmallArea";
-            headerRow.appendChild(th1);
-            var th2 = document.createElement("th");
-            th2.textContent = "";
-            switch(aCode) {
-              case 'aLanes':
-                th2.textContent = "Lane Miles";
-                break;
-              case 'aFt':
-                th2.textContent = "FT x Distance";
-                break;
-              case 'aFtClass':
-                th2.textContent = "ERROR";
-                break;
-              case 'aCap1HL':
-                th2.textContent = "Cap x Distance";
-                break;
-              case 'aVc' :
-                th2.textContent = "VC x Distance";
-                break;
-              case 'aVol':
-                th2.textContent = "VMT";
-                break;
-              case 'aSpd':
-              case 'aFfSpd':
-                th2.textContent = "Spd x Distance";
-                break;
-            }
-            headerRow.appendChild(th2);
-
-            const formatNumber = (num) => {
-              return num.toLocaleString('en-US', {
-                minimumFractionDigits: 1, 
-                maximumFractionDigits: 1 
-              });
-            }
-
-            // Populate the table with data
-            for (var smallArea in aggregatedData) {
-              var row = table.insertRow();
-              var cell1 = row.insertCell();
-              cell1.textContent = smallArea;
-              var cell2 = row.insertCell();
-              //cell2.style.textAlign = "right"; // Right-justify the text
-              cell2.textContent = formatNumber(aggregatedData[smallArea]);
-            }
-
-            // Append the table to the container div
-            var container = document.getElementById("tableContainer");
-            container.innerHTML = '';
-            container.appendChild(table);
-
-        }).catch(function(error) {
-            console.error("There was an error: ", error);
-        });
-      }
+      const modelEntityInstance = this;
 
       geojsonSegments.when(() => {
         geojsonSegments.queryFeatures().then((result) => {
@@ -1087,7 +1186,8 @@ require([
                 setRendererAndLegend(aCode);
                 
                 // update agg table
-                updateAggTable(layerDisplay);
+                modelEntityInstance.updateFilters();
+                modelEntityInstance.updateAggregations();
 
               } else {
                 console.log("No features were added.");

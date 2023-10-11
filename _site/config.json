@@ -121,11 +121,11 @@
                 "showLayers": ["Segments"],
                 "mapSidebarItems": [
                     {
+                        "id"  : "roadway-segment-attribute",
                         "text": "Roadway Segment Attribute",
                         "type": "radio",
                         "options": [["aLanes"  , "Lanes"                     ],
                                     ["aFt"     , "Functional Type"           ],
-                                    ["aFtClass", "Functional Class"          ],
                                     ["aCap1HL" , "Capacity per Hour per Lane"], 
                                     ["aFfSpd"  , "Free-flow Speed"           ],
                                     ["aVol"    , "Volume"                    ],
@@ -165,17 +165,17 @@
                     },
                     {
                         "id"  : "aggNumerator",
-                        "text": "Report by",
+                        "text": "<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>Ranked List of",
                         "type": "select",
-                        "options": [{"value":"SEGID"  , "label":"Segment"        },
-                                    {"value":"CORID"  , "label":"Corridor"       },
-                                    {"value":"PROJ"   , "label":"RTP Project"    },
-                                    {"value":"SAREA"  , "label":"Small Area"     },
-                                    {"value":"MDIST"  , "label":"Medium District"},
-                                    {"value":"LDIST"  , "label":"Large District" },
-                                    {"value":"CO_FIPS", "label":"County"         },
-                                    {"value":"MPO"    , "label":"MPO"            }],
-                        "selectedOption": "SAREA"
+                        "options": [{"value":"SEGID"    , "label":"Segment"        },
+                                    {"value":"CORID"    , "label":"Corridor"       },
+                                    {"value":"PROJ"     , "label":"RTP Project"    },
+                                    {"value":"SmallArea", "label":"Small Area"     },
+                                    {"value":"DMED_NAME", "label":"Medium District"},
+                                    {"value":"DLRG_NAME", "label":"Large District" },
+                                    {"value":"CO_FIPS"  , "label":"County"         },
+                                    {"value":"MPO"      , "label":"MPO"            }],
+                        "selectedOption": "SmallArea"
                     },
                     {
                         "id"  : "aggDenominator",
@@ -194,7 +194,7 @@
                     },
                     {
                         "id": "tableContainer",
-                        "text": "Aggregated Results",
+                        "text": "",
                         "type": "html",
                         "content": "<div id=\"tableContainer\"></div>"
 

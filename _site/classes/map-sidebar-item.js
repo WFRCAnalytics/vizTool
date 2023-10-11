@@ -1,7 +1,7 @@
 // Class for Sidebar Item
 class MapSidebarItem {
   constructor(data, parent) {
-      this.id = this.generateIdFromText(data.text);
+      this.id = data.id; //generateIdFromText(data.text);
       this.text = data.text;
       this.type = data.type;
       this.options = data.options;
@@ -10,14 +10,15 @@ class MapSidebarItem {
       this.parentEntity = parent;
   }
 
-  generateIdFromText(text) {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
+  //generateIdFromText(text) {
+  //  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  //}
 
   // Render the item based on its type
   render() {
     const container = document.createElement('div');
     container.className = 'map-sidebar-item';
+    container.id = this.id + "_container";
     
     let title = document.createElement("calcite-label");  // Create a new div element
     title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
@@ -93,9 +94,9 @@ class MapSidebarItem {
         const displayName = radioButton.value;
         // Update renderer with value of radio button
         console.log(this.id + ':' + displayName + ' radio button change');
-
-        this.parentEntity.updateMap(displayName);
-
+        this.selectedOption = displayName;
+        this.parentEntity.updateMap();
+        this.parentEntity.updateFilters();
       });
 
       // Nest the radio button directly inside the calcite-label
@@ -119,7 +120,7 @@ class MapSidebarItem {
       checkbox.checked = option[1];
 
       // Listen for changes to the checkbox
-      checkbox.addEventListener("change", function (e) {
+      checkbox.addEventListener("calciteCheckboxChange", function (e) {
         // to make sure the checkbox is the is the actual element
         const checkbox = e.currentTarget; // or e.target.closest('input[type="checkbox"]')
         // update renderer with value of checkbox
@@ -137,6 +138,7 @@ class MapSidebarItem {
 
   createSelect(container){
     const select = document.createElement('calcite-select');
+    select.id = this.id;
     this.options.forEach(option => {
       const optionEl = document.createElement('calcite-option');
       optionEl.value = option.value;
@@ -147,10 +149,12 @@ class MapSidebarItem {
       }
       select.appendChild(optionEl);
     });
-    select.addEventListener('change', (e) => {
-      this.selectedOption = e.detail;
+    select.addEventListener('calciteSelectChange', (e) => {
+      this.selectedOption = e.target.selectedOption.value;
+      this.parentEntity.afterSidebarUpdate();
     });
     container.appendChild(select);
+    
   }
 
 
