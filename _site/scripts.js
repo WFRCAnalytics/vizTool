@@ -31,12 +31,10 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
-
-
-  async function fetchMenuData() {
+  async function fetchConfig() {
     const response = await fetch('config.json');
-    const dataMenu = await response.json();
-    return dataMenu;
+    const dataConfig = await response.json();
+    return dataConfig;
   }
 
   async function fetchScenarioData() {
@@ -51,9 +49,13 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
   }
 
   async function loadMenuAndItems() {
-    const jsonMenu = await fetchMenuData();
-    const dataMenu = jsonMenu.map(item => new MenuItem(item));
-    
+    const jsonConfig = await fetchConfig();
+
+    const userElement = document.querySelector('calcite-navigation-user[slot="user"]');
+    const username = userElement.getAttribute('username');
+
+    const dataApp = jsonConfig['users'].map(item => new User(item));
+    const dataMenu = dataApp.filter(item => item.userType === username)[0].userLayout.menuItems;
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
 
     // Clear existing menu items

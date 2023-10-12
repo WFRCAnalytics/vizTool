@@ -1,6 +1,3 @@
-let legend;
-let widget;
-
 class ModelEntity {
   constructor(data) {
     this.id = data.id || this.generateIdFromText(data.submenuText); // use provided id or generate one if not provided
@@ -8,13 +5,11 @@ class ModelEntity {
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
     if (data.template=='vizMap') {
-      this.vizMap = new vizMap(data.templateSettings);
+      this.vizMap = new VizMap(data.templateSettings);
     }
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;
-    this.pngFile = data.pngFile;
-    this.showLayers = data.showLayers || [];
-    
+    this.pngFile = data.pngFile;    
   }
   
   generateIdFromText(text) {
@@ -46,13 +41,15 @@ class ModelEntity {
       allTemplates.forEach(template => template.hidden = true);
   
       // Show the selected template
-      const selectedTemplate = document.getElementById(modelEntityInstance.submenuTemplate + 'Template');
+      const selectedTemplate = document.getElementById(modelEntityInstance.template + 'Template');
       if (selectedTemplate) {
         selectedTemplate.hidden = false;
         // ... (Any additional specific logic for the template type)
       }
-      const sidebarSelect = modelEntityInstance.getSidebarSelector(modelEntityInstance.submenuTemplate)
-      modelEntityInstance.populateSidebar(sidebarSelect);  // Use the saved instance context here as well
+      if (modelEntityInstance.template=="vizMap") {
+        modelEntityInstance.vizMap.renderSidebar();  // Use the saved instance context here as well
+        modelEntityInstance.vizMap.updateMap();
+      }
       modelEntityInstance.populateText();
       modelEntityInstance.populateImage();
       modelEntityInstance.displayJSONData();
@@ -195,14 +192,14 @@ class ModelEntity {
         }
     }
   }
-  getSidebarSelector(submenuTemplate) {
-    if (submenuTemplate === 'vizLog') {
+  getSidebarSelector(template) {
+    if (template === 'vizLog') {
         return '#logSidebarContent';
-    } else if (submenuTemplate === 'vizMap') {
+    } else if (template === 'vizMap') {
         return '#sidebarContent';
-    } else if (submenuTemplate === 'vizTrends') {
+    } else if (template === 'vizTrends') {
         return '#trendSidebarContent'
-    } else if(submenuTemplate === 'vizMatrix') {
+    } else if(template === 'vizMatrix') {
         return '#matrixSidebarContent'
     }
 

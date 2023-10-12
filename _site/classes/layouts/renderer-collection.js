@@ -15,7 +15,7 @@ require([
   }
 
   function createRenderer(data) {
-    if (data.classInfoBreaks) {
+    if (data.classBreakInfos) {
       const renderer = new ClassBreaksRenderer();
       renderer.field = data.field;
       renderer.classBreakInfos = data.classBreakInfos;

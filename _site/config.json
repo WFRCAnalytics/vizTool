@@ -213,6 +213,7 @@
                     },
                     {
                       "aCode": "aSpd",
+                      "aDisplayName": "Speed",
                       "rendererCollection": {
                         "main": {
                           "name": "Speed",

@@ -15,14 +15,20 @@
         <link rel="stylesheet" href="styles.css">
 
         <script src="scripts.js"></script>
-        <script src="classes/map-sidebar-item.js"></script>
-        <script src="classes/model-entity.js"></script>
-        <script src="classes/menu-item.js"></script>
-        <script src="classes/filter.js"></script>
-        <script src="classes/attribute.js"></script>
-        <script src="classes/attribute-filter-data.js"></script>
-        <script src="classes/scenario.js"></script>
-
+        <script src="classes/app/model-entity.js"></script>
+        <script src="classes/app/menu-item.js"></script>
+        <script src="classes/app/user.js"></script>
+        <script src="classes/app/user-layout.js"></script>
+        <script src="classes/layouts/attribute.js"></script>
+        <script src="classes/layouts/filter.js"></script>
+        <script src="classes/layouts/map-sidebar-item.js"></script>
+        <script src="classes/layouts/renderer-collection.js"></script>
+        <script src="classes/layouts/viz-map.js"></script>
+        <script src="classes/scenarios/attribute-filter-data.js"></script>
+        <script src="classes/scenarios/scenario.js"></script>
+        <script src="classes/widgets/wij-checkboxes.js"></script>
+        <script src="classes/widgets/wij-radio.js"></script>
+        <script src="classes/widgets/wij-select.js"></script>
     </head>
     <body>
         <calcite-shell>
@@ -32,7 +38,7 @@
                 <calcite-navigation slot="navigation-secondary">
                     <calcite-menu slot="content-start"></calcite-menu>
                 </calcite-navigation>
-                <calcite-navigation-user slot="user" full-name="vizWhiz" username="vizWhiz"></calcite-navigation-user>                    
+                <calcite-navigation-user slot="user" full-name="Planner" username="planner"></calcite-navigation-user>                    
             </calcite-navigation>
             <div id="main"></div>
         </calcite-shell>
