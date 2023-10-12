@@ -1,7 +1,7 @@
 // Class for Main Menu Item
 class MenuItem {
   constructor(data) {
-    this.id = this.generateIdFromText(data.menuText);
+    this.id = data.id || this.generateIdFromText(data.menuText); // use provided id or generate one if not provided
     this.menuText = data.menuText;
     this.menuIconStart = data.menuIconStart;
     this.modelEntitys = (data.modelEntitys || []).map(item => new ModelEntity(item));

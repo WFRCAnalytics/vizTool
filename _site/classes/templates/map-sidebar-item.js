@@ -1,7 +1,7 @@
 // Class for Sidebar Item
 class MapSidebarItem {
   constructor(data, parent) {
-      this.id = data.id; //generateIdFromText(data.text);
+      this.id = data.id || this.generateIdFromText(data.text); // use provided id or generate one if not provided
       this.text = data.text;
       this.type = data.type;
       this.options = data.options;
@@ -10,9 +10,9 @@ class MapSidebarItem {
       this.parentEntity = parent;
   }
 
-  //generateIdFromText(text) {
-  //  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  //}
+  generateIdFromText(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
 
   // Render the item based on its type
   render() {

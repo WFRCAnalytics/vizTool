@@ -16,20 +16,20 @@ require([
 ], function(Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, UniqueValueRenderer, Query) {
   // Now you can use Graphic inside this callback function
 
-  class ModelEntity {
+  class VizMap {
     constructor(data) {
-      this.id = this.generateIdFromText(data.submenuText);
-      this.submenuText = data.submenuText;
-      this.submenuIconStart = data.submenuIconStart;
-      this.submenuTemplate = data.submenuTemplate;
-      this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
-      this.textFile = data.textFile;
-      this.pngFile = data.pngFile;
-      this.showLayers = data.showLayers || [];
+      this.mapViewDiv = data.mapViewDiv;
+      this.mapOverlayDiv = data.mapOverlayDiv;
+      this.sidebarDiv = data.sidebarDiv;
+      this.attributeTitle = data.attributeTitle;
+      this.attributes = (data.attributes || []).map(item => new Attribute(item));
+      this.attributeSelect = new WidgetRadioButton(this.id & "_container", data.attributes.map({
+        value: item.aCode,
+        label: item.aDisplayName
+      }), data.selected);
+      this.filters = (data.filters || []).map(item => new Filter(item));
       
-      if (this.submenuTemplate==="vizMap" & this.id==="roadway-segments") {
-        this.initListeners();
-      }
+      this.initListeners();
     }
     
     initListeners() {
@@ -559,265 +559,6 @@ require([
       
       const setRendererAndLegend = (aCode) => {
 
-        // SETUP COLORS FOR RENDERER AND RENDERERS - NEEDS TO BE MOVED TO JSON
-
-        const sCBertGrad9 = "#Af2944"; //rgb(175,41,68)
-        const sCBertGrad8 = "#E5272d"; //rgb(229,39,45)
-        const sCBertGrad7 = "#Eb672d"; //rgb(235,103,45)
-        const sCBertGrad6 = "#E09d2e"; //rgb(224,157,46)
-        const sCBertGrad5 = "#8dc348"; //rgb(141,195,72)
-        const sCBertGrad4 = "#6cb74a"; //rgb(108,183,74)
-        const sCBertGrad3 = "#00a74e"; //rgb(0,167,78)
-        const sCBertGrad2 = "#1ba9e6"; //rgb(27,169,230)
-        const sCBertGrad1 = "#31398a"; //rgb(49,57,138)
-        const sCBertGrad0 = "#EEEEEE";
-
-        const sCLaneGrad9 = "#000000"; //rgb(175,41,68)
-        const sCLaneGrad8 = "#222222"; //rgb(229,39,45)
-        const sCLaneGrad7 = "#800000"; //rgb(235,103,45)
-        const sCLaneGrad6 = "#FF0000"; //rgb(224,157,46)
-        const sCLaneGrad5 = "#66023C"; //rgb(141,195,72)
-        const sCLaneGrad4 = "#3c59ff"; //rgb(108,183,74)
-        const sCLaneGrad3 = "#86DC3D"; //rgb(0,167,78)
-        const sCLaneGrad2 = "#333333"; //rgb(27,169,230)
-        const sCLaneGrad1 = "#CCCCCC"; //rgb(49,57,138)
-
-        const laneColorData = [sCLaneGrad1,sCLaneGrad2,sCLaneGrad3,sCLaneGrad4,sCLaneGrad5,sCLaneGrad6,sCLaneGrad7,sCLaneGrad8,sCLaneGrad9];
-        const bertColorData = [sCBertGrad1,sCBertGrad2,sCBertGrad3,sCBertGrad4,sCBertGrad5,sCBertGrad6,sCBertGrad7,sCBertGrad8,sCBertGrad9];
-        
-        //Typical Colors
-        const sCLightGrey     = "#EEEEEE";
-        const sCDefaultGrey   = "#AAAAAA";
-        const sCBlue1         = "#BED2FF";
-        const sCBlue2         = "#73B2FF";
-        const sCBlue3         = "#0070FF";
-        const sCBlue4         = "#005CC4";//"#005CE6";
-        const sCBlue5         = "#004DA8";
-        const sCRed1          = "#FFBEBE";
-        const sCRed2          = "#FF7F7F";
-        const sCRed3          = "#E60000";
-        const sCRed4          = "#510000";//"#730000";
-        const sCGreen1        = "#54ff00";
-        const sCGreen2        = "#4ce600";
-        const sCWhite         = "#ffffff";
-        const sSelectionColor = "#ffff00";//"#FF69B4"; //Hot Pink
-
-        const aCR_Change9  = new Array(sCBlue4,sCBlue3,sCBlue2,sCBlue1,sCDefaultGrey,sCRed1,sCRed2,sCRed3,sCRed4);
-
-        /* Green to Red Gradiant Ramp - 5 Steps with grey as 0 */
-        const sCVCGrad0 = "#EEEEEE";
-        const sCVCGrad1 = "#00FF00";
-        const sCVCGrad2 = "#A9F36A";
-        const sCVCGrad3 = "#FFE469";
-        const sCVCGrad4 = "#FF0000";
-        const sCVCGrad5 = "#730000";
-
-        const aCGrYl = ["#00FF00","#AAED46","#D5E958","#FFE469"];
-        const aCReds = ["#FF4D4D","#E64545","#CC3E3E","#B33636","#992E2E","#802727","#661F1F","#4C1717","#330F0F","#1A0808"];//,"000000"]; gradient is 11 red to black, but last black removed.
-        const sCBlack = "#000000"
-
-
-        let rendererFt = new ClassBreaksRenderer({
-          field: "dVal",
-
-        });
-
-        let rendererFt_Change = new ClassBreaksRenderer({
-          field: "dVal",
-
-        });
-        
-        let rendererFtClass = new UniqueValueRenderer({
-          field: "dVal",
-          defaultSymbol: { type: "simple-line", color: "grey", width: 0.5},
-          defaultLabel: "Other",
-          uniqueValueInfos: [
-            { value: "Freeway"           , symbol: new SimpleLineSymbol({ color: bertColorData[8], width:  6.0}), label: "Freeway"           },
-            { value: "Expressway"        , symbol: new SimpleLineSymbol({ color: bertColorData[6], width:  4.0}), label: "Expressway"        },
-            { value: "Principal Arterial", symbol: new SimpleLineSymbol({ color: bertColorData[4], width:  3.0}), label: "Principal Arterial"},
-            { value: "Minor Arterial"    , symbol: new SimpleLineSymbol({ color: bertColorData[3], width:  2.0}), label: "Minor Arterial"    },
-            { value: "Collector"         , symbol: new SimpleLineSymbol({ color: bertColorData[1], width:  1.0}), label: "Collector"         },
-            { value: "Local"             , symbol: new SimpleLineSymbol({ color: bertColorData[0], width:  0.5}), label: "Local"             },
-          ]
-        });
-
-
-        let rendererPercent = new ClassBreaksRenderer({
-          field: "dVal",
-          classBreakInfos: [
-            { minValue: 0.000001, maxValue:       10, symbol: new SimpleLineSymbol({ color:        "#000000", width: 5.50 }), label: "Less than 10%" },
-            { minValue:       10, maxValue:       20, symbol: new SimpleLineSymbol({ color: bertColorData[8], width: 5.30 }), label:"10% to 20%"     },
-            { minValue:       20, maxValue:       30, symbol: new SimpleLineSymbol({ color: bertColorData[7], width: 4.70 }), label:"20% to 30%"     },
-            { minValue:       30, maxValue:       40, symbol: new SimpleLineSymbol({ color: bertColorData[6], width: 4.10 }), label:"30% to 40%"     },
-            { minValue:       40, maxValue:       50, symbol: new SimpleLineSymbol({ color: bertColorData[5], width: 3.90 }), label:"40% to 50%"     },
-            { minValue:       50, maxValue:       60, symbol: new SimpleLineSymbol({ color: bertColorData[4], width: 3.50 }), label:"50% to 60%"     },
-            { minValue:       60, maxValue:       70, symbol: new SimpleLineSymbol({ color: bertColorData[3], width: 2.30 }), label:"60% to 70%"     },
-            { minValue:       70, maxValue:       80, symbol: new SimpleLineSymbol({ color: bertColorData[2], width: 1.70 }), label:"70% to 80%"     },
-            { minValue:       80, maxValue:       90, symbol: new SimpleLineSymbol({ color: bertColorData[1], width: 1.10 }), label:"80% to 90%"     },
-            { minValue:       90, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: bertColorData[0], width: 0.50 }), label:"More than 90%"  }
-          ]
-        });
-
-        let rendererPercent_Change = getPercentChangeRenderer_Reverse('dVal');
-
-        let rendererPercent_Truck = new ClassBreaksRenderer({
-          field: "dVal",
-          classBreakInfos: [
-            { minValue: 0.000000, maxValue:      7.5, symbol: new SimpleLineSymbol({ color: bertColorData[0], width: 0.50 }), label: "Less than 7.5%" },
-            { minValue: 7.500001, maxValue:     10.0, symbol: new SimpleLineSymbol({ color: bertColorData[1], width: 1.10 }), label: "7.5% to 10.0%"  },
-            { minValue:10.000001, maxValue:     12.5, symbol: new SimpleLineSymbol({ color: bertColorData[2], width: 1.70 }), label: "10.0% to 12.5%" },
-            { minValue:12.500001, maxValue:     15.0, symbol: new SimpleLineSymbol({ color: bertColorData[3], width: 2.30 }), label: "12.5% to 15.0%" },
-            { minValue:15.000001, maxValue:     17.5, symbol: new SimpleLineSymbol({ color: bertColorData[4], width: 3.50 }), label: "15.0% to 17.5%" },
-            { minValue:17.500001, maxValue:     20.0, symbol: new SimpleLineSymbol({ color: bertColorData[5], width: 3.90 }), label: "17.5% to 20.0%" },
-            { minValue:20.000001, maxValue:     22.5, symbol: new SimpleLineSymbol({ color: bertColorData[6], width: 4.10 }), label: "20.0% to 22.5%" },
-            { minValue:22.500001, maxValue:     25.0, symbol: new SimpleLineSymbol({ color: bertColorData[7], width: 4.70 }), label: "22.5% to 25.0%" },
-            { minValue:25.000001, maxValue:     30.0, symbol: new SimpleLineSymbol({ color: bertColorData[8], width: 5.30 }), label: "25.0% to 30.0%" },
-            { minValue:30.000001, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: "#000000"       , width: 5.50 }), label: "More than 30%"  }
-          ]
-        });
-
-        let rendererPercent_Truck_Change = getPercentChangeRenderer('dVal');
-
-        // Truck Volume Renderers
-        const rendererVolTrk = new ClassBreaksRenderer({
-          field: 'dVal',
-          classBreakInfos: [
-            { minValue:        0, maxValue:      599, symbol: new SimpleLineSymbol({ color: bertColorData[0], width: 1.10 }), label: "Less than 600"    },
-            { minValue:      600, maxValue:     1799, symbol: new SimpleLineSymbol({ color: bertColorData[1], width: 1.10 }), label: "600 to 1,800"     },
-            { minValue:     1800, maxValue:     3599, symbol: new SimpleLineSymbol({ color: bertColorData[2], width: 1.70 }), label: "1,800 to 3,600"   },
-            { minValue:     3600, maxValue:     7199, symbol: new SimpleLineSymbol({ color: bertColorData[3], width: 2.30 }), label: "3,600 to 7,200"   },
-            { minValue:     7200, maxValue:    11999, symbol: new SimpleLineSymbol({ color: bertColorData[4], width: 3.90 }), label: "7,200 to 12,000"  },
-            { minValue:    12000, maxValue:    15999, symbol: new SimpleLineSymbol({ color: bertColorData[5], width: 3.50 }), label: "12,000 to 16,000" },
-            { minValue:    16000, maxValue:    19999, symbol: new SimpleLineSymbol({ color: bertColorData[6], width: 4.10 }), label: "16,000 to 20,000" },
-            { minValue:    20000, maxValue:    23999, symbol: new SimpleLineSymbol({ color: bertColorData[7], width: 4.70 }), label: "20,000 to 24,000" },
-            { minValue:    24000, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: bertColorData[8], width: 5.30 }), label: "More than 24,000" }
-          ]
-        });
-        
-        const rendererVolTrk_Change = new ClassBreaksRenderer({
-          field: 'dVal',
-          classBreakInfos: [
-            { minValue: -999999, maxValue:   -10001, symbol: new SimpleLineSymbol({ color:aCR_Change9[0], width: 5.0000 }), label: "Less than -10,000"},
-            { minValue:  -10000, maxValue:    -5001, symbol: new SimpleLineSymbol({ color:aCR_Change9[1], width: 2.5000 }), label: "-10,000 to -5,000"},
-            { minValue:   -5000, maxValue:    -1501, symbol: new SimpleLineSymbol({ color:aCR_Change9[2], width: 1.2500 }), label: "-5,000 to -1,500" },
-            { minValue:   -1500, maxValue:     -501, symbol: new SimpleLineSymbol({ color:aCR_Change9[3], width: 0.6250 }), label: "-1,500 to -500"   },
-            { minValue:    -500, maxValue:      499, symbol: new SimpleLineSymbol({ color:aCR_Change9[4], width: 0.3125 }), label: "-500 to +500"     },
-            { minValue:     500, maxValue:     1499, symbol: new SimpleLineSymbol({ color:aCR_Change9[5], width: 0.6250 }), label: "+100 to +1,500"   },
-            { minValue:    1500, maxValue:     4999, symbol: new SimpleLineSymbol({ color:aCR_Change9[6], width: 1.2500 }), label: "+1,500 to +5,000" },
-            { minValue:    5000, maxValue:     9999, symbol: new SimpleLineSymbol({ color:aCR_Change9[7], width: 2.5000 }), label: "+5,000 to +10,000"},
-            { minValue:   10000, maxValue: Infinity, symbol: new SimpleLineSymbol({ color:aCR_Change9[8], width: 5.0000 }), label: "More than +10,000"}
-          ]
-        });
-        
-        const rendererVolTrkPer_Change = getPercentChangeRenderer('dVal');
-        
-        function generateValueExpression(featureName) {
-          return "var p = $feature." + featureName + ";" +
-                 "var ft = $feature.FT;" +
-                 "if      ( p< -200              && ft>=20) { return 'class_f1' ; }" +
-                 "else if ((p<  -40 && p>= -200) && ft>=20) { return 'class_f2' ; }" +
-                 "else if ((p<  -20 && p>=  -40) && ft>=20) { return 'class_f3' ; }" +
-                 "else if ((p<   -5 && p>=  -20) && ft>=20) { return 'class_f4' ; }" +
-                 "else if ((p<    5 && p>=   -5) && ft>=20) { return 'class_f5' ; }" +
-                 "else if ((p<   20 && p>=    5) && ft>=20) { return 'class_f6' ; }" +
-                 "else if ((p<   40 && p>=   20) && ft>=20) { return 'class_f7' ; }" +
-                 "else if ((p<  100 && p>=   40) && ft>=20) { return 'class_f8' ; }" +
-                 "else if ((p<  200 && p>=  100) && ft>=20) { return 'class_f9' ; }" +
-                 "else if ((p<  400 && p>=  200) && ft>=20) { return 'class_f10'; }" +
-                 "else if ( p>  400              && ft>=20) { return 'class_f11'; }" +
-                 "else if ( p< -200              && ft <20) { return 'class_r1' ; }" +
-                 "else if ((p<  -40 && p>= -200) && ft< 20) { return 'class_r2' ; }" +
-                 "else if ((p<  -20 && p>=  -40) && ft< 20) { return 'class_r3' ; }" +
-                 "else if ((p<   -5 && p>=  -20) && ft< 20) { return 'class_r4' ; }" +
-                 "else if ((p<    5 && p>=   -5) && ft< 20) { return 'class_r5' ; }" +
-                 "else if ((p<   20 && p>=    5) && ft< 20) { return 'class_r6' ; }" +
-                 "else if ((p<   40 && p>=   20) && ft< 20) { return 'class_r7' ; }" +
-                 "else if ((p<  100 && p>=   40) && ft< 20) { return 'class_r8' ; }" +
-                 "else if ((p<  200 && p>=  100) && ft< 20) { return 'class_r9' ; }" +
-                 "else if ((p<  400 && p>=  200) && ft< 20) { return 'class_r10'; }" +
-                 "else if ( p>  400              && ft< 20) { return 'class_r11'; }"
-        }
-        
-        function getUniqueValueInfos(isReversed = false) {
-          let baseColors = isReversed ? ["#000000", "#000000", ...aCR_Change9.slice().reverse()] : aCR_Change9;
-          let freewayLabels = [
-            "Freeway Less than -200%" ,
-            "Freeway -200% to -40%"   ,
-            "Freeway -40% to -20%"    ,
-            "Freeway -20% to -5%"     ,
-            "Freeway -5% to +5%"      ,
-            "Freeway +5% to +20%"     ,
-            "Freeway +20% to +40%"    ,
-            "Freeway +40% to +100%"   ,
-            "Freeway +100% to +200%"  ,
-            "Freeway +200% to +400%"  ,
-            "Freeway More than +400%" ];
-          let arterialLabels = [
-            "Arterial Less than -200%" ,
-            "Arterial -200% to -40%"   ,
-            "Arterial -40% to -20%"    ,
-            "Arterial -20% to -5%"     ,
-            "Arterial -5% to +5%"      ,
-            "Arterial +5% to +20%"     ,
-            "Arterial +20% to +40%"    ,
-            "Arterial +40% to +100%"   ,
-            "Arterial +100% to +200%"  ,
-            "Arterial +200% to +400%"  ,
-            "Arterial More than +400%" ];
-
-          let lineWidths = [6.0000, 5.5000, 4.2500, 3.6250, 2.3125, 2.6250, 3.2500, 4.5000, 5.5000, 6.0000, 7.0000];
-        
-          let freewayValues = freewayLabels.map((label, index) => {
-            return {
-              value: "class_f" + (index + 1),
-              label: label,
-              symbol: new SimpleLineSymbol({color: baseColors[index], width: lineWidths[index]})
-            };
-          });
-        
-          let arterialValues = arterialLabels.map((label, index) => {
-            return {
-              value: "class_r" + (index + 1),
-              label: label,
-              symbol: new SimpleLineSymbol({color: baseColors[index], width: lineWidths[index] / 3})
-            };
-          });
-        
-          return [...freewayValues, ...arterialValues];
-        }
-        
-        function createRenderer(featureName, isReversed = false) {
-          return new UniqueValueRenderer({
-            valueExpression: generateValueExpression(featureName),
-            uniqueValueInfos: getUniqueValueInfos(isReversed)
-          });
-        }
-        
-        function getPercentChangeRenderer (featureName) {
-          return createRenderer(featureName, false);
-        }
-        
-        function getPercentChangeRenderer_Reverse (featureName) {
-          return createRenderer(featureName, true);
-        }
-        
-
-        // Set a renderer based on the 'dVal' field
-        const rendererTemp = new ClassBreaksRenderer({
-          field: "dVal",
-          classBreakInfos: [
-              { minValue:   0.01, maxValue:     5999, symbol: new SimpleLineSymbol({ color: new Color("#31398a"), width: 0.5000 }), label: "Less than 6,000"   },
-              { minValue:   6000, maxValue:    17999, symbol: new SimpleLineSymbol({ color: new Color("#1ba9e6"), width: 1.1000 }), label: "6,000 to 18,000"   },
-              { minValue:  18000, maxValue:    35999, symbol: new SimpleLineSymbol({ color: new Color("#00a74e"), width: 1.7000 }), label: "18,000 to 36,000"  },
-              { minValue:  36000, maxValue:    71999, symbol: new SimpleLineSymbol({ color: new Color("#6cb74a"), width: 2.3000 }), label: "36,000 to 72,000"  },
-              { minValue:  72000, maxValue:   119999, symbol: new SimpleLineSymbol({ color: new Color("#8dc348"), width: 3.9000 }), label: "72,000 to 120,000" },
-              { minValue: 120000, maxValue:   159999, symbol: new SimpleLineSymbol({ color: new Color("#E09d2e"), width: 3.5000 }), label: "120,000 to 160,000"},
-              { minValue: 160000, maxValue:   199999, symbol: new SimpleLineSymbol({ color: new Color("#Eb672d"), width: 4.1000 }), label: "160,000 to 200,000"},
-              { minValue: 200000, maxValue:   239999, symbol: new SimpleLineSymbol({ color: new Color("#E5272d"), width: 4.7000 }), label: "200,000 to 240,000"},
-              { minValue: 240000, maxValue: Infinity, symbol: new SimpleLineSymbol({ color: new Color("#Af2944"), width: 5.3000 }), label: "More than 240,000" }
-          ]
-        });
-
         var renderer;
 
         if (mode==='base') {
@@ -1023,10 +764,3 @@ require([
   window.ModelEntity = ModelEntity;
 
 });
-
-
-
-
-
-
-
