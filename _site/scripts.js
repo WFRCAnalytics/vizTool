@@ -108,38 +108,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
         // Popup properties here if any customizations are needed
       }
     });
-    
-    // Dummy polyline feature connecting Salt Lake City and Provo
-    dummyFeature = {
-      geometry: {
-        type: "polyline",
-        paths: [
-          [-111.8910, 40.7608], // Salt Lake City
-          [-111.8911, 40.7609]  // Provo
-        ],
-        spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-      },
-      attributes: {
-        SEGID: 0, // Unique ID, using "SEGID" as the objectIdField
-        // ... add other attribute fields if necessary
-        displayValue: 0 // Assuming you want a displayValue, you can set any initial value
-      }
-    };
-
-    let features = [dummyFeature]; // This will be populated with graphics
-
-    layerDisplay = new FeatureLayer({
-      source: features,  // Now contains the dummyFeature
-      objectIdField: "SEGID",
-      fields: [
-        // ... your other fields
-        { name: "SEGID", type: "oid" },  // Object ID field
-        { name: "displayValue", type: "double" } // Assuming 'displayValue' is a type of double
-      ]
-    });
-
-    map.add(layerDisplay);  // Assuming 'map' is your Map instance
-
 
     // ADD GEOJSONS
     
@@ -156,94 +124,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });
     map.add(geojsonSegments);
-    
-    const geojsonParking = new GeoJSONLayer({
-      url: "data/parking.geojson",
-      title: "Parking",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [255, 120, 120],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0,
-            color: [0, 0, 0, 0]
-          }
-        }
-      }
-    });
-    map.add(geojsonParking);
-    
-    const geojsonTollz = new GeoJSONLayer({
-      url: "data/tollz.geojson",
-      title: "Toll Zones",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [120, 255, 120],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0,
-            color: [0, 0, 0, 0]
-          }
-        }
-      }
-    });
-    map.add(geojsonTollz);
-    
-    const geojsonHexGrid = new GeoJSONLayer({
-      url: "data/hexgrid.geojson",
-      title: "HexGrid",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [0, 0, 0, 0],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0.5,
-            color: [120, 120, 120]
-          }
-        }
-      }
-    });
-    map.add(geojsonHexGrid);
-
-    const geojsonCities = new GeoJSONLayer({
-      url: "data/city.geojson",
-      title: "Municipalities",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [0, 0, 0, 0],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 3,
-            color: [50, 50, 50]
-          }
-        }
-      }
-    });
-    map.add(geojsonCities);
-
-//    // Define the layer selection widget
-//    const layerList = new LayerList({
-//      view: view,
-//      // Optional: Specify the title for the widget
-//      container: document.createElement('div'),
-//      // Optional: Expand the widget by default
-//      listItemCreatedFunction: function(event) {
-//        const item = event.item;
-//        item.panel = {
-//          content: 'legend',
-//          open: true
-//        };
-//      }
-//    });
-//
-//    // Add the widget to the top-right corner of the view
-//    view.ui.add(layerList, {
-//      position: 'bottom-left'
-//    });
 
     // add basemap toggle
     const basemapToggle = new BasemapToggle({
@@ -252,7 +132,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     });
     
     view.ui.add(basemapToggle,"bottom-left");
-
 
     // initialize map
     init();
