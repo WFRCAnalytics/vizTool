@@ -237,7 +237,7 @@ createAvmtChart(displayName = 'VMT') { //set default to 'VMT'
           // Create canvas and chart
           const canvas = document.createElement('canvas');
           canvas.width = 400; // Set the width of the canvas
-          canvas.height = 400; // Set the height of the canvas
+          canvas.height = 200; // Set the height of the canvas
           chartContainer.appendChild(canvas); // Append canvas to chart container
 
           // Append the chart container to the specified element in HTML
