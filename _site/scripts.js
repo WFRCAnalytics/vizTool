@@ -1,5 +1,10 @@
 let globalTemplates = [];
+let dataScenarios = [];
 let map;
+let geojsonSegments;
+let view;
+let layerDisplay;
+let dummyFeature;
 
 require(["esri/config",
          "esri/Map",
@@ -10,53 +15,65 @@ require(["esri/config",
          "esri/widgets/Home",
          "esri/widgets/Search",
          "esri/layers/TileLayer",
-         "esri/Graphic",
          "esri/geometry/Point",
          "esri/geometry/Polygon",
          "esri/geometry/Polyline",
          "esri/layers/FeatureLayer",
          "esri/widgets/LayerList",
-         "esri/renderers/ClassBreaksRenderer",
-         "esri/renderers/UniqueValueRenderer",
-         "esri/renderers/SimpleRenderer",
          "esri/widgets/Legend",
          "esri/PopupTemplate",
          "esri/symbols/TextSymbol",
          "esri/rest/support/Query",
-         "esri/WebMap"
+         "esri/WebMap",
+         "esri/PopupTemplate"
         ],
-function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, Search, TileLayer, Graphic, Point, Polygon, Polyline, FeatureLayer, LayerList, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, Legend, PopupTemplate, TextSymbol, Query, WebMap) {
+function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, Search, TileLayer, Point, Polygon, Polyline, FeatureLayer, LayerList, Legend, PopupTemplate, TextSymbol, Query, WebMap, PopupTemplate) {
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
-
-
-  async function fetchMenuData() {
+  async function fetchConfig() {
     const response = await fetch('config.json');
-    const data = await response.json();
-    return data;
+    const dataConfig = await response.json();
+    return dataConfig;
+  }
+
+  async function fetchScenarioData() {
+    const response = await fetch('scenarios.json');
+    const dataScenario = await response.json();
+    return dataScenario;
+  }
+
+  async function loadScenarios() {
+    const jsonScenario = await fetchScenarioData();
+    dataScenarios = jsonScenario.map(item => new Scenario(item));
   }
 
   async function loadMenuAndItems() {
-    const menuJson = await fetchMenuData();
-    const menuData = menuJson.map(item => new MenuItem(item));
-    
+    const jsonConfig = await fetchConfig();
+
+    const userElement = document.querySelector('calcite-navigation-user[slot="user"]');
+    const username = userElement.getAttribute('username');
+
+    const dataApp = jsonConfig['users'].map(item => new User(item));
+    const dataMenu = dataApp.filter(item => item.userType === username)[0].userLayout.menuItems;
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
     calciteMenu.innerHTML = '';
 
     // Render each menu item and log (or insert into the DOM)
-    menuData.forEach(menuItem => {
+    dataMenu.forEach(menuItem => {
       calciteMenu.appendChild(menuItem.createMenuItemElement());
     });
   }
 
   async function init() {
     const menuStructure = await loadMenuAndItems();
+    await loadScenarios();
+    await populateTemplates();
   }
 
-  function populateTemplates() {
+  async function populateTemplates() {
     const container = document.getElementById('main'); // Assuming your templates will be children of a div with the id "main".
 
     globalTemplates.forEach(template => {
@@ -65,6 +82,10 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
         div.classList.add('template');
         div.hidden = true;
         div.innerHTML = template.layoutDivs;
+        if (template.templateType='vizMap') {
+          // code for map overlay widgets
+
+        }
         container.appendChild(div);
     });
 
@@ -83,18 +104,20 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       basemap: "gray-vector" // Basemap layerSegments service
     });
     
-    const view = new MapView({
+    view = new MapView({
       map: map,
       center: [-111.8910, 40.7608], // Longitude, latitude
       zoom: 10, // Zoom level
-      container: "mapView" // Div element
+      container: "mapView", // Div element
+      popup: {
+        // Popup properties here if any customizations are needed
+      }
     });
-
 
     // ADD GEOJSONS
     
-    const geojsonSegments = new GeoJSONLayer({
-      url: "data/segments.geojson",
+    geojsonSegments = new GeoJSONLayer({
+      url: "data/segmentsWithAggFields.geojson",
       title: "Segments",
       renderer: {
         type: "simple",  // autocasts as new SimpleRenderer()
@@ -106,94 +129,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });
     map.add(geojsonSegments);
-    
-    const geojsonParking = new GeoJSONLayer({
-      url: "data/parking.geojson",
-      title: "Parking",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [255, 120, 120],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0,
-            color: [0, 0, 0, 0]
-          }
-        }
-      }
-    });
-    map.add(geojsonParking);
-    
-    const geojsonTollz = new GeoJSONLayer({
-      url: "data/tollz.geojson",
-      title: "Toll Zones",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [120, 255, 120],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0,
-            color: [0, 0, 0, 0]
-          }
-        }
-      }
-    });
-    map.add(geojsonTollz);
-    
-    const geojsonHexGrid = new GeoJSONLayer({
-      url: "data/hexgrid.geojson",
-      title: "HexGrid",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [0, 0, 0, 0],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 0.5,
-            color: [120, 120, 120]
-          }
-        }
-      }
-    });
-    map.add(geojsonHexGrid);
-
-    const geojsonCities = new GeoJSONLayer({
-      url: "data/city.geojson",
-      title: "Municipalities",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: "simple-fill",  // autocasts as new SimpleFillSymbol()
-          color: [0, 0, 0, 0],  // transparent fill
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 3,
-            color: [50, 50, 50]
-          }
-        }
-      }
-    });
-    map.add(geojsonCities);
-
-//    // Define the layer selection widget
-//    const layerList = new LayerList({
-//      view: view,
-//      // Optional: Specify the title for the widget
-//      container: document.createElement('div'),
-//      // Optional: Expand the widget by default
-//      listItemCreatedFunction: function(event) {
-//        const item = event.item;
-//        item.panel = {
-//          content: 'legend',
-//          open: true
-//        };
-//      }
-//    });
-//
-//    // Add the widget to the top-right corner of the view
-//    view.ui.add(layerList, {
-//      position: 'bottom-left'
-//    });
 
     // add basemap toggle
     const basemapToggle = new BasemapToggle({
@@ -201,8 +136,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       nextBasemap: "arcgis-imagery"
     });
     
-    view.ui.add(basemapToggle,"bottom-right");
-
+    view.ui.add(basemapToggle,"bottom-left");
 
     // initialize map
     init();
