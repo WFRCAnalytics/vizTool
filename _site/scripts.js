@@ -70,10 +70,9 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
   async function init() {
     const menuStructure = await loadMenuAndItems();
     await loadScenarios();
-    await populateTemplates();
   }
 
-  async function populateTemplates() {
+  function populateTemplates() {
     const container = document.getElementById('main'); // Assuming your templates will be children of a div with the id "main".
 
     globalTemplates.forEach(template => {
@@ -82,10 +81,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
         div.classList.add('template');
         div.hidden = true;
         div.innerHTML = template.layoutDivs;
-        if (template.templateType='vizMap') {
-          // code for map overlay widgets
-
-        }
         container.appendChild(div);
     });
 
