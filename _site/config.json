@@ -329,6 +329,79 @@
                     }
                   ]
                 }
+              },
+              {
+                "submenuText": "Roadway Trends",
+                "submenuIconStart": "graph-line-series",
+                "jsonFile": "roadway-seg-summary.json",
+                "template": "vizTrends",
+                "templateSettings": {
+                  "mapViewDiv": "mainTrend",
+                  "sidebarDiv": "trendSidebarContent",
+                  "attributeSelected": "aLanes",
+                  "attributes": [
+                    {
+                      "aCode": "aLanes",
+                      "aDisplayName": "Lanes"
+                    },
+                    {
+                      "aCode": "aFt",
+                      "aDisplayName": "Functional Type"
+                    },
+                    {
+                      "aCode": "aCap1HL",
+                      "aDisplayName": "Capacity"
+                    },
+                    {
+                      "aCode": "aFfSpd",
+                      "aDisplayName": "Free-flow Speed"
+                    },
+                    {
+                      "aCode": "aVol",
+                      "aDisplayName": "Volume"
+                    },
+                    {
+                      "aCode": "aSpd",
+                      "aDisplayName": "Speed"
+                    },
+                    {
+                      "aCode": "aVc",
+                      "aDisplayName": "Congestion"
+                    }
+                ],
+                  "filters" : [
+                    {
+                      "id"  : "fDir",
+                      "text": "Filter Direction",
+                      "type": "select",
+                      "options": [{"value":"DT", "label":"Both Directions"},
+                                  {"value":"D1", "label":"NB/EB"      },
+                                  {"value":"D2", "label":"SB/WB"      }],
+                      "selected": "DT"
+                    },
+                    {
+                      "id"  : "fTod",
+                      "text": "Filter Time of Day",
+                      "type": "select",
+                      "options": [{"value":"DY", "label":"Daily"     },
+                                  {"value":"AM", "label":"AM Period"   },
+                                  {"value":"MD", "label":"Midday Period" },
+                                  {"value":"PM", "label":"PM Period"   },
+                                  {"value":"EV", "label":"Evening Period"}],
+                      "selected": "DY"
+                    },
+                    {
+                      "id"  : "fVeh",
+                      "text": "Filter Vehicle Type",
+                      "type": "select",
+                      "options": [{"value":"All", "label":"All Vehicles" },
+                                  {"value":"LT" , "label":"Light Trucks" },
+                                  {"value":"MD" , "label":"Medium Trucks"},
+                                  {"value":"HV" , "label":"Heavy Trucks" }],
+                      "selected": "All"
+                    }
+                  ]
+                }
               }
             ]
           }

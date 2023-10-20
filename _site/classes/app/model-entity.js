@@ -6,6 +6,8 @@ class ModelEntity {
     this.template = data.template;
     if (data.template=='vizMap') {
       this.vizMap = new VizMap(data.templateSettings);
+    } else if (data.template=='vizTrends') {
+      this.vizTrends = new VizTrends(data.templateSettings);
     }
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;
@@ -49,6 +51,9 @@ class ModelEntity {
       if (modelEntityInstance.template=="vizMap") {
         modelEntityInstance.vizMap.renderSidebar();  // Use the saved instance context here as well
         modelEntityInstance.vizMap.updateMap();
+      } else if (modelEntityInstance.template=='vizTrends') {
+        modelEntityInstance.vizTrends.renderSidebar();
+        //modelEntityInstance.vizTrends.updateMap();
       }
       modelEntityInstance.populateText();
       modelEntityInstance.populateImage();
