@@ -67,10 +67,37 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     });
   }
 
+  async function populateScenarioSelections (){
+    const modMain = document.getElementById('selectModMain');
+    const grpMain = document.getElementById('selectGrpMain');
+    const yearMain = document.getElementById('selectYearMain');
+    const modComp = document.getElementById('selectModComp');
+    const grpComp = document.getElementById('selectGrpComp');
+    const yearComp = document.getElementById('selectYearComp');
+    const scenarioModel = new Set();
+    const scenarioGroup = new Set();
+    const scenarioYear = new Set();
+
+    dataScenarios.forEach(entry=> {
+      scenarioModel.add(entry.modVersion);
+      scenarioGroup.add(entry.scnGroup);
+      scenarioYear.add(entry.scnYear);
+    });
+    scenarioModel.forEach(entry=>modMain.add(new Option(entry)));
+    scenarioGroup.forEach(entry=>grpMain.add(new Option(entry)));
+    scenarioYear.forEach(entry=>yearMain.add(new Option(entry)));
+    modComp.add(new Option("none"));
+    grpComp.add(new Option("none"));
+    yearComp.add(new Option("none"));
+    scenarioModel.forEach(entry=>modComp.add(new Option(entry)));
+    scenarioGroup.forEach(entry=>grpComp.add(new Option(entry)));
+    scenarioYear.forEach(entry=>yearComp.add(new Option(entry)));
+  }
+
   async function init() {
     const menuStructure = await loadMenuAndItems();
     await loadScenarios();
-    await populateTemplates();
+    await populateScenarioSelections();
   }
 
   async function populateTemplates() {
@@ -82,10 +109,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
         div.classList.add('template');
         div.hidden = true;
         div.innerHTML = template.layoutDivs;
-        if (template.templateType='vizMap') {
-          // code for map overlay widgets
-
-        }
         container.appendChild(div);
     });
 
