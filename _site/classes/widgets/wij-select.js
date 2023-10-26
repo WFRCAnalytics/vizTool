@@ -1,9 +1,10 @@
 class WijSelect {
-  constructor(id, options, selected, vizLayout) {
+  constructor(id, options, selected, vizLayout, text) {
     this.id = id;
     this.options = options;
     this.selected = selected;
     this.vizLayout = vizLayout;
+    this.text = text;
   }
 
   // Render the item based on its type
