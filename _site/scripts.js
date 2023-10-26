@@ -100,7 +100,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     await populateScenarioSelections();
   }
 
-  async function populateTemplates() {
+  function populateTemplates() {
     const container = document.getElementById('main'); // Assuming your templates will be children of a div with the id "main".
 
     globalTemplates.forEach(template => {
