@@ -7,7 +7,7 @@ class Filter {
       this.filterSelect = new WijSelect(this.id + "_filter", data.options.map(item => ({
         value: item.value,
         label: item.label
-      })), data.selected, this.vizLayout);
+      })), data.selected, this.vizLayout, data.text);
     } else if (data.type === "radio") {
       this.filterSelect = new WijRadio(this.id + "_filter", data.options.map(item => ({
         value: item.value,
