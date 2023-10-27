@@ -108,7 +108,9 @@ require([
       }
     }
 
-    updateChartData(displayName) {
+    // FIX THIS TO RELOAD WHEN SIDEBAR ELEMENT IS SELECTED -- RIGHT NOW ONLY UPDATES WHEN MENU OPTION CHANGES
+    updateChartData() {
+      var displayName = this.attributeSelect.selected;
       // Get values from the select widgets
       let modVersionValueMain = document.getElementById('selectModMain').value;
       let scnGroupValueMain = document.getElementById('selectGrpMain').value;
@@ -159,7 +161,21 @@ require([
         return filterSelectionData.aCap1HL; // Change this to the appropriate property based on your data structure
     } else if (displayName === 'aFfSpd') {
         return filterSelectionData.aFfSpd; // Change this to the appropriate property based on your data structure
+    } else if (displayName === 'aFt') {
+        return filterSelectionData.aFt;
+    } else if (displayName === 'aVol') {
+        return filterSelectionData.aVol;
+    } else if (displayName === 'aSpeed') {
+        return filterSelectionData.aSpeed;
+    } else if (displayName === 'aLanes') {
+        return filterSelectionData.aLanes;
     }
+
+    //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in viz-map L#272)
+
+
+
+
     // Handle other display names if needed
     return null;
 }
@@ -167,6 +183,10 @@ require([
   createAvmtChart(displayName, labels, chartData) {
     console.log('Creating the chart...');
     console.log("Selected radio button option under 'Display':", displayName);
+
+     // Clear existing chart container
+     const chartElement = document.getElementById('mainTrend');
+     chartElement.innerHTML = '';
   
     // Create chart container dynamically
     const chartContainer = document.createElement('div');
@@ -179,11 +199,7 @@ require([
     chartContainer.appendChild(canvas); // Append canvas to chart container
   
     // Append the chart container to the specified element in HTML
-    const chartElement = document.getElementById('mainTrend');
-    chartElement.innerHTML = '';
-    if (chartElement) {
-      chartElement.appendChild(chartContainer);
-    }
+    chartElement.appendChild(chartContainer);
   
     // Create Chart.js chart
     const ctx = canvas.getContext('2d');
