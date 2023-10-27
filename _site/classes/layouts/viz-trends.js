@@ -68,7 +68,6 @@ require([
       console.log('afterSidebarUpdate');
       //this.updateMap();
       this.updateFilters();
-      this.updateAggregations();
     }
 
     afterFilterUpdate() {
@@ -89,165 +88,127 @@ require([
       }
 
 
-      if (document.getElementById('fVeh_container') === null || typeof document.getElementById('fVeh_container') === 'undefined') {
+      if (document.getElementById('fVeh_container2') === null || typeof document.getElementById('fVeh_container2') === 'undefined') {
         return;
       }
     
       // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
       if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'none';
-        document.getElementById('fTod_container').style.display = 'none';
+        document.getElementById('fDir_container2').style.display = 'block';
+        document.getElementById('fVeh_container2').style.display = 'none';
+        document.getElementById('fTod_container2').style.display = 'none';
       } else if (aCode === 'aVol') {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'block';
-        document.getElementById('fTod_container').style.display = 'block';
+        document.getElementById('fDir_container2').style.display = 'block';
+        document.getElementById('fVeh_container2').style.display = 'block';
+        document.getElementById('fTod_container2').style.display = 'block';
       } else if (['aVc', 'aSpd'].includes(aCode)) {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'none';
-        document.getElementById('fTod_container').style.display = 'block';
+        document.getElementById('fDir_container2').style.display = 'block';
+        document.getElementById('fVeh_container2').style.display = 'none';
+        document.getElementById('fTod_container2').style.display = 'block';
       }
     }
 
-    updateAggregations() {
-      console.log('updateAggregations');
-      
-      const aggNumeratorSelect = document.getElementById('aggNumerator');
+    updateChartData(displayName) {
+      // Get values from the select widgets
+      let modVersionValueMain = document.getElementById('selectModMain').value;
+      let scnGroupValueMain = document.getElementById('selectGrpMain').value;
+      let scnYearValueMain = parseInt(document.getElementById('selectYearMain').value, 10); // Assuming it's a number
 
-      if (aggNumeratorSelect === null || typeof aggNumeratorSelect === 'undefined') {
-        return;
-      }
-    
-
-      const selectedOption = aggNumeratorSelect.querySelector('calcite-option[selected]');
-      
-      var aggNumeratorContent = "";
-
-      if (selectedOption) {
-        aggNumeratorContent = selectedOption.textContent || selectedOption.innerText;
-        console.log(aggNumeratorContent); // Outputs the text content of the selected option
-      } else {
-        console.error('No option selected in aggNumerator.');
-      }
-
-      const aggDenominatorInput = document.getElementById('aggDenominator');
-
-      // get aggregation numberator
-      const aggNumerator = selectedOption.value;
-      const aggDenominator = aggDenominatorInput.value;
-
-      // Query the features
-      var query = new Query();
-      query.where = "1=1"; // Get all features. Adjust if you need a different condition.
-      query.returnGeometry = false; // We don't need geometries for aggregation.
-      query.outFields = [aggNumerator, "dVal", "DISTANCE"];
+      // Specify the file path
+      const chartDataPath = `data/scnData/${modVersionValueMain}__${scnGroupValueMain}__${scnYearValueMain}/roadway-seg-summary.json`;
   
-      layerDisplay.queryFeatures(query).then(function(results) {
-        var sumDistXVal  = {};
-        var sumDist      = {}; // For storing distances
-        var aggDistWtVal = {};
-        
-        results.features.forEach(function(feature) {
-          var agg = feature.attributes[aggNumerator];
-          var distxval = feature.attributes.dVal * feature.attributes.DISTANCE;
-          var dist = feature.attributes.DISTANCE;
-      
-          // Check if agg already exists in the objects
-          if (sumDistXVal[agg]) {
-            sumDistXVal[agg] += distxval;
-            sumDist    [agg] += dist;
-          } else {
-            sumDistXVal[agg] = distxval;
-            sumDist    [agg] = dist;
-          }
-        });
-        
-        // Calculate aggDistWtVal for each key
-        for (var key in sumDistXVal) {
-          aggDistWtVal[key] = sumDistXVal[key] / sumDist[key];
-        }
-        
-                        
-        // Sort the keys based on their values in aggDistWtVal in descending order
-        var sortedKeys = Object.keys(aggDistWtVal).sort(function(a, b) {
-          return aggDistWtVal[b] - aggDistWtVal[a];
-        });
-
-        // Construct a new object with sorted keys
-        var sortedAggDistWtVal = {};
-        for (var i = 0; i < sortedKeys.length; i++) {
-          sortedAggDistWtVal[sortedKeys[i]] = aggDistWtVal[sortedKeys[i]];
-        }
-
-        // Do something with the aggDistWtVal...
-        console.log(aggDistWtVal);
-        //table.style.fontSize = "0.8em"; // For smaller text
-
-        // Create a new table element
-        var table = document.createElement("table");
-        
-        // Create the table header
-        var thead = table.createTHead();
-        var headerRow = thead.insertRow();
-        var th1 = document.createElement("th");
-        th1.textContent = aggNumeratorContent;
-        headerRow.appendChild(th1);
-        var th2 = document.createElement("th");
-        th2.textContent = "";
-        //switch(aCode) {
-        //  case 'aLanes':
-        //    th2.textContent = "Lane Miles";
-        //    break;
-        //  case 'aFt':
-        //    th2.textContent = "FT x Distance";
-        //    break;
-        //  case 'aFtClass':
-        //    th2.textContent = "ERROR";
-        //    break;
-        //  case 'aCap1HL':
-        //    th2.textContent = "Cap x Distance";
-        //    break;
-        //  case 'aVc' :
-        //    th2.textContent = "VC x Distance";
-        //    break;
-        //  case 'aVol':
-        //    th2.textContent = "VMT";
-        //    break;
-        //  case 'aSpd':
-        //  case 'aFfSpd':
-        //    th2.textContent = "Spd x Distance";
-        //    break;
-        //}
-        headerRow.appendChild(th2);
-
-        const formatNumber = (num) => {
-          return num.toLocaleString('en-US', {
-            minimumFractionDigits: 1, 
-            maximumFractionDigits: 1 
+      if (typeof chartDataPath === 'undefined') {
+          console.error('Invalid chart data path:', chartDataPath);
+          return;
+      }
+  
+      fetch(chartDataPath)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (!data.data || !data.data.D1) {
+                  throw new Error('Invalid JSON data format');
+              }
+  
+              const labels = [];
+              const chartData = [];
+  
+              // Access the segment data using data.D1
+              Object.keys(data.data.D1).forEach(segId => {
+                  const selectedValue = this.getChartData(displayName, data.data.D1[segId]);
+                  if (selectedValue !== null) {
+                      labels.push(segId);
+                      chartData.push(selectedValue);
+                  }
+              });
+  
+              // Call your createAvmtChart function here with labels and chartData
+              this.createAvmtChart(displayName, labels, chartData);
+          })
+          .catch(error => {
+              console.error('Error fetching or updating chart data:', error);
           });
-        }
+  }
 
-        // Populate the table with data
-        for (var key in sortedAggDistWtVal) {
-          var row = table.insertRow();
-          var cell1 = row.insertCell();
-          cell1.textContent = key;
-          var cell2 = row.insertCell();
-          //cell2.style.textAlign = "right"; // Right-justify the text
-          cell2.textContent = formatNumber(sortedAggDistWtVal[key]);
-        }
+  getChartData(displayName, filterSelectionData) {
+    if (displayName === 'aCap1HL') {
+        return filterSelectionData.aCap1HL; // Change this to the appropriate property based on your data structure
+    } else if (displayName === 'aFfSpd') {
+        return filterSelectionData.aFfSpd; // Change this to the appropriate property based on your data structure
+    }
+    // Handle other display names if needed
+    return null;
+}
 
-        // Append the table to the container div
-        var container = document.getElementById("tableContainer");
-        container.innerHTML = '';
-        container.appendChild(table);
-
-      }).catch(function(error) {
-          console.error("There was an error: ", error);
-      });
-
+  createAvmtChart(displayName, labels, chartData) {
+    console.log('Creating the chart...');
+    console.log("Selected radio button option under 'Display':", displayName);
+  
+    // Create chart container dynamically
+    const chartContainer = document.createElement('div');
+    chartContainer.id = 'chartContainer'; // Set the id for the chart container
+  
+    // Create canvas and chart
+    const canvas = document.createElement('canvas');
+    canvas.width = 400; // Set the width of the canvas
+    canvas.height = 200; // Set the height of the canvas
+    chartContainer.appendChild(canvas); // Append canvas to chart container
+  
+    // Append the chart container to the specified element in HTML
+    const chartElement = document.getElementById('mainTrend');
+    chartElement.innerHTML = '';
+    if (chartElement) {
+      chartElement.appendChild(chartContainer);
     }
   
+    // Create Chart.js chart
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: displayName + ' Data',
+          data: chartData,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
   
     getSidebarSelector(submenuTemplate) {
       if (submenuTemplate === 'vizLog') {

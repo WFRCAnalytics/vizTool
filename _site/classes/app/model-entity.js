@@ -53,7 +53,7 @@ class ModelEntity {
         modelEntityInstance.vizMap.updateMap();
       } else if (modelEntityInstance.template=='vizTrends') {
         modelEntityInstance.vizTrends.renderSidebar();
-        //modelEntityInstance.vizTrends.updateMap();
+        modelEntityInstance.vizTrends.updateChartData('aCap1HL');
       }
       modelEntityInstance.populateText();
       modelEntityInstance.populateImage();

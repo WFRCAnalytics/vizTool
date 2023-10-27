@@ -94,9 +94,9 @@ th, td {
 }
 #mainTrend {
     /* Main content styles */
-    flex-grow: 1;
-    display: flex;
-    flex-wrap: wrap;
+    width: 1300px; /* or any other value */
+    padding: 15px;
+    height: calc(100vh - 144px);
 }
 #mainMatrix {
     /* Main content styles */
