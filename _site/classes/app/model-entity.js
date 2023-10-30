@@ -5,7 +5,7 @@ class ModelEntity {
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
     if (data.template=='vizMap') {
-      this.vizMap = new VizMap(data.templateSettings);
+      this.vizMap = new VizMap(data.templateSettings, data.submenuText);
     }
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;

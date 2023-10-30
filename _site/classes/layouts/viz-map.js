@@ -1,7 +1,8 @@
-let legend;
-let widget;
-
 require([
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/widgets/BasemapToggle",
+  "esri/layers/GeoJSONLayer",
   "esri/Graphic",
   "esri/layers/FeatureLayer",
   "esri/renderers/ClassBreaksRenderer",
@@ -11,25 +12,175 @@ require([
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
-  "esri/renderers/UniqueValueRenderer",
   "esri/rest/support/Query"
-], function(Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, UniqueValueRenderer, Query) {
+], function(Map, MapView, BasemapToggle, GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
-    constructor(data) {
+    constructor(data, layerTitle) {
+      this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
       this.mapViewDiv = data.mapViewDiv;
       this.mapOverlayDiv = data.mapOverlayDiv;
       this.sidebarDiv = data.sidebarDiv;
+      this.geometryFile = data.geometryFile;
+      this.geometryFileId = data.geometryFileId;
+      this.popupTitle = data.popupTitle;
       this.attributeTitle = data.attributeTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
       this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
-      })), data.attributeSelected);
+      })), data.attributeSelected, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
-      
+      this.layerTitle = layerTitle;
+      this.layerDisplay = new FeatureLayer();
       this.initListeners();
+
+      // add map
+      this.map = new Map({
+        basemap: "gray-vector" // Basemap layerSegments service
+      });
+      
+      this.mapView = new MapView({
+        map: this.map,
+        center: [-111.8910, 40.7608], // Longitude, latitude
+        zoom: 10, // Zoom level
+        container: data.mapViewDiv, // Div element
+        popup: {
+          // Popup properties here if any customizations are needed
+        }
+      });
+
+      // add basemap toggle
+      const basemapToggle = new BasemapToggle({
+        view: this.mapView,
+        nextBasemap: "arcgis-imagery"
+      });
+      
+      this.mapView.ui.add(basemapToggle,"bottom-left");
+      
+      // ADD GEOJSONS
+      // need to check geometry type before adding!!
+      this.geojsonGeometry = new GeoJSONLayer({
+        url: "data/" + this.geometryFile,
+        title: this.s,
+        renderer: {
+          type: "simple",  // autocasts as new SimpleRenderer()
+          symbol: {
+            type: 'simple-line',
+            color: [150, 150, 200],
+            width: 1
+          }
+        }
+      });
+      this.map.add(this.geojsonGeometry);
+      this.geojsonGeometry.visible = false;
+
+      // Dummy polyline feature connecting Salt Lake City and Provo
+      this.dummyFeature = {
+        geometry: {
+          type: "polyline",
+          paths: [
+            [-111.8910, 40.7608], // Salt Lake City
+            [-111.8911, 40.7609]  // Provo
+          ],
+          spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+        },
+        attributes: {
+          SEGID: 0, // Unique ID, using "SEGID" as the objectIdField
+          // ... add other attribute fields if necessary
+          displayValue: 0 // Assuming you want a displayValue, you can set any initial value
+        }
+      };
+
+    }
+
+    
+    generateIdFromText(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    
+    getScenario(_modVersion, _scnGroup, _scnYear) {
+      return dataScenarios.find(scenario =>
+        scenario.modVersion === _modVersion &&
+        scenario.scnGroup   === _scnGroup   &&
+        scenario.scnYear    === _scnYear
+      ) || null;
+    }
+
+    scenarioMain() {
+      return this.getScenario(         document.getElementById('selectModMain' ).value,
+                                       document.getElementById('selectGrpMain' ).value,
+                              parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+    }
+
+    scenarioComp() {
+      return this.getScenario(         document.getElementById('selectModComp' ).value,
+                                       document.getElementById('selectGrpComp' ).value,
+                              parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
+    }
+
+    dataMain() {
+      // for roadway segs
+      return this.scenarioMain().roadwaySegData.data[this.getFilter()]
+    }
+    dataComp() {
+      // for roadway segs
+      return this.scenarioComp().roadwaySegData.data[this.getFilter()]
+    }
+
+    // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
+    incompleteScenarioComp() {
+      if (this.scenarioComp() === null) {
+        if ((document.getElementById('selectModComp' ).value !== "none" ||
+             document.getElementById('selectGrpComp' ).value !== "none" ||
+             document.getElementById('selectYearComp').value !== "none" )) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
+    getACode() {
+      return this.attributeSelect.selected;
+    }
+
+    getAttributeRendererCollection() {
+      return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
+    }
+
+    getMainRenderer() {
+      return this.getAttributeRendererCollection().main.renderer;
+    }
+
+    getCompareAbsRenderer() {
+      return this.getAttributeRendererCollection().compare_abs.renderer;
+    }
+
+    getComparePctRenderer() {
+      return this.getAttributeRendererCollection().compare_pct.renderer;
+    }
+
+    // get the current filter
+    getFilter() {
+
+      const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+
+      // Split the _filterGroup by "_"
+      const _filterArray = _filterGroup.split("_");
+      
+      // Map selected options to an array and join with "_"
+      const _filter = _filterArray
+        .map(filterItem => {
+          var _fItem = this.filters.find(item => item.id === filterItem);
+          return _fItem ? _fItem.filterWij.selected : "";
+        })
+        .join("_");
+
+      return _filter;
     }
     
     renderSidebar() {
@@ -77,37 +228,26 @@ require([
     }
 
     afterFilterUpdate() {
-
+      this.updateMap();
     }
 
     updateFilters() {
       console.log('updateFilters');
-
-      var aCode = "";
-
-      if (this.mapSidebarItems && this.mapSidebarItems.length > 0) {
-        aCode = this.mapSidebarItems[0].selectedOption;
-        console.log(aCode);
-      } else {
-        console.error('mapSidebarItems is empty or not defined.');
-        return;
-      }
-
 
       if (document.getElementById('fVeh_container') === null || typeof document.getElementById('fVeh_container') === 'undefined') {
         return;
       }
     
       // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
+      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(this.getACode())) {
         document.getElementById('fDir_container').style.display = 'block';
         document.getElementById('fVeh_container').style.display = 'none';
         document.getElementById('fTod_container').style.display = 'none';
-      } else if (aCode === 'aVol') {
+      } else if (this.getACode() === 'aVol') {
         document.getElementById('fDir_container').style.display = 'block';
         document.getElementById('fVeh_container').style.display = 'block';
         document.getElementById('fTod_container').style.display = 'block';
-      } else if (['aVc', 'aSpd'].includes(aCode)) {
+      } else if (['aVc', 'aSpd'].includes(this.getACode())) {
         document.getElementById('fDir_container').style.display = 'block';
         document.getElementById('fVeh_container').style.display = 'none';
         document.getElementById('fTod_container').style.display = 'block';
@@ -147,7 +287,7 @@ require([
       query.returnGeometry = false; // We don't need geometries for aggregation.
       query.outFields = [aggNumerator, "dVal", "DISTANCE"];
   
-      layerDisplay.queryFeatures(query).then(function(results) {
+      this.layerDisplay.queryFeatures(query).then(function(results) {
         var sumDistXVal  = {};
         var sumDist      = {}; // For storing distances
         var aggDistWtVal = {};
@@ -199,7 +339,7 @@ require([
         headerRow.appendChild(th1);
         var th2 = document.createElement("th");
         th2.textContent = "";
-        //switch(aCode) {
+        //switch(this.getACode()) {
         //  case 'aLanes':
         //    th2.textContent = "Lane Miles";
         //    break;
@@ -257,114 +397,59 @@ require([
       console.log('updateMap');
       
       // Reinitialize the layer with the current features array
-      map.remove(layerDisplay);
+      this.map.remove(this.layerDisplay);
 
-      var aCode = "";
-
-      if (this.mapSidebarItems && this.mapSidebarItems.length > 0) {
-        aCode = this.mapSidebarItems[0].selectedOption;
-        console.log(aCode);
-      } else {
-        console.error('mapSidebarItems is empty or not defined.');
-        return;
-      }
-  
-      let _filter;
-
-      var _fDirItem = this.mapSidebarItems.find(item => item.id === "fDir");
-      var _fDir = _fDirItem ? _fDirItem.selectedOption : "";
-
-      var _fVehItem = this.mapSidebarItems.find(item => item.id === "fVeh");
-      var _fVeh = _fVehItem ? _fVehItem.selectedOption : "";
-
-      var _fTodItem = this.mapSidebarItems.find(item => item.id === "fTod");
-      var _fTod = _fTodItem ? _fTodItem.selectedOption : "";
-
-      // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
-        _filter = _fDir;
-      } else if (aCode === 'aVol') {
-        _filter = _fDir + '_' + _fVeh + '_' + _fTod;
-      } else if (['aVc', 'aSpd'].includes(aCode)) {
-        _filter = _fDir + '_' + _fTod;
-      }
-
-      // Get values from the select widgets
-      let modVersionValueMain = document.getElementById('selectModMain').value;
-      let scnGroupValueMain = document.getElementById('selectGrpMain').value;
-      let scnYearValueMain = parseInt(document.getElementById('selectYearMain').value, 10); // Assuming it's a number
-
-      // Use the obtained values in the find method
-      let scenarioMain = dataScenarios.find(scenario => 
-        scenario.modVersion === modVersionValueMain && 
-        scenario.scnGroup === scnGroupValueMain && 
-        scenario.scnYear === scnYearValueMain
-      );
-
+      var _dataMain = [];
+      var _dataComp = [];
       
-      if (typeof scenarioMain === 'undefined') {
-        return;
-      }
+      let _filter = this.getFilter();
 
-      // get segment data give the filter
-      const segDataMain = scenarioMain.roadwaySegData.data[_filter]
-
-      // Get values from the select widgets
-      let modVersionValueComp = document.getElementById('selectModComp').value;
-      let scnGroupValueComp = document.getElementById('selectGrpComp').value;
-      let scnYearValueComp = parseInt(document.getElementById('selectYearComp').value, 10); // Assuming it's a number
-
-
-
-      // Use the obtained values in the find method
-      let scenarioComp = dataScenarios.find(scenario => 
-        scenario.modVersion === modVersionValueComp && 
-        scenario.scnGroup === scnGroupValueComp && 
-        scenario.scnYear === scnYearValueComp
-      );
-
+      // get main data
+      _dataMain = this.dataMain();
 
       let mode = 'base'; //default is base
 
-      var segDataComp = [];
-
-      if (typeof scenarioComp !== 'undefined') {
+      // get compare data
+      if (this.scenarioComp() !== null) {
         mode = 'compare';
-        segDataComp = scenarioComp.roadwaySegData.data[_filter];
+        _dataComp = this.dataComp();
       }
 
-      if (mode==='base' && (modVersionValueComp !== "none" || scnGroupValueComp !== "none" || document.getElementById('selectYearComp').value !== "none")) {
+      // check if comp scenario values are complete. if selection is incomplete, then do not map
+      if (this.incompleteScenarioComp()) {
         return;
       }
 
+      //
       let dValFieldType;
 
       // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (aCode === 'aFtClass') {
+      if (this.getACode() === 'aFtClass') {
         dValFieldType = "string";
       } else {
         dValFieldType = "double";  // or "int" based on your requirement
       }
 
-      layerDisplay = new FeatureLayer({
-        source: [dummyFeature],
-        objectIdField: "SEGID",
+      this.layerDisplay = new FeatureLayer({
+        source: [this.dummyFeature],
+        objectIdField: this.geometryFileId,
         fields: [
           // ... your other fields
-          { name: "SEGID"    , type: "oid" },  // Object ID field
-          { name: "dVal"     , type: dValFieldType, alias: aCode },
-          { name: "SmallArea", type: "string"},
-          { name: "DMED_NAME", type: "string"},
-          { name: "DLRG_NAME", type: "string"},
-          { name: "DISTANCE" , type: "double"}
+          { name: this.geometryFileId, type: "oid" },  // Object ID field
+          { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
+          // HARD CODE... NEED TO ADD PROGRAMATICALLY
+          { name: "SmallArea"        , type: "string"},
+          { name: "DMED_NAME"        , type: "string"},
+          { name: "DLRG_NAME"        , type: "string"},
+          { name: "DISTANCE"         , type: "double"}
 
         ],
         popupTemplate: {
-          title: "Segment Details",
+          title: this.popupTitle,
           content: [
             {
               type: "text",
-              text: "The " + aCode + " is: {expression/formatDisplayValue}"
+              text: "The " + this.getACode() + " is: {expression/formatDisplayValue}"
             }
           ],
           expressionInfos: [
@@ -376,107 +461,42 @@ require([
           ]
         }
       });
-      map.add(layerDisplay);
+      this.map.add(this.layerDisplay);
       
-      const setRendererAndLegend = (aCode) => {
-
-        var renderer;
+      const setRendererAndLegend = () => {
 
         if (mode==='base') {
-          switch(aCode) {
-            case 'aLanes':
-              renderer = rendererLanes;
-              break;
-            case 'aFt':
-              renderer = rendererFt;
-              break;
-            case 'aFtClass':
-              renderer = rendererFtClass;
-              break;
-            case 'aCap1HL':
-              renderer = rendererCap;
-              break;
-            case 'aVc' :
-              renderer = rendererVc;
-              break;
-            case 'aVol':
-              renderer = rendererVol;
-              break;
-            case 'aSpd':
-            case 'aFfSpd':
-              renderer = rendererSpd;
-              break;
-            // ... and so on ...
-            default:
-              renderer = rendererTemp;
-              // code to be executed if expression doesn't match any cases
-          }
+          this.layerDisplay.renderer = this.getMainRenderer();
         } else if (mode==='compare') {
-          switch(aCode) {
-            case 'aLanes':
-              renderer = rendererLanes_Change;
-              break;
-            case 'aFt':
-              renderer = rendererFt_Change;
-              break;
-            case 'aFtClass':
-              //renderer = rendererFtClass_Change;
-              break;
-            case 'aCap1HL':
-              renderer = rendererCap_Change;
-              break;
-            case 'aVc' :
-              renderer = rendererVc_Change;
-              break;
-            case 'aVol':
-              renderer = rendererVol_Change;
-              break;
-            case 'aSpd':
-            case 'aFfSpd':
-              renderer = rendererSpd_Change;
-              break;
-            // ... and so on ...
-            default:
-              renderer = rendererTemp;
-              // code to be executed if expression doesn't match any cases
-          }
+          this.layerDisplay.renderer = this.getCompareAbsRendererRenderer() 
         }
 
+        this.layerDisplay.refresh();
+        this.layerDisplay.visible = true;
 
-        layerDisplay.renderer = renderer;
-        layerDisplay.refresh();
-
-        layerDisplay.visible = true;
-
-        layerDisplay.queryFeatures().then(function(results) {
+        this.layerDisplay.queryFeatures().then(function(results) {
           console.log("Total number of features in layer:", results.features.length);
         });
 
-        geojsonSegments.visible = false;
-
-        //this.graphicsLayer.renderer = renderer;
-
-        if (legend) {
-          view.ui.remove(legend);
+        if (this.legend) {
+          this.mapView.ui.remove(this.legend);
         }
 
-        legend = new Legend({
-          view: view,
+        this.legend = new Legend({
+          view: this.mapView,
           layerInfos: [{
-            layer: layerDisplay,
-            title: "Roadway Segments - Filtered by " + _filter
+            layer: this.layerDisplay,
+            title: this.popupTitle + " - Filtered by " + _filter
           }]
         });
-        view.ui.add(legend, "bottom-right");
+        this.mapView.ui.add(this.legend, "bottom-right");
       
       };
 
-      
+      const vizMapInstance = this;
 
-      const modelEntityInstance = this;
-
-      geojsonSegments.when(() => {
-        geojsonSegments.queryFeatures().then((result) => {
+      this.geojsonGeometry.when(() => {
+        this.geojsonGeometry.queryFeatures().then((result) => {
           let graphicsToAdd = [];  // Temporary array to hold graphics
 
           result.features.forEach((feature) => {
@@ -488,16 +508,16 @@ require([
             var _valueDisp = 0;
 
             // main value
-            if (segDataMain!=='none') {
-              if (segDataMain[_segId]!==undefined){
-                _valueMain = segDataMain[_segId][aCode]
+            if (_dataMain!=='none') {
+              if (_dataMain[_segId]!==undefined){
+                _valueMain = _dataMain[_segId][this.getACode()]
               }
             }
 
             // comp value
-            if (segDataComp!=='none') {
-              if (segDataComp[_segId]!==undefined) {
-              _valueComp = segDataComp[_segId][aCode]
+            if (_dataComp!=='none') {
+              if (_dataComp[_segId]!==undefined) {
+              _valueComp = _dataComp[_segId][this.getACode()]
               }
             }
 
@@ -515,8 +535,8 @@ require([
               _valueDisp = _valueMain;
             }
             
-            // If there's a display value for the given SEGID in the segDataMain object, set it
-            if (segDataMain[_segId]) {
+            // If there's a display value for the given SEGID in the _dataMain object, set it
+            if (_dataMain[_segId]) {
               let attributes = {
                 ...feature.attributes,
                 dVal: _valueDisp  // Add the dVal to attributes
@@ -532,22 +552,21 @@ require([
             }
           });
 
-
-          layerDisplay.on("error", function(event){
+          vizMapInstance.layerDisplay.on("error", function(event){
             console.log("Layer error: ", event.error);
           });
 
           // Source modifications will not propagate after layer has been loaded. Please use .applyEdits() instead
-          layerDisplay.applyEdits({ addFeatures: graphicsToAdd })
+          vizMapInstance.layerDisplay.applyEdits({ addFeatures: graphicsToAdd })
             .then(function(editsResult) {
               if (editsResult.addFeatureResults.length > 0) {
                 console.log("Number of features added:", editsResult.addFeatureResults.length);
                 // Call this AFTER adding graphics to the feature layer
-                setRendererAndLegend(aCode);
+                setRendererAndLegend();
                 
                 // update agg table
-                modelEntityInstance.updateFilters();
-                modelEntityInstance.updateAggregations();
+                vizMapInstance.updateFilters();
+                vizMapInstance.updateAggregations();
 
               } else {
                 console.log("No features were added.");
@@ -557,7 +576,7 @@ require([
             console.log("Error applying edits:", error);
           });
           // Add graphics to the FeatureLayer's source
-          //layerDisplay.source.addMany(graphicsToAdd);
+          //vizMapInstance.layerDisplay.source.addMany(graphicsToAdd);
 
         });
       });

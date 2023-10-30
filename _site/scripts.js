@@ -6,28 +6,9 @@ let view;
 let layerDisplay;
 let dummyFeature;
 
-require(["esri/config",
-         "esri/Map",
-         "esri/views/MapView",
-         "esri/Basemap",
-         "esri/widgets/BasemapToggle",
-         "esri/layers/GeoJSONLayer",
-         "esri/widgets/Home",
-         "esri/widgets/Search",
-         "esri/layers/TileLayer",
-         "esri/geometry/Point",
-         "esri/geometry/Polygon",
-         "esri/geometry/Polyline",
-         "esri/layers/FeatureLayer",
-         "esri/widgets/LayerList",
-         "esri/widgets/Legend",
-         "esri/PopupTemplate",
-         "esri/symbols/TextSymbol",
-         "esri/rest/support/Query",
-         "esri/WebMap",
-         "esri/PopupTemplate"
+require(["esri/config"
         ],
-function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, Search, TileLayer, Point, Polygon, Polyline, FeatureLayer, LayerList, Legend, PopupTemplate, TextSymbol, Query, WebMap, PopupTemplate) {
+function(esriConfig) {
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
@@ -123,45 +104,6 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
       }
     });
 
-    map = new Map({
-      basemap: "gray-vector" // Basemap layerSegments service
-    });
-    
-    view = new MapView({
-      map: map,
-      center: [-111.8910, 40.7608], // Longitude, latitude
-      zoom: 10, // Zoom level
-      container: "mapView", // Div element
-      popup: {
-        // Popup properties here if any customizations are needed
-      }
-    });
-
-    // ADD GEOJSONS
-    
-    geojsonSegments = new GeoJSONLayer({
-      url: "data/segmentsWithAggFields.geojson",
-      title: "Segments",
-      renderer: {
-        type: "simple",  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: 'simple-line',
-          color: [150, 150, 200],
-          width: 1
-        }
-      }
-    });
-    map.add(geojsonSegments);
-
-    // add basemap toggle
-    const basemapToggle = new BasemapToggle({
-      view: view,
-      nextBasemap: "arcgis-imagery"
-    });
-    
-    view.ui.add(basemapToggle,"bottom-left");
-
-    // initialize map
     init();
   }
 

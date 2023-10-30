@@ -18,6 +18,9 @@
                   "mapViewDiv": "mapView",
                   "mapOverlayDiv": "overlay",
                   "sidebarDiv": "sidebarContent",
+                  "geometryFile": "segmentsWithAggFields.geojson",
+                  "geometryFileId": "SEGID",
+                  "popupTitle": "Segment Details",
                   "attributeTitle": "Roadway Segment Attribute",
                   "attributeSelected": "aLanes",
                   "attributes": [
@@ -302,18 +305,18 @@
                       "text": "Filter Direction",
                       "type": "select",
                       "options": [{"value":"DT", "label":"Both Directions"},
-                                  {"value":"D1", "label":"NB/EB"      },
-                                  {"value":"D2", "label":"SB/WB"      }],
+                                  {"value":"D1", "label":"NB/EB"          },
+                                  {"value":"D2", "label":"SB/WB"          }],
                       "selected": "DT"
                     },
                     {
                       "id"  : "fTod",
                       "text": "Filter Time of Day",
                       "type": "select",
-                      "options": [{"value":"DY", "label":"Daily"     },
-                                  {"value":"AM", "label":"AM Period"   },
+                      "options": [{"value":"DY", "label":"Daily"         },
+                                  {"value":"AM", "label":"AM Period"     },
                                   {"value":"MD", "label":"Midday Period" },
-                                  {"value":"PM", "label":"PM Period"   },
+                                  {"value":"PM", "label":"PM Period"     },
                                   {"value":"EV", "label":"Evening Period"}],
                       "selected": "DY"
                     },
