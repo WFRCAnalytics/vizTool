@@ -83,14 +83,49 @@ require([
       }
     }
 
-    // FIX THIS TO RELOAD WHEN SIDEBAR ELEMENT IS SELECTED -- RIGHT NOW ONLY UPDATES WHEN MENU OPTION CHANGES
     updateChartData() {
-      var displayName = this.attributeSelect.selected;
-      console.log('location2');
+      var aCode = this.attributeSelect.selected;
+      console.log('updateChartData');
+
+      let _filter;
+
+      var _fDirItem = this.filters.find(item => item.id === "fDir");
+      var _fDir = _fDirItem ? _fDirItem.filterSelect.selected : "";
+
+      var _fVehItem = this.filters.find(item => item.id === "fVeh");
+      var _fVeh = _fVehItem ? _fVehItem.filterSelect.selected : "";
+
+      var _fTodItem = this.filters.find(item => item.id === "fTod");
+      var _fTod = _fTodItem ? _fTodItem.filterSelect.selected : "";
+
+      // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
+      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
+        _filter = _fDir;
+      } else if (aCode === 'aVol') {
+        _filter = _fDir + '_' + _fVeh + '_' + _fTod;
+      } else if (['aVc', 'aSpd'].includes(aCode)) {
+        _filter = _fDir + '_' + _fTod;
+      }
+
       // Get values from the select widgets
       let modVersionValueMain = document.getElementById('selectModMain').value;
       let scnGroupValueMain = document.getElementById('selectGrpMain').value;
       let scnYearValueMain = parseInt(document.getElementById('selectYearMain').value, 10); // Assuming it's a number
+
+      // Use the obtained values in the find method
+      let scenarioMain = dataScenarios.find(scenario => 
+        scenario.modVersion === modVersionValueMain && 
+        scenario.scnGroup === scnGroupValueMain && 
+        scenario.scnYear === scnYearValueMain
+      );
+
+      
+      if (typeof scenarioMain === 'undefined') {
+        return;
+      }
+
+      // get segment data give the filter
+      const segDataMain = scenarioMain.roadwaySegData.data[_filter]
 
       // Specify the file path
       const chartDataPath = `data/scnData/${modVersionValueMain}__${scnGroupValueMain}__${scnYearValueMain}/roadway-seg-summary.json`;
@@ -108,7 +143,7 @@ require([
               return response.json();
           })
           .then(data => {
-              if (!data.data || !data.data.D1) {
+              if (!data.data || !segDataMain) {
                   throw new Error('Invalid JSON data format');
               }
   
@@ -116,8 +151,8 @@ require([
               const chartData = [];
   
               // Access the segment data using data.D1
-              Object.keys(data.data.D1).forEach(segId => {
-                  const selectedValue = this.getChartData(displayName, data.data.D1[segId]);
+              Object.keys(segDataMain).forEach(segId => {
+                  const selectedValue = this.getChartData(aCode, segDataMain[segId]);
                   if (selectedValue !== null) {
                       labels.push(segId);
                       chartData.push(selectedValue);
@@ -125,25 +160,27 @@ require([
               });
   
               // Call your createAvmtChart function here with labels and chartData
-              this.createAvmtChart(displayName, labels, chartData);
+              this.createAvmtChart(aCode, labels, chartData);
           })
           .catch(error => {
               console.error('Error fetching or updating chart data:', error);
           });
   }
 
-  getChartData(displayName, filterSelectionData) {
-    if (displayName === 'aCap1HL') {
+  getChartData(aCode, filterSelectionData) {
+    if (aCode === 'aCap1HL') {
         return filterSelectionData.aCap1HL; // Change this to the appropriate property based on your data structure
-    } else if (displayName === 'aFfSpd') {
+    } else if (aCode === 'aFfSpd') {
         return filterSelectionData.aFfSpd; // Change this to the appropriate property based on your data structure
-    } else if (displayName === 'aFt') {
+    } else if (aCode === 'aFt') {
         return filterSelectionData.aFt;
-    } else if (displayName === 'aVol') {
+    } else if (aCode === 'aVol') {
         return filterSelectionData.aVol;
-    } else if (displayName === 'aSpeed') {
-        return filterSelectionData.aSpeed;
-    } else if (displayName === 'aLanes') {
+    } else if (aCode === 'aSpd') {
+        return filterSelectionData.aSpd;
+    } else if (aCode === 'aVc') {
+      return filterSelectionData.aVc;
+    } else if (aCode === 'aLanes') {
         return filterSelectionData.aLanes;
     }
 
@@ -156,9 +193,9 @@ require([
     return null;
 }
 
-  createAvmtChart(displayName, labels, chartData) {
+  createAvmtChart(aCode, labels, chartData) {
     console.log('Creating the chart...');
-    console.log("Selected radio button option under 'Display':", displayName);
+    console.log("Selected radio button option under 'Display':", aCode);
 
      // Clear existing chart container
      const chartElement = document.getElementById('mainTrend');
@@ -184,7 +221,7 @@ require([
       data: {
         labels: labels,
         datasets: [{
-          label: displayName + ' Data',
+          label: aCode + ' Data',
           data: chartData,
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',

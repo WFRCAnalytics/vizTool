@@ -1,10 +1,11 @@
 class WijSelect {
-  constructor(id, options, selected, vizLayout, text) {
+  constructor(id, options, selected, vizLayout, text, parent) {
     this.id = id;
     this.options = options;
     this.selected = selected;
     this.vizLayout = vizLayout;
     this.text = text;
+    this.parentEntity = parent;
   }
 
   // Render the item based on its type
@@ -31,7 +32,7 @@ class WijSelect {
     });
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-      //this.vizLayout.afterFilterUpdate();
+      this.vizLayout.afterSidebarUpdate();
     });
     container.appendChild(select);
     

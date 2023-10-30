@@ -36,7 +36,7 @@ class WijRadio {
         // Update renderer with value of radio button
         console.log(this.id + ':' + rbValue + ' radio button change');
         this.selected = rbValue;
-        this.vizLayout.updateChartData();
+        this.vizLayout.afterSidebarUpdate();
         //this.vizLayout.afterFilterUpdate();
       });
 
