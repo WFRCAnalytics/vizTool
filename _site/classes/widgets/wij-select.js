@@ -31,7 +31,7 @@ class WijSelect {
     });
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-      this.vizLayout.afterFilterUpdate();
+      //this.vizLayout.afterFilterUpdate();
     });
     container.appendChild(select);
     

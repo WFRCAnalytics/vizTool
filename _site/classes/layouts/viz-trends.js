@@ -21,10 +21,8 @@ require([
       this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
-      })), data.attributeSelected);
+      })), data.attributeSelected, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
-      
-      this.initListeners();
     }
     
     renderSidebar() {
@@ -40,33 +38,10 @@ require([
       divSidebar.innerHTML = '';
       divSidebar.appendChild(container);  // Append the new element to the container
     }
-
-    initListeners() {
-      console.log('initListeners');
-      
-      //document.getElementById('selectModMain').addEventListener('change', this.updateMap.bind(this));
-      //document.getElementById('selectGrpMain').addEventListener('change', this.updateMap.bind(this));
-      //document.getElementById('selectYearMain').addEventListener('change', this.updateMap.bind(this));
-      //
-      //document.getElementById('selectModComp').addEventListener('change', this.updateMap.bind(this));
-      //document.getElementById('selectGrpComp').addEventListener('change', this.updateMap.bind(this));
-      //document.getElementById('selectYearComp').addEventListener('change', this.updateMap.bind(this));
-
-      // Get all radio buttons with the name "rcPcOption"
-      var radioButtons = document.querySelectorAll('input[name="rcPcOption"]');
-
-      // Assuming this is inside a class or object with a method named this.updateMap()
-      radioButtons.forEach(function(radio) {
-        radio.addEventListener('change', (event) => {  // Arrow function here
-            console.log(event.target.value);
-            //this.updateMap();
-        });
-      });
-    }
     
     afterSidebarUpdate() {
       console.log('afterSidebarUpdate');
-      //this.updateMap();
+      this.updateChartData();
       this.updateFilters();
     }
 
@@ -111,6 +86,7 @@ require([
     // FIX THIS TO RELOAD WHEN SIDEBAR ELEMENT IS SELECTED -- RIGHT NOW ONLY UPDATES WHEN MENU OPTION CHANGES
     updateChartData() {
       var displayName = this.attributeSelect.selected;
+      console.log('location2');
       // Get values from the select widgets
       let modVersionValueMain = document.getElementById('selectModMain').value;
       let scnGroupValueMain = document.getElementById('selectGrpMain').value;
