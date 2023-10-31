@@ -96,6 +96,7 @@ class MapSidebarItem {
         console.log(this.id + ':' + displayName + ' radio button change');
         this.selectedOption = displayName;
         this.parentEntity.updateMap();
+        this.parentEntity.updateChartData();
         this.parentEntity.updateFilters();
       });
 

@@ -1,8 +1,10 @@
 class WijRadio {
-  constructor(id, options, selected, vizLayout) {
+  constructor(id, options, selected, vizLayout, parent) {
+    this.id = id;
     this.options = options;
     this.selected = selected;
     this.vizLayout = vizLayout;
+    this.parentEntity = parent;
   }
 
   // Render the item based on its type
@@ -37,6 +39,7 @@ class WijRadio {
         console.log(this.id + ':' + rbValue + ' radio button change');
         this.selected = rbValue;
         wijRadioInstance.vizLayout.afterFilterUpdate();
+        this.vizLayout.afterSidebarUpdate();
       });
 
       // Nest the radio button directly inside the calcite-label
