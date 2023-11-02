@@ -30,7 +30,7 @@ require([
       this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
-      })), data.attributeSelected, this);
+      })), data.attributeSelected, data.hidden, data.text, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
@@ -182,7 +182,26 @@ require([
 
       return _filter;
     }
-    
+
+    // get the current filter
+    getFilterGroup() {
+
+      //const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      //
+      //// Split the _filterGroup by "_"
+      //const _filterArray = _filterGroup.split("_");
+      //
+      //// Map selected options to an array and join with "_"
+      //const _filter = _filterArray
+      //  .map(filterItem => {
+      //    var _fItem = this.filters.find(item => item.id === filterItem);
+      //    return _fItem ? _fItem.filterWij.selected : "";
+      //  })
+      //  .join("_");
+      //
+      //return _filter;
+    }
+
     renderSidebar() {
       const container = document.createElement('div');
       container.id = this.id + "viz-map-sidebar";
@@ -227,31 +246,21 @@ require([
       this.updateAggregations();
     }
 
-    afterFilterUpdate() {
-      this.updateMap();
-    }
-
     updateFilters() {
       console.log('updateFilters');
-
-      if (document.getElementById('fVeh_container') === null || typeof document.getElementById('fVeh_container') === 'undefined') {
-        return;
-      }
     
-      // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(this.getACode())) {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'none';
-        document.getElementById('fTod_container').style.display = 'none';
-      } else if (this.getACode() === 'aVol') {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'block';
-        document.getElementById('fTod_container').style.display = 'block';
-      } else if (['aVc', 'aSpd'].includes(this.getACode())) {
-        document.getElementById('fDir_container').style.display = 'block';
-        document.getElementById('fVeh_container').style.display = 'none';
-        document.getElementById('fTod_container').style.display = 'block';
-      }
+      const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+    
+      // Split the _filterGroup by "_"
+      const _filterArray = _filterGroup.split("_");
+    
+      // Select all elements with an 'id' containing '_filter_container'
+      const filteredDivs = Array.from(document.querySelectorAll('div[id*="_filter_container"]'));
+    
+      filteredDivs.forEach(divElement => {
+        const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
+        divElement.style.display = containsFilterText && _filterGroup !== '' ? 'block' : 'none';
+      });
     }
 
     updateAggregations() {
@@ -486,7 +495,7 @@ require([
           view: this.mapView,
           layerInfos: [{
             layer: this.layerDisplay,
-            title: this.popupTitle + " - Filtered by " + _filter
+            title: this.popupTitle + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
         this.mapView.ui.add(this.legend, "bottom-right");

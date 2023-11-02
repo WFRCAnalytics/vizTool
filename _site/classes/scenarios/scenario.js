@@ -10,8 +10,8 @@ class Scenario {
         this.roadwaySegData = null; // initialize to null for now
 
         // fetch the data from the JSON file and set it to the roadwaySeg property
-        // _site\data\scnData\v900__Base__2019\roadway-seg-summary.json
-        fetch('data/scnData/' + this.scnFolder + '/roadway-seg-summary.json')
+        // _site\data\scnData\v900__Base__2019\roadway-vizmap.json
+        fetch('data/scnData/' + this.scnFolder + '/roadway-vizmap.json')
             .then(response => response.json())
             .then(jsonData => {
                 this.roadwaySegData = new AttributeFilterData(jsonData);

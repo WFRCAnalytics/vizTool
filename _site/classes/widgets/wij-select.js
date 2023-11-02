@@ -1,10 +1,11 @@
 class WijSelect {
-  constructor(id, options, selected, vizLayout, text, parent) {
+  constructor(id, options, selected, hidden, text, vizLayout, parent) {
     this.id = id;
     this.options = options;
     this.selected = selected;
-    this.vizLayout = vizLayout;
+    this.hidden = hidden !== undefined ? hidden : false;
     this.text = text;
+    this.vizLayout = vizLayout;
     this.parentEntity = parent;
   }
 
@@ -41,6 +42,11 @@ class WijSelect {
     space.innerHTML = "<br/>";  // Set its innerHTML
     container.appendChild(space);  // Append the new element to the container
     
+    // Check if this.hidden is true and hide the container if it is
+    if (this.hidden) {
+      container.style.display = "none";
+    }
+
     return container;
   }
 }

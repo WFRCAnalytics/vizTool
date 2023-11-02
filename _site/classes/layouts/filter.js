@@ -7,12 +7,12 @@ class Filter {
       this.filterWij = new WijSelect(this.id + "_filter", data.options.map(item => ({
         value: item.value,
         label: item.label
-      })), data.selected, this.vizLayout, data.text, this);
+      })), data.selected, data.hidden, data.text, this.vizLayout, this);
     } else if (data.type === "radio") {
       this.filterWij = new WijRadio(this.id + "_filter", data.options.map(item => ({
         value: item.value,
         label: item.label
-      })), data.selected, this.vizLayout, this);
+      })), data.selected, data.hidden, '', this.vizLayout, this);
     } else if (data.type === "checkbox") {
         // Handle checkbox case if needed
     }

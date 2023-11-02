@@ -12,7 +12,6 @@
               {
                 "submenuText": "Roadway Segments",
                 "submenuIconStart": "line-straight",
-                "jsonFile": "roadway-seg-summary.json",
                 "template": "vizMap",
                 "templateSettings": {
                   "mapViewDiv": "mapView",
@@ -300,15 +299,6 @@
                     }
                   ],
                   "filters" : [
-                    {
-                      "id"  : "fDir",
-                      "text": "Filter Direction",
-                      "type": "select",
-                      "options": [{"value":"DT", "label":"Both Directions"},
-                                  {"value":"D1", "label":"NB/EB"          },
-                                  {"value":"D2", "label":"SB/WB"          }],
-                      "selected": "DT"
-                    },
                     {
                       "id"  : "fTod",
                       "text": "Filter Time of Day",

@@ -1,8 +1,10 @@
 class WijRadio {
-  constructor(id, options, selected, vizLayout, parent) {
+  constructor(id, options, selected, hidden, text, vizLayout, parent) {
     this.id = id;
     this.options = options;
     this.selected = selected;
+    this.hidden = hidden !== undefined ? hidden : false;
+    this.text = text;
     this.vizLayout = vizLayout;
     this.parentEntity = parent;
   }
@@ -38,8 +40,7 @@ class WijRadio {
         // Update renderer with value of radio button
         console.log(this.id + ':' + rbValue + ' radio button change');
         this.selected = rbValue;
-        wijRadioInstance.vizLayout.afterFilterUpdate();
-        this.vizLayout.afterSidebarUpdate();
+        wijRadioInstance.vizLayout.afterSidebarUpdate();
       });
 
       // Nest the radio button directly inside the calcite-label
@@ -52,7 +53,12 @@ class WijRadio {
     var space = document.createElement("calcite-label");  // Create a new div element
     space.innerHTML = "<br/>";  // Set its innerHTML
     container.appendChild(space);  // Append the new element to the container
-    
+
+    // Check if this.hidden is true and hide the container if it is
+    if (this.hidden) {
+      container.style.display = "none";
+    }
+
     return container;
   }
 }

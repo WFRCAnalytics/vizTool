@@ -90,13 +90,13 @@ require([
       let _filter;
 
       var _fDirItem = this.filters.find(item => item.id === "fDir");
-      var _fDir = _fDirItem ? _fDirItem.filterSelect.selected : "";
+      var _fDir = _fDirItem ? _fDirItem.filterWij.selected : "";
 
       var _fVehItem = this.filters.find(item => item.id === "fVeh");
-      var _fVeh = _fVehItem ? _fVehItem.filterSelect.selected : "";
+      var _fVeh = _fVehItem ? _fVehItem.filterWij.selected : "";
 
       var _fTodItem = this.filters.find(item => item.id === "fTod");
-      var _fTod = _fTodItem ? _fTodItem.filterSelect.selected : "";
+      var _fTod = _fTodItem ? _fTodItem.filterWij.selected : "";
 
       // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
       if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
