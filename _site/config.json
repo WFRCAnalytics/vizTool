@@ -253,7 +253,7 @@
                       }
                     },
                     {
-                      "aCode": "aVc",
+                      "aCode": "aMaxVc",
                       "aDisplayName": "Max V/C Ratio",
                       "rendererCollection": {
                         "main": {
@@ -358,7 +358,7 @@
                       "aDisplayName": "Speed"
                     },
                     {
-                      "aCode": "aVc",
+                      "aCode": "aMaxVc",
                       "aDisplayName": "Congestion"
                     }
                 ],
