@@ -30,7 +30,7 @@ require([
       this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
-      })), data.attributeSelected, data.hidden, data.text, this);
+      })), data.attributeSelected, data.hidden, data.attributeTitle, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();

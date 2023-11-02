@@ -15,6 +15,10 @@ class WijRadio {
     container.id = this.id + "_container";
 
     const wijRadioInstance = this;
+    
+    let title = document.createElement("calcite-label");  // Create a new div element
+    title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
+    container.appendChild(title);  // Append the new element to the container
 
     // Call a type-specific rendering method
     this.options.forEach((option) => {
