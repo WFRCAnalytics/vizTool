@@ -458,10 +458,19 @@ require([
           content: [
             {
               type: "text",
-              text: "The " + this.getACode() + " is: {expression/formatDisplayValue}"
+              text: "SEGID {expression/segid}"
+            },
+            {
+              type: "text",
+              text: this.getACode() + " is: {expression/formatDisplayValue}"
             }
           ],
           expressionInfos: [
+            {
+              name: "segid",
+              title: "SegID",
+              expression: "$feature.SEGID"
+            },
             {
               name: "formatDisplayValue",
               title: "Formatted Display Value",
