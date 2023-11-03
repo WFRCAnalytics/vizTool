@@ -25,19 +25,30 @@
         {
             "pCode": "pFt",
             "pName": "Functional Type",
-            "pWidget": "select"
+            "pWidget": "checbox"
         }
     ],
     "dimensions": [
         {
-            "dCode": "dTod"
+            "dCode": "dTod",
+            "dName": "Time of Day",
+            "dWidget": "checkbox"
         },
         {
-            "dCode": "dVeh"
+            "dCode": "dVeh",
+            "dName": "Vehicle Type",
+            "dWidget": "checkbox"
         }
     ],
     "crossClassifications": [
-
+        {
+            "xcCode": "aVht",
+            "xcName": "Vehicle-Hours Traveled"
+        },
+        {
+            "xcCode": "aLaneMiles",
+            "aName": "Lane-Miles"
+        }
     ],
     "segData": {
         "0015_299.0": {
@@ -49,28 +60,84 @@
                 "aVmt": 12,
                 "aVht": 0.5,
                 "xcSpd": 55,
-                "xcVol": 135000, 
+                "xcVol": 20000, 
                 "xcVc": 1.02
             },
             "MD_All": {
-                "aVmt": 12,
-                "aVht": 0.5,
+                "aVmt": 24,
+                "aVht": 1.0,
                 "xcSpd": 70,
-                "xcVol": 135000, 
-                "xcVc": 1.02
+                "xcVol": 50000, 
+                "xcVc": 0.85
             },
             "PM_All": {
-                "aVmt": 12,
-                "aVht": 0.5,
+                "aVmt": 15,
+                "aVht": 0.75,
                 "xcSpd": 45,
-                "xcVol": 135000, 
-                "xcVc": 1.02
+                "xcVol": 30000, 
+                "xcVc": 1.15
             },
             "EV_All": {
-                "aVmt": 12,
-                "aVht": 0.5,
+                "aVmt": 10,
+                "aVht": 0.4,
                 "xcSpd": 65,
-                "xcVol": 135000, 
+                "xcVol": 18000, 
+                "xcVc": 1.02
+            },
+            "AM_MD": {
+                "aVmt": 1.2,
+                "aVht": 0.05,
+                "xcSpd": 55,
+                "xcVol": 2000, 
+                "xcVc": 1.02
+            },
+            "MD_MD": {
+                "aVmt": 2.4,
+                "aVht": 0.1,
+                "xcSpd": 70,
+                "xcVol": 5000, 
+                "xcVc": 0.85
+            },
+            "PM_MD": {
+                "aVmt": 1.5,
+                "aVht": 0.08,
+                "xcSpd": 45,
+                "xcVol": 3000, 
+                "xcVc": 1.15
+            },
+            "EV_MD": {
+                "aVmt": 0.5,
+                "aVht": 0.02,
+                "xcSpd": 65,
+                "xcVol": 900, 
+                "xcVc": 1.02
+            },
+            "AM_HV": {
+                "aVmt": 0.6,
+                "aVht": 0.03,
+                "xcSpd": 55,
+                "xcVol": 1000, 
+                "xcVc": 1.02
+            },
+            "MD_HV": {
+                "aVmt": 1.2,
+                "aVht": 0.05,
+                "xcSpd": 70,
+                "xcVol": 2500, 
+                "xcVc": 0.85
+            },
+            "PM_HV": {
+                "aVmt": 0.75,
+                "aVht": 0.04,
+                "xcSpd": 45,
+                "xcVol": 1500, 
+                "xcVc": 1.15
+            },
+            "EV_HV": {
+                "aVmt": 0.5,
+                "aVht": 0.02,
+                "xcSpd": 65,
+                "xcVol": 900, 
                 "xcVc": 1.02
             }
         }
