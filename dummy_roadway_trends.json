@@ -42,12 +42,17 @@
     ],
     "crossClassifications": [
         {
-            "xcCode": "aVht",
-            "xcName": "Vehicle-Hours Traveled"
+            "xcCode": "xcSpd",
+            "xcName": "Speed"
         },
         {
-            "xcCode": "aLaneMiles",
-            "aName": "Lane-Miles"
+            "xcCode": "xcVol",
+            "xcName": "Volume"
+        },
+        {
+            "xcCode": "xcVc",
+            "xcName": "Volume-to-Capacty Ratio"
+
         }
     ],
     "segData": {
