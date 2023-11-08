@@ -11,6 +11,5 @@
     { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2032, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
     { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2042, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
     { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
-    { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2042, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
     { "modVersion": "v900", "scnGroup": "Needs MAG", "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"}
 ]
