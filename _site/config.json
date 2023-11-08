@@ -427,16 +427,17 @@
                           "name": "Number of Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":    0, "maxValue":  399, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue":    0, "maxValue":  399, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue":  400, "maxValue":  599, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue":  600, "maxValue":  799, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue":  800, "maxValue":  999, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 1000, "maxValue": 1199, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 1200, "maxValue": 1399, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 1400, "maxValue": 1599, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"},
-                            { "minValue": 1600, "maxValue": 1799, "symbol": { "type": "simple-fill", "color": "#222222", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,600 to 1,799 Trips"},
-                            { "minValue": 1800, "maxValue": 9999, "symbol": { "type": "simple-fill", "color": "#000000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,800 to 9,999 Trips"}
+                            { "minValue":     0, "maxValue":     0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0 Trips"},
+                            { "minValue":     0, "maxValue":  1000, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "      0 to  1,000 Trips"},
+                            { "minValue":  1000, "maxValue":  2000, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1,000 to  2,000 Trips"},
+                            { "minValue":  2000, "maxValue":  4000, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2,000 to  4,000 Trips"},
+                            { "minValue":  4000, "maxValue":  6000, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  4,000 to  6,000 Trips"},
+                            { "minValue":  6000, "maxValue":  8000, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6,000 to  8,000 Trips"},
+                            { "minValue":  8000, "maxValue": 10000, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  8,000 to 10,000 Trips"},
+                            { "minValue": 10000, "maxValue": 12000, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 10,000 to 12,000 Trips"},
+                            { "minValue": 12000, "maxValue": 14000, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 12,000 to 14,000 Trips"},
+                            { "minValue": 14000, "maxValue": 16000, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 14,000 to 16,000 Trips"},
+                            { "minValue": 16000, "maxValue": 99999, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 16,000 to 99,999 Trips"}
                           ]
                         },
                         "compare_abs": {
@@ -455,14 +456,17 @@
                           "name": "Share of All Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}
                           ]
                         },
                         "compare_abs": {
@@ -481,15 +485,17 @@
                           "name": "Share of Motorized Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Motorized Trips"
@@ -507,15 +513,17 @@
                           "name": "Share of Auto Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Auto Trips"
@@ -533,15 +541,17 @@
                           "name": "Share of Transit Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Transit Trips"
@@ -559,15 +569,17 @@
                           "name": "Share of Local Bus",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Local Bus"
@@ -585,15 +597,17 @@
                           "name": "Share of Core Bus",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change Share of Core Bus"
@@ -611,15 +625,17 @@
                           "name": "Share of Express Bus",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Express Bus"
@@ -637,15 +653,17 @@
                           "name": "Share of Bus-Rapid Transit",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Bus-Rapid Transit"
@@ -663,15 +681,17 @@
                           "name": "Share of Light-Rail Transit",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Light-Rail Transit"
@@ -689,15 +709,17 @@
                           "name": "Share of Commuter-Rail Transit",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Commuter-Rail Transit"
@@ -715,15 +737,17 @@
                           "name": "Share of Non-Motorized Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Non-Motorized Trips"
@@ -741,15 +765,17 @@
                           "name": "Share of Walk Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Walk Trips"
@@ -767,15 +793,17 @@
                           "name": "Share of Bike Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0000, "maxValue": 0.0000, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    0 to     0 Trips"},
-                            { "minValue": 0.0001, "maxValue": 0.0499, "symbol": { "type": "simple-fill", "color": "#CCCCCC", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "    1 to   399 Trips"},
-                            { "minValue": 0.0500, "maxValue": 0.0999, "symbol": { "type": "simple-fill", "color": "#333333", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  400 to   599 Trips"},
-                            { "minValue": 0.1000, "maxValue": 0.1499, "symbol": { "type": "simple-fill", "color": "#86DC3D", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  600 to   799 Trips"},
-                            { "minValue": 0.1500, "maxValue": 0.2499, "symbol": { "type": "simple-fill", "color": "#3c59ff", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  800 to   999 Trips"},
-                            { "minValue": 0.2500, "maxValue": 0.4999, "symbol": { "type": "simple-fill", "color": "#66023C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,000 to 1,199 Trips"},
-                            { "minValue": 0.5000, "maxValue": 0.7499, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,200 to 1,399 Trips"},
-                            { "minValue": 0.7500, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#800000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "1,400 to 1,599 Trips"}
-                          ]
+                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
+                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
+                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
+                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
+                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
+                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
+                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
+                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
+                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
+                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
+                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
                         },
                         "compare_abs": {
                           "name": "Change in Share of Bike Trips"

@@ -513,9 +513,35 @@ require([
             {
               name: "formatDisplayValue",
               title: "Formatted Display Value",
-              expression: "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###.0')"
+              expression: "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###.0000')"
             }
           ]
+        },
+        labelingInfo: [{
+          symbol: {
+            type: "text",  // Use a text symbol for labeling
+            color: [50, 50, 50],  // Dark grey color
+            haloColor: "white",
+            haloSize: "2px",  // Halo size of 2px
+            font: {  // Define the font used for labeling
+              family: "sans-serif",
+              size: 10,
+              weight: "normal"  // Make the font weight normal (not bold)
+            }
+          },
+          labelPlacement: "above-center",  // Define where to place the label
+          labelExpressionInfo: { expression: "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###.0000')" }  // Define the expression for the label
+        }],
+        renderer: {
+          type: "simple",  // Use a simple renderer
+          symbol: {
+            type: "simple-fill",  // Use a fill symbol for polygons
+            color: [0, 0, 0, 0],  // No fill color (transparent)
+            outline: {  // Define the outline of the polygon
+              color: [255, 255, 255],  // Outline color (black)
+              width: 0.2  // Outline width
+            }
+          }
         }
       });
       this.map.add(this.layerDisplay);
