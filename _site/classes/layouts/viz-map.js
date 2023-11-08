@@ -24,6 +24,7 @@ require([
       this.sidebarDiv = data.sidebarDiv;
       this.geometryFile = data.geometryFile;
       this.geometryFileId = data.geometryFileId;
+      this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.attributeTitle = data.attributeTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
@@ -76,23 +77,43 @@ require([
       this.map.add(this.geojsonGeometry);
       this.geojsonGeometry.visible = false;
 
-      // Dummy polyline feature connecting Salt Lake City and Provo
-      this.dummyFeature = {
-        geometry: {
-          type: "polyline",
-          paths: [
-            [-111.8910, 40.7608], // Salt Lake City
-            [-111.8911, 40.7609]  // Provo
-          ],
-          spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-        },
-        attributes: {
-          SEGID: 0, // Unique ID, using "SEGID" as the objectIdField
-          // ... add other attribute fields if necessary
-          displayValue: 0 // Assuming you want a displayValue, you can set any initial value
-        }
-      };
-
+      if (this.geometryType=='polyline') {
+        // Dummy polyline feature
+        this.dummyFeature = {
+          geometry: {
+            type: "polyline",
+            paths: [
+              [-111.8910, 40.7608],
+              [-111.8911, 40.7609]
+            ],
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0, // Unique ID, using "SEGID" as the objectIdField
+            // ... add other attribute fields if necessary
+            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+          }
+        };
+      } else if (this.geometryType=='polygon') {
+        // Dummy polygon feature representing an area encompassing Salt Lake City and Provo
+        this.dummyFeature = {
+          geometry: {
+            type: "polygon",
+            rings: [
+              [-111.8910, 40.7608], // Start at Salt Lake City
+              [-111.8911, 40.7609], // A point near Provo
+              [-111.8912, 40.7610], // An additional point to make it a polygon, could be another city or arbitrary coordinate
+              [-111.8910, 40.7608]  // End at Salt Lake City to close the loop
+            ],
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0, // Unique ID, using "SEGID" as the objectIdField
+            // ... add other attribute fields if necessary
+            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+          }
+        };
+      }
     }
 
     
@@ -121,12 +142,18 @@ require([
     }
 
     dataMain() {
-      // for roadway segs
-      return this.scenarioMain().roadwaySegData.data[this.getFilter()]
+      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
+        return this.scenarioMain().roadwaySegData.data[this.getFilter()]
+      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
+        return this.scenarioMain().zoneModeData.data[this.getFilter()]
+      }
     }
     dataComp() {
-      // for roadway segs
-      return this.scenarioComp().roadwaySegData.data[this.getFilter()]
+      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
+        return this.scenarioComp().roadwaySegData.data[this.getFilter()]
+      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
+        return this.scenarioComp().zoneModeData.data[this.getFilter()]
+      }
     }
 
     // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
@@ -167,7 +194,13 @@ require([
     // get the current filter
     getFilter() {
 
-      const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      var _filterGroup = [];
+
+      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
+        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
+        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      }
 
       // Split the _filterGroup by "_"
       const _filterArray = _filterGroup.split("_");
@@ -248,9 +281,15 @@ require([
 
     updateFilters() {
       console.log('updateFilters');
-    
-      const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
-    
+      
+      var _filterGroup = [];
+
+      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
+        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
+        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      }
+      
       // Split the _filterGroup by "_"
       const _filterArray = _filterGroup.split("_");
     
@@ -458,7 +497,7 @@ require([
           content: [
             {
               type: "text",
-              text: "SEGID {expression/segid}"
+              text: this.geometryFileId + " {expression/geometryFieldId}"
             },
             {
               type: "text",
@@ -467,9 +506,9 @@ require([
           ],
           expressionInfos: [
             {
-              name: "segid",
-              title: "SegID",
-              expression: "$feature.SEGID"
+              name: "geometryFieldId",
+              title: this.geometryFieldId,
+              expression: "$feature." + this.geometryFileId
             },
             {
               name: "formatDisplayValue",
@@ -518,8 +557,8 @@ require([
           let graphicsToAdd = [];  // Temporary array to hold graphics
 
           result.features.forEach((feature) => {
-            // Get SEGID from the feature's attributes
-            const _segId = feature.attributes.SEGID;
+            // Get ID from the feature's attributes
+            const _id = feature.attributes[this.geometryFileId];
 
             var _valueMain = 0;
             var _valueComp = 0;
@@ -527,15 +566,15 @@ require([
 
             // main value
             if (_dataMain!=='none') {
-              if (_dataMain[_segId]!==undefined){
-                _valueMain = _dataMain[_segId][this.getACode()]
+              if (_dataMain[_id]!==undefined){
+                _valueMain = _dataMain[_id][this.getACode()]
               }
             }
 
             // comp value
             if (_dataComp!=='none') {
-              if (_dataComp[_segId]!==undefined) {
-              _valueComp = _dataComp[_segId][this.getACode()]
+              if (_dataComp[_id]!==undefined) {
+              _valueComp = _dataComp[_id][this.getACode()]
               }
             }
 
@@ -554,7 +593,7 @@ require([
             }
             
             // If there's a display value for the given SEGID in the _dataMain object, set it
-            if (_dataMain[_segId]) {
+            if (_dataMain[_id]) {
               let attributes = {
                 ...feature.attributes,
                 dVal: _valueDisp  // Add the dVal to attributes
