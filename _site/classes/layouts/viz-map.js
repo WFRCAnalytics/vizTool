@@ -38,6 +38,9 @@ require([
       this.layerDisplay = new FeatureLayer();
       this.initListeners();
 
+      // Global variable to store original label info
+      this.originalLabelInfo = null;
+
       // add map
       this.map = new Map({
         basemap: "gray-vector" // Basemap layerSegments service
@@ -236,7 +239,7 @@ require([
               haloSize: "2px",  // Halo size of 2px
               font: {  // Define the font used for labeling
                 family: "sans-serif",
-                size: 10,
+                size: 9,
                 weight: "normal"  // Make the font weight normal (not bold)
               }
             },
@@ -422,6 +425,36 @@ require([
             this.updateMap();
         });
       });
+
+      document.getElementById('vizMapLabelToggle').addEventListener('change', (event) => {  // Arrow function here
+        this.toggleLabels(); // Replace with the actual function or code to show labels
+      });
+    }
+
+
+    // Function to be called when checkbox status changes
+    toggleLabels() {
+      var labelCheckbox = document.getElementById('vizMapLabelToggle');
+      
+      if (this.layerDisplay) {
+        if (labelCheckbox.checked) {
+          // Checkbox is checked, show labels
+          // Restore labels if originalLabelInfo has been stored
+          if (!this.originalLabelInfo) {
+            // Set originalLabelInfo if not set previously
+            this.originalLabelInfo = this.layerDisplay.labelingInfo;
+          }
+          this.layerDisplay.labelingInfo = this.originalLabelInfo;
+        } else {
+          // Checkbox is unchecked, hide labels
+          // Store the current label info before hiding if not already stored
+          if (!this.originalLabelInfo) {
+            this.originalLabelInfo = this.layerDisplay.labelingInfo;
+          }
+          this.layerDisplay.labelingInfo = [];
+        }
+        this.layerDisplay.refresh(); // Refresh the layer to apply changes
+      }
     }
     
     afterSidebarUpdate() {
@@ -625,14 +658,28 @@ require([
       const setRendererAndLegend = () => {
 
         if (this.getACode().substring(0, 2) === "aS") {
-          // Define the color ramp from yellow to blue
-          var colorVisVar = new ColorVariable({
-            field: "dVal", // replace with the field name of your data
-            stops: [
-              { value: 0.0000, color: new Color("#FFFF00") }, // Yellow
-              { value: 1.0000, color: new Color("#0000FF") }  // Blue
-            ]
-          });
+          if (mode==='base') {
+            // Define the color ramp from yellow to blue
+            var colorVisVar = new ColorVariable({
+              field: "dVal", // replace with the field name of your data
+              stops: [
+                { value: 0.0000, color: new Color("#FFFF00") }, // Yellow
+                { value: 1.0000, color: new Color("#0000FF") }  // Blue
+              ]
+            });
+          }
+          else if (mode==='compare') {
+            var colorVisVar = {
+              type: "color",
+              field: "dVal", // Replace with your field name
+              stops: [
+                { value: -0.25, color: "red", label: "< -0.25" },
+                { value: 0, color: "#d3d3d3", label: "0" }, // Lighter grey color
+                { value: 0.25, color: "blue", label: "> 0.25" }
+              ],
+              // Optional: Include normalizationField, minValue, maxValue, etc., if needed
+            };
+          }
 
           // Create a simple renderer and apply the visual variable
           this.layerDisplay.renderer = new SimpleRenderer({
@@ -673,7 +720,11 @@ require([
           }]
         });
         this.mapView.ui.add(this.legend, "bottom-right");
-      
+        
+        // toggle labels based on checkbox
+        this.originalLabelInfo = this.layerDisplay.labelingInfo;
+        this.toggleLabels();
+
       };
 
       const vizMapInstance = this;
