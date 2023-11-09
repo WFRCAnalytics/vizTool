@@ -327,52 +327,28 @@
               {
                 "submenuText": "Trends",
                 "submenuIconStart": "graph-line-series",
-                "jsonFile": "roadway-seg-summary.json",
+                "jsonFile": "roadway-trends.json",
                 "template": "vizTrends",
                 "templateSettings": {
                   "mapViewDiv": "mainTrend",
                   "sidebarDiv": "trendSidebarContent",
-                  "attributeSelected": "aLanes",
+                  "attributeSelected": "aVmt",
+                  "attributeTitle": "Roadway Segment Attribute",
                   "attributes": [
                     {
-                      "aCode": "aLanes",
-                      "aDisplayName": "Lanes"
+                      "aCode": "aVmt",
+                      "aDisplayName": "VMT"
                     },
                     {
-                      "aCode": "aFt",
-                      "aDisplayName": "Functional Type"
+                      "aCode": "aVht",
+                      "aDisplayName": "VHT"
                     },
                     {
-                      "aCode": "aCap1HL",
-                      "aDisplayName": "Capacity"
-                    },
-                    {
-                      "aCode": "aFfSpd",
-                      "aDisplayName": "Free-flow Speed"
-                    },
-                    {
-                      "aCode": "aVol",
-                      "aDisplayName": "Volume"
-                    },
-                    {
-                      "aCode": "aSpd",
-                      "aDisplayName": "Speed"
-                    },
-                    {
-                      "aCode": "aMaxVc",
-                      "aDisplayName": "Congestion"
+                      "aCode": "aLMl",
+                      "aDisplayName": "Lane Miles"
                     }
                   ],
                   "filters" : [
-                    {
-                      "id"  : "fDir",
-                      "text": "Filter Direction",
-                      "type": "select",
-                      "options": [{"value":"DT", "label":"Both Directions"},
-                                  {"value":"D1", "label":"NB/EB"      },
-                                  {"value":"D2", "label":"SB/WB"      }],
-                      "selected": "DT"
-                    },
                     {
                       "id"  : "fTod",
                       "text": "Filter Time of Day",

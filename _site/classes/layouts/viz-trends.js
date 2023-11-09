@@ -17,11 +17,12 @@ require([
     constructor(data) {
       this.mapViewDiv = data.mapViewDiv;
       this.sidebarDiv = data.sidebarDiv;
+      this.attributeTitle = data.attributeTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
       this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
-      })), data.attributeSelected, this);
+      })), data.attributeSelected,  data.hidden, data.attributeTitle, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
     }
     
@@ -49,38 +50,43 @@ require([
 
     }
 
+    getACode() {
+      return this.attributeSelect.selected;
+    }
+
+    getScenario(_modVersion, _scnGroup, _scnYear) {
+      return dataScenarios.find(scenario =>
+        scenario.modVersion === _modVersion &&
+        scenario.scnGroup   === _scnGroup   &&
+        scenario.scnYear    === _scnYear
+      ) || null;
+    }
+
+    scenarioMain() {
+      return this.getScenario(         document.getElementById('selectModMain' ).value,
+                                       document.getElementById('selectGrpMain' ).value,
+                              parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+    }
+
     updateFilters() {
       console.log('updateFilters');
 
-      var aCode = "";
+      var _filterGroup = [];
 
-      if (this.mapSidebarItems && this.mapSidebarItems.length > 0) {
-        aCode = this.mapSidebarItems[0].selectedOption;
-        console.log(aCode);
-      } else {
-        console.error('mapSidebarItems is empty or not defined.');
-        return;
+      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
+        _filterGroup = this.scenarioMain().roadwayTrendData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
       }
-
-
-      if (document.getElementById('fVeh_container2') === null || typeof document.getElementById('fVeh_container2') === 'undefined') {
-        return;
-      }
+      
+      // Split the _filterGroup by "_"
+      const _filterArray = _filterGroup.split("_");
     
-      // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
-        document.getElementById('fDir_container2').style.display = 'block';
-        document.getElementById('fVeh_container2').style.display = 'none';
-        document.getElementById('fTod_container2').style.display = 'none';
-      } else if (aCode === 'aVol') {
-        document.getElementById('fDir_container2').style.display = 'block';
-        document.getElementById('fVeh_container2').style.display = 'block';
-        document.getElementById('fTod_container2').style.display = 'block';
-      } else if (['aVc', 'aSpd'].includes(aCode)) {
-        document.getElementById('fDir_container2').style.display = 'block';
-        document.getElementById('fVeh_container2').style.display = 'none';
-        document.getElementById('fTod_container2').style.display = 'block';
-      }
+      // Select all elements with an 'id' containing '_filter_container'
+      const filteredDivs = Array.from(document.querySelectorAll('div[id*="_filter_container"]'));
+    
+      filteredDivs.forEach(divElement => {
+        const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
+        divElement.style.display = containsFilterText && _filterGroup !== '' ? 'block' : 'none';
+      });
     }
 
     updateChartData() {
@@ -89,9 +95,6 @@ require([
 
       let _filter;
 
-      var _fDirItem = this.filters.find(item => item.id === "fDir");
-      var _fDir = _fDirItem ? _fDirItem.filterWij.selected : "";
-
       var _fVehItem = this.filters.find(item => item.id === "fVeh");
       var _fVeh = _fVehItem ? _fVehItem.filterWij.selected : "";
 
@@ -99,12 +102,10 @@ require([
       var _fTod = _fTodItem ? _fTodItem.filterWij.selected : "";
 
       // MANUALLY SET FILTER -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (['aLanes', 'aFt', 'aFtClass', 'aCap1HL', 'aFfSpd'].includes(aCode)) {
-        _filter = _fDir;
-      } else if (aCode === 'aVol') {
-        _filter = _fDir + '_' + _fVeh + '_' + _fTod;
-      } else if (['aVc', 'aSpd'].includes(aCode)) {
-        _filter = _fDir + '_' + _fTod;
+      if (['aVmt', 'aVht'].includes(aCode)) {
+        _filter =  _fTod + '_' + _fVeh;
+      } else if (aCode === 'aLMl') {
+        _filter = "";
       }
 
       // Get values from the select widgets
@@ -125,10 +126,10 @@ require([
       }
 
       // get segment data give the filter
-      const segDataMain = scenarioMain.roadwaySegData.data[_filter]
+      const segDataMain = scenarioMain.roadwayTrendData.data[_filter]
 
       // Specify the file path
-      const chartDataPath = `data/scnData/${modVersionValueMain}__${scnGroupValueMain}__${scnYearValueMain}/roadway-seg-summary.json`;
+      const chartDataPath = `data/scnData/${modVersionValueMain}__${scnGroupValueMain}__${scnYearValueMain}/roadway-trends.json`;
   
       if (typeof chartDataPath === 'undefined') {
           console.error('Invalid chart data path:', chartDataPath);
@@ -168,21 +169,13 @@ require([
   }
 
   getChartData(aCode, filterSelectionData) {
-    if (aCode === 'aCap1HL') {
-        return filterSelectionData.aCap1HL; // Change this to the appropriate property based on your data structure
-    } else if (aCode === 'aFfSpd') {
-        return filterSelectionData.aFfSpd; // Change this to the appropriate property based on your data structure
-    } else if (aCode === 'aFt') {
-        return filterSelectionData.aFt;
-    } else if (aCode === 'aVol') {
-        return filterSelectionData.aVol;
-    } else if (aCode === 'aSpd') {
-        return filterSelectionData.aSpd;
-    } else if (aCode === 'aVc') {
-      return filterSelectionData.aVc;
-    } else if (aCode === 'aLanes') {
-        return filterSelectionData.aLanes;
-    }
+    if (aCode === 'aVmt') {
+        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
+    } else if (aCode === 'aVht') {
+        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
+    } else if (aCode === 'aLMl') {
+        return filterSelectionData.aLMl;
+    } 
 
     //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in viz-map L#272)
 
