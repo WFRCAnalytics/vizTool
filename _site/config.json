@@ -14,8 +14,6 @@
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
-                  "mapViewDiv": "mapView",
-                  "mapOverlayDiv": "overlay",
                   "sidebarDiv": "sidebarContent",
                   "geometryFile": "segmentsWithAggFields.geojson",
                   "geometryFileId": "SEGID",
@@ -99,10 +97,10 @@
                     {
                       "aCode": "aCap1HL",
                       "aDisplayName": "Capacity",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
                           "name": "Capacity per Hour per Lane",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
                           "classBreakInfos": [
@@ -142,11 +140,11 @@
                     {
                       "aCode": "aFfSpd",
                       "aDisplayName": "Free-flow Speed",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
                           "name": "Free-flow Speed",
                           "type": "ClassBreaksRenderer",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
@@ -337,56 +335,32 @@
                 }
               },
               {
+                "id": "trends",
                 "submenuText": "Trends",
                 "submenuIconStart": "graph-line-series",
-                "jsonFile": "roadway-seg-summary.json",
+                "jsonFile": "roadway-trends.json",
                 "template": "vizTrends",
                 "templateSettings": {
-                  "mapViewDiv": "mainTrend",
                   "sidebarDiv": "trendSidebarContent",
-                  "attributeSelected": "aLanes",
+                  "attributeTitle": "Roadway Segment Trends",
+                  "attributeSelected": "aVmt",
                   "attributes": [
                     {
-                      "aCode": "aLanes",
-                      "aDisplayName": "Lanes"
+                      "aCode": "aVmt",
+                      "aDisplayName": "Vehicle-Miles Traveled"
                     },
                     {
-                      "aCode": "aFt",
-                      "aDisplayName": "Functional Type"
+                      "aCode": "aVht",
+                      "aDisplayName": "Vehicle-Hours Traveled"
                     },
                     {
-                      "aCode": "aCap1HL",
-                      "aDisplayName": "Capacity"
-                    },
-                    {
-                      "aCode": "aFfSpd",
-                      "aDisplayName": "Free-flow Speed"
-                    },
-                    {
-                      "aCode": "aVol",
-                      "aDisplayName": "Volume"
-                    },
-                    {
-                      "aCode": "aSpd",
-                      "aDisplayName": "Speed"
-                    },
-                    {
-                      "aCode": "aMaxVc",
-                      "aDisplayName": "Congestion"
+                      "aCode": "aLMl",
+                      "aDisplayName": "Lane-Miles"
                     }
                   ],
                   "filters" : [
                     {
-                      "id"  : "fDir",
-                      "text": "Filter Direction",
-                      "type": "select",
-                      "options": [{"value":"DT", "label":"Both Directions"},
-                                  {"value":"D1", "label":"NB/EB"      },
-                                  {"value":"D2", "label":"SB/WB"      }],
-                      "selected": "DT"
-                    },
-                    {
-                      "id"  : "fTod",
+                      "id"  : "dTod",
                       "text": "Filter Time of Day",
                       "type": "select",
                       "options": [{"value":"DY", "label":"Daily"     },
@@ -397,7 +371,7 @@
                       "selected": "DY"
                     },
                     {
-                      "id"  : "fVeh",
+                      "id"  : "dVeh",
                       "text": "Filter Vehicle Type",
                       "type": "select",
                       "options": [{"value":"All", "label":"All Vehicles" },
@@ -421,8 +395,6 @@
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
-                  "mapViewDiv": "mapView",
-                  "mapOverlayDiv": "overlay",
                   "sidebarDiv": "sidebarContent",
                   "geometryFile": "tazWithAggFields.geojson",
                   "geometryFileId": "TAZID",

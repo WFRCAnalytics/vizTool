@@ -2,13 +2,17 @@ let globalTemplates = [];
 let dataScenarios = [];
 let map;
 let geojsonSegments;
-let view;
+let mapView;
 let layerDisplay;
 let dummyFeature;
 
-require(["esri/config"
-        ],
-function(esriConfig) {
+require([
+  "esri/config",
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/widgets/BasemapToggle"
+],
+function(esriConfig, Map, MapView, BasemapToggle,) {
 
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
@@ -92,6 +96,31 @@ function(esriConfig) {
         div.innerHTML = template.layoutDivs;
         container.appendChild(div);
     });
+
+
+    // add map
+    map = new Map({
+      basemap: "gray-vector" // Basemap layerSegments service
+    });
+    
+    mapView = new MapView({
+      map: map,
+      center: [-111.8910, 40.7608], // Longitude, latitude
+      zoom: 10, // Zoom level
+      container: "mapView", // Div element
+      popup: {
+        // Popup properties here if any customizations are needed
+      }
+    });
+
+    // add basemap toggle
+    const basemapToggle = new BasemapToggle({
+      view: mapView,
+      nextBasemap: "arcgis-imagery"
+    });
+    
+    mapView.ui.add(basemapToggle,"bottom-left");
+    
 
     document.getElementById('toggleOverlay').addEventListener('click', function() {
       var overlay = document.getElementById('overlay');

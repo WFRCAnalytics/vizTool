@@ -1,7 +1,4 @@
 require([
-  "esri/Map",
-  "esri/views/MapView",
-  "esri/widgets/BasemapToggle",
   "esri/layers/GeoJSONLayer",
   "esri/Graphic",
   "esri/layers/FeatureLayer",
@@ -14,14 +11,12 @@ require([
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query"
-], function(Map, MapView, BasemapToggle, GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, ColorVariable, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
+], function(GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, ColorVariable, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
     constructor(data, layerTitle) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
-      this.mapViewDiv = data.mapViewDiv;
-      this.mapOverlayDiv = data.mapOverlayDiv;
       this.sidebarDiv = data.sidebarDiv;
       this.geometryFile = data.geometryFile;
       this.geometryFileId = data.geometryFileId;
@@ -41,29 +36,6 @@ require([
       // Global variable to store original label info
       this.originalLabelInfo = null;
 
-      // add map
-      this.map = new Map({
-        basemap: "gray-vector" // Basemap layerSegments service
-      });
-      
-      this.mapView = new MapView({
-        map: this.map,
-        center: [-111.8910, 40.7608], // Longitude, latitude
-        zoom: 10, // Zoom level
-        container: data.mapViewDiv, // Div element
-        popup: {
-          // Popup properties here if any customizations are needed
-        }
-      });
-
-      // add basemap toggle
-      const basemapToggle = new BasemapToggle({
-        view: this.mapView,
-        nextBasemap: "arcgis-imagery"
-      });
-      
-      this.mapView.ui.add(basemapToggle,"bottom-left");
-      
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonGeometry = new GeoJSONLayer({
@@ -78,7 +50,7 @@ require([
           }
         }
       });
-      this.map.add(this.geojsonGeometry);
+      map.add(this.geojsonGeometry);
       this.geojsonGeometry.visible = false;
 
     }
@@ -255,7 +227,7 @@ require([
             }
           }
         });
-        this.map.add(this.layerDisplay);
+        map.add(this.layerDisplay);
 
       } else if (this.geometryType=='polygon') {
         // Dummy polygon feature representing an area encompassing Salt Lake City and Provo
@@ -343,7 +315,7 @@ require([
             }
           }
         });
-        this.map.add(this.layerDisplay);
+        map.add(this.layerDisplay);
       }
     }
     // get the current filter
@@ -351,24 +323,30 @@ require([
 
       var _filterGroup = [];
 
-      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
-        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
-      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
-        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
+        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
+      } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
+        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       }
-
-      // Split the _filterGroup by "_"
-      const _filterArray = _filterGroup.split("_");
-      
-      // Map selected options to an array and join with "_"
-      const _filter = _filterArray
-        .map(filterItem => {
-          var _fItem = this.filters.find(item => item.id === filterItem);
-          return _fItem ? _fItem.filterWij.selected : "";
-        })
-        .join("_");
-
-      return _filter;
+    
+      // Check if _filterGroup is not undefined
+      if (_filterGroup) {
+        // Split the _filterGroup by "_"
+        const _filterArray = _filterGroup.split("_");
+        
+        // Map selected options to an array and join with "_"
+        const _filter = _filterArray
+          .map(filterItem => {
+            var _fItem = this.filters.find(item => item.id === filterItem + '_' + this.id);
+            return _fItem ? _fItem.filterWij.selected : "";
+          })
+          .join("_");
+    
+        return _filter;
+      }
+    
+      return ""; // Return an empty string or a default value if _filterGroup is undefined
+    
     }
 
     // get the current filter
@@ -468,24 +446,33 @@ require([
       console.log('updateFilters');
       
       var _filterGroup = [];
-
-      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
-        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
-      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
-        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+    
+      if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
+        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
+      } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
+        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       }
-      
-      // Split the _filterGroup by "_"
-      const _filterArray = _filterGroup.split("_");
     
       // Select all elements with an 'id' containing '_filter_container'
-      const filteredDivs = Array.from(document.querySelectorAll('div[id*="_filter_container"]'));
+      const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
     
-      filteredDivs.forEach(divElement => {
-        const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
-        divElement.style.display = containsFilterText && _filterGroup !== '' ? 'block' : 'none';
-      });
+      if (_filterGroup) {
+        // Split the _filterGroup by "_"
+        const _filterArray = _filterGroup.split("_");
+        
+        filteredDivs.forEach(divElement => {
+          const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
+          divElement.style.display = containsFilterText ? 'block' : 'none';
+        });
+      } else {
+        console.log('_filterGroup is null or undefined. Hiding all divs.');
+        // Hide all divs if _filterGroup is null or undefined
+        filteredDivs.forEach(divElement => {
+          divElement.style.display = 'none';
+        });
+      }
     }
+    
 
     updateAggregations() {
       console.log('updateAggregations');
@@ -630,7 +617,7 @@ require([
       console.log('updateMap');
       
       // Reinitialize the layer with the current features array
-      this.map.remove(this.layerDisplay);
+      map.remove(this.layerDisplay);
 
       var _dataMain = [];
       var _dataComp = [];
@@ -657,7 +644,7 @@ require([
 
       const setRendererAndLegend = () => {
 
-        if (this.getACode().substring(0, 2) === "aS") {
+        if (this.getACode().substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
           if (mode==='base') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
@@ -709,17 +696,17 @@ require([
         });
 
         if (this.legend) {
-          this.mapView.ui.remove(this.legend);
+          mapView.ui.remove(this.legend);
         }
 
         this.legend = new Legend({
-          view: this.mapView,
+          view: mapView,
           layerInfos: [{
             layer: this.layerDisplay,
             title: this.popupTitle + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
-        this.mapView.ui.add(this.legend, "bottom-right");
+        mapView.ui.add(this.legend, "bottom-right");
         
         // toggle labels based on checkbox
         this.originalLabelInfo = this.layerDisplay.labelingInfo;
