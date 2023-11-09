@@ -27,6 +27,7 @@
                     {
                       "aCode": "aLanes",
                       "aDisplayName": "Lanes",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
                           "name": "Number of Lanes",
@@ -66,6 +67,7 @@
                     {
                       "aCode": "aFt",
                       "aDisplayName": "Functional Type",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
                       "rendererCollection": {
                         "main": {
                           "name": "Functional Type",
@@ -100,6 +102,7 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Capacity per Hour per Lane",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
                           "classBreakInfos": [
@@ -116,6 +119,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Capacity per Hour per Lane",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
                           "classBreakInfos": [
@@ -142,6 +146,7 @@
                         "main": {
                           "name": "Free-flow Speed",
                           "type": "ClassBreaksRenderer",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
@@ -157,6 +162,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Free-flow Speed",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
@@ -178,6 +184,7 @@
                     {
                       "aCode": "aVol",
                       "aDisplayName": "Volume",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
                           "name": "Volume",
@@ -196,6 +203,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":   -25001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -25,000"  },
@@ -217,6 +225,7 @@
                     {
                       "aCode": "aSpd",
                       "aDisplayName": "Speed",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
                           "name": "Speed",
@@ -235,6 +244,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Speed",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
@@ -256,6 +266,7 @@
                     {
                       "aCode": "aMaxVc",
                       "aDisplayName": "Max V/C Ratio",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0.00')",
                       "rendererCollection": {
                         "main": {
                           "name": "Max Volume-to-Capacity Ratio",
@@ -280,6 +291,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume-to-Capacity Ratio",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0.00')",
                           "valueExpression": "var v  = $feature.dVal; if (v<=-1.00) { return 'class_1'; } else if (v< -0.50) { return 'class_2'; } else if (v< -0.15) { return 'class_3'; } else if (v< -0.05) { return 'class_4'; } else if (v<  0.05) { return 'class_5'; } else if (v<  0.15) { return 'class_6'; } else if (v<  0.50) { return 'class_7'; } else if (v<  1.00) { return 'class_8'; } else { return 'class_9'; }",
                           "uniqueValueInfos": [
                             { "value": "class_9", "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +1.00"},
@@ -376,9 +388,9 @@
             ]
           },
           {
-            "id": "transit",
-            "menuText": "Transit",
-            "menuIconStart": "conference-room",
+            "id": "trips",
+            "menuText": "Trips",
+            "menuIconStart": "tour",
             "modelEntitys": [
               {
                 "submenuText": "Mode Share",
@@ -393,15 +405,14 @@
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
                   "attributeTitle": "Mode Share Attributes",
-                  "attributeSelected": "aT",
+                  "attributeSelected": "aSTrn",
                   "attributes": [
                     {
                       "aCode": "aT",
                       "aDisplayName": "Trips",
-                      "aLabelFormat": "#,##0",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Number of Trips",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":     0, "maxValue":     0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0 Trips"},
@@ -428,10 +439,10 @@
                     {
                       "aCode": "aSAll",
                       "aDisplayName": "Share of All Trips",
+                      "aLabelExpressionInfo": "Text($feature.dVal * 100, '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of All Trips",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '0.0%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
@@ -458,10 +469,10 @@
                     {
                       "aCode": "aSMot",
                       "aDisplayName": "Share of Motorized Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Motorized Trips",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '0.0%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
@@ -487,6 +498,7 @@
                     {
                       "aCode": "aSAut",
                       "aDisplayName": "Share of Auto Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Auto Trips",
@@ -515,6 +527,7 @@
                     {
                       "aCode": "aSTrn",
                       "aDisplayName": "Share of Transit Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Transit Trips",
@@ -543,6 +556,7 @@
                     {
                       "aCode": "aSLcl",
                       "aDisplayName": "Share of Local Bus",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Local Bus",
@@ -571,6 +585,7 @@
                     {
                       "aCode": "aSCor",
                       "aDisplayName": "Share of Core Bus",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Core Bus",
@@ -599,6 +614,7 @@
                     {
                       "aCode": "aSExp",
                       "aDisplayName": "Share of Express Bus",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Express Bus",
@@ -627,6 +643,7 @@
                     {
                       "aCode": "aSBrt",
                       "aDisplayName": "Share of Bus-Rapid Transit",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Bus-Rapid Transit",
@@ -655,6 +672,7 @@
                     {
                       "aCode": "aSLrt",
                       "aDisplayName": "Share of Light-Rail Transit",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Light-Rail Transit",
@@ -683,6 +701,7 @@
                     {
                       "aCode": "aSCrt",
                       "aDisplayName": "Share of Commuter-Rail Transit",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Commuter-Rail Transit",
@@ -711,6 +730,7 @@
                     {
                       "aCode": "aSNon",
                       "aDisplayName": "Share of Non-Motorized Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Non-Motorized Trips",
@@ -739,6 +759,7 @@
                     {
                       "aCode": "aSWlk",
                       "aDisplayName": "Share of Walk Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Walk Trips",
@@ -767,6 +788,7 @@
                     {
                       "aCode": "aSBik",
                       "aDisplayName": "Share of Bike Trips",
+                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Bike Trips",
@@ -793,19 +815,8 @@
                       }
                     }
                   ],
-                  "filters" : [  
-                    {
-                      "id"  : "fPurp",
-                      "text": "Filter Purpose",
-                      "type": "select",
-                      "options": [{"value":"AllPurp", "label": "All Purposes"      },
-                                  {"value":"HBO"    , "label": "Home-Based Other"  },
-                                  {"value":"HBSch"  , "label": "Home-Based School" },
-                                  {"value":"HBW"    , "label": "Home-Based Work"   },
-                                  {"value":"NHB"    , "label": "Non-Home-Based"    },
-                                  {"value":"HBC"    , "label": "Home-Based College"}],
-                      "selected": "AllPurp"
-                    },
+                  "filters" : [
+                    
                     {
                       "id"  : "fMode",
                       "text": "Filter Mode",
@@ -845,7 +856,19 @@
                                   {"value": "Wlk" , "label": "Walk: All"                          },
                                   {"value": "nsWk", "label": "Walk: Non-School"                   },
                                   {"value": "scWk", "label": "Walk: School"                       }],
-                      "selected": "Mot"
+                      "selected": "wLcl"
+                    },
+                    {
+                      "id"  : "fPurp",
+                      "text": "Filter Purpose",
+                      "type": "select",
+                      "options": [{"value":"AllPurp", "label": "All Purposes"      },
+                                  {"value":"HBO"    , "label": "Home-Based Other"  },
+                                  {"value":"HBSch"  , "label": "Home-Based School" },
+                                  {"value":"HBW"    , "label": "Home-Based Work"   },
+                                  {"value":"NHB"    , "label": "Non-Home-Based"    },
+                                  {"value":"HBC"    , "label": "Home-Based College"}],
+                      "selected": "AllPurp"
                     },
                     {
                       "id"  : "fTod",
