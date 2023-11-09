@@ -5,12 +5,12 @@
       "userLayout": {
         "menuItems":[
           {
-            "id": "segments",
-            "menuText": "Segments",
-            "menuIconStart": "line-straight",
+            "id": "roadways",
+            "menuText": "Roadways",
+            "menuIconStart": "driving-distance",
             "modelEntitys": [
               {
-                "submenuText": "Roadway Segments",
+                "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
@@ -325,7 +325,7 @@
                 }
               },
               {
-                "submenuText": "Roadway Trends",
+                "submenuText": "Trends",
                 "submenuIconStart": "graph-line-series",
                 "jsonFile": "roadway-seg-summary.json",
                 "template": "vizTrends",
@@ -400,9 +400,9 @@
             ]
           },
           {
-            "id": "zones",
-            "menuText": "Zones/Districts",
-            "menuIconStart": "polygon",
+            "id": "transit",
+            "menuText": "Transit",
+            "menuIconStart": "conference-room",
             "modelEntitys": [
               {
                 "submenuText": "Mode Share",
@@ -422,6 +422,7 @@
                     {
                       "aCode": "aT",
                       "aDisplayName": "Trips",
+                      "aLabelFormat": "#,##0",
                       "rendererCollection": {
                         "main": {
                           "name": "Number of Trips",
@@ -454,6 +455,7 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Share of All Trips",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '0.0%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
@@ -483,6 +485,7 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Motorized Trips",
+                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '0.0%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
