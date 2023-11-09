@@ -8,12 +8,13 @@ require([
   "esri/renderers/ClassBreaksRenderer",
   "esri/renderers/UniqueValueRenderer",
   "esri/renderers/SimpleRenderer",
+  "esri/renderers/visualVariables/ColorVariable",
   "esri/symbols/SimpleLineSymbol",
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query"
-], function(Map, MapView, BasemapToggle, GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
+], function(Map, MapView, BasemapToggle, GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, ColorVariable, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -77,43 +78,6 @@ require([
       this.map.add(this.geojsonGeometry);
       this.geojsonGeometry.visible = false;
 
-      if (this.geometryType=='polyline') {
-        // Dummy polyline feature
-        this.dummyFeature = {
-          geometry: {
-            type: "polyline",
-            paths: [
-              [-111.8910, 40.7608],
-              [-111.8911, 40.7609]
-            ],
-            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-          },
-          attributes: {
-            id: 0, // Unique ID, using "SEGID" as the objectIdField
-            // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
-          }
-        };
-      } else if (this.geometryType=='polygon') {
-        // Dummy polygon feature representing an area encompassing Salt Lake City and Provo
-        this.dummyFeature = {
-          geometry: {
-            type: "polygon",
-            rings: [
-              [-111.8910, 40.7608], // Start at Salt Lake City
-              [-111.8911, 40.7609], // A point near Provo
-              [-111.8912, 40.7610], // An additional point to make it a polygon, could be another city or arbitrary coordinate
-              [-111.8910, 40.7608]  // End at Salt Lake City to close the loop
-            ],
-            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-          },
-          attributes: {
-            id: 0, // Unique ID, using "SEGID" as the objectIdField
-            // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
-          }
-        };
-      }
     }
 
     
@@ -178,6 +142,10 @@ require([
     getAttributeRendererCollection() {
       return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
     }
+    
+    getAttributeLabelExpressionInfo() {
+      return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
+    }
 
     getMainRenderer() {
       return this.getAttributeRendererCollection().main.renderer;
@@ -191,6 +159,190 @@ require([
       return this.getAttributeRendererCollection().compare_pct.renderer;
     }
 
+    initializeLayer() {
+      //
+      let dValFieldType;
+
+      // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
+      if (this.getACode() === 'aFtClass') {
+        dValFieldType = "string";
+      } else {
+        dValFieldType = "double";  // or "int" based on your requirement
+      }
+
+      if (this.geometryType=='polyline') {
+        // Dummy polyline feature
+        this.dummyFeature = {
+          geometry: {
+            type: "polyline",
+            paths: [
+              [-111.8910, 40.7608],
+              [-111.8911, 40.7609]
+            ],
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0, // Unique ID, using "SEGID" as the objectIdField
+            // ... add other attribute fields if necessary
+            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+          }
+        };
+
+        
+        this.layerDisplay = new FeatureLayer({
+          source: [this.dummyFeature],
+          objectIdField: this.geometryFileId,
+          fields: [
+            // ... your other fields
+            { name: this.geometryFileId, type: "oid" },  // Object ID field
+            { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
+            // HARD CODE... NEED TO ADD PROGRAMATICALLY
+            { name: "SmallArea"        , type: "string"},
+            { name: "DMED_NAME"        , type: "string"},
+            { name: "DLRG_NAME"        , type: "string"},
+            { name: "DISTANCE"         , type: "double"}
+
+          ],
+          popupTemplate: {
+            title: this.popupTitle,
+            content: [
+              {
+                type: "text",
+                text: this.geometryFileId + " {expression/geometryFieldId}"
+              },
+              {
+                type: "text",
+                text: this.getACode() + " is: {expression/formatDisplayValue}"
+              }
+            ],
+            expressionInfos: [
+              {
+                name: "geometryFieldId",
+                title: this.geometryFieldId,
+                expression: "$feature." + this.geometryFileId
+              },
+              {
+                name: "formatDisplayValue",
+                title: "Formatted Display Value",
+                expression: this.getAttributeLabelExpressionInfo()
+              }
+            ]
+          },
+          labelingInfo: [{
+            symbol: {
+              type: "text",  // Use a text symbol for labeling
+              color: [50, 50, 50],  // Dark grey color
+              haloColor: "white",
+              haloSize: "2px",  // Halo size of 2px
+              font: {  // Define the font used for labeling
+                family: "sans-serif",
+                size: 10,
+                weight: "normal"  // Make the font weight normal (not bold)
+              }
+            },
+            labelPlacement: "center-along",  // Define where to place the label
+            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+          }],
+          renderer: {
+            type: "simple",  // Use a simple renderer
+            symbol: {
+              type: 'simple-line',
+              color: [255, 255, 255],
+              width: 0.2
+            }
+          }
+        });
+        this.map.add(this.layerDisplay);
+
+      } else if (this.geometryType=='polygon') {
+        // Dummy polygon feature representing an area encompassing Salt Lake City and Provo
+        this.dummyFeature = {
+          geometry: {
+            type: "polygon",
+            rings: [
+              [-111.8910, 40.7608], // Start at Salt Lake City
+              [-111.8911, 40.7609], // A point near Provo
+              [-111.8912, 40.7610], // An additional point to make it a polygon, could be another city or arbitrary coordinate
+              [-111.8910, 40.7608]  // End at Salt Lake City to close the loop
+            ],
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0, // Unique ID, using "SEGID" as the objectIdField
+            // ... add other attribute fields if necessary
+            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+          }
+        };
+
+        this.layerDisplay = new FeatureLayer({
+          source: [this.dummyFeature],
+          objectIdField: this.geometryFileId,
+          fields: [
+            // ... your other fields
+            { name: this.geometryFileId, type: "oid" },  // Object ID field
+            { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
+            // HARD CODE... NEED TO ADD PROGRAMATICALLY
+            { name: "SmallArea"        , type: "string"},
+            { name: "DMED_NAME"        , type: "string"},
+            { name: "DLRG_NAME"        , type: "string"},
+            { name: "DISTANCE"         , type: "double"}
+
+          ],
+          popupTemplate: {
+            title: this.popupTitle,
+            content: [
+              {
+                type: "text",
+                text: this.geometryFileId + " {expression/geometryFieldId}"
+              },
+              {
+                type: "text",
+                text: this.getACode() + " is: {expression/formatDisplayValue}"
+              }
+            ],
+            expressionInfos: [
+              {
+                name: "geometryFieldId",
+                title: this.geometryFieldId,
+                expression: "$feature." + this.geometryFileId
+              },
+              {
+                name: "formatDisplayValue",
+                title: "Formatted Display Value",
+                expression: this.getAttributeLabelExpressionInfo()
+              }
+            ]
+          },
+          labelingInfo: [{
+            symbol: {
+              type: "text",  // Use a text symbol for labeling
+              color: [50, 50, 50],  // Dark grey color
+              haloColor: "white",
+              haloSize: "2px",  // Halo size of 2px
+              font: {  // Define the font used for labeling
+                family: "sans-serif",
+                size: 10,
+                weight: "normal"  // Make the font weight normal (not bold)
+              }
+            },
+            labelPlacement: "always-horizontal",  // Define where to place the label
+            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+          }],
+          renderer: {
+            type: "simple",  // Use a simple renderer
+            symbol: {
+              type: "simple-fill",  // Use a fill symbol for polygons
+              color: [0, 0, 0, 0],  // No fill color (transparent)
+              outline: {  // Define the outline of the polygon
+                color: [255, 255, 255],  // Outline color (black)
+                width: 0.2  // Outline width
+              }
+            }
+          }
+        });
+        this.map.add(this.layerDisplay);
+      }
+    }
     // get the current filter
     getFilter() {
 
@@ -468,90 +620,38 @@ require([
         return;
       }
 
-      //
-      let dValFieldType;
+      this.initializeLayer();
 
-      // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (this.getACode() === 'aFtClass') {
-        dValFieldType = "string";
-      } else {
-        dValFieldType = "double";  // or "int" based on your requirement
-      }
-
-      this.layerDisplay = new FeatureLayer({
-        source: [this.dummyFeature],
-        objectIdField: this.geometryFileId,
-        fields: [
-          // ... your other fields
-          { name: this.geometryFileId, type: "oid" },  // Object ID field
-          { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
-          // HARD CODE... NEED TO ADD PROGRAMATICALLY
-          { name: "SmallArea"        , type: "string"},
-          { name: "DMED_NAME"        , type: "string"},
-          { name: "DLRG_NAME"        , type: "string"},
-          { name: "DISTANCE"         , type: "double"}
-
-        ],
-        popupTemplate: {
-          title: this.popupTitle,
-          content: [
-            {
-              type: "text",
-              text: this.geometryFileId + " {expression/geometryFieldId}"
-            },
-            {
-              type: "text",
-              text: this.getACode() + " is: {expression/formatDisplayValue}"
-            }
-          ],
-          expressionInfos: [
-            {
-              name: "geometryFieldId",
-              title: this.geometryFieldId,
-              expression: "$feature." + this.geometryFileId
-            },
-            {
-              name: "formatDisplayValue",
-              title: "Formatted Display Value",
-              expression: "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###.0000')"
-            }
-          ]
-        },
-        labelingInfo: [{
-          symbol: {
-            type: "text",  // Use a text symbol for labeling
-            color: [50, 50, 50],  // Dark grey color
-            haloColor: "white",
-            haloSize: "2px",  // Halo size of 2px
-            font: {  // Define the font used for labeling
-              family: "sans-serif",
-              size: 10,
-              weight: "normal"  // Make the font weight normal (not bold)
-            }
-          },
-          labelPlacement: "above-center",  // Define where to place the label
-          labelExpressionInfo: { expression: "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###.0000')" }  // Define the expression for the label
-        }],
-        renderer: {
-          type: "simple",  // Use a simple renderer
-          symbol: {
-            type: "simple-fill",  // Use a fill symbol for polygons
-            color: [0, 0, 0, 0],  // No fill color (transparent)
-            outline: {  // Define the outline of the polygon
-              color: [255, 255, 255],  // Outline color (black)
-              width: 0.2  // Outline width
-            }
-          }
-        }
-      });
-      this.map.add(this.layerDisplay);
-      
       const setRendererAndLegend = () => {
 
-        if (mode==='base') {
-          this.layerDisplay.renderer = this.getMainRenderer();
-        } else if (mode==='compare') {
-          this.layerDisplay.renderer = this.getCompareAbsRendererRenderer() 
+        if (this.getACode().substring(0, 2) === "aS") {
+          // Define the color ramp from yellow to blue
+          var colorVisVar = new ColorVariable({
+            field: "dVal", // replace with the field name of your data
+            stops: [
+              { value: 0.0000, color: new Color("#FFFF00") }, // Yellow
+              { value: 1.0000, color: new Color("#0000FF") }  // Blue
+            ]
+          });
+
+          // Create a simple renderer and apply the visual variable
+          this.layerDisplay.renderer = new SimpleRenderer({
+            symbol: {
+              type: "simple-fill", // Use "simple-marker" for point layers
+              outline: {
+                // You can adjust the outline properties as needed
+                color: "white",
+                width: 0.2
+              }
+            },
+            visualVariables: [colorVisVar]
+          });
+        } else {
+          if (mode==='base') {
+            this.layerDisplay.renderer = this.getMainRenderer();
+          } else if (mode==='compare') {
+            this.layerDisplay.renderer = this.getCompareAbsRendererRenderer() 
+          }
         }
 
         this.layerDisplay.refresh();
