@@ -49,7 +49,6 @@ require([
       console.log('afterSidebarUpdate');
       this.updateFilters();
       this.updateChartData();
-      //this.updateLineCharts();
     }
 
     afterFilterUpdate() {
@@ -69,8 +68,8 @@ require([
     }
 
     scenarioMain() {
-      return this.getScenario(         document.getElementById('selectModMain' ).value,
-                                        document.getElementById('selectGrpMain' ).value,
+      return this.getScenario(document.getElementById('selectModMain' ).value,
+                              document.getElementById('selectGrpMain' ).value,
                               parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
     }
 
@@ -101,8 +100,6 @@ require([
       }
     }
 
-
-
     // get the current filter
     getFilter() {
 
@@ -130,29 +127,6 @@ require([
     
     }
 
-    //updateChartData() {
-    //  var aCode = this.attributeSelect.selected;
-    //  console.log('updateChartData');
-//
-    //  let _filter = this.getFilter();
-    //  
-    //  // get segment data give the filter
-    //  const segDataMain = this.scenarioMain().roadwayTrendData.data[_filter]
-//
-    //  const labels = [];
-    //  const chartData = [];
-//
-    //  // Access the segment data using data.D1
-    //  Object.keys(segDataMain).forEach(segId => {
-    //      const selectedValue = this.getChartData(aCode, segDataMain[segId]);
-    //      if (selectedValue !== null) {
-    //          labels.push(segId);
-    //          chartData.push(selectedValue);
-    //      }
-    //  });
-    //  this.createAvmtChart(aCode, labels, chartData);
-    //} 
-
     getChartData(aCode, filterSelectionData) {
       if (aCode === 'aVmt') {
           return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
@@ -167,6 +141,18 @@ require([
       // Handle other display names if needed
       return null;
     }
+
+    getSegidOptions() {
+      const segidOptions = [];
+      const filter = this.getFilter();
+  
+      const scenarioData = this.scenarioMain().roadwayTrendData.data[filter];
+      Object.keys(scenarioData).forEach(segId => {
+          segidOptions.push(segId);
+      });
+  
+      return segidOptions;
+  }  
 
     createLineChart(aCode, labels, chartData) {
       console.log('Creating the chart...');
@@ -256,12 +242,12 @@ require([
   
       return colors[index % colors.length];
   }
-  
-  
+
   
   updateChartData() {
       const aCode = this.getACode();
-      const segId = '0006_149.9'; // Change this to your desired SEGID
+      const segId = "0006_146.9"; // Change this to your desired SEGID
+      const segOptions = this.getSegidOptions();
     
       const scnGroupYearCombos = [
           { scnGroup: 'Base', scnYear: 2019 },
@@ -311,54 +297,6 @@ require([
     
       this.createLineChart(aCode, labels, chartData);
   }
-
-
-
-
-    //createAvmtChart(aCode, labels, chartData) {
-    //  console.log('Creating the chart...');
-    //  console.log("Selected radio button option under 'Display':", aCode);
-//
-    //    // Clear existing chart container
-    //    const chartElement = document.getElementById('mainTrend');
-    //    chartElement.innerHTML = '';
-//
-    //  // Create chart container dynamically
-    //  const chartContainer = document.createElement('div');
-    //  chartContainer.id = 'chartContainer'; // Set the id for the chart container
-//
-    //  // Create canvas and chart
-    //  const canvas = document.createElement('canvas');
-    //  canvas.width = 400; // Set the width of the canvas
-    //  canvas.height = 200; // Set the height of the canvas
-    //  chartContainer.appendChild(canvas); // Append canvas to chart container
-//
-    //  // Append the chart container to the specified element in HTML
-    //  chartElement.appendChild(chartContainer);
-//
-    //  // Create Chart.js chart
-    //  const ctx = canvas.getContext('2d');
-    //  new Chart(ctx, {
-    //    type: 'bar',
-    //    data: {
-    //      labels: labels,
-    //      datasets: [{
-    //        label: aCode + ' Data',
-    //        data: chartData,
-    //        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-    //        borderColor: 'rgba(75, 192, 192, 1)',
-    //        borderWidth: 1
-    //      }]
-    //    },
-    //    options: {
-    //      scales: {
-    //        y: {
-    //          beginAtZero: true
-    //        }
-    //      }
-    //    }
-    //  });
-    //}
 
     getSidebarSelector(submenuTemplate) {
       if (submenuTemplate === 'vizLog') {
