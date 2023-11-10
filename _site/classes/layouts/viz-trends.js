@@ -49,6 +49,7 @@ require([
       console.log('afterSidebarUpdate');
       this.updateFilters();
       this.updateChartData();
+      //this.updateLineCharts();
     }
 
     afterFilterUpdate() {
@@ -100,6 +101,8 @@ require([
       }
     }
 
+
+
     // get the current filter
     getFilter() {
 
@@ -127,28 +130,28 @@ require([
     
     }
 
-    updateChartData() {
-      var aCode = this.attributeSelect.selected;
-      console.log('updateChartData');
-
-      let _filter = this.getFilter();
-      
-      // get segment data give the filter
-      const segDataMain = this.scenarioMain().roadwayTrendData.data[_filter]
-
-      const labels = [];
-      const chartData = [];
-
-      // Access the segment data using data.D1
-      Object.keys(segDataMain).forEach(segId => {
-          const selectedValue = this.getChartData(aCode, segDataMain[segId]);
-          if (selectedValue !== null) {
-              labels.push(segId);
-              chartData.push(selectedValue);
-          }
-      });
-      this.createAvmtChart(aCode, labels, chartData);
-    } 
+    //updateChartData() {
+    //  var aCode = this.attributeSelect.selected;
+    //  console.log('updateChartData');
+//
+    //  let _filter = this.getFilter();
+    //  
+    //  // get segment data give the filter
+    //  const segDataMain = this.scenarioMain().roadwayTrendData.data[_filter]
+//
+    //  const labels = [];
+    //  const chartData = [];
+//
+    //  // Access the segment data using data.D1
+    //  Object.keys(segDataMain).forEach(segId => {
+    //      const selectedValue = this.getChartData(aCode, segDataMain[segId]);
+    //      if (selectedValue !== null) {
+    //          labels.push(segId);
+    //          chartData.push(selectedValue);
+    //      }
+    //  });
+    //  this.createAvmtChart(aCode, labels, chartData);
+    //} 
 
     getChartData(aCode, filterSelectionData) {
       if (aCode === 'aVmt') {
@@ -165,50 +168,197 @@ require([
       return null;
     }
 
-    createAvmtChart(aCode, labels, chartData) {
+    createLineChart(aCode, labels, chartData) {
       console.log('Creating the chart...');
       console.log("Selected radio button option under 'Display':", aCode);
 
-        // Clear existing chart container
-        const chartElement = document.getElementById('mainTrend');
-        chartElement.innerHTML = '';
+      const containerElement = document.getElementById('mainTrend');
+      containerElement.innerHTML = '';
 
-      // Create chart container dynamically
+      // Create dropdown element
+      const dropdown = document.createElement('select');
+      dropdown.id = 'scenarioGroupDropdown';
+      dropdown.innerHTML = `
+          <option value="RTP">RTP</option>
+          <option value="NoBuild">NoBuild</option>
+          <option value="Needs">Needs</option>
+      `;
+      containerElement.appendChild(dropdown);
+      
       const chartContainer = document.createElement('div');
-      chartContainer.id = 'chartContainer'; // Set the id for the chart container
-
-      // Create canvas and chart
+      chartContainer.id = 'chartContainer';
+      containerElement.appendChild(chartContainer);
+  
       const canvas = document.createElement('canvas');
-      canvas.width = 400; // Set the width of the canvas
-      canvas.height = 200; // Set the height of the canvas
-      chartContainer.appendChild(canvas); // Append canvas to chart container
-
-      // Append the chart container to the specified element in HTML
-      chartElement.appendChild(chartContainer);
-
-      // Create Chart.js chart
+      canvas.width = 400;
+      canvas.height = 200;
+      chartContainer.appendChild(canvas);
+  
       const ctx = canvas.getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: aCode + ' Data',
-            data: chartData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
+      let currentChart = null;
+  
+      const segIds = Object.keys(chartData);
+  
+      const createChart = () => {
+        if (currentChart) {
+            // Destroy existing Chart instance
+            currentChart.destroy();
         }
-      });
-    }
+
+        currentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: segIds.map(segId => {
+                    const selectedScenarioGroup = dropdown.value;
+                    const scenarioGroups = ['Base', selectedScenarioGroup];
+                    const data = scenarioGroups.map(scenarioGroup => {
+                        const values = chartData[segId][scenarioGroup];
+                        const years = Object.keys(values).map(year => values[year]);
+                        return years;
+                    });
+
+                    return {
+                        label: segId,
+                        data: data.flat(),
+                        fill: false,
+                        borderColor: this.getRandomColor(),
+                        borderWidth: 1
+                    };
+                })
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    };
+
+    // Initial chart creation
+    createChart();
+
+    dropdown.addEventListener('change', createChart);
+  }
+  
+  getRandomColor(index) {
+      // Generate a random color based on index
+      const colors = [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+      ];
+  
+      return colors[index % colors.length];
+  }
+  
+  
+  
+  updateChartData() {
+      const aCode = this.getACode();
+      const segId = '0006_149.9'; // Change this to your desired SEGID
+    
+      const scnGroupYearCombos = [
+          { scnGroup: 'Base', scnYear: 2019 },
+          { scnGroup: 'Base', scnYear: 2023 },
+          { scnGroup: 'RTP', scnYear: 2032 },
+          { scnGroup: 'RTP', scnYear: 2042 },
+          { scnGroup: 'RTP', scnYear: 2050 },
+          { scnGroup: 'NoBuild', scnYear: 2032 },
+          { scnGroup: 'NoBuild', scnYear: 2042 },
+          { scnGroup: 'NoBuild', scnYear: 2050 },
+          { scnGroup: 'Needs', scnYear: 2032 },
+          { scnGroup: 'Needs', scnYear: 2042 },
+          { scnGroup: 'Needs', scnYear: 2050 },
+          { scnGroup: 'Needs MAG', scnYear: 2050 }
+      ];
+    
+      const labels = [2019,2023,2032,2042,2050];
+      const chartData = {};
+    
+      scnGroupYearCombos.forEach(combo => {
+        const scnGroup = combo.scnGroup;
+        const scnYear = combo.scnYear;
+        const scenarioData = this.getScenario('v900', scnGroup, scnYear);
+        const filter = this.getFilter();
+    
+        if (scenarioData) {
+            const filteredScenario = scenarioData.roadwayTrendData.data[filter];
+            const filterSelectionData = filteredScenario[segId];
+    
+            if (filterSelectionData) {
+                const selectedValue = this.getChartData(aCode, filterSelectionData);
+    
+                if (selectedValue !== null) {
+                    if (!chartData[segId]) {
+                        chartData[segId] = {};
+                    }
+    
+                    if (!chartData[segId][scnGroup]) {
+                        chartData[segId][scnGroup] = {};
+                    }
+    
+                    chartData[segId][scnGroup][scnYear] = selectedValue;
+                }
+            }
+        }
+    });
+    
+      this.createLineChart(aCode, labels, chartData);
+  }
+
+
+
+
+    //createAvmtChart(aCode, labels, chartData) {
+    //  console.log('Creating the chart...');
+    //  console.log("Selected radio button option under 'Display':", aCode);
+//
+    //    // Clear existing chart container
+    //    const chartElement = document.getElementById('mainTrend');
+    //    chartElement.innerHTML = '';
+//
+    //  // Create chart container dynamically
+    //  const chartContainer = document.createElement('div');
+    //  chartContainer.id = 'chartContainer'; // Set the id for the chart container
+//
+    //  // Create canvas and chart
+    //  const canvas = document.createElement('canvas');
+    //  canvas.width = 400; // Set the width of the canvas
+    //  canvas.height = 200; // Set the height of the canvas
+    //  chartContainer.appendChild(canvas); // Append canvas to chart container
+//
+    //  // Append the chart container to the specified element in HTML
+    //  chartElement.appendChild(chartContainer);
+//
+    //  // Create Chart.js chart
+    //  const ctx = canvas.getContext('2d');
+    //  new Chart(ctx, {
+    //    type: 'bar',
+    //    data: {
+    //      labels: labels,
+    //      datasets: [{
+    //        label: aCode + ' Data',
+    //        data: chartData,
+    //        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    //        borderColor: 'rgba(75, 192, 192, 1)',
+    //        borderWidth: 1
+    //      }]
+    //    },
+    //    options: {
+    //      scales: {
+    //        y: {
+    //          beginAtZero: true
+    //        }
+    //      }
+    //    }
+    //  });
+    //}
 
     getSidebarSelector(submenuTemplate) {
       if (submenuTemplate === 'vizLog') {
