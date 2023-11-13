@@ -180,7 +180,7 @@ require([
       });
   
       return segidOptions;
-  }  
+    }
 
     createLineChart(aCode, labels, chartData) {
       console.log('Creating the chart...');
@@ -222,43 +222,55 @@ require([
         ];
 
         currentChart = new Chart(ctx, {
-          type: 'line',
+          type: 'scatter', // Use scatter chart type
           data: {
-            labels: labels,
             datasets: aggIds.flatMap(aggId => {
-              // For each segId, create a dataset for each scenario group
+              // For each aggId, create a dataset for each scenario group
               return scenarioGroups.map(scenarioGroup => {
                 const name = scenarioGroup.name;
                 const values = chartData[aggId][name];
-                const years = Object.keys(values).map(year => values[year]);
+                const dataPoints = Object.keys(values).map(year => {
+                  return { x: year, y: values[year] }; // Format data as x-y pairs
+                });
         
                 return {
                   label: `${name}`,
-                  data: years,
+                  data: dataPoints,
                   fill: false,
                   borderColor: this.getRandomColor(),
                   borderWidth: 3,
-                  pointRadius: 8
+                  pointRadius: 8,
+                  showLine: true // Add this line to connect points
                 };
               });
             })
           },
           options: {
             scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                min: 2019, 
+                ticks: {
+                  callback: function(value) {
+                    // Convert value to string and remove commas
+                    return value.toString().replace(/,/g, '');
+                  }
+                }
+              },
               y: {
                 beginAtZero: true
               }
             }
           }
         });
+      }
         
-    };
-
-    // Initial chart creation
-    createChart();
-  }
+      // Initial chart creation
+      createChart();
+    }
   
-  getRandomColor(index) {
+    getRandomColor(index) {
       // Generate a random color based on index
       const colors = [
           'rgba(75, 192, 192, 1)',
@@ -270,10 +282,10 @@ require([
       ];
   
       return colors[index % colors.length];
-  }
+    }
 
   
-  updateChartData() {
+    updateChartData() {
       const aCode = this.getACode();
       //const segId = "0006_146.9"; // Change this to your desired SEGID
       //const segOptions = this.getSegidOptions();
@@ -372,7 +384,7 @@ require([
 
 
       this.createLineChart(aCode, labels, chartData);
-  }
+    }
 
     getSidebarSelector(submenuTemplate) {
       if (submenuTemplate === 'vizLog') {
