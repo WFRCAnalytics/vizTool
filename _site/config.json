@@ -342,6 +342,34 @@
                 "template": "vizTrends",
                 "templateSettings": {
                   "sidebarDiv": "trendSidebarContent",
+                  "aggregatorTitle": "Select Summary Geography",
+                  "aggregatorSelected" : "CO_FIPS",
+                  "aggregators": [
+                    {
+                      "agCode": "PLANAREA",
+                      "agDisplayName": "Plan Area"
+                    },
+                    {
+                      "agCode": "CO_FIPS",
+                      "agDisplayName": "County"
+                    },
+                    {
+                      "agCode": "CITY_NAME",
+                      "agDisplayName": "City"
+                    },
+                    {
+                      "agCode": "DISTMED",
+                      "agDisplayName": "Medium District"
+                    },
+                    {
+                      "agCode": "DISTLRG",
+                      "agDisplayName": "Large District"
+                    },
+                    {
+                      "agCode": "SmallArea",
+                      "agDisplayName": "Small Area"
+                    }
+                  ],
                   "attributeTitle": "Roadway Segment Trends",
                   "attributeSelected": "aVmt",
                   "attributes": [

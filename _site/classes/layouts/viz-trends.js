@@ -25,6 +25,14 @@ require([
         label: item.aDisplayName
       })), data.attributeSelected,  data.hidden, data.attributeTitle, this);
       this.filters = (data.filters || []).map(item => new Filter(item, this));
+      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
+      // Check if data.aggregator exists before initializing aggregatorSelect
+      if (data.aggregators) {
+        this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector", data.aggregators.map(item => ({
+          value: item.agCode,
+          label: item.agDisplayName
+        })), data.aggregatorSelected, false, data.aggregatorTitle, this);
+      }
     }
     
     generateIdFromText(text) {
@@ -34,6 +42,11 @@ require([
     renderSidebar() {
       const container = document.createElement('div');
       container.id = this.id + "viz-trends-sidebar";
+
+      
+      if (this.aggregatorSelect) {
+        container.appendChild(this.aggregatorSelect.render());
+      }
 
       container.appendChild(this.attributeSelect.render());
       this.filters.forEach(filter => {
@@ -65,6 +78,21 @@ require([
         scenario.scnGroup   === _scnGroup   &&
         scenario.scnYear    === _scnYear
       ) || null;
+    }
+
+    getSelectedAggregator() {
+      let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
+
+      if (foundAggregator) {
+        return foundAggregator;
+      }
+
+      return;
+    }
+
+    afterUpdateAggregator() {
+      console.log('afterUpdateAggregator');
+      this.afterUpdateSidebar();
     }
 
     scenarioMain() {
@@ -160,17 +188,12 @@ require([
 
       const containerElement = document.getElementById('mainTrend');
       containerElement.innerHTML = '';
+        
+      const title = document.createElement('div');
+      title.id = 'charttitle';
+      title.innerHTML = '<h1>Salt Lake County Trends</h1>'
+      containerElement.appendChild(title);
 
-      // Create dropdown element
-      const dropdown = document.createElement('select');
-      dropdown.id = 'scenarioGroupDropdown';
-      dropdown.innerHTML = `
-          <option value="RTP">RTP</option>
-          <option value="NoBuild">NoBuild</option>
-          <option value="Needs">Needs</option>
-      `;
-      containerElement.appendChild(dropdown);
-      
       const chartContainer = document.createElement('div');
       chartContainer.id = 'chartContainer';
       containerElement.appendChild(chartContainer);
@@ -183,50 +206,56 @@ require([
       const ctx = canvas.getContext('2d');
       let currentChart = null;
   
-      const segIds = Object.keys(chartData);
+      const aggIds = Object.keys(chartData);
   
       const createChart = () => {
         if (currentChart) {
             // Destroy existing Chart instance
             currentChart.destroy();
         }
+        
+        const scenarioGroups = [
+          {"name": "RTP"},
+          {"name": "NoBuild"},
+          {"name": "Needs"},
+          {"name": "Needs MAG"}
+        ];
 
         currentChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: segIds.map(segId => {
-                    const selectedScenarioGroup = dropdown.value;
-                    const scenarioGroups = ['Base', selectedScenarioGroup];
-                    const data = scenarioGroups.map(scenarioGroup => {
-                        const values = chartData[segId][scenarioGroup];
-                        const years = Object.keys(values).map(year => values[year]);
-                        return years;
-                    });
-
-                    return {
-                        label: segId,
-                        data: data.flat(),
-                        fill: false,
-                        borderColor: this.getRandomColor(),
-                        borderWidth: 1
-                    };
-                })
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: aggIds.flatMap(aggId => {
+              // For each segId, create a dataset for each scenario group
+              return scenarioGroups.map(scenarioGroup => {
+                const name = scenarioGroup.name;
+                const values = chartData[aggId][name];
+                const years = Object.keys(values).map(year => values[year]);
+        
+                return {
+                  label: `${name}`,
+                  data: years,
+                  fill: false,
+                  borderColor: this.getRandomColor(),
+                  borderWidth: 3,
+                  pointRadius: 8
+                };
+              });
+            })
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
             }
+          }
         });
+        
     };
 
     // Initial chart creation
     createChart();
-
-    dropdown.addEventListener('change', createChart);
   }
   
   getRandomColor(index) {
@@ -246,55 +275,102 @@ require([
   
   updateChartData() {
       const aCode = this.getACode();
-      const segId = "0006_146.9"; // Change this to your desired SEGID
-      const segOptions = this.getSegidOptions();
+      //const segId = "0006_146.9"; // Change this to your desired SEGID
+      //const segOptions = this.getSegidOptions();
     
       const scnGroupYearCombos = [
-          { scnGroup: 'Base', scnYear: 2019 },
-          { scnGroup: 'Base', scnYear: 2023 },
-          { scnGroup: 'RTP', scnYear: 2032 },
-          { scnGroup: 'RTP', scnYear: 2042 },
-          { scnGroup: 'RTP', scnYear: 2050 },
-          { scnGroup: 'NoBuild', scnYear: 2032 },
-          { scnGroup: 'NoBuild', scnYear: 2042 },
-          { scnGroup: 'NoBuild', scnYear: 2050 },
-          { scnGroup: 'Needs', scnYear: 2032 },
-          { scnGroup: 'Needs', scnYear: 2042 },
-          { scnGroup: 'Needs', scnYear: 2050 },
-          { scnGroup: 'Needs MAG', scnYear: 2050 }
+          { scnDisplay: 'RTP'      , scnGroup: 'Base'     , scnYear: 2019 },
+          { scnDisplay: 'RTP'      , scnGroup: 'Base'     , scnYear: 2023 },
+          { scnDisplay: 'RTP'      , scnGroup: 'TIP'      , scnYear: 2028 },
+          { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2032 },
+          { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2042 },
+          { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2050 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'Base'     , scnYear: 2019 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'Base'     , scnYear: 2023 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'TIP'      , scnYear: 2028 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2032 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2042 },
+          { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2050 },
+          { scnDisplay: 'Needs'    , scnGroup: 'Base'     , scnYear: 2019 },
+          { scnDisplay: 'Needs'    , scnGroup: 'Base'     , scnYear: 2023 },
+          { scnDisplay: 'Needs'    , scnGroup: 'TIP'      , scnYear: 2028 },
+          { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2032 },
+          { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2042 },
+          { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2050 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'Base'     , scnYear: 2019 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'Base'     , scnYear: 2023 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'TIP'      , scnYear: 2028 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'Needs'    , scnYear: 2032 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'Needs'    , scnYear: 2042 },
+          { scnDisplay: 'Needs MAG', scnGroup: 'Needs MAG', scnYear: 2050 }
       ];
-    
-      const labels = [2019,2023,2032,2042,2050];
+
+      const labels = [2019,2023,2028,2032,2042,2050];
       const chartData = {};
+
+      var aggID = 35;
+    
+      fetch("data/segmentsWithAggFields.geojson")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Filter features where CO_FIPS is 35
+          this.filteredFeatures = data.features.filter(feature => 
+            feature.properties.CO_FIPS === aggID
+          );
+
+          // Now you have an array of features where CO_FIPS is 35
+          console.log(filteredFeatures);
+
+          // You can use filteredFeatures for further processing
+        })
+        .catch(error => {
+          console.error('Error reading the JSON file:', error);
+        });
+
     
       scnGroupYearCombos.forEach(combo => {
+        const scnDisplay = combo.scnDisplay;
         const scnGroup = combo.scnGroup;
         const scnYear = combo.scnYear;
         const scenarioData = this.getScenario('v900', scnGroup, scnYear);
         const filter = this.getFilter();
-    
+
         if (scenarioData) {
-            const filteredScenario = scenarioData.roadwayTrendData.data[filter];
+    
+          if (!chartData[aggID]) {
+              chartData[aggID] = {};
+          }
+          if (!chartData[aggID][scnDisplay]) {
+              chartData[aggID][scnDisplay] = {};
+          }
+
+          chartData[aggID][scnDisplay][scnYear] = 0;
+
+          const filteredScenario = scenarioData.roadwayTrendData.data[filter];
+
+          this.filteredFeatures.forEach(feature => {
+
+            const segId = feature.properties.SEGID;
             const filterSelectionData = filteredScenario[segId];
     
             if (filterSelectionData) {
-                const selectedValue = this.getChartData(aCode, filterSelectionData);
-    
-                if (selectedValue !== null) {
-                    if (!chartData[segId]) {
-                        chartData[segId] = {};
-                    }
-    
-                    if (!chartData[segId][scnGroup]) {
-                        chartData[segId][scnGroup] = {};
-                    }
-    
-                    chartData[segId][scnGroup][scnYear] = selectedValue;
-                }
+              const selectedValue = this.getChartData(aCode, filterSelectionData);
+
+              if (selectedValue !== null) {
+                chartData[aggID][scnDisplay][scnYear] += selectedValue;
+              }
             }
+          })
         }
-    });
+      });
     
+
+
       this.createLineChart(aCode, labels, chartData);
   }
 
