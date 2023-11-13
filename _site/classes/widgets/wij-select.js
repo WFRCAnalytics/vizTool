@@ -33,7 +33,11 @@ class WijSelect {
     });
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-      this.vizLayout.afterSidebarUpdate();
+      if (this.id.includes('_aggregator-selector')) { // run only if aggregator
+        this.vizLayout.afterUpdateAggregator();
+      } else {
+        this.vizLayout.afterUpdateSidebar();
+      }
     });
     container.appendChild(select);
     

@@ -152,7 +152,7 @@ class MapSidebarItem {
     });
     select.addEventListener('calciteSelectChange', (e) => {
       this.selectedOption = e.target.selectedOption.value;
-      this.parentEntity.afterSidebarUpdate();
+      this.parentEntity.afterUpdateSidebar();
     });
     container.appendChild(select);
     

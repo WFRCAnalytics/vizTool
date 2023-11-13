@@ -45,7 +45,7 @@ require([
       divSidebar.appendChild(container);  // Append the new element to the container
     }
     
-    afterSidebarUpdate() {
+    afterUpdateSidebar() {
       console.log('afterSidebarUpdate');
       this.updateFilters();
       this.updateChartData();

@@ -44,7 +44,7 @@ class WijRadio {
         // Update renderer with value of radio button
         console.log(this.id + ':' + rbValue + ' radio button change');
         this.selected = rbValue;
-        wijRadioInstance.vizLayout.afterSidebarUpdate();
+        wijRadioInstance.vizLayout.afterUpdateSidebar();
       });
 
       // Nest the radio button directly inside the calcite-label

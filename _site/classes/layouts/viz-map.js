@@ -18,13 +18,13 @@ require([
     constructor(data, layerTitle) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
       this.sidebarDiv = data.sidebarDiv;
-      this.geometryFile = data.geometryFile;
-      this.geometryFileId = data.geometryFileId;
+      this.baseGeometryFile = data.baseGeometryFile;
+      this.baseGeometryIdField = data.baseGeometryIdField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.attributeTitle = data.attributeTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
-      this.attributeSelect = new WijRadio(this.id & "_container", data.attributes.map(item => ({
+      this.attributeSelect = new WijRadio(this.id & "_attribute-selector", data.attributes.map(item => ({
         value: item.aCode,
         label: item.aDisplayName
       })), data.attributeSelected, data.hidden, data.attributeTitle, this);
@@ -32,26 +32,48 @@ require([
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       this.initListeners();
+      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
+      // Check if data.aggregator exists before initializing aggregatorSelect
+      if (data.aggregators) {
+        this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector", data.aggregators.map(item => ({
+          value: item.agCode,
+          label: item.agDisplayName
+        })), data.aggregatorSelected, false, data.aggregatorTitle, this);
+      }
 
       // Global variable to store original label info
       this.originalLabelInfo = null;
 
       // ADD GEOJSONS
       // need to check geometry type before adding!!
-      this.geojsonGeometry = new GeoJSONLayer({
-        url: "data/" + this.geometryFile,
-        title: this.s,
-        renderer: {
-          type: "simple",  // autocasts as new SimpleRenderer()
-          symbol: {
-            type: 'simple-line',
-            color: [150, 150, 200],
-            width: 1
-          }
-        }
+      this.geojsonLayer = new GeoJSONLayer({
+        url: this.baseGeometryFile,
+        title: "Zone Aggregation"
       });
-      map.add(this.geojsonGeometry);
-      this.geojsonGeometry.visible = false;
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+
+      
+      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
+      // Read JSON file
+      fetch(this.baseGeometryFile)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+        this.baseGeometryGeoJson = data;
+
+          // Now call the rest of your code that depends on this.aggregatorGeoJson
+          // For example, you might need to refactor the remaining code into a new function and call it here
+      })
+      .catch(error => {
+        console.error('Error reading the JSON file:', error);
+        // Handle the error appropriately
+        });
+
 
     }
 
@@ -114,6 +136,18 @@ require([
       return this.attributeSelect.selected;
     }
 
+    getSelectedAggregator() {
+      let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
+
+      if (foundAggregator) {
+        return foundAggregator;
+      }
+
+      return;
+    }
+
+
+
     getAttributeRendererCollection() {
       return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
     }
@@ -166,10 +200,10 @@ require([
         
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.geometryFileId,
+          objectIdField: this.baseGeometryIdField,
           fields: [
             // ... your other fields
-            { name: this.geometryFileId, type: "oid" },  // Object ID field
+            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -183,7 +217,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.geometryFileId + " {expression/geometryFieldId}"
+                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
               },
               {
                 type: "text",
@@ -192,9 +226,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "geometryFieldId",
-                title: this.geometryFieldId,
-                expression: "$feature." + this.geometryFileId
+                name: "baseGeometryIdField",
+                title: this.baseGeometryIdField,
+                expression: "$feature." + this.baseGeometryIdField
               },
               {
                 name: "formatDisplayValue",
@@ -251,10 +285,10 @@ require([
 
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.geometryFileId,
+          objectIdField: this.baseGeometryIdField,
           fields: [
             // ... your other fields
-            { name: this.geometryFileId, type: "oid" },  // Object ID field
+            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -268,7 +302,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.geometryFileId + " {expression/geometryFieldId}"
+                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
               },
               {
                 type: "text",
@@ -277,9 +311,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "geometryFieldId",
-                title: this.geometryFieldId,
-                expression: "$feature." + this.geometryFileId
+                name: "baseGeometryIdField",
+                title: this.baseGeometryIdField,
+                expression: "$feature." + this.baseGeometryIdField
               },
               {
                 name: "formatDisplayValue",
@@ -349,29 +383,13 @@ require([
     
     }
 
-    // get the current filter
-    getFilterGroup() {
-
-      //const _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
-      //
-      //// Split the _filterGroup by "_"
-      //const _filterArray = _filterGroup.split("_");
-      //
-      //// Map selected options to an array and join with "_"
-      //const _filter = _filterArray
-      //  .map(filterItem => {
-      //    var _fItem = this.filters.find(item => item.id === filterItem);
-      //    return _fItem ? _fItem.filterWij.selected : "";
-      //  })
-      //  .join("_");
-      //
-      //return _filter;
-    }
-
     renderSidebar() {
       const container = document.createElement('div');
       container.id = this.id + "viz-map-sidebar";
 
+      if (this.aggregatorSelect) {
+        container.appendChild(this.aggregatorSelect.render());
+      }
       container.appendChild(this.attributeSelect.render());
       this.filters.forEach(filter => {
         container.appendChild(filter.render());
@@ -435,11 +453,32 @@ require([
       }
     }
     
-    afterSidebarUpdate() {
-      console.log('afterSidebarUpdate');
+    afterUpdateSidebar() {
+      console.log('afterUpdateSidebar');
       this.updateMap();
       this.updateFilters();
       this.updateAggregations();
+    }
+
+    afterUpdateAggregator() {
+      console.log('afterUpdateAggregator');
+      
+      // remove aggregator geometry
+      if (this.geojsonLayer) {
+        map.remove(this.geojsonLayer);
+      }
+
+      // ADD GEOJSONS
+      // need to check geometry type before adding!!
+      this.geojsonLayer = new GeoJSONLayer({
+        url: this.getSelectedAggregator().agGeoJson,
+        title: "Aggregator Layer"
+      });
+
+      // add new geometry
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+      this.afterUpdateSidebar();
     }
 
     updateFilters() {
@@ -619,20 +658,19 @@ require([
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
 
-      var _dataMain = [];
-      var _dataComp = [];
+      // remove other vizMap displays??? MAYBE ADD HERE
       
       let _filter = this.getFilter();
 
       // get main data
-      _dataMain = this.dataMain();
+      var _dataMain = this.dataMain();
 
       let mode = 'base'; //default is base
 
       // get compare data
       if (this.scenarioComp() !== null) {
         mode = 'compare';
-        _dataComp = this.dataComp();
+        var _dataComp = this.dataComp();
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
@@ -650,7 +688,7 @@ require([
             var colorVisVar = new ColorVariable({
               field: "dVal", // replace with the field name of your data
               stops: [
-                { value: 0.0000, color: new Color("#FFFF00") }, // Yellow
+                { value: 0.0001, color: new Color("#FFFF00") }, // Yellow
                 { value: 1.0000, color: new Color("#0000FF") }  // Blue
               ]
             });
@@ -716,48 +754,146 @@ require([
 
       const vizMapInstance = this;
 
-      this.geojsonGeometry.when(() => {
-        this.geojsonGeometry.queryFeatures().then((result) => {
+
+      // GET MAP FEATURES
+
+      this.geojsonLayer.when(() => {
+        this.geojsonLayer.queryFeatures().then((result) => {
           let graphicsToAdd = [];  // Temporary array to hold graphics
 
-          result.features.forEach((feature) => {
-            // Get ID from the feature's attributes
-            const _id = feature.attributes[this.geometryFileId];
 
-            var _valueMain = 0;
-            var _valueComp = 0;
-            var _valueDisp = 0;
+          // there will be two pathways
+          // A: one with new aggregation possible this.aggregator is empty
+          //    loop through geojsonLayer features
+          //    one-to-one relationship with json data
+          //    add data to feature
+          // B: one with aggregation
+          //    loop through geojsonLayer features
+          //    get agg id
+          //    find matching json records
+          //    aggregate
+          //    add data to feature
 
-            // main value
-            if (_dataMain!=='none') {
-              if (_dataMain[_id]!==undefined){
-                _valueMain = _dataMain[_id][this.getACode()]
-              }
-            }
-
-            // comp value
-            if (_dataComp!=='none') {
-              if (_dataComp[_id]!==undefined) {
-              _valueComp = _dataComp[_id][this.getACode()]
-              }
-            }
-
-            var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
-            var curPCOption = selectedRadio ? selectedRadio.value : null;
-
-            // calculate final display value based on selection (absolute or change)
-            try {
-              if (curPCOption=='abs') { // absolute change
-              _valueDisp = _valueMain - _valueComp;
-              } else if (curPCOption=='pct') { // percent change
-                if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
-              }
-            } catch(err) {
-              _valueDisp = _valueMain;
-            }
+          
+            // NO AGGREGATOR
+          if (!this.aggregators || this.getSelectedAggregator().agCode == this.baseGeometryIdField) {
             
-            // If there's a display value for the given SEGID in the _dataMain object, set it
-            if (_dataMain[_id]) {
+            result.features.forEach((feature) => {
+
+              // Get ID from the feature's attributes
+              var _id = feature.attributes[this.baseGeometryIdField];
+                                          
+              var _valueMain = 0;
+              var _valueComp = 0;
+              var _valueDisp = 0;
+
+              // main value
+              if (_dataMain!==undefined) {
+                if (_dataMain[_id]) {
+                  _valueMain = _dataMain[_id][this.getACode()];
+                }
+              }
+
+              // comp value
+              if (_dataComp!==undefined) {
+                if (_dataComp[_id]) {
+                _valueComp = _dataComp[_id][this.getACode()];
+                }
+              }
+
+              var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
+              var curPCOption = selectedRadio ? selectedRadio.value : null;
+
+              // calculate final display value based on selection (absolute or change)
+              try {
+                if (curPCOption=='abs') { // absolute change
+                _valueDisp = _valueMain - _valueComp;
+                } else if (curPCOption=='pct') { // percent change
+                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+                }
+              } catch(err) {
+                _valueDisp = _valueMain;
+              }
+
+              var attributes;
+
+              // If there's a display value for the given SEGID in the _dataMain object, set it
+              if (_valueMain>0) {
+                attributes = {
+                  ...feature.attributes,
+                  dVal: _valueDisp  // Add the dVal to attributes
+                };
+              } else {
+                attributes = {
+                  ...feature.attributes,
+                  dVal: null  // Add the dVal to attributes
+                };
+              }
+
+              // Create a new graphic with the updated attributes
+              var graphic = new Graphic({
+                geometry: feature.geometry,
+                attributes: attributes
+              });
+
+              graphicsToAdd.push(graphic);  // Add graphic to the temporary array
+            
+
+            });
+
+          // B: Aggregator
+          } else if (this.baseGeometryGeoJson.features) {
+
+            var _displayFeatureIdField = this.getSelectedAggregator().agCode;
+            
+            // go through display geometry features
+            result.features.forEach((feature) => {
+
+              var _valueMain = 0;
+              var _valueComp = 0;
+              var _valueDisp = 0;
+
+              // Get ID from the feature's attributes
+              var _displayFeatureId = feature.attributes[_displayFeatureIdField];
+              
+              // get associated json records for given aggregator
+              let _dataMainSetToAgg = this.baseGeometryGeoJson.features.filter(feature => 
+                feature.properties[_displayFeatureIdField] === _displayFeatureId
+              );
+
+              // aggregate json data for give display feature
+              _dataMainSetToAgg.forEach((_dataMainSetToAggRecord) => {
+                
+                // main value
+                if (_dataMain!==undefined) {
+                  if (_dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]]) {
+                    _valueMain += _dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]][this.getACode()];
+                  }
+                }
+                
+                // comp value
+                if (_dataComp!==undefined) {
+                  if (_dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]]) {
+                    _valueComp  += _dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]][this.getACode()];
+                  }
+                }
+              });
+
+              var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
+              var curPCOption = selectedRadio ? selectedRadio.value : null;
+
+              // calculate final display value based on selection (absolute or change)
+              try {
+                if (curPCOption=='abs') { // absolute change
+                _valueDisp = _valueMain - _valueComp;
+                } else if (curPCOption=='pct') { // percent change
+                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+                }
+              } catch(err) {
+                _valueDisp = _valueMain;
+              }
+              
+              // If there's a display value for the given SEGID in the _dataMain object, set it
               let attributes = {
                 ...feature.attributes,
                 dVal: _valueDisp  // Add the dVal to attributes
@@ -770,8 +906,10 @@ require([
               });
 
               graphicsToAdd.push(graphic);  // Add graphic to the temporary array
-            }
-          });
+
+              
+            });
+          }
 
           vizMapInstance.layerDisplay.on("error", function(event){
             console.log("Layer error: ", event.error);

@@ -15,8 +15,8 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
-                  "geometryFile": "segmentsWithAggFields.geojson",
-                  "geometryFileId": "SEGID",
+                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryIdField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Segment Details",
                   "attributeTitle": "Roadway Segment Attribute",
@@ -25,7 +25,7 @@
                     {
                       "aCode": "aLanes",
                       "aDisplayName": "Lanes",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Number of Lanes",
@@ -97,7 +97,7 @@
                     {
                       "aCode": "aCap1HL",
                       "aDisplayName": "Capacity",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Capacity per Hour per Lane",
@@ -117,7 +117,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Capacity per Hour per Lane",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
                           "classBreakInfos": [
@@ -129,7 +129,7 @@
                             { "minValue":    -500, "maxValue":     -101, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-100 to -500"   },
                             { "minValue":   -1000, "maxValue":     -501, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-500 to -1000"  },
                             { "minValue":   -2500, "maxValue":    -1001, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-1000 to -2500" },
-                            { "minValue": -999999, "maxValue":    -2501, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "Less than -2500"}
+                            { "minValue": -9999999, "maxValue":    -2501, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "Less than -2500"}
                           ]
                         },
                         "compare_pct": {
@@ -140,7 +140,7 @@
                     {
                       "aCode": "aFfSpd",
                       "aDisplayName": "Free-flow Speed",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Free-flow Speed",
@@ -160,7 +160,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Free-flow Speed",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
@@ -182,7 +182,7 @@
                     {
                       "aCode": "aVol",
                       "aDisplayName": "Volume",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Volume",
@@ -201,7 +201,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":   -25001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -25,000"  },
@@ -223,7 +223,7 @@
                     {
                       "aCode": "aSpd",
                       "aDisplayName": "Speed",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Speed",
@@ -242,7 +242,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Speed",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
@@ -264,7 +264,7 @@
                     {
                       "aCode": "aMaxVc",
                       "aDisplayName": "Max V/C Ratio",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0.00')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Max Volume-to-Capacity Ratio",
@@ -289,7 +289,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume-to-Capacity Ratio",
-                          "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0.00')",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                           "valueExpression": "var v  = $feature.dVal; if (v<=-1.00) { return 'class_1'; } else if (v< -0.50) { return 'class_2'; } else if (v< -0.15) { return 'class_3'; } else if (v< -0.05) { return 'class_4'; } else if (v<  0.05) { return 'class_5'; } else if (v<  0.15) { return 'class_6'; } else if (v<  0.50) { return 'class_7'; } else if (v<  1.00) { return 'class_8'; } else { return 'class_9'; }",
                           "uniqueValueInfos": [
                             { "value": "class_9", "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +1.00"},
@@ -391,37 +391,76 @@
             "menuIconStart": "tour",
             "modelEntitys": [
               {
-                "submenuText": "Mode Share",
+                "submenuText": "Zone Mode Share",
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
-                  "geometryFile": "tazWithAggFields.geojson",
-                  "geometryFileId": "TAZID",
+                  "baseGeometryFile": "data/tazWithAggFields.geojson",
+                  "baseGeometryIdField": "TAZID",
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
+                  "aggregatorTitle": "Select Zone Geography",
+                  "aggregatorSelected" : "TAZID",
+                  "aggregators": [
+                    {
+                      "agCode": "TAZID",
+                      "agDisplayName": "TAZ",
+                      "agGeoJson": "data/tazWithAggFields.geojson"
+                    },
+                    {
+                      "agCode": "CITY_UGRC",
+                      "agDisplayName": "City",
+                      "agGeoJson": "data/cityUgrc.geojson"
+                    },
+                    {
+                      "agCode": "DISTSML",
+                      "agDisplayName": "Small District",
+                      "agGeoJson": "data/districtsSmall.geojson"
+                    },
+                    {
+                      "agCode": "DISTMED",
+                      "agDisplayName": "Medium District",
+                      "agGeoJson": "data/districtsMedium.geojson"
+                    },
+                    {
+                      "agCode": "DISTLRG",
+                      "agDisplayName": "Large District",
+                      "agGeoJson": "data/districtsLarge.geojson"
+                    },
+                    {
+                      "agCode": "DISTSUPER",
+                      "agDisplayName": "Super District",
+                      "agGeoJson": "data/districtsSuper.geojson"
+                    },
+                    {
+                      "agCode": "CO_FIPS",
+                      "agDisplayName": "County",
+                      "agGeoJson": "data/counties.geojson"
+                    }
+                  ],
                   "attributeTitle": "Mode Share Attributes",
                   "attributeSelected": "aSTrn",
                   "attributes": [
                     {
                       "aCode": "aT",
                       "aDisplayName": "Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '#,###')",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":     0, "maxValue":     0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0 Trips"},
-                            { "minValue":     0, "maxValue":  1000, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "      0 to  1,000 Trips"},
-                            { "minValue":  1000, "maxValue":  2000, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1,000 to  2,000 Trips"},
-                            { "minValue":  2000, "maxValue":  4000, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2,000 to  4,000 Trips"},
-                            { "minValue":  4000, "maxValue":  6000, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  4,000 to  6,000 Trips"},
-                            { "minValue":  6000, "maxValue":  8000, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6,000 to  8,000 Trips"},
-                            { "minValue":  8000, "maxValue": 10000, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  8,000 to 10,000 Trips"},
-                            { "minValue": 10000, "maxValue": 12000, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 10,000 to 12,000 Trips"},
-                            { "minValue": 12000, "maxValue": 14000, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 12,000 to 14,000 Trips"},
-                            { "minValue": 14000, "maxValue": 16000, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 14,000 to 16,000 Trips"},
-                            { "minValue": 16000, "maxValue": 99999, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 16,000 to 99,999 Trips"}
+                            { "minValue":     0, "maxValue":       0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                 0 Trips"},
+                            { "minValue":     0, "maxValue":    1000, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "       0 to  1,000 Trips"},
+                            { "minValue":  1000, "maxValue":    2000, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   1,000 to  2,000 Trips"},
+                            { "minValue":  2000, "maxValue":    4000, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   2,000 to  4,000 Trips"},
+                            { "minValue":  4000, "maxValue":    6000, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   4,000 to  6,000 Trips"},
+                            { "minValue":  6000, "maxValue":    8000, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   6,000 to  8,000 Trips"},
+                            { "minValue":  8000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   8,000 to 10,000 Trips"},
+                            { "minValue": 10000, "maxValue":   12000, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  10,000 to 12,000 Trips"},
+                            { "minValue": 12000, "maxValue":   14000, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  12,000 to 14,000 Trips"},
+                            { "minValue": 14000, "maxValue":   16000, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  14,000 to 16,000 Trips"},
+                            { "minValue": 16000, "maxValue": 9999999, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 16,000 to 999,999 Trips"}
                           ]
                         },
                         "compare_abs": {
@@ -438,21 +477,7 @@
                       "aLabelExpressionInfo": "Text($feature.dVal * 100, '#,##0.0') + '%'",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of All Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}
-                          ]
+                          "name": "Share of All Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of All Trips"
@@ -465,23 +490,10 @@
                     {
                       "aCode": "aSMot",
                       "aDisplayName": "Share of Motorized Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Motorized Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Motorized Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Motorized Trips"
@@ -494,23 +506,10 @@
                     {
                       "aCode": "aSAut",
                       "aDisplayName": "Share of Auto Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Auto Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Auto Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Auto Trips"
@@ -523,23 +522,10 @@
                     {
                       "aCode": "aSTrn",
                       "aDisplayName": "Share of Transit Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Transit Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Transit Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Transit Trips"
@@ -552,23 +538,10 @@
                     {
                       "aCode": "aSLcl",
                       "aDisplayName": "Share of Local Bus",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Local Bus",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Local Bus"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Local Bus"
@@ -581,23 +554,10 @@
                     {
                       "aCode": "aSCor",
                       "aDisplayName": "Share of Core Bus",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Core Bus",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Core Bus"
                         },
                         "compare_abs": {
                           "name": "Change Share of Core Bus"
@@ -610,23 +570,10 @@
                     {
                       "aCode": "aSExp",
                       "aDisplayName": "Share of Express Bus",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Express Bus",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Express Bus"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Express Bus"
@@ -639,23 +586,10 @@
                     {
                       "aCode": "aSBrt",
                       "aDisplayName": "Share of Bus-Rapid Transit",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Bus-Rapid Transit",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Bus-Rapid Transit"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Bus-Rapid Transit"
@@ -668,23 +602,10 @@
                     {
                       "aCode": "aSLrt",
                       "aDisplayName": "Share of Light-Rail Transit",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Light-Rail Transit",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Light-Rail Transit"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Light-Rail Transit"
@@ -697,23 +618,10 @@
                     {
                       "aCode": "aSCrt",
                       "aDisplayName": "Share of Commuter-Rail Transit",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Commuter-Rail Transit",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Commuter-Rail Transit"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Commuter-Rail Transit"
@@ -726,23 +634,10 @@
                     {
                       "aCode": "aSNon",
                       "aDisplayName": "Share of Non-Motorized Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Non-Motorized Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Non-Motorized Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Non-Motorized Trips"
@@ -755,23 +650,10 @@
                     {
                       "aCode": "aSWlk",
                       "aDisplayName": "Share of Walk Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Walk Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Walk Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Walk Trips"
@@ -784,23 +666,10 @@
                     {
                       "aCode": "aSBik",
                       "aDisplayName": "Share of Bike Trips",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal * 100), '#,##0.0') + '%'",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Bike Trips",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":      0, "maxValue":      0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                0%"},
-                            { "minValue": 0.0001, "maxValue": 0.0002, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.01% to  00.02%"},
-                            { "minValue": 0.0003, "maxValue": 0.0005, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.03% to  00.05%"},
-                            { "minValue": 0.0006, "maxValue": 0.0015, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.06% to  00.15%"},
-                            { "minValue": 0.0016, "maxValue": 0.0039, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.16% to  00.39%"},
-                            { "minValue": 0.0040, "maxValue": 0.0099, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  0.40% to  00.99%"},
-                            { "minValue": 0.0100, "maxValue": 0.0250, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  1.00% to  02.50%"},
-                            { "minValue": 0.0251, "maxValue": 0.0630, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  2.51% to  06.30%"},
-                            { "minValue": 0.0631, "maxValue": 0.1584, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  6.31% to  15.84%"},
-                            { "minValue": 0.1585, "maxValue": 0.3980, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 15.85% to  39.80%"},
-                            { "minValue": 0.3981, "maxValue": 1.0000, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 39.81% to 100.00%"}                          ]
+                          "name": "Share of Bike Trips"
                         },
                         "compare_abs": {
                           "name": "Change in Share of Bike Trips"
