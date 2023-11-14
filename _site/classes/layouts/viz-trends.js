@@ -230,7 +230,10 @@ require([
                 const name = scenarioGroup.name;
                 const values = chartData[aggId][name];
                 const dataPoints = Object.keys(values).map(year => {
-                  return { x: year, y: values[year] }; // Format data as x-y pairs
+                  return { 
+                    x: parseInt(year, 10), // Ensure the year is a number
+                    y: +values[year].toPrecision(4) // Round y values to 4 significant figures
+                  };
                 });
         
                 return {
@@ -240,7 +243,7 @@ require([
                   borderColor: this.getRandomColor(),
                   borderWidth: 3,
                   pointRadius: 8,
-                  showLine: true // Add this line to connect points
+                  showLine: true // Draw lines between points
                 };
               });
             })
