@@ -16,7 +16,7 @@
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
-                  "baseGeometryIdField": "SEGID",
+                  "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Segment Details",
                   "attributeTitle": "Roadway Segment Attribute",
@@ -425,7 +425,7 @@
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
-                  "baseGeometryIdField": "TAZID",
+                  "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
                   "aggregatorTitle": "Select Zone Geography",
@@ -502,7 +502,8 @@
                     {
                       "aCode": "aSAll",
                       "aDisplayName": "Share of All Trips",
-                      "aLabelExpressionInfo": "Text($feature.dVal * 100, '#,##0.0') + '%'",
+                      "agWeightCodeCode": "aT",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of All Trips"
@@ -518,6 +519,7 @@
                     {
                       "aCode": "aSMot",
                       "aDisplayName": "Share of Motorized Trips",
+                      "agWeightCodeCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -534,6 +536,7 @@
                     {
                       "aCode": "aSAut",
                       "aDisplayName": "Share of Auto Trips",
+                      "agWeightCodeCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -550,6 +553,7 @@
                     {
                       "aCode": "aSTrn",
                       "aDisplayName": "Share of Transit Trips",
+                      "agWeightCodeCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -566,6 +570,7 @@
                     {
                       "aCode": "aSLcl",
                       "aDisplayName": "Share of Local Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -582,6 +587,7 @@
                     {
                       "aCode": "aSCor",
                       "aDisplayName": "Share of Core Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -598,6 +604,7 @@
                     {
                       "aCode": "aSExp",
                       "aDisplayName": "Share of Express Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -614,6 +621,7 @@
                     {
                       "aCode": "aSBrt",
                       "aDisplayName": "Share of Bus-Rapid Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -630,6 +638,7 @@
                     {
                       "aCode": "aSLrt",
                       "aDisplayName": "Share of Light-Rail Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -646,6 +655,7 @@
                     {
                       "aCode": "aSCrt",
                       "aDisplayName": "Share of Commuter-Rail Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -662,6 +672,7 @@
                     {
                       "aCode": "aSNon",
                       "aDisplayName": "Share of Non-Motorized Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -678,6 +689,7 @@
                     {
                       "aCode": "aSWlk",
                       "aDisplayName": "Share of Walk Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -694,7 +706,8 @@
                     {
                       "aCode": "aSBik",
                       "aDisplayName": "Share of Bike Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "agWeightCode": "aT",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Bike Trips"

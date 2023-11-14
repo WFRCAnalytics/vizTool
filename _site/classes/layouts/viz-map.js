@@ -19,7 +19,7 @@ require([
       this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
       this.sidebarDiv = data.sidebarDiv;
       this.baseGeometryFile = data.baseGeometryFile;
-      this.baseGeometryIdField = data.baseGeometryIdField;
+      this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.attributeTitle = data.attributeTitle;
@@ -201,10 +201,10 @@ require([
         
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeometryIdField,
+          objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
-            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
+            { name: this.baseGeoField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -218,7 +218,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
+                text: this.baseGeoField + " {expression/baseGeoField}"
               },
               {
                 type: "text",
@@ -227,9 +227,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "baseGeometryIdField",
-                title: this.baseGeometryIdField,
-                expression: "$feature." + this.baseGeometryIdField
+                name: "baseGeoField",
+                title: this.baseGeoField,
+                expression: "$feature." + this.baseGeoField
               },
               {
                 name: "formatDisplayValue",
@@ -286,10 +286,10 @@ require([
 
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeometryIdField,
+          objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
-            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
+            { name: this.baseGeoField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -303,7 +303,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
+                text: this.baseGeoField + " {expression/baseGeoField}"
               },
               {
                 type: "text",
@@ -312,9 +312,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "baseGeometryIdField",
-                title: this.baseGeometryIdField,
-                expression: "$feature." + this.baseGeometryIdField
+                name: "baseGeoField",
+                title: this.baseGeoField,
+                expression: "$feature." + this.baseGeoField
               },
               {
                 name: "formatDisplayValue",
@@ -776,13 +776,13 @@ require([
           //    add data to feature
 
           
-            // NO AGGREGATOR
-          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeometryIdField)) {
+          // NO AGGREGATOR
+          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
             
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
-              var _id = feature.attributes[this.baseGeometryIdField];
+              var _id = feature.attributes[this.baseGeoField];
                                           
               var _valueMain = 0;
               var _valueComp = 0;
@@ -847,12 +847,18 @@ require([
 
             var _displayFeatureIdField = this.getSelectedAggregator().agCode;
             
+            const _agWeightCode = this.getSelectedAggregator().agWeightCode;
+
             // go through display geometry features
             result.features.forEach((feature) => {
 
               var _valueMain = 0;
               var _valueComp = 0;
               var _valueDisp = 0;
+              var _valueMainXWeight = 0;
+              var _valueCompXWeight = 0;
+              var _valueMainSumWeight = 0;
+              var _valueCompSumWeight = 0;
 
               // Get ID from the feature's attributes
               var _displayFeatureId = feature.attributes[_displayFeatureIdField];
@@ -863,22 +869,46 @@ require([
               );
 
               // aggregate json data for give display feature
-              _dataMainSetToAgg.forEach((_dataMainSetToAggRecord) => {
+              _dataMainSetToAgg.forEach((record) => {
                 
                 // main value
                 if (_dataMain!==undefined) {
-                  if (_dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]]) {
-                    _valueMain += _dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]][this.getACode()];
+                  if (_dataMain[record.properties[this.baseGeoField]]) {
+                    if (_dataMain[record.properties[this.baseGeoField]][this.getACode()]) {
+                      if (!_agWeightCode) {
+                        _valueMain += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                      } else {
+                        _valueMainXWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()] * _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                        _valueMainSumWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                      }
+                      
+                    }
                   }
                 }
                 
                 // comp value
                 if (_dataComp!==undefined) {
-                  if (_dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]]) {
-                    _valueComp  += _dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]][this.getACode()];
+                  if (_dataComp[_dataMainSetToAgg.properties[this.baseGeoField]]) {
+                    if (_dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()]) {
+                      if (!_agWeightCode) {
+                        _valueComp  += _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()];
+                      } else {
+                        _valueCompXWeight  += _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()] * _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()];
+                        _valueCompSumWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                      }
+                    }
                   }
                 }
               });
+
+              if (_agWeightCode) {
+                if (_valueMainSumWeight>0) {
+                  _valueMain = _valueMainXWeight / _valueMainSumWeight;
+                }
+                if (_valueCompSumWeight>0) {
+                  _valueComp = _valueCompXWeight / _valueCompSumWeight;
+                }
+              }
 
               var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
               var curPCOption = selectedRadio ? selectedRadio.value : null;
