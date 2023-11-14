@@ -137,6 +137,7 @@ require([
     }
 
     getSelectedAggregator() {
+
       let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
 
       if (foundAggregator) {
@@ -776,7 +777,7 @@ require([
 
           
             // NO AGGREGATOR
-          if (!this.aggregators || this.getSelectedAggregator().agCode == this.baseGeometryIdField) {
+          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeometryIdField)) {
             
             result.features.forEach((feature) => {
 
