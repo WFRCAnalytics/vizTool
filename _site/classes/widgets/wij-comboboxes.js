@@ -15,10 +15,12 @@ class WijComboboxes {
     container.id = this.id + "_container";
 
     const wijComboInstance = this;
+
+    const aggCode = this.vizLayout.getSelectedAggregator();
     
-    //let title = document.createElement("calcite-label");  // Create a new div element
-    //title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
-    //container.appendChild(title);  // Append the new element to the container
+    let title = document.createElement("calcite-label");  // Create a new div element
+    title.innerHTML = "<b> Select " + aggCode.agDisplayName + "(s)</b>";  // Set its innerHTML
+    container.appendChild(title);  // Append the new element to the container
 
     // Create radio buttons
     var comboBoxLabel = document.createElement("calcite-combobox");
@@ -26,11 +28,11 @@ class WijComboboxes {
     comboBoxLabel.classList.add('pointer-cursor');
 
     // Call a type-specific rendering method
-    this.options.forEach((option) => {
+    aggCode.agOptions.forEach((option) => {
 
       var comboBoxButton = document.createElement("calcite-combobox-item");
-      comboBoxButton.textLabel = option.label;
-      comboBoxButton.value = option.value;
+      comboBoxButton.textLabel = option;
+      comboBoxButton.value = option;
 
       // Optionally, select the first radio button by default
       if (option.value === this.selected) {

@@ -347,27 +347,33 @@
                   "aggregators": [
                     {
                       "agCode": "PLANAREA",
-                      "agDisplayName": "Plan Area"
+                      "agDisplayName": "Plan Area",
+                      "agOptions": ["UDOT","MAG","WFRC2"]
                     },
                     {
                       "agCode": "CO_FIPS",
-                      "agDisplayName": "County"
+                      "agDisplayName": "County",
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     },
                     {
                       "agCode": "CITY_NAME",
-                      "agDisplayName": "City"
+                      "agDisplayName": "City",
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     },
                     {
                       "agCode": "DISTMED",
-                      "agDisplayName": "Medium District"
+                      "agDisplayName": "Medium District",
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     },
                     {
                       "agCode": "DISTLRG",
-                      "agDisplayName": "Large District"
+                      "agDisplayName": "Large District",
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     },
                     {
                       "agCode": "SmallArea",
-                      "agDisplayName": "Small Area"
+                      "agDisplayName": "Small Area",
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     }
                   ],
                   "attributeTitle": "Roadway Segment Trends",

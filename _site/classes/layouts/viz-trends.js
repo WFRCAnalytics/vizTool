@@ -32,7 +32,12 @@ require([
           value: item.agCode,
           label: item.agDisplayName
         })), data.aggregatorSelected, false, data.aggregatorTitle, this);
-      }
+      };
+      this.comboSelector = new WijComboboxes(this.id + "_attributecombo", data.aggregators.map(item => ({
+        value: item.agCode,
+        label: item.agDisplayName,
+        options: item.agOptions
+      })), data.aggregatorSelected, false, data.aggregatorTitle, this)
     }
     
     generateIdFromText(text) {
@@ -46,6 +51,10 @@ require([
       
       if (this.aggregatorSelect) {
         container.appendChild(this.aggregatorSelect.render());
+      }
+
+      if (this.comboSelector) {
+        container.appendChild(this.comboSelector.render());
       }
 
       container.appendChild(this.attributeSelect.render());
@@ -92,6 +101,9 @@ require([
 
     afterUpdateAggregator() {
       console.log('afterUpdateAggregator');
+      //document.getElementById(this.comboSelector.id + '_container').innerHTML = '';
+      this.comboSelector.render();
+      this.renderSidebar();
       this.afterUpdateSidebar();
     }
 
@@ -290,6 +302,7 @@ require([
   
     updateChartData() {
       const aCode = this.getACode();
+      const aggCode = this.getSelectedAggregator();
       //const segId = "0006_146.9"; // Change this to your desired SEGID
       //const segOptions = this.getSegidOptions();
     
