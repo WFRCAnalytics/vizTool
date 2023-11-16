@@ -344,16 +344,17 @@
                   "sidebarDiv": "trendSidebarContent",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
+                  "comboSelected": "3",
                   "aggregators": [
                     {
                       "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
-                      "agOptions": ["UDOT","MAG","WFRC2"]
+                      "agOptions": ["UDOT","MAG","WFRC"]
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agOptions": ["UDOT","MAG","WFRC"]
+                      "agOptions": [3, 11, 35, 49, 57]
                     },
                     {
                       "agCode": "CITY_NAME",
