@@ -83,7 +83,11 @@ require([
 
     getComboboxOptions(){
       const comboOptions = Array.isArray(this.comboSelector.comboSelected) ? this.comboSelector.comboSelected : [this.comboSelector.comboSelected];
-      if (this.comboSelector.selected.agCode == 'CO_FIPS'){
+      if (
+        this.comboSelector.selected.agCode === 'CO_FIPS' ||
+        this.comboSelector.selected.agCode === 'DISTMED' ||
+        this.comboSelector.selected.agCode === 'DISTLRG'
+      ) {
         return comboOptions.map(str => parseInt(str,10));
       } else {
         return comboOptions;
@@ -210,9 +214,11 @@ require([
       const containerElement = document.getElementById('mainTrend');
       containerElement.innerHTML = '';
         
+      
+      const aggCode = this.getSelectedAggregator();
       const title = document.createElement('div');
       title.id = 'charttitle';
-      title.innerHTML = '<h1>' + aggIDsString + ' Trends</h1>'
+      title.innerHTML = '<h1>' + aggCode.agDisplayName + ' Trends</h1>'
       containerElement.appendChild(title);
 
       const chartContainer = document.createElement('div');
@@ -415,7 +421,7 @@ require([
         .catch(error => {
           console.error('Error reading the JSON file:', error);
         });
-        
+
       }
 
     getSidebarSelector(submenuTemplate) {

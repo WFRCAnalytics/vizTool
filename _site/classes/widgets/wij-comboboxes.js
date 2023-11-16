@@ -37,7 +37,7 @@ class WijComboboxes {
       comboBoxButton.value = option;
 
       // Optionally, select the first radio button by default
-      if (option.value === this.selected) {
+      if (option.value === this.comboSelected) {
         comboBoxButton.checked = true;
       }
 
