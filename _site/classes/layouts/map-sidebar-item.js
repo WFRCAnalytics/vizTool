@@ -50,6 +50,9 @@ class MapSidebarItem {
       case "select":
         this.createSelect(container);
         break;
+      case "combobox":
+        this.createComboboxes(container);
+        break;
       // Add more cases for other types as needed
       case "html":
 
@@ -133,6 +136,35 @@ class MapSidebarItem {
       checkboxLabel.appendChild(document.createTextNode(option[0] || option[0]));
 
       container.appendChild(checkboxLabel);
+
+    });
+  }
+
+  createComboboxes(container) {
+    this.options.forEach((option, index) => {
+
+      // create checkboxes
+      var comboboxLabel = document.createElement("calcite-label");
+      comboboxLabel.setAttribute('layout', 'inline');
+      comboboxLabel.classList.add('pointer-cursor');
+
+      var combobox = document.createElement("calcite-combobox");
+
+      combobox.checked = option[1];
+
+      // Listen for changes to the combobox
+      combobox.addEventListener("calciteComboboxChange", function (e) {
+        // to make sure the combobox is the is the actual element
+        const combobox = e.currentTarget; // or e.target.closest('input[type="combobox"]')
+        // update renderer with value of combobox
+        console.log(this.id + ':' + this.name + ' combobox change')
+      });    
+
+      // Nest the combobox directly inside the calcite-label
+      comboboxLabel.appendChild(combobox);
+      comboboxLabel.appendChild(document.createTextNode(option[0] || option[0]));
+
+      container.appendChild(comboboxLabel);
 
     });
   }

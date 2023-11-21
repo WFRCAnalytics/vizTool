@@ -32,7 +32,12 @@ require([
           value: item.agCode,
           label: item.agDisplayName
         })), data.aggregatorSelected, false, data.aggregatorTitle, this);
-      }
+      };
+      this.comboSelector = new WijComboboxes(this.id + "_attributecombo", data.aggregators.map(item => ({
+        value: item.agCode,
+        label: item.agDisplayName,
+        options: item.agOptions
+      })), data.aggregatorSelected, data.comboSelected, false, data.aggregatorTitle, this)
     }
     
     generateIdFromText(text) {
@@ -46,6 +51,10 @@ require([
       
       if (this.aggregatorSelect) {
         container.appendChild(this.aggregatorSelect.render());
+      }
+
+      if (this.comboSelector) {
+        container.appendChild(this.comboSelector.render());
       }
 
       container.appendChild(this.attributeSelect.render());
@@ -72,6 +81,19 @@ require([
       return this.attributeSelect.selected;
     }
 
+    getComboboxOptions(){
+      const comboOptions = Array.isArray(this.comboSelector.comboSelected) ? this.comboSelector.comboSelected : [this.comboSelector.comboSelected];
+      if (
+        this.comboSelector.selected.agCode === 'CO_FIPS' ||
+        this.comboSelector.selected.agCode === 'DISTMED' ||
+        this.comboSelector.selected.agCode === 'DISTLRG'
+      ) {
+        return comboOptions.map(str => parseInt(str,10));
+      } else {
+        return comboOptions;
+      }
+    }
+
     getScenario(_modVersion, _scnGroup, _scnYear) {
       return dataScenarios.find(scenario =>
         scenario.modVersion === _modVersion &&
@@ -92,6 +114,9 @@ require([
 
     afterUpdateAggregator() {
       console.log('afterUpdateAggregator');
+      //document.getElementById(this.comboSelector.id + '_container').innerHTML = '';
+      this.comboSelector.render();
+      this.renderSidebar();
       this.afterUpdateSidebar();
     }
 
@@ -182,16 +207,18 @@ require([
       return segidOptions;
     }
 
-    createLineChart(aCode, labels, chartData) {
+    createLineChart(aCode, labels, chartData, aggIDsString) {
       console.log('Creating the chart...');
       console.log("Selected radio button option under 'Display':", aCode);
 
       const containerElement = document.getElementById('mainTrend');
       containerElement.innerHTML = '';
         
+      
+      const aggCode = this.getSelectedAggregator();
       const title = document.createElement('div');
       title.id = 'charttitle';
-      title.innerHTML = '<h1>Salt Lake County Trends</h1>'
+      title.innerHTML = '<h1>' + aggCode.agDisplayName + ' Trends</h1>'
       containerElement.appendChild(title);
 
       const chartContainer = document.createElement('div');
@@ -290,6 +317,9 @@ require([
   
     updateChartData() {
       const aCode = this.getACode();
+      const comboCodes = this.getComboboxOptions();
+      const combos = this.comboSelector;
+      //const aggCode = this.getSelectedAggregator();
       //const segId = "0006_146.9"; // Change this to your desired SEGID
       //const segOptions = this.getSegidOptions();
     
@@ -322,9 +352,17 @@ require([
 
       const labels = [2019,2023,2028,2032,2042,2050];
       const chartData = {};
+      var filteredFeatures = {};
 
-      var aggID = 35;
-    
+      var aggIDs = comboCodes//[35,49];
+      
+      let aggIDsString = '';
+      if (comboCodes.length > 1) {
+          aggIDsString = comboCodes.join('_');
+      } else if (comboCodes.length === 1) {
+          aggIDsString = comboCodes[0].toString();
+      }
+      console.log('Going to fetch the data now... agIDsString is ' + aggIDs);
       fetch("data/segmentsWithAggFields.geojson")
         .then(response => {
           if (!response.ok) {
@@ -334,60 +372,57 @@ require([
         })
         .then(data => {
           // Filter features where CO_FIPS is 35
-          this.filteredFeatures = data.features.filter(feature => 
-            feature.properties.CO_FIPS === aggID
-          );
+          filteredFeatures = data.features.filter(feature => 
+            aggIDs.includes(feature.properties[this.comboSelector.selected.agCode])
+        );
 
           // Now you have an array of features where CO_FIPS is 35
           console.log(filteredFeatures);
 
-          // You can use filteredFeatures for further processing
+          scnGroupYearCombos.forEach(combo => {
+            const scnDisplay = combo.scnDisplay;
+            const scnGroup = combo.scnGroup;
+            const scnYear = combo.scnYear;
+            const scenarioData = this.getScenario('v900', scnGroup, scnYear);
+            const filter = this.getFilter();
+    
+            if (scenarioData) {
+        
+              if (!chartData[aggIDsString]) {
+                  chartData[aggIDsString] = {};
+              }
+              if (!chartData[aggIDsString][scnDisplay]) {
+                  chartData[aggIDsString][scnDisplay] = {};
+              }
+    
+              chartData[aggIDsString][scnDisplay][scnYear] = 0;
+    
+              const filteredScenario = scenarioData.roadwayTrendData.data[filter];
+    
+              filteredFeatures.forEach(feature => {
+    
+                const segId = feature.properties.SEGID;
+                const filterSelectionData = filteredScenario[segId];
+        
+                if (filterSelectionData) {
+                  const selectedValue = this.getChartData(aCode, filterSelectionData);
+    
+                  if (selectedValue !== null) {
+                    chartData[aggIDsString][scnDisplay][scnYear] += selectedValue;
+                  }
+                }
+              })
+            }
+          });
+        
+          this.createLineChart(aCode, labels, chartData, aggIDsString);
+        
         })
         .catch(error => {
           console.error('Error reading the JSON file:', error);
         });
 
-    
-      scnGroupYearCombos.forEach(combo => {
-        const scnDisplay = combo.scnDisplay;
-        const scnGroup = combo.scnGroup;
-        const scnYear = combo.scnYear;
-        const scenarioData = this.getScenario('v900', scnGroup, scnYear);
-        const filter = this.getFilter();
-
-        if (scenarioData) {
-    
-          if (!chartData[aggID]) {
-              chartData[aggID] = {};
-          }
-          if (!chartData[aggID][scnDisplay]) {
-              chartData[aggID][scnDisplay] = {};
-          }
-
-          chartData[aggID][scnDisplay][scnYear] = 0;
-
-          const filteredScenario = scenarioData.roadwayTrendData.data[filter];
-
-          this.filteredFeatures.forEach(feature => {
-
-            const segId = feature.properties.SEGID;
-            const filterSelectionData = filteredScenario[segId];
-    
-            if (filterSelectionData) {
-              const selectedValue = this.getChartData(aCode, filterSelectionData);
-
-              if (selectedValue !== null) {
-                chartData[aggID][scnDisplay][scnYear] += selectedValue;
-              }
-            }
-          })
-        }
-      });
-    
-
-
-      this.createLineChart(aCode, labels, chartData);
-    }
+      }
 
     getSidebarSelector(submenuTemplate) {
       if (submenuTemplate === 'vizLog') {
