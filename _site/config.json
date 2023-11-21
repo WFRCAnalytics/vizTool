@@ -509,7 +509,7 @@
                     {
                       "aCode": "aSAll",
                       "aDisplayName": "Share of All Trips",
-                      "agWeightCodeCode": "aT",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -526,7 +526,7 @@
                     {
                       "aCode": "aSMot",
                       "aDisplayName": "Share of Motorized Trips",
-                      "agWeightCodeCode": "aT",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -543,7 +543,7 @@
                     {
                       "aCode": "aSAut",
                       "aDisplayName": "Share of Auto Trips",
-                      "agWeightCodeCode": "aT",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -560,7 +560,7 @@
                     {
                       "aCode": "aSTrn",
                       "aDisplayName": "Share of Transit Trips",
-                      "agWeightCodeCode": "aT",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {

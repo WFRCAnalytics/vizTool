@@ -136,6 +136,10 @@ require([
       return this.attributeSelect.selected;
     }
 
+    getWeightCode() {
+      return this.attributes.find(item => item.aCode === this.getACode()).agWeightCode;
+    }
+
     getSelectedAggregator() {
 
       let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
@@ -194,7 +198,7 @@ require([
           attributes: {
             id: 0, // Unique ID, using "SEGID" as the objectIdField
             // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+            dVal: null // Assuming you want a displayValue, you can set any initial value
           }
         };
 
@@ -280,7 +284,7 @@ require([
           attributes: {
             id: 0, // Unique ID, using "SEGID" as the objectIdField
             // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+            dVal: null // Assuming you want a displayValue, you can set any initial value
           }
         };
 
@@ -681,9 +685,11 @@ require([
 
       this.initializeLayer();
 
+      const _aCode = this.getACode();
+
       const setRendererAndLegend = () => {
 
-        if (this.getACode().substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
+        if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
           if (mode==='base') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
@@ -791,14 +797,14 @@ require([
               // main value
               if (_dataMain!==undefined) {
                 if (_dataMain[_id]) {
-                  _valueMain = _dataMain[_id][this.getACode()];
+                  _valueMain = _dataMain[_id][_aCode];
                 }
               }
 
               // comp value
               if (_dataComp!==undefined) {
                 if (_dataComp[_id]) {
-                _valueComp = _dataComp[_id][this.getACode()];
+                _valueComp = _dataComp[_id][_aCode];
                 }
               }
 
@@ -845,9 +851,8 @@ require([
           // B: Aggregator
           } else if (this.baseGeometryGeoJson.features) {
 
-            var _displayFeatureIdField = this.getSelectedAggregator().agCode;
-            
-            const _agWeightCode = this.getSelectedAggregator().agWeightCode;
+            const _idAgFieldName = this.getSelectedAggregator().agCode;
+            const _wtCode = this.getWeightCode();
 
             // go through display geometry features
             result.features.forEach((feature) => {
@@ -855,58 +860,65 @@ require([
               var _valueMain = 0;
               var _valueComp = 0;
               var _valueDisp = 0;
-              var _valueMainXWeight = 0;
-              var _valueCompXWeight = 0;
-              var _valueMainSumWeight = 0;
-              var _valueCompSumWeight = 0;
+              var _valueMainXWt = 0;
+              var _valueCompXWt = 0;
+              var _valueMainSumWt = 0;
+              var _valueCompSumWt = 0;
 
               // Get ID from the feature's attributes
-              var _displayFeatureId = feature.attributes[_displayFeatureIdField];
+              var _idAg = feature.attributes[_idAgFieldName];
               
               // get associated json records for given aggregator
-              let _dataMainSetToAgg = this.baseGeometryGeoJson.features.filter(feature => 
-                feature.properties[_displayFeatureIdField] === _displayFeatureId
+              let _featuresToAg = this.baseGeometryGeoJson.features.filter(feature => 
+                feature.properties[_idAgFieldName] === _idAg
               );
 
               // aggregate json data for give display feature
-              _dataMainSetToAgg.forEach((record) => {
+              _featuresToAg.forEach((baseFt) => {
                 
+                const _idFt = baseFt.properties[this.baseGeoField];
+
                 // main value
                 if (_dataMain!==undefined) {
-                  if (_dataMain[record.properties[this.baseGeoField]]) {
-                    if (_dataMain[record.properties[this.baseGeoField]][this.getACode()]) {
-                      if (!_agWeightCode) {
-                        _valueMain += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                  if (_dataMain[_idFt]) {
+                    if (_dataMain[_idFt][_aCode]) {
+                      if (!_wtCode) {
+                        _valueMain += _dataMain[_idFt][_aCode];
                       } else {
-                        _valueMainXWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()] * _dataMain[record.properties[this.baseGeoField]][this.getACode()];
-                        _valueMainSumWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                        var _wtMain = _dataMain[_idFt][_wtCode];
+                        if (_wtMain) {
+                          _valueMainXWt +=  _dataMain[_idFt][_aCode] * _wtMain;
+                          _valueMainSumWt += _wtMain;
+                        }
                       }
-                      
                     }
                   }
                 }
                 
                 // comp value
                 if (_dataComp!==undefined) {
-                  if (_dataComp[_dataMainSetToAgg.properties[this.baseGeoField]]) {
-                    if (_dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()]) {
-                      if (!_agWeightCode) {
-                        _valueComp  += _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()];
+                  if (_dataComp[_idFt]) {
+                    if (_dataComp[_idFt][_aCode]) {
+                      if (!_wtCode) {
+                        _valueComp += _dataComp[_idFt][_aCode];
                       } else {
-                        _valueCompXWeight  += _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()] * _dataComp[_dataMainSetToAgg.properties[this.baseGeoField]][this.getACode()];
-                        _valueCompSumWeight += _dataMain[record.properties[this.baseGeoField]][this.getACode()];
+                        var _wtComp = _dataComp[_idFt][_wtCode];
+                        if (_wtComp) {
+                          _valueCompXWt +=  _dataComp[_idFt][_aCode] * _wtComp;
+                          _valueCompSumWt += _wtComp;
+                        }
                       }
                     }
                   }
                 }
               });
 
-              if (_agWeightCode) {
-                if (_valueMainSumWeight>0) {
-                  _valueMain = _valueMainXWeight / _valueMainSumWeight;
+              if (_wtCode) {
+                if (_valueMainSumWt>0) {
+                  _valueMain = _valueMainXWt / _valueMainSumWt;
                 }
-                if (_valueCompSumWeight>0) {
-                  _valueComp = _valueCompXWeight / _valueCompSumWeight;
+                if (_valueCompSumWt>0) {
+                  _valueComp = _valueCompXWt / _valueCompSumWt;
                 }
               }
 
