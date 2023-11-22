@@ -18,34 +18,64 @@ class WijComboboxes {
     const wijComboInstance = this;
 
     const aggCode = this.vizLayout.getSelectedAggregator();
-    this.selected = aggCode;
+
+    if (aggCode) {// if aggregator
+      this.selected = aggCode;
     
-    let title = document.createElement("calcite-label");  // Create a new div element
-    title.innerHTML = "<b> Select " + aggCode.agDisplayName + "(s)</b>";  // Set its innerHTML
-    container.appendChild(title);  // Append the new element to the container
-
-    // Create radio buttons
-    var comboBoxLabel = document.createElement("calcite-combobox");
-    comboBoxLabel.setAttribute('layout', 'inline');
-    comboBoxLabel.classList.add('pointer-cursor');
-
-    // Call a type-specific rendering method
-    aggCode.agOptions.forEach((option) => {
-
-      var comboBoxButton = document.createElement("calcite-combobox-item");
-      comboBoxButton.textLabel = option;
-      comboBoxButton.value = option;
-
-      // Optionally, select the first radio button by default
-      if (option.value === this.comboSelected) {
-        comboBoxButton.checked = true;
-      }
-
-      // Nest the radio button directly inside the calcite-label
-      comboBoxLabel.appendChild(comboBoxButton);
-
-      container.appendChild(comboBoxLabel);
-    });
+      let title = document.createElement("calcite-label");  // Create a new div element
+      title.innerHTML = "<b> Select " + aggCode.agDisplayName + "(s)</b>";  // Set its innerHTML
+      container.appendChild(title);  // Append the new element to the container
+  
+      // Create radio buttons
+      var comboBoxLabel = document.createElement("calcite-combobox");
+      comboBoxLabel.setAttribute('layout', 'inline');
+      comboBoxLabel.classList.add('pointer-cursor');
+  
+      // Call a type-specific rendering method
+      aggCode.agOptions.forEach((option) => {
+  
+        var comboBoxButton = document.createElement("calcite-combobox-item");
+        comboBoxButton.textLabel = option;
+        comboBoxButton.value = option;
+  
+        // Optionally, select the first radio button by default
+        if (option.value === this.comboSelected) {
+          comboBoxButton.checked = true;
+        }
+  
+        // Nest the radio button directly inside the calcite-label
+        comboBoxLabel.appendChild(comboBoxButton);
+  
+        container.appendChild(comboBoxLabel);
+      });
+    } else { // if not agregator
+      let title = document.createElement("calcite-label");  // Create a new div element
+      title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
+      container.appendChild(title);  // Append the new element to the container
+  
+      // Create radio buttons
+      var comboBoxLabel = document.createElement("calcite-combobox");
+      comboBoxLabel.setAttribute('layout', 'inline');
+      comboBoxLabel.classList.add('pointer-cursor');
+  
+      // Call a type-specific rendering method
+      this.options.forEach((option) => {
+  
+        var comboBoxButton = document.createElement("calcite-combobox-item");
+        comboBoxButton.textLabel = option.label;
+        comboBoxButton.value = option.value;
+  
+        // Optionally, select the first radio button by default
+        if (this.comboSelected.includes(option.value)) {
+          comboBoxButton.selected = true;
+        }
+  
+        // Nest the radio button directly inside the calcite-label
+        comboBoxLabel.appendChild(comboBoxButton);
+  
+        container.appendChild(comboBoxLabel);
+      });
+    }
     
     // Listen for changes to the radio buttons
     comboBoxLabel.addEventListener("calciteComboboxChange", (e) => {

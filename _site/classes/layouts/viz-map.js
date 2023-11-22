@@ -102,11 +102,34 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
+    findAllCombinationsOfFilters(prefix = '', separator = '_') {
+      // If there are no more lists to process, return the current prefix as the result
+      if (this.filters.length === 0) {
+        return [prefix];
+      }
+  
+      // Get the first list and the remaining lists
+      const firstList = this.filters[0];
+      const remainingLists = this.filters.slice(1);
+  
+      // Combine the elements of the first list with the recursive results of the remaining lists
+      let combinations = [];
+      firstList.forEach(element => {
+          const newPrefix = prefix ? prefix + separator + element : element;
+          combinations = combinations.concat(findAllCombinations(remainingLists, newPrefix, separator));
+      });
+  
+      return combinations;
+    }
+
     dataMain() {
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioMain().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
         return this.scenarioMain().zoneModeData.data[this.getFilter()]
+      } else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
+        //return this.scenarioMain().transitSegData.data[this.getFilter()]
+        // loop through attributes and get every single combination...
       }
     }
     dataComp() {
@@ -114,6 +137,8 @@ require([
         return this.scenarioComp().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
         return this.scenarioComp().zoneModeData.data[this.getFilter()]
+      } else if (this.attributeTitle=="Transit Segment Attribute") {              // for zone mode share
+        return this.scenarioComp().transitSegData.data[this.getFilter()]
       }
     }
 
@@ -366,6 +391,8 @@ require([
         _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
         _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
+      } else if (this.attributeTitle == "Transit Segment Attribute") {          // for transit segs
+        _filterGroup = this.scenarioMain().transitSegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       }
     
       // Check if _filterGroup is not undefined
