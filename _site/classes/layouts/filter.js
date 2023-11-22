@@ -26,4 +26,8 @@ class Filter {
     return this.filterWij.render();
   }
 
+  getOptionsAsList() {
+    return this.filterWij.options.map(option => option.value);
+  }
+
 }

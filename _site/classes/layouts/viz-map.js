@@ -102,21 +102,21 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
-    findAllCombinationsOfFilters(prefix = '', separator = '_') {
+    findAllCombinationsOfFilters(lists, prefix = '', separator = '_') {
       // If there are no more lists to process, return the current prefix as the result
-      if (this.filters.length === 0) {
+      if (lists.length === 0) {
         return [prefix];
       }
   
       // Get the first list and the remaining lists
-      const firstList = this.filters[0];
-      const remainingLists = this.filters.slice(1);
+      const firstList = lists[0];
+      const remainingLists = lists.slice(1);
   
       // Combine the elements of the first list with the recursive results of the remaining lists
       let combinations = [];
       firstList.forEach(element => {
           const newPrefix = prefix ? prefix + separator + element : element;
-          combinations = combinations.concat(findAllCombinations(remainingLists, newPrefix, separator));
+          combinations = combinations.concat(this.findAllCombinationsOfFilters(remainingLists, newPrefix, separator));
       });
   
       return combinations;
@@ -130,6 +130,13 @@ require([
       } else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
         //return this.scenarioMain().transitSegData.data[this.getFilter()]
         // loop through attributes and get every single combination...
+        const listOfOptions = this.filters.map(filter => filter.getOptionsAsList());
+        console.log(listOfOptions);
+
+
+        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
+          console.log(combo);
+      });
       }
     }
     dataComp() {
