@@ -98,4 +98,9 @@ class WijComboboxes {
 
     return container;
   }
+
+  getSelectedOptionsAsList() {
+    return this.comboSelected;
+  }
+
 }

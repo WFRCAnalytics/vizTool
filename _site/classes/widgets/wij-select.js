@@ -53,4 +53,9 @@ class WijSelect {
 
     return container;
   }
+
+  getSelectedOptionsAsList() {
+    return [this.selected];
+  }
+  
 }
