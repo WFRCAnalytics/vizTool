@@ -171,13 +171,54 @@ require([
         return aggregatedSums;
       }
     }
+
     dataComp() {
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioComp().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
         return this.scenarioComp().zoneModeData.data[this.getFilter()]
-      } else if (this.attributeTitle=="Transit Segment Attribute") {              // for zone mode share
-        return this.scenarioComp().transitSegData.data[this.getFilter()]
+      }  else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
+        //return this.scenarioMain().transitSegData.data[this.getFilter()]
+
+        // loop through attributes and get every single combination...
+        
+        // for each filter, add all options to list of options
+        const listOfOptions = this.filters.map(filter => filter.getSelectedOptionsAsList());
+
+        // Initialize an object to hold the aggregated sums
+        let aggregatedSums = {};
+
+        const _parent = this;
+
+        // Modified sumFields function to handle the summing of specific attributes for each key
+        function sumFields(data) {
+          Object.keys(data).forEach(key => {
+            if (!aggregatedSums[key]) {
+              aggregatedSums[key] = {};
+            }
+
+            _parent.attributes.forEach(attr => {
+              if (data[key].hasOwnProperty(attr.aCode)) {
+                if (!aggregatedSums[key][attr.aCode]) {
+                  aggregatedSums[key][attr.aCode] = 0;
+                }
+                aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
+              }
+            });
+          });
+        }
+
+        // Loop through each combination of filters
+        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
+          let data = _parent.scenarioComp().transitSegData.data[combo];
+
+          // Sum the fields in the data object
+          if (data) {
+            sumFields(data);
+          }
+        });
+
+        return aggregatedSums;
       }
     }
 
