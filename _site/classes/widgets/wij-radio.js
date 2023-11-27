@@ -65,4 +65,9 @@ class WijRadio {
 
     return container;
   }
+
+  getSelectedOptionsAsList() {
+    return [this.selected];
+  }
+  
 }

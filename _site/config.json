@@ -8,7 +8,7 @@
             "id": "roadways",
             "menuText": "Roadways",
             "menuIconStart": "driving-distance",
-            "modelEntitys": [
+            "modelEntities": [
               {
                 "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
@@ -16,7 +16,7 @@
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
-                  "baseGeometryIdField": "SEGID",
+                  "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Segment Details",
                   "attributeTitle": "Roadway Segment Attribute",
@@ -314,22 +314,22 @@
                       "id"  : "fTod",
                       "text": "Filter Time of Day",
                       "type": "select",
+                      "selected": "DY",
                       "options": [{"value":"DY", "label":"Daily"         },
                                   {"value":"AM", "label":"AM Period"     },
                                   {"value":"MD", "label":"Midday Period" },
                                   {"value":"PM", "label":"PM Period"     },
-                                  {"value":"EV", "label":"Evening Period"}],
-                      "selected": "DY"
+                                  {"value":"EV", "label":"Evening Period"}]
                     },
                     {
                       "id"  : "fVeh",
                       "text": "Filter Vehicle Type",
                       "type": "select",
+                      "selected": "All",
                       "options": [{"value":"All", "label":"All Vehicles" },
                                   {"value":"LT" , "label":"Light Trucks" },
                                   {"value":"MD" , "label":"Medium Trucks"},
-                                  {"value":"HV" , "label":"Heavy Trucks" }],
-                      "selected": "All"
+                                  {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }
@@ -398,22 +398,243 @@
                       "id"  : "dTod",
                       "text": "Filter Time of Day",
                       "type": "select",
+                      "selected": "DY",
                       "options": [{"value":"DY", "label":"Daily"     },
                                   {"value":"AM", "label":"AM Period"   },
                                   {"value":"MD", "label":"Midday Period" },
                                   {"value":"PM", "label":"PM Period"   },
-                                  {"value":"EV", "label":"Evening Period"}],
-                      "selected": "DY"
+                                  {"value":"EV", "label":"Evening Period"}]
                     },
                     {
                       "id"  : "dVeh",
                       "text": "Filter Vehicle Type",
                       "type": "select",
+                      "selected": "All",
                       "options": [{"value":"All", "label":"All Vehicles" },
                                   {"value":"LT" , "label":"Light Trucks" },
                                   {"value":"MD" , "label":"Medium Trucks"},
-                                  {"value":"HV" , "label":"Heavy Trucks" }],
-                      "selected": "All"
+                                  {"value":"HV" , "label":"Heavy Trucks" }]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "transit",
+            "menuText": "Transit",
+            "menuIconStart": "",
+            "modelEntities": [
+              {
+                "submenuText": "Segments",
+                "submenuIconStart": "line-straight",
+                "template": "vizMap",
+                "templateSettings": {
+                  "sidebarDiv": "sidebarContent",
+                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeoField": "SEGID",
+                  "geometryType": "polyline",
+                  "popupTitle": "Segment Details",
+                  "attributeTitle": "Transit Segment Attribute",
+                  "attributeSelected": "aR",
+                  "attributes": [
+                    {
+                      "aCode": "aR",
+                      "aDisplayName": "Riders",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Riders",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "More than 15,000"}
+                          ]
+                        },
+                        "compare_abs": {
+                          "name": "Change in Riders",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +5,000" }
+                            ]
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Lanes"
+                        }
+                      }
+                    }
+                  ],
+                  "filters" : [
+                    {
+                      "id"  : "fPurp",
+                      "text": "Filter Trip Purpose",
+                      "type": "combobox",
+                      "selected": ["All"],
+                      "options": [{"value":"All", "label":"All Purposes"}]
+                    },
+                    {
+                      "id"  : "fTod",
+                      "text": "Filter Time of Day",
+                      "type": "combobox",
+                      "selected": ["pk","ok"],
+                      "options": [{"value":"pk", "label":"Peak"     },
+                                  {"value":"ok", "label":"Off-Peak" }]
+                    },
+                    {
+                      "id"  : "fMdA",
+                      "text": "Filter Access Mode",
+                      "type": "combobox",
+                      "selected": ["drive", "walk"],
+                      "options": [{"value":"drive", "label":"Drive"},
+                                  {"value":"walk" , "label":"Walk" }]
+                    },
+                    {
+                      "id"  : "fDir",
+                      "text": "Filter Direction",
+                      "type": "combobox",
+                      "selected": ["IB", "OB"],
+                      "options": [{"value":"IB", "label":"In-Bound" },
+                                  {"value":"OB", "label":"Out-Bound"}]
+                    },
+                    {
+                      "id"  : "fMd",
+                      "text": "Filter Mode",
+                      "type": "combobox",
+                      "selected": [4,5,6,7,8,9],
+                      "options": [{"value":4, "label":"Local Bus"            },
+                                  {"value":5, "label":"Core Bus"             },
+                                  {"value":6, "label":"Express Bus"          },
+                                  {"value":9, "label":"Bus Rapid Transit"    },
+                                  {"value":7, "label":"Light Rail Transit"   },
+                                  {"value":8, "label":"Commuter Rail Transit"}]
+                    },
+                    {
+                      "id"  : "fName",
+                      "text": "Filter Route Name",
+                      "type": "combobox",
+                      "selected": ["M805_Santaquin", "Santaquin_Exp" ,"M821_5YR2023" ,"O630" ,"OF638" ,"Core_Nebo" ,"M864_ThanksgivingPnt" ,"M871_SLtoUtahCnty" ,"S472X" ,"S473X" ,"Clear" ,"O640" ,"BRTWash_R" ,"O607" ,"OF618" ,"O606" ,"7800FtUn_3" ,"SF570" ,"Core_Maple" ,"M822_Psn" ,"BRT_VinOrm" ,"O604" ,"O601" ,"Core_CedarLehi" ,"BRTRdwd_South" ,"BRTRdwd_T" ,"MidValCon" ,"S31" ,"LakePark" ,"900So" ,"BRT_2700W_T" ,"S1" ,"BRTNRedwd_T" ,"500E_2" ,"OF605" ,"BRTNSDA_R" ,"BRT123RD_A" ,"SF514" ,"StGrid_2" ,"900E_2" ,"BRT62S_T1" ,"Cedar_Exp" ,"M823_5RY2023" ,"O609" ,"SF453" ,"BRT56_R" ,"M831_WPr" ,"CG_BRT_S1" ,"M833_CntPr" ,"M862_Orem" ,"BRT104th_2" ,"SoJoSandyC" ,"SF525" ,"StGrid_2_BRT" ,"5400S" ,"BRTFTHLWA_N" ,"S004" ,"300W" ,"S455" ,"PlsntClear" ,"O614" ,"O626" ,"HinckleyUnion" ,"OF620" ,"MTTrolley" ,"O627" ,"O628" ,"ClearRoyWest" ,"BRT3533S_Core" ,"UVX" ,"S236" ,"S248" ,"S223" ,"S513" ,"FthlDr2100" ,"M834_EstPr" ,"S509" ,"S017" ,"O603" ,"O615" ,"LittleCott" ,"BRT1300E_T" ,"200So_2" ,"SF11" ,"O667" ,"RGRANSUG_U" ,"ShldSego_3" ,"SF202" ,"SF232" ,"Sline_Mill" ,"3900S" ,"1700So" ,"1300So"],
+                      "options": [{"value":"M805_Santaquin"      , "label": "M805_Santaquin"      },
+                                  {"value":"Santaquin_Exp"       , "label": "Santaquin_Exp"       },
+                                  {"value":"M821_5YR2023"        , "label": "M821_5YR2023"        },
+                                  {"value":"O630"                , "label": "O630"                },
+                                  {"value":"OF638"               , "label": "OF638"               },
+                                  {"value":"Core_Nebo"           , "label": "Core_Nebo"           },
+                                  {"value":"M864_ThanksgivingPnt", "label": "M864_ThanksgivingPnt"},
+                                  {"value":"M871_SLtoUtahCnty"   , "label": "M871_SLtoUtahCnty"   },
+                                  {"value":"S472X"               , "label": "S472X"               },
+                                  {"value":"S473X"               , "label": "S473X"               },
+                                  {"value":"Clear"               , "label": "Clear"               },
+                                  {"value":"O640"                , "label": "O640"                },
+                                  {"value":"BRTWash_R"           , "label": "BRTWash_R"           },
+                                  {"value":"O607"                , "label": "O607"                },
+                                  {"value":"OF618"               , "label": "OF618"               },
+                                  {"value":"O606"                , "label": "O606"                },
+                                  {"value":"7800FtUn_3"          , "label": "7800FtUn_3"          },
+                                  {"value":"SF570"               , "label": "SF570"               },
+                                  {"value":"Core_Maple"          , "label": "Core_Maple"          },
+                                  {"value":"M822_Psn"            , "label": "M822_Psn"            },
+                                  {"value":"BRT_VinOrm"          , "label": "BRT_VinOrm"          },
+                                  {"value":"O604"                , "label": "O604"                },
+                                  {"value":"O601"                , "label": "O601"                },
+                                  {"value":"Core_CedarLehi"      , "label": "Core_CedarLehi"      },
+                                  {"value":"BRTRdwd_South"       , "label": "BRTRdwd_South"       },
+                                  {"value":"BRTRdwd_T"           , "label": "BRTRdwd_T"           },
+                                  {"value":"MidValCon"           , "label": "MidValCon"           },
+                                  {"value":"S31"                 , "label": "S31"                 },
+                                  {"value":"LakePark"            , "label": "LakePark"            },
+                                  {"value":"900So"               , "label": "900So"               },
+                                  {"value":"BRT_2700W_T"         , "label": "BRT_2700W_T"         },
+                                  {"value":"S1"                  , "label": "S1"                  },
+                                  {"value":"BRTNRedwd_T"         , "label": "BRTNRedwd_T"         },
+                                  {"value":"500E_2"              , "label": "500E_2"              },
+                                  {"value":"OF605"               , "label": "OF605"               },
+                                  {"value":"BRTNSDA_R"           , "label": "BRTNSDA_R"           },
+                                  {"value":"BRT123RD_A"          , "label": "BRT123RD_A"          },
+                                  {"value":"SF514"               , "label": "SF514"               },
+                                  {"value":"StGrid_2"            , "label": "StGrid_2"            },
+                                  {"value":"900E_2"              , "label": "900E_2"              },
+                                  {"value":"BRT62S_T1"           , "label": "BRT62S_T1"           },
+                                  {"value":"Cedar_Exp"           , "label": "Cedar_Exp"           },
+                                  {"value":"M823_5RY2023"        , "label": "M823_5RY2023"        },
+                                  {"value":"O609"                , "label": "O609"                },
+                                  {"value":"SF453"               , "label": "SF453"               },
+                                  {"value":"BRT56_R"             , "label": "BRT56_R"             },
+                                  {"value":"M831_WPr"            , "label": "M831_WPr"            },
+                                  {"value":"CG_BRT_S1"           , "label": "CG_BRT_S1"           },
+                                  {"value":"M833_CntPr"          , "label": "M833_CntPr"          },
+                                  {"value":"M862_Orem"           , "label": "M862_Orem"           },
+                                  {"value":"BRT104th_2"          , "label": "BRT104th_2"          },
+                                  {"value":"SoJoSandyC"          , "label": "SoJoSandyC"          },
+                                  {"value":"SF525"               , "label": "SF525"               },
+                                  {"value":"StGrid_2_BRT"        , "label": "StGrid_2_BRT"        },
+                                  {"value":"5400S"               , "label": "5400S"               },
+                                  {"value":"BRTFTHLWA_N"         , "label": "BRTFTHLWA_N"         },
+                                  {"value":"S004"                , "label": "S004"                },
+                                  {"value":"300W"                , "label": "300W"                },
+                                  {"value":"S455"                , "label": "S455"                },
+                                  {"value":"PlsntClear"          , "label": "PlsntClear"          },
+                                  {"value":"O614"                , "label": "O614"                },
+                                  {"value":"O626"                , "label": "O626"                },
+                                  {"value":"HinckleyUnion"       , "label": "HinckleyUnion"       },
+                                  {"value":"OF620"               , "label": "OF620"               },
+                                  {"value":"MTTrolley"           , "label": "MTTrolley"           },
+                                  {"value":"O627"                , "label": "O627"                },
+                                  {"value":"O628"                , "label": "O628"                },
+                                  {"value":"ClearRoyWest"        , "label": "ClearRoyWest"        },
+                                  {"value":"BRT3533S_Core"       , "label": "BRT3533S_Core"       },
+                                  {"value":"UVX"                 , "label": "UVX"                 },
+                                  {"value":"S236"                , "label": "S236"                },
+                                  {"value":"S248"                , "label": "S248"                },
+                                  {"value":"S223"                , "label": "S223"                },
+                                  {"value":"S513"                , "label": "S513"                },
+                                  {"value":"FthlDr2100"          , "label": "FthlDr2100"          },
+                                  {"value":"M834_EstPr"          , "label": "M834_EstPr"          },
+                                  {"value":"S509"                , "label": "S509"                },
+                                  {"value":"S017"                , "label": "S017"                },
+                                  {"value":"O603"                , "label": "O603"                },
+                                  {"value":"O615"                , "label": "O615"                },
+                                  {"value":"LittleCott"          , "label": "LittleCott"          },
+                                  {"value":"BRT1300E_T"          , "label": "BRT1300E_T"          },
+                                  {"value":"200So_2"             , "label": "200So_2"             },
+                                  {"value":"SF11"                , "label": "SF11"                },
+                                  {"value":"O667"                , "label": "O667"                },
+                                  {"value":"RGRANSUG_U"          , "label": "RGRANSUG_U"          },
+                                  {"value":"ShldSego_3"          , "label": "ShldSego_3"          },
+                                  {"value":"SF202"               , "label": "SF202"               },
+                                  {"value":"SF232"               , "label": "SF232"               },
+                                  {"value":"Sline_Mill"          , "label": "Sline_Mill"          },
+                                  {"value":"3900S"               , "label": "3900S"               },
+                                  {"value":"1700So"              , "label": "1700So"              },
+                                  {"value":"1300So"              , "label": "1300So"              }]
+                    },
+                    {
+                      "id"  : "fMdH",
+                      "text": "Filter Hierarchacal Mode",
+                      "type": "select",
+                      "selected": "ALL",
+                      "options": [{"value":"ALL", "label":"All Modes"            },
+                                  {"value":"LCL", "label":"Local Bus"            },
+                                  {"value":"COR", "label":"Core Bus"             },
+                                  {"value":"EXP", "label":"Express Bus"          },
+                                  {"value":"BRT", "label":"Bus Rapid Transit"    },
+                                  {"value":"LRT", "label":"Light Rail Transit"   },
+                                  {"value":"CRT", "label":"Commuter Rail Transit"}]
                     }
                   ]
                 }
@@ -424,7 +645,7 @@
             "id": "trips",
             "menuText": "Trips",
             "menuIconStart": "tour",
-            "modelEntitys": [
+            "modelEntities": [
               {
                 "submenuText": "Zone Mode Share",
                 "submenuIconStart": "graph-pie-slice",
@@ -432,7 +653,7 @@
                 "templateSettings": {
                   "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
-                  "baseGeometryIdField": "TAZID",
+                  "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
                   "aggregatorTitle": "Select Zone Geography",
@@ -509,7 +730,8 @@
                     {
                       "aCode": "aSAll",
                       "aDisplayName": "Share of All Trips",
-                      "aLabelExpressionInfo": "Text($feature.dVal * 100, '#,##0.0') + '%'",
+                      "agWeightCode": "aT",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of All Trips"
@@ -525,6 +747,7 @@
                     {
                       "aCode": "aSMot",
                       "aDisplayName": "Share of Motorized Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -541,6 +764,7 @@
                     {
                       "aCode": "aSAut",
                       "aDisplayName": "Share of Auto Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -557,6 +781,7 @@
                     {
                       "aCode": "aSTrn",
                       "aDisplayName": "Share of Transit Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -573,6 +798,7 @@
                     {
                       "aCode": "aSLcl",
                       "aDisplayName": "Share of Local Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -589,6 +815,7 @@
                     {
                       "aCode": "aSCor",
                       "aDisplayName": "Share of Core Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -605,6 +832,7 @@
                     {
                       "aCode": "aSExp",
                       "aDisplayName": "Share of Express Bus",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -621,6 +849,7 @@
                     {
                       "aCode": "aSBrt",
                       "aDisplayName": "Share of Bus-Rapid Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -637,6 +866,7 @@
                     {
                       "aCode": "aSLrt",
                       "aDisplayName": "Share of Light-Rail Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -653,6 +883,7 @@
                     {
                       "aCode": "aSCrt",
                       "aDisplayName": "Share of Commuter-Rail Transit",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -669,6 +900,7 @@
                     {
                       "aCode": "aSNon",
                       "aDisplayName": "Share of Non-Motorized Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -685,6 +917,7 @@
                     {
                       "aCode": "aSWlk",
                       "aDisplayName": "Share of Walk Trips",
+                      "agWeightCode": "aT",
                       "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
@@ -701,7 +934,8 @@
                     {
                       "aCode": "aSBik",
                       "aDisplayName": "Share of Bike Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "agWeightCode": "aT",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
                       "rendererCollection": {
                         "main": {
                           "name": "Share of Bike Trips"
@@ -721,6 +955,7 @@
                       "id"  : "fMode",
                       "text": "Filter Mode",
                       "type": "select",
+                      "selected": "wCrt",
                       "options": [{"value": "Mot" , "label": "All Motorized"                      },
                                   {"value": "Aut" , "label": "Auto: All"                          },
                                   {"value": "da"  , "label": "Auto: Drive-Alone"                  },
@@ -755,37 +990,36 @@
                                   {"value": "scBk", "label": "Bike: School"                       },
                                   {"value": "Wlk" , "label": "Walk: All"                          },
                                   {"value": "nsWk", "label": "Walk: Non-School"                   },
-                                  {"value": "scWk", "label": "Walk: School"                       }],
-                      "selected": "wCrt"
+                                  {"value": "scWk", "label": "Walk: School"                       }]
                     },
                     {
                       "id"  : "fPurp",
                       "text": "Filter Purpose",
                       "type": "select",
+                      "selected": "AllPurp",
                       "options": [{"value":"AllPurp", "label": "All Purposes"      },
                                   {"value":"HBO"    , "label": "Home-Based Other"  },
                                   {"value":"HBSch"  , "label": "Home-Based School" },
                                   {"value":"HBW"    , "label": "Home-Based Work"   },
                                   {"value":"NHB"    , "label": "Non-Home-Based"    },
-                                  {"value":"HBC"    , "label": "Home-Based College"}],
-                      "selected": "AllPurp"
+                                  {"value":"HBC"    , "label": "Home-Based College"}]
                     },
                     {
                       "id"  : "fTod",
                       "text": "Filter Time of Day",
                       "type": "select",
+                      "selected": "Dy",
                       "options": [{"value":"Dy", "label":"Daily"            },
                                   {"value":"Pk", "label":"Peak (AM/PM)"     },
-                                  {"value":"Ok", "label":"Off-Peak (Midday)"}],
-                      "selected": "Dy"
+                                  {"value":"Ok", "label":"Off-Peak (Midday)"}]
                     },
                     {
                       "id"  : "fPA",
                       "text": "Filter Production/Attraction",
                       "type": "select",
+                      "selected": "P",
                       "options": [{"value":"P", "label":"Production" },
-                                  {"value":"A", "label":"Attraction" }],
-                      "selected": "P"
+                                  {"value":"A", "label":"Attraction" }]
                     }
                   ]
                 }

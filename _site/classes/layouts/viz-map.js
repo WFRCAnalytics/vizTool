@@ -19,7 +19,7 @@ require([
       this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
       this.sidebarDiv = data.sidebarDiv;
       this.baseGeometryFile = data.baseGeometryFile;
-      this.baseGeometryIdField = data.baseGeometryIdField;
+      this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.attributeTitle = data.attributeTitle;
@@ -102,18 +102,123 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
+    findAllCombinationsOfFilters(lists, prefix = '', separator = '_') {
+      // If there are no more lists to process, return the current prefix as the result
+      if (lists.length === 0) {
+        return [prefix];
+      }
+  
+      // Get the first list and the remaining lists
+      const firstList = lists[0];
+      const remainingLists = lists.slice(1);
+  
+      // Combine the elements of the first list with the recursive results of the remaining lists
+      let combinations = [];
+      firstList.forEach(element => {
+          const newPrefix = prefix ? prefix + separator + element : element;
+          combinations = combinations.concat(this.findAllCombinationsOfFilters(remainingLists, newPrefix, separator));
+      });
+  
+      return combinations;
+    }
+
     dataMain() {
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioMain().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
         return this.scenarioMain().zoneModeData.data[this.getFilter()]
+      } else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
+        //return this.scenarioMain().transitSegData.data[this.getFilter()]
+
+        // loop through attributes and get every single combination...
+        
+        // for each filter, add all options to list of options
+        const listOfOptions = this.filters.map(filter => filter.getSelectedOptionsAsList());
+
+        // Initialize an object to hold the aggregated sums
+        let aggregatedSums = {};
+
+        const _parent = this;
+
+        // Modified sumFields function to handle the summing of specific attributes for each key
+        function sumFields(data) {
+          Object.keys(data).forEach(key => {
+            if (!aggregatedSums[key]) {
+              aggregatedSums[key] = {};
+            }
+
+            _parent.attributes.forEach(attr => {
+              if (data[key].hasOwnProperty(attr.aCode)) {
+                if (!aggregatedSums[key][attr.aCode]) {
+                  aggregatedSums[key][attr.aCode] = 0;
+                }
+                aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
+              }
+            });
+          });
+        }
+
+        // Loop through each combination of filters
+        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
+          let data = _parent.scenarioMain().transitSegData.data[combo];
+
+          // Sum the fields in the data object
+          if (data) {
+            sumFields(data);
+          }
+        });
+
+        return aggregatedSums;
       }
     }
+
     dataComp() {
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioComp().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
         return this.scenarioComp().zoneModeData.data[this.getFilter()]
+      }  else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
+        //return this.scenarioMain().transitSegData.data[this.getFilter()]
+
+        // loop through attributes and get every single combination...
+        
+        // for each filter, add all options to list of options
+        const listOfOptions = this.filters.map(filter => filter.getSelectedOptionsAsList());
+
+        // Initialize an object to hold the aggregated sums
+        let aggregatedSums = {};
+
+        const _parent = this;
+
+        // Modified sumFields function to handle the summing of specific attributes for each key
+        function sumFields(data) {
+          Object.keys(data).forEach(key => {
+            if (!aggregatedSums[key]) {
+              aggregatedSums[key] = {};
+            }
+
+            _parent.attributes.forEach(attr => {
+              if (data[key].hasOwnProperty(attr.aCode)) {
+                if (!aggregatedSums[key][attr.aCode]) {
+                  aggregatedSums[key][attr.aCode] = 0;
+                }
+                aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
+              }
+            });
+          });
+        }
+
+        // Loop through each combination of filters
+        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
+          let data = _parent.scenarioComp().transitSegData.data[combo];
+
+          // Sum the fields in the data object
+          if (data) {
+            sumFields(data);
+          }
+        });
+
+        return aggregatedSums;
       }
     }
 
@@ -134,6 +239,10 @@ require([
 
     getACode() {
       return this.attributeSelect.selected;
+    }
+
+    getWeightCode() {
+      return this.attributes.find(item => item.aCode === this.getACode()).agWeightCode;
     }
 
     getSelectedAggregator() {
@@ -194,17 +303,17 @@ require([
           attributes: {
             id: 0, // Unique ID, using "SEGID" as the objectIdField
             // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+            dVal: null // Assuming you want a displayValue, you can set any initial value
           }
         };
 
         
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeometryIdField,
+          objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
-            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
+            { name: this.baseGeoField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -218,7 +327,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
+                text: this.baseGeoField + " {expression/baseGeoField}"
               },
               {
                 type: "text",
@@ -227,9 +336,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "baseGeometryIdField",
-                title: this.baseGeometryIdField,
-                expression: "$feature." + this.baseGeometryIdField
+                name: "baseGeoField",
+                title: this.baseGeoField,
+                expression: "$feature." + this.baseGeoField
               },
               {
                 name: "formatDisplayValue",
@@ -280,16 +389,16 @@ require([
           attributes: {
             id: 0, // Unique ID, using "SEGID" as the objectIdField
             // ... add other attribute fields if necessary
-            dVal: 0 // Assuming you want a displayValue, you can set any initial value
+            dVal: null // Assuming you want a displayValue, you can set any initial value
           }
         };
 
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeometryIdField,
+          objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
-            { name: this.baseGeometryIdField, type: "oid" },  // Object ID field
+            { name: this.baseGeoField, type: "oid" },  // Object ID field
             { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
             // HARD CODE... NEED TO ADD PROGRAMATICALLY
             { name: "SmallArea"        , type: "string"},
@@ -303,7 +412,7 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeometryIdField + " {expression/baseGeometryIdField}"
+                text: this.baseGeoField + " {expression/baseGeoField}"
               },
               {
                 type: "text",
@@ -312,9 +421,9 @@ require([
             ],
             expressionInfos: [
               {
-                name: "baseGeometryIdField",
-                title: this.baseGeometryIdField,
-                expression: "$feature." + this.baseGeometryIdField
+                name: "baseGeoField",
+                title: this.baseGeoField,
+                expression: "$feature." + this.baseGeoField
               },
               {
                 name: "formatDisplayValue",
@@ -362,6 +471,8 @@ require([
         _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
         _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
+      } else if (this.attributeTitle == "Transit Segment Attribute") {          // for transit segs
+        _filterGroup = this.scenarioMain().transitSegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
       }
     
       // Check if _filterGroup is not undefined
@@ -681,9 +792,11 @@ require([
 
       this.initializeLayer();
 
+      const _aCode = this.getACode();
+
       const setRendererAndLegend = () => {
 
-        if (this.getACode().substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
+        if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
           if (mode==='base') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
@@ -776,13 +889,13 @@ require([
           //    add data to feature
 
           
-            // NO AGGREGATOR
-          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeometryIdField)) {
+          // NO AGGREGATOR
+          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
             
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
-              var _id = feature.attributes[this.baseGeometryIdField];
+              var _id = feature.attributes[this.baseGeoField];
                                           
               var _valueMain = 0;
               var _valueComp = 0;
@@ -791,14 +904,14 @@ require([
               // main value
               if (_dataMain!==undefined) {
                 if (_dataMain[_id]) {
-                  _valueMain = _dataMain[_id][this.getACode()];
+                  _valueMain = _dataMain[_id][_aCode];
                 }
               }
 
               // comp value
               if (_dataComp!==undefined) {
                 if (_dataComp[_id]) {
-                _valueComp = _dataComp[_id][this.getACode()];
+                _valueComp = _dataComp[_id][_aCode];
                 }
               }
 
@@ -845,40 +958,76 @@ require([
           // B: Aggregator
           } else if (this.baseGeometryGeoJson.features) {
 
-            var _displayFeatureIdField = this.getSelectedAggregator().agCode;
-            
+            const _idAgFieldName = this.getSelectedAggregator().agCode;
+            const _wtCode = this.getWeightCode();
+
             // go through display geometry features
             result.features.forEach((feature) => {
 
               var _valueMain = 0;
               var _valueComp = 0;
               var _valueDisp = 0;
+              var _valueMainXWt = 0;
+              var _valueCompXWt = 0;
+              var _valueMainSumWt = 0;
+              var _valueCompSumWt = 0;
 
               // Get ID from the feature's attributes
-              var _displayFeatureId = feature.attributes[_displayFeatureIdField];
+              var _idAg = feature.attributes[_idAgFieldName];
               
               // get associated json records for given aggregator
-              let _dataMainSetToAgg = this.baseGeometryGeoJson.features.filter(feature => 
-                feature.properties[_displayFeatureIdField] === _displayFeatureId
+              let _featuresToAg = this.baseGeometryGeoJson.features.filter(feature => 
+                feature.properties[_idAgFieldName] === _idAg
               );
 
               // aggregate json data for give display feature
-              _dataMainSetToAgg.forEach((_dataMainSetToAggRecord) => {
+              _featuresToAg.forEach((baseFt) => {
                 
+                const _idFt = baseFt.properties[this.baseGeoField];
+
                 // main value
                 if (_dataMain!==undefined) {
-                  if (_dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]]) {
-                    _valueMain += _dataMain[_dataMainSetToAggRecord.properties[this.baseGeometryIdField]][this.getACode()];
+                  if (_dataMain[_idFt]) {
+                    if (_dataMain[_idFt][_aCode]) {
+                      if (!_wtCode) {
+                        _valueMain += _dataMain[_idFt][_aCode];
+                      } else {
+                        var _wtMain = _dataMain[_idFt][_wtCode];
+                        if (_wtMain) {
+                          _valueMainXWt +=  _dataMain[_idFt][_aCode] * _wtMain;
+                          _valueMainSumWt += _wtMain;
+                        }
+                      }
+                    }
                   }
                 }
                 
                 // comp value
                 if (_dataComp!==undefined) {
-                  if (_dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]]) {
-                    _valueComp  += _dataComp[_dataMainSetToAgg.properties[this.baseGeometryIdField]][this.getACode()];
+                  if (_dataComp[_idFt]) {
+                    if (_dataComp[_idFt][_aCode]) {
+                      if (!_wtCode) {
+                        _valueComp += _dataComp[_idFt][_aCode];
+                      } else {
+                        var _wtComp = _dataComp[_idFt][_wtCode];
+                        if (_wtComp) {
+                          _valueCompXWt +=  _dataComp[_idFt][_aCode] * _wtComp;
+                          _valueCompSumWt += _wtComp;
+                        }
+                      }
+                    }
                   }
                 }
               });
+
+              if (_wtCode) {
+                if (_valueMainSumWt>0) {
+                  _valueMain = _valueMainXWt / _valueMainSumWt;
+                }
+                if (_valueCompSumWt>0) {
+                  _valueComp = _valueCompXWt / _valueCompSumWt;
+                }
+              }
 
               var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
               var curPCOption = selectedRadio ? selectedRadio.value : null;

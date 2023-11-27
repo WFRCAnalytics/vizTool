@@ -14,6 +14,7 @@ require([
 ],
 function(esriConfig, Map, MapView, BasemapToggle,) {
 
+  // TODO: LOOK FOR WAYS TO HIDE KEY OR USE OTHER SOURCE
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
 
   async function fetchConfig() {

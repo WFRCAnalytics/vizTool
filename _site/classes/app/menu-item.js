@@ -4,7 +4,7 @@ class MenuItem {
     this.id = data.id || this.generateIdFromText(data.menuText); // use provided id or generate one if not provided
     this.menuText = data.menuText;
     this.menuIconStart = data.menuIconStart;
-    this.modelEntitys = (data.modelEntitys || []).map(item => new ModelEntity(item));
+    this.modelEntities = (data.modelEntities || []).map(item => new ModelEntity(item));
   }
 
   generateIdFromText(text) {
@@ -45,7 +45,7 @@ class MenuItem {
     secondaryMenu.innerHTML = '';
 
     // Render each menu item and log (or insert into the DOM)
-    this.modelEntitys.forEach(modelEntity => {
+    this.modelEntities.forEach(modelEntity => {
       secondaryMenu.appendChild(modelEntity.createModelEntityElement());
     });
   }

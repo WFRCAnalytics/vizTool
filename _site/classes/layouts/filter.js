@@ -15,11 +15,19 @@ class Filter {
       })), data.selected, data.hidden, '', this.vizLayout, this);
     } else if (data.type === "checkbox") {
         // Handle checkbox case if needed
-    }
+    } else if (data.type === "combobox") {
+      this.filterWij = new WijComboboxes(this.id + '_filter', data.options.map(item => ({
+        value: item.value,
+        label: item.label
+      })), data.selected, data.selected, data.hidden, '', this.vizLayout, this);    }
   }
 
   render() {
     return this.filterWij.render();
+  }
+
+  getSelectedOptionsAsList() {
+    return this.filterWij.getSelectedOptionsAsList();
   }
 
 }
