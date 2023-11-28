@@ -82,9 +82,11 @@ class WijComboboxes {
       // to make sure the radio button is the is the actual element
       const comboBoxButton = e.currentTarget; // or e.target.closest('input[type="comboBoxButton"]')
       const cbValue = comboBoxButton.value;
+      const cbValueList = Array.isArray(cbValue) ? cbValue : [cbValue];
+
       // Update renderer with value of radio button
       console.log(this.id + ':' + cbValue + ' combobox change');
-      this.comboSelected = cbValue;
+      this.comboSelected = cbValueList;
       wijComboInstance.vizLayout.afterUpdateSidebar();
     });
 
