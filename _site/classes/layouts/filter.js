@@ -13,13 +13,17 @@ class Filter {
         value: item.value,
         label: item.label
       })), data.selected, data.hidden, '', this.vizLayout, this);
-    } else if (data.type === "checkbox") {
-        // Handle checkbox case if needed
-    } else if (data.type === "combobox") {
-      this.filterWij = new WijComboboxes(this.id + '_filter', data.options.map(item => ({
+    } else if (data.type === "checkboxes") {
+      this.filterWij = new WijCheckboxes(this.id + '_filter', data.options.map(item => ({
         value: item.value,
         label: item.label
-      })), data.selected, data.selected, data.hidden, '', this.vizLayout, this);    }
+      })), data.selected, data.selected, data.hidden, data.text, this.vizLayout, this);
+    } else if (data.type === "combobox") {
+      this.filterWij = new WijCombobox(this.id + '_filter', data.options.map(item => ({
+        value: item.value,
+        label: item.label
+      })), data.selected, data.selected, data.hidden, '', this.vizLayout, this);
+    }
   }
 
   render() {

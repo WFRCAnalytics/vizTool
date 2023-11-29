@@ -775,7 +775,7 @@ require([
 
       // remove other vizMap displays??? MAYBE ADD HERE
       
-      let _filter = this.getFilter();
+      //let _filter = this.getFilter();
 
       // get main data
       var _dataMain = this.dataMain();
@@ -858,7 +858,7 @@ require([
           view: mapView,
           layerInfos: [{
             layer: this.layerDisplay,
-            title: this.popupTitle + (_filter !== "" ? " - Filtered by " + _filter : "")
+            title: this.popupTitle// + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
         mapView.ui.add(this.legend, "bottom-right");

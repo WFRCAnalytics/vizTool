@@ -1,4 +1,4 @@
-class WijComboboxes {
+class WijCombobox {
   constructor(id, options, selected, comboSelected, hidden, text, vizLayout, parent) {
     this.id = id;
     this.options = options;
