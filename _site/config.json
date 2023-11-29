@@ -10,6 +10,7 @@
             "menuIconStart": "driving-distance",
             "modelEntities": [
               {
+                "submenuId": "roadSegs",
                 "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
@@ -335,7 +336,7 @@
                 }
               },
               {
-                "id": "trends",
+                "submenuId": "roadTrends",
                 "submenuText": "Trends",
                 "submenuIconStart": "graph-line-series",
                 "jsonFile": "roadway-trends.json",
@@ -426,6 +427,7 @@
             "menuIconStart": "",
             "modelEntities": [
               {
+                "submenuId": "transitSegs",
                 "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",

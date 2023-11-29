@@ -77,6 +77,9 @@ require([
 
     }
 
+    hideLayout() {
+
+    }
     
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -497,7 +500,7 @@ require([
 
     renderSidebar() {
       const container = document.createElement('div');
-      container.id = this.id + "viz-map-sidebar";
+      container.id = this.id + "-viz-map-sidebar";
 
       if (this.aggregatorSelect) {
         container.appendChild(this.aggregatorSelect.render());
@@ -515,22 +518,22 @@ require([
     initListeners() {
       console.log('initListeners');
       
-      document.getElementById('selectModMain').addEventListener('change', this.updateMap.bind(this));
-      document.getElementById('selectGrpMain').addEventListener('change', this.updateMap.bind(this));
-      document.getElementById('selectYearMain').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectModMain').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectGrpMain').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectYearMain').addEventListener('change', this.updateDisplay.bind(this));
       
-      document.getElementById('selectModComp').addEventListener('change', this.updateMap.bind(this));
-      document.getElementById('selectGrpComp').addEventListener('change', this.updateMap.bind(this));
-      document.getElementById('selectYearComp').addEventListener('change', this.updateMap.bind(this));
+      document.getElementById('selectModComp').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectGrpComp').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectYearComp').addEventListener('change', this.updateDisplay.bind(this));
 
       // Get all radio buttons with the name "rcPcOption"
       var radioButtons = document.querySelectorAll('input[name="rcPcOption"]');
 
-      // Assuming this is inside a class or object with a method named this.updateMap()
+      // Assuming this is inside a class or object with a method named this.updateDisplay()
       radioButtons.forEach(function(radio) {
         radio.addEventListener('change', (event) => {  // Arrow function here
             console.log(event.target.value);
-            this.updateMap();
+            this.updateDisplay();
         });
       });
 
@@ -567,7 +570,7 @@ require([
     
     afterUpdateSidebar() {
       console.log('afterUpdateSidebar');
-      this.updateMap();
+      this.updateDisplay();
       this.updateFilters();
       this.updateAggregations();
     }
@@ -764,8 +767,8 @@ require([
 
     }
 
-    updateMap() {
-      console.log('updateMap');
+    updateDisplay() {
+      console.log('updateDisplay');
       
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
@@ -836,13 +839,13 @@ require([
           if (mode==='base') {
             this.layerDisplay.renderer = this.getMainRenderer();
           } else if (mode==='compare') {
-            this.layerDisplay.renderer = this.getCompareAbsRendererRenderer() 
+            this.layerDisplay.renderer = this.getCompareAbsRenderer() 
           }
         }
 
         this.layerDisplay.refresh();
         this.layerDisplay.visible = true;
-
+          
         this.layerDisplay.queryFeatures().then(function(results) {
           console.log("Total number of features in layer:", results.features.length);
         });
@@ -867,7 +870,6 @@ require([
       };
 
       const vizMapInstance = this;
-
 
       // GET MAP FEATURES
 
@@ -1092,20 +1094,15 @@ require([
 
     }
 
-  
-  
-    getSidebarSelector(submenuTemplate) {
-      if (submenuTemplate === 'vizLog') {
-          return '#logSidebarContent';
-      } else if (submenuTemplate === 'vizMap') {
-          return '#sidebarContent';
-      } else if (submenuTemplate === 'vizTrends') {
-          return '#trendSidebarContent'
-      } else if(submenuTemplate === 'vizMatrix') {
-          return '#matrixSidebarContent'
+    hideLayers() {
+      this.layerDisplay.visible = false;
+      
+      if (this.legend) {
+        mapView.ui.remove(this.legend);
       }
-  
     }
+    
+
   }
   
   // Export ModelEntity to the global scope

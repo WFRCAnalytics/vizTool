@@ -1,17 +1,18 @@
 class ModelEntity {
-  constructor(data) {
+  constructor(data, menuItem) {
     this.id = data.id || this.generateIdFromText(data.submenuText); // use provided id or generate one if not provided
     this.submenuText = data.submenuText;
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
     if (data.template=='vizMap') {
-      this.vizMap = new VizMap(data.templateSettings, data.submenuText);
+      this.vizLayout = new VizMap(data.templateSettings, data.submenuText);
     } else if (data.template=='vizTrends') {
-      this.vizTrends = new VizTrends(data.templateSettings);
+      this.vizLayout = new VizTrends(data.templateSettings);
     }
     this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;
-    this.pngFile = data.pngFile;    
+    this.pngFile = data.pngFile;
+    this.menuItem = menuItem;
   }
   
   generateIdFromText(text) {
@@ -48,95 +49,17 @@ class ModelEntity {
         selectedTemplate.hidden = false;
         // ... (Any additional specific logic for the template type)
       }
-      if (modelEntityInstance.template=="vizMap") {
-        modelEntityInstance.vizMap.renderSidebar();  // Use the saved instance context here as well
-        modelEntityInstance.vizMap.updateMap();
-      } else if (modelEntityInstance.template=='vizTrends') {
-        modelEntityInstance.vizTrends.renderSidebar();
-        modelEntityInstance.vizTrends.updateChartData();
-      }
-      modelEntityInstance.populateText();
-      modelEntityInstance.populateImage();
-      modelEntityInstance.displayJSONData();
-      //modelEntityInstance.populateMainContent(modelEntityInstance.templateContent);
 
+      
+      modelEntityInstance.menuItem.userLayout.hideAllUserLayoutLayers()
+
+      modelEntityInstance.vizLayout.renderSidebar();  // Use the saved instance context here as well
+      modelEntityInstance.vizLayout.updateDisplay();
+      //modelEntityInstance.displayJSONData();
     });
     return modelEntity;
   }
   
-  populateSidebar(sidebarSelect) {
-
-    const container = document.createElement('div');
-    
-    const titleEl = document.createElement('h2');
-    titleEl.textContent = this.title;
-
-    const sidebarContainer = document.createElement('div');
-    this.mapSidebarItems.forEach(mapSidebarItem => {
-      sidebarContainer.appendChild(mapSidebarItem.render());
-    });
-
-    container.appendChild(titleEl);
-    container.appendChild(sidebarContainer);
-
-
-    const sidebar = document.querySelector(sidebarSelect);
-    // You might have to modify the next line based on the structure of your SidebarContent class.
-    sidebar.innerHTML = ''; // clear existing content
-    sidebar.appendChild(container);
-    // Set the focus to the sidebar
-    sidebar.focus();
-
-  }
-
-  populateText(){
-    
-    // Specify the file path
-    const filePath = this.textFile;
-
-    if (typeof filePath==='undefined') return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const fileContents = e.target.result;
-        const fileContentsElement = document.getElementById("fileContents");
-        if (fileContentsElement) {
-            fileContentsElement.textContent = fileContents;
-        }
-    };
-    fetch(filePath)
-        .then(response => response.blob())
-        .then(blob => {
-            reader.readAsText(blob);
-        })
-        .catch(error => {
-            console.error("Error reading file:", error);
-        });
-  }
-
-  populateImage() {
-    // Specify the file path
-    const imagePath = this.pngFile;
-
-    if (typeof imagePath==='undefined') return;
-
-    fetch(imagePath)
-        .then(response => {
-            return response.blob();
-        })
-        .then(blob => {
-            const imageURL = URL.createObjectURL(blob); // Create a URL for the blob
-            const imgHTML = `<img src="${imageURL}" alt="Image Placeholder">`;
-
-            const imageElement = document.getElementById("imageElement");
-            if (imageElement) {
-                imageElement.innerHTML = imgHTML; // Set the HTML content
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching or displaying image:", error);
-        });
-  }
 
   // Function to create and populate the table
   displayJSONData() {
@@ -197,16 +120,10 @@ class ModelEntity {
         }
     }
   }
-  getSidebarSelector(template) {
-    if (template === 'vizLog') {
-        return '#logSidebarContent';
-    } else if (template === 'vizMap') {
-        return '#sidebarContent';
-    } else if (template === 'vizTrends') {
-        return '#trendSidebarContent'
-    } else if(template === 'vizMatrix') {
-        return '#matrixSidebarContent'
-    }
 
+  hideLayoutLayers() {
+    if (this.vizLayout && typeof this.vizLayout.hideLayers === 'function') {
+      this.vizLayout.hideLayers();
+    }
   }
 }

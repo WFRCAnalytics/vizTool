@@ -1,10 +1,11 @@
 // Class for Main Menu Item
 class MenuItem {
-  constructor(data) {
+  constructor(data, userLayout) {
     this.id = data.id || this.generateIdFromText(data.menuText); // use provided id or generate one if not provided
     this.menuText = data.menuText;
     this.menuIconStart = data.menuIconStart;
-    this.modelEntities = (data.modelEntities || []).map(item => new ModelEntity(item));
+    this.modelEntities = (data.modelEntities || []).map(item => new ModelEntity(item, this));
+    this.userLayout = userLayout;
   }
 
   generateIdFromText(text) {
@@ -21,24 +22,33 @@ class MenuItem {
     const menuItemInstance = this;
 
     menuItem.addEventListener('click', function() {
-        let mainSidebarItems2 = document.querySelectorAll('calcite-menu-item');
-        mainSidebarItems2.forEach(item2 => {
-            if(item2.text === menuItemInstance.menuText) {  // Use the saved instance context here
-                item2.active = true;
-            } else {
-                item2.active = false;
-            }
-        });
-        
-        menuItemInstance.populatemodEnt();  // Use the saved instance context here as well
-        //menuItemInstance.populateMainContent(menuItemInstance.templateContent);
+      let mainSidebarItems2 = document.querySelectorAll('calcite-menu-item');
+      mainSidebarItems2.forEach(item2 => {
+        if(item2.text === menuItemInstance.menuText) {  // Use the saved instance context here
+          item2.active = true;
+        } else {
+          item2.active = false;
+        }
+      });
+
+      // hide all templates
+      globalTemplates.forEach(template => {
+        const existingDiv = document.getElementById(template.templateType + 'Template');
+        if (existingDiv) {
+          existingDiv.hidden = true;
+        }
+      });
+      
+      menuItemInstance.userLayout.hideAllUserLayoutLayers()
+      menuItemInstance.populateModelEntities();  // Use the saved instance context here as well
+      //menuItemInstance.populateMainContent(menuItemInstance.templateContent);
     });
 
     return menuItem;
 
   }
 
-  populatemodEnt() {
+  populateModelEntities() {
     const secondaryMenu = document.querySelector('calcite-navigation[slot="navigation-secondary"] > calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
@@ -47,6 +57,12 @@ class MenuItem {
     // Render each menu item and log (or insert into the DOM)
     this.modelEntities.forEach(modelEntity => {
       secondaryMenu.appendChild(modelEntity.createModelEntityElement());
+    });
+  }
+
+  hideAllMenuItemLayers() {
+    this.modelEntities.forEach(modelEntity => {
+      modelEntity.hideLayoutLayers();
     });
   }
   

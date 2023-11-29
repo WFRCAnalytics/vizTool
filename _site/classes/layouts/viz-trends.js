@@ -70,7 +70,7 @@ require([
     afterUpdateSidebar() {
       console.log('afterSidebarUpdate');
       this.updateFilters();
-      this.updateChartData();
+      this.updateDisplay();
     }
 
     afterFilterUpdate() {
@@ -315,7 +315,7 @@ require([
     }
 
   
-    updateChartData() {
+    updateDisplay() {
       const aCode = this.getACode();
       const comboCodes = this.getComboboxOptions();
       const combos = this.comboSelector;
