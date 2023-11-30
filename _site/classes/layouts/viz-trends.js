@@ -33,7 +33,7 @@ require([
           label: item.agDisplayName
         })), data.aggregatorSelected, false, data.aggregatorTitle, this);
       };
-      this.comboSelector = new WijComboboxes(this.id + "_attributecombo", data.aggregators.map(item => ({
+      this.comboSelector = new WijCombobox(this.id + "_attributecombo", data.aggregators.map(item => ({
         value: item.agCode,
         label: item.agDisplayName,
         options: item.agOptions

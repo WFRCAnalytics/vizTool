@@ -1,0 +1,19 @@
+
+Pre-steps:
+Bill: Add LONG_NAME to JSON (CREATE NEW ROUTE DETAILS JSON)
+Suzie: Code real long name into TDM .lin files
+
+Jem Steps:
+
+1. Find where json is being fetched: _site/scnData/{scenario name}/transit-segments-riders.json (IN FUTURE BILL WILL CREATE JSON JUST WITH ROUTE DETAILS)
+
+2. Pull {Name}:fName and [{LongName}:fLName][NOT NOW!] from JSON
+
+Find fCode: fName (filter for routes by TDM short name)
+
+example:
+ {"fCode": "fName", "fName": "Route Name", "fWidget": "combobox", "fOwnCol": true, "col": "Name", "fOptions": ["M805_Santaquin", "O630", "OF638", "M806_EglMtn", "M864_ThanksgivingPnt", "M871_SLtoUtahCnty", "S451X", "S472X", "S473X", "S471", "S456", "O616", "S470", "O640", "O613", "SF570", "SF578", "S072", "M821_Psn", "M822_Psn", "O604", "O606", "O601", "SF518", "S218", "S217", "S039", "S509", "S009", "D460", "S463", "D461", "FD605", "SF547", "S526", "SF534", "SF514", "SF546", "SF94", "S313X", "S209", "S307X", "S320X", "S455", "O645", "S454", "SF453", "S551", "M831_WPr", "M833_CntPr", "M850_StateStreet", "M862_Orem", "M809_AM-PG", "S201", "S213", "S525", "S200", "S045", "Red", "D462", "S004", "S519/520", "O625", "O612", "OF618", "M807_NoCnty", "O626", "OF620", "O628", "S035", "BRT3500S", "UVX", "M841_UVU", "O627", "SF504", "S220", "S240", "S033", "S223", "S054", "SF556", "S041", "S047", "S513", "S006", "S011", "S003", "S354X", "S021", "M834_EstPr", "S017", "O603", "O650", "S248", "SF590", "O667", "S205", "S2X", "S002", "S227", "Green", "S062", "S232", "Blue", "SF522", "O608", "Sline", "RCRT_OGPN"]},
+
+3. Add code to populate multi-select checkbox based on selected mode
+
+4. Select All / Unselect all toggle
