@@ -17,7 +17,7 @@ require([
   class VizMap {
     constructor(data, layerTitle) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
-      this.sidebarDiv = data.sidebarDiv;
+      this.sidebarDiv = "sidebarContent";
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
@@ -78,10 +78,12 @@ require([
     }
 
     hideLayout() {
+      console.log('hideLayout');
 
     }
     
     generateIdFromText(text) {
+      console.log('generateIdFromText');
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
     
@@ -126,6 +128,7 @@ require([
     }
 
     dataMain() {
+      console.log('dataMain');
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioMain().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
@@ -176,6 +179,7 @@ require([
     }
 
     dataComp() {
+      console.log('dataComp');
       if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
         return this.scenarioComp().roadwaySegData.data[this.getFilter()]
       } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share

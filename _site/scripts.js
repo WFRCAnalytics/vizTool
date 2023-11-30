@@ -86,34 +86,54 @@ function(esriConfig, Map, MapView, BasemapToggle,) {
     await populateScenarioSelections();
   }
 
-  function populateTemplates() {
-    const container = document.getElementById('main'); // Assuming your templates will be children of a div with the id "main".
 
+  function populateTemplates() {
+    const container = document.getElementById('main');
+    const fetchPromises = [];
+  
     globalTemplates.forEach(template => {
-        const div = document.createElement('div');
-        div.id = template.templateType + 'Template'; 
-        div.classList.add('template');
-        div.hidden = true;
+      const div = document.createElement('div');
+      div.id = template.templateType + 'Template';
+      div.classList.add('template');
+      div.hidden = true;
+  
+      if (template.layoutDivs) {
         div.innerHTML = template.layoutDivs;
         container.appendChild(div);
+      } else if (template.layoutHtml) {
+        const fetchPromise = fetch(template.layoutHtml)
+          .then(response => response.text())
+          .then(data => {
+            div.innerHTML = data;
+            container.appendChild(div);
+          })
+          .catch(error => console.error('Error loading HTML:', error));
+  
+        fetchPromises.push(fetchPromise);
+      } else {
+        container.appendChild(div);
+      }
     });
-
-
+  
+    Promise.all(fetchPromises).then(() => {
+      // All templates are loaded, now add the map
+      addMapAndOtherFunctionality();
+    });
+  }
+  
+  function addMapAndOtherFunctionality() {
     // add map
     map = new Map({
-      basemap: "gray-vector" // Basemap layerSegments service
+      basemap: "gray-vector"
     });
     
     mapView = new MapView({
       map: map,
-      center: [-111.8910, 40.7608], // Longitude, latitude
-      zoom: 10, // Zoom level
-      container: "mapView", // Div element
-      popup: {
-        // Popup properties here if any customizations are needed
-      }
+      center: [-111.8910, 40.7608],
+      zoom: 10,
+      container: "mapView"
     });
-
+  
     // add basemap toggle
     const basemapToggle = new BasemapToggle({
       view: mapView,
@@ -137,7 +157,7 @@ function(esriConfig, Map, MapView, BasemapToggle,) {
     init();
   }
 
-  fetch('templates.json')
+  fetch('templates/templates.json')
   .then(response => response.json())
   .then(data => {
     globalTemplates = data;

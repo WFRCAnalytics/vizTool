@@ -15,7 +15,6 @@
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
-                  "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
@@ -432,7 +431,6 @@
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
-                  "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
@@ -728,7 +726,6 @@
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
-                  "sidebarDiv": "sidebarContent",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
