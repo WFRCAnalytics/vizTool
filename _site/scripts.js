@@ -68,6 +68,7 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
   }
 
   async function populateScenarioSelections (){
+    //Get the dropdowns
     const modMain = document.getElementById('selectModMain');
     const grpMain = document.getElementById('selectGrpMain');
     const yearMain = document.getElementById('selectYearMain');
@@ -77,18 +78,23 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     const scenarioModel = new Set();
     const scenarioGroup = new Set();
     const scenarioYear = new Set();
-
+    //Put the scenarios from the json into sets to remove duplicates 
     dataScenarios.forEach(entry=> {
       scenarioModel.add(entry.modVersion);
       scenarioGroup.add(entry.scnGroup);
       scenarioYear.add(entry.scnYear);
     });
+    //Add the names/years to the dropdowns
     scenarioModel.forEach(entry=>modMain.add(new Option(entry)));
     scenarioGroup.forEach(entry=>grpMain.add(new Option(entry)));
     scenarioYear.forEach(entry=>yearMain.add(new Option(entry)));
+    //Add to the comparison dropdowns, but add "none" as an options
     modComp.add(new Option("none"));
     grpComp.add(new Option("none"));
     yearComp.add(new Option("none"));
+    //Disable group and year when model is none
+    grpComp.disabled = true;
+    yearComp.disabled = true;
     scenarioModel.forEach(entry=>modComp.add(new Option(entry)));
     scenarioGroup.forEach(entry=>grpComp.add(new Option(entry)));
     scenarioYear.forEach(entry=>yearComp.add(new Option(entry)));
@@ -113,15 +119,30 @@ function(esriConfig, Map, MapView, Basemap, BasemapToggle, GeoJSONLayer, Home, S
     });
 
     document.getElementById('toggleOverlay').addEventListener('click', function() {
-      var overlay = document.getElementById('overlay');
-      if (overlay.classList.contains('collapsed')) {
-        overlay.classList.remove('collapsed');
+      const overlayContent = document.getElementById('overlay-content');
+      if (overlayContent.classList.contains('collapsed')) {
+        overlayContent.classList.remove('collapsed');
         this.innerText = 'Collapse';
       } else {
-        overlay.classList.add('collapsed');
+        overlayContent.classList.add('collapsed');
         this.innerText = 'Expand';
       }
     });
+
+    //Make the comparison scenario something that opens up and collapses
+    const compare = document.getElementById('compare-header').addEventListener('click',function() {
+      const compareBlock = document.getElementById('compare-content');
+
+      if(compareBlock.classList.contains('collapsed')){
+        compareBlock.classList.remove('collapsed');
+        this.innerHTML = '&#x25BC Select scenario with which to compare:';
+      }
+      else {
+        compareBlock.classList.add('collapsed');
+        this.innerHTML =  '&#x25BA Compare scenarios';
+      }
+    });
+
 
     map = new Map({
       basemap: "gray-vector" // Basemap layerSegments service

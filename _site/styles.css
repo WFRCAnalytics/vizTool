@@ -166,7 +166,7 @@ th, td {
     align-items: center;
 }
 
-.collapsed #overlay {
+.collapsed {
     max-height: 0;
     opacity: 0; /* This can make the collapse look smoother */
 }
