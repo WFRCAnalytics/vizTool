@@ -187,7 +187,9 @@ require([
           return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
       } else if (aCode === 'aLMl') {
           return filterSelectionData.aLMl;
-      } 
+      } else {
+          return 0; // return 0 if nothing is found
+      }
 
       //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in viz-map L#272)
 
@@ -406,8 +408,13 @@ require([
         
                 if (filterSelectionData) {
                   const selectedValue = this.getChartData(aCode, filterSelectionData);
-    
-                  if (selectedValue !== null) {
+
+                  if (selectedValue == null | selectedValue == undefined) {
+                    //chartData[aggIDsString][scnDisplay][scnYear] += 0;
+                    console.log("null data found in here: " + aggIDsString + '_' + scnDisplay + '_' + scnYear)
+                  }
+
+                  if (selectedValue !== null & selectedValue !== undefined) {
                     chartData[aggIDsString][scnDisplay][scnYear] += selectedValue;
                   }
                 }
