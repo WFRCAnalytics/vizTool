@@ -394,6 +394,29 @@
                       "aDisplayName": "Lane-Miles"
                     }
                   ],
+                  "divideByAttributeTitle": "Divide By",
+                  "divideByAttributeSelected": "aTotHh",
+                  "divideByAttributes": [
+                    {"aCode": "",
+                      "aDisplayName":"Nothing"
+                    },
+                    {
+                      "aCode": "aTotHh",
+                      "aDisplayName": "Total Households"
+                    },
+                    {
+                      "aCode": "aTotWrk",
+                      "aDisplayName": "Total Workers"
+                    },
+                    {
+                      "aCode": "aTotEmp",
+                      "aDisplayName": "Total Employment"
+                    },
+                    {
+                      "aCode": "aHhPop",
+                      "aDisplayName": "Total Population"
+                    }
+                  ],
                   "filters" : [
                     {
                       "id"  : "dTod",

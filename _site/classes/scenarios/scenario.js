@@ -9,6 +9,7 @@ class Scenario {
     this.scnFolder        = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
     this.roadwaySegData   = null; // initialize to null for now
     this.zoneModeData     = null; // initialize to null for now
+    this.zoneSeData       = null; // initialize to null for now
     this.roadwayTrendData = null; // initialize to null for now
 
     // fetch the data from the JSON file and set it to the roadwaySeg property
@@ -35,6 +36,15 @@ class Scenario {
       .then(response => response.json())
       .then(jsonData => {
           this.roadwayTrendData = new AttributeFilterData(jsonData);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
+    // fetch the data from the JSON file and set it to the roadwaySeg property
+    // _site\data\scnData\v900__Base__2019\roadway-trends.json
+    fetch('data/scnData/' + this.scnFolder + '/zones-se-vizmap.json')
+      .then(response => response.json())
+      .then(jsonData => {
+          this.zoneSeData = new AttributeFilterData(jsonData);
       })
       .catch(error => console.error('Error fetching data:', error));
 
