@@ -1,6 +1,7 @@
 class VizMapSidebar {
-  constructor(attributeTitle, attributes, attributeSelected, hidden, filters, aggregators, aggregatorSelected, aggregatorTitle) {
+  constructor(attributeTitle, attributes, attributeSelected, hidden, filters, aggregators, aggregatorSelected, aggregatorTitle, vizMap) {
     this.id = this.generateIdFromText(attributeTitle) + "-viz-map-sidebar"; // use provided id or generate one if not provided
+    this.dataArrayCode = 
     this.attributeTitle = attributeTitle;
     this.attributeSelect = new WijRadio(this.id & "_attribute-selector", attributes.map(item => ({
       value: item.aCode,
@@ -15,6 +16,7 @@ class VizMapSidebar {
         label: item.agDisplayName
       })), aggregatorSelected, false, aggregatorTitle, this);
     }
+    this.vizMap = vizMap;
   }
 
   hideLayout() {
@@ -26,8 +28,9 @@ class VizMapSidebar {
     console.log('generateIdFromText');
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
+
   
-  findAllCombinationsOfFilters(lists, prefix = '', separator = '_') {
+  findAllCombinationsOfLists(lists, prefix = '', separator = '_') {
     // If there are no more lists to process, return the current prefix as the result
     if (lists.length === 0) {
       return [prefix];
@@ -41,12 +44,15 @@ class VizMapSidebar {
     let combinations = [];
     firstList.forEach(element => {
         const newPrefix = prefix ? prefix + separator + element : element;
-        combinations = combinations.concat(this.findAllCombinationsOfFilters(remainingLists, newPrefix, separator));
+        combinations = combinations.concat(this.findAllCombinationsOfLists(remainingLists, newPrefix, separator));
     });
 
     return combinations;
   }
 
+  getListOfSelectedFilterOptions() {
+    return this.findAllCombinationsOfLists(this.filters.map(filter => filter.getSelectedOptionsAsList()));
+  }
 
   getACode() {
     return this.attributeSelect.selected;
@@ -89,16 +95,10 @@ class VizMapSidebar {
 
   // get the current filter
   getFilter() {
-
+    
     var _filterGroup = [];
-
-    if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
-      _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-    } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
-      _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-    } else if (this.attributeTitle == "Transit Segment Attribute") {          // for transit segs
-      _filterGroup = this.scenarioMain().transitSegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-    }
+  
+    _filterGroup = this.vizMap.getFilterGroup();
   
     // Check if _filterGroup is not undefined
     if (_filterGroup) {
@@ -184,8 +184,7 @@ class VizMapSidebar {
   }
   
   afterUpdateSidebar() {
-    console.log('afterUpdateSidebar');
-    this.updateDisplay();
+    this.vizMap.afterUpdateSidebar();
     this.updateFilters();
     this.updateAggregations();
   }
@@ -208,7 +207,7 @@ class VizMapSidebar {
     // add new geometry
     map.add(this.geojsonLayer);
     this.geojsonLayer.visible = false;
-    this.afterUpdateSidebar();
+    this.vizMap.afterUpdateSidebar();
   }
 
   updateFilters() {
@@ -216,11 +215,7 @@ class VizMapSidebar {
     
     var _filterGroup = [];
   
-    if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
-      _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-    } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
-      _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-    }
+    _filterGroup = this.vizMap.getFilterGroup();
   
     // Select all elements with an 'id' containing '_filter_container'
     const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
@@ -378,333 +373,6 @@ class VizMapSidebar {
 
     }).catch(function(error) {
         console.error("There was an error: ", error);
-    });
-
-  }
-
-  updateDisplay() {
-    console.log('updateDisplay');
-    
-    // Reinitialize the layer with the current features array
-    map.remove(this.layerDisplay);
-
-    // remove other vizMap displays??? MAYBE ADD HERE
-    
-    //let _filter = this.getFilter();
-
-    // get main data
-    var _dataMain = this.dataMain();
-
-    let mode = 'base'; //default is base
-
-    // get compare data
-    if (this.scenarioComp() !== null) {
-      mode = 'compare';
-      var _dataComp = this.dataComp();
-    }
-
-    // check if comp scenario values are complete. if selection is incomplete, then do not map
-    if (this.incompleteScenarioComp()) {
-      return;
-    }
-
-    this.initializeLayer();
-
-    const _aCode = this.getACode();
-
-    const setRendererAndLegend = () => {
-
-      if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
-        if (mode==='base') {
-          // Define the color ramp from yellow to blue
-          var colorVisVar = new ColorVariable({
-            field: "dVal", // replace with the field name of your data
-            stops: [
-              { value: 0.0001, color: new Color("#FFFF00") }, // Yellow
-              { value: 1.0000, color: new Color("#0000FF") }  // Blue
-            ]
-          });
-        }
-        else if (mode==='compare') {
-          var colorVisVar = {
-            type: "color",
-            field: "dVal", // Replace with your field name
-            stops: [
-              { value: -0.25, color: "red", label: "< -0.25" },
-              { value: 0, color: "#d3d3d3", label: "0" }, // Lighter grey color
-              { value: 0.25, color: "blue", label: "> 0.25" }
-            ],
-            // Optional: Include normalizationField, minValue, maxValue, etc., if needed
-          };
-        }
-
-        // Create a simple renderer and apply the visual variable
-        this.layerDisplay.renderer = new SimpleRenderer({
-          symbol: {
-            type: "simple-fill", // Use "simple-marker" for point layers
-            outline: {
-              // You can adjust the outline properties as needed
-              color: "white",
-              width: 0.2
-            }
-          },
-          visualVariables: [colorVisVar]
-        });
-      } else {
-        if (mode==='base') {
-          this.layerDisplay.renderer = this.getMainRenderer();
-        } else if (mode==='compare') {
-          this.layerDisplay.renderer = this.getCompareAbsRenderer() 
-        }
-      }
-
-      this.layerDisplay.refresh();
-      this.layerDisplay.visible = true;
-        
-      this.layerDisplay.queryFeatures().then(function(results) {
-        console.log("Total number of features in layer:", results.features.length);
-      });
-
-      if (this.legend) {
-        mapView.ui.remove(this.legend);
-      }
-
-      this.legend = new Legend({
-        view: mapView,
-        layerInfos: [{
-          layer: this.layerDisplay,
-          title: this.popupTitle// + (_filter !== "" ? " - Filtered by " + _filter : "")
-        }]
-      });
-      mapView.ui.add(this.legend, "bottom-right");
-      
-      // toggle labels based on checkbox
-      this.originalLabelInfo = this.layerDisplay.labelingInfo;
-      this.toggleLabels();
-
-    };
-
-    const vizMapInstance = this;
-
-    // GET MAP FEATURES
-
-    this.geojsonLayer.when(() => {
-      this.geojsonLayer.queryFeatures().then((result) => {
-        let graphicsToAdd = [];  // Temporary array to hold graphics
-
-
-        // there will be two pathways
-        // A: one with new aggregation possible this.aggregator is empty
-        //    loop through geojsonLayer features
-        //    one-to-one relationship with json data
-        //    add data to feature
-        // B: one with aggregation
-        //    loop through geojsonLayer features
-        //    get agg id
-        //    find matching json records
-        //    aggregate
-        //    add data to feature
-
-        
-        // NO AGGREGATOR
-        if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
-          
-          result.features.forEach((feature) => {
-
-            // Get ID from the feature's attributes
-            var _id = feature.attributes[this.baseGeoField];
-                                        
-            var _valueMain = 0;
-            var _valueComp = 0;
-            var _valueDisp = 0;
-
-            // main value
-            if (_dataMain!==undefined) {
-              if (_dataMain[_id]) {
-                _valueMain = _dataMain[_id][_aCode];
-              }
-            }
-
-            // comp value
-            if (_dataComp!==undefined) {
-              if (_dataComp[_id]) {
-              _valueComp = _dataComp[_id][_aCode];
-              }
-            }
-
-            var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
-            var curPCOption = selectedRadio ? selectedRadio.value : null;
-
-            // calculate final display value based on selection (absolute or change)
-            try {
-              if (curPCOption=='abs') { // absolute change
-              _valueDisp = _valueMain - _valueComp;
-              } else if (curPCOption=='pct') { // percent change
-                if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
-              }
-            } catch(err) {
-              _valueDisp = _valueMain;
-            }
-
-            var attributes;
-
-            // If there's a display value for the given SEGID in the _dataMain object, set it
-            if (_valueMain>0) {
-              attributes = {
-                ...feature.attributes,
-                dVal: _valueDisp  // Add the dVal to attributes
-              };
-            } else {
-              attributes = {
-                ...feature.attributes,
-                dVal: null  // Add the dVal to attributes
-              };
-            }
-
-            // Create a new graphic with the updated attributes
-            var graphic = new Graphic({
-              geometry: feature.geometry,
-              attributes: attributes
-            });
-
-            graphicsToAdd.push(graphic);  // Add graphic to the temporary array
-          
-
-          });
-
-        // B: Aggregator
-        } else if (this.baseGeometryGeoJson.features) {
-
-          const _idAgFieldName = this.getSelectedAggregator().agCode;
-          const _wtCode = this.getWeightCode();
-
-          // go through display geometry features
-          result.features.forEach((feature) => {
-
-            var _valueMain = 0;
-            var _valueComp = 0;
-            var _valueDisp = 0;
-            var _valueMainXWt = 0;
-            var _valueCompXWt = 0;
-            var _valueMainSumWt = 0;
-            var _valueCompSumWt = 0;
-
-            // Get ID from the feature's attributes
-            var _idAg = feature.attributes[_idAgFieldName];
-            
-            // get associated json records for given aggregator
-            let _featuresToAg = this.baseGeometryGeoJson.features.filter(feature => 
-              feature.properties[_idAgFieldName] === _idAg
-            );
-
-            // aggregate json data for give display feature
-            _featuresToAg.forEach((baseFt) => {
-              
-              const _idFt = baseFt.properties[this.baseGeoField];
-
-              // main value
-              if (_dataMain!==undefined) {
-                if (_dataMain[_idFt]) {
-                  if (_dataMain[_idFt][_aCode]) {
-                    if (!_wtCode) {
-                      _valueMain += _dataMain[_idFt][_aCode];
-                    } else {
-                      var _wtMain = _dataMain[_idFt][_wtCode];
-                      if (_wtMain) {
-                        _valueMainXWt +=  _dataMain[_idFt][_aCode] * _wtMain;
-                        _valueMainSumWt += _wtMain;
-                      }
-                    }
-                  }
-                }
-              }
-              
-              // comp value
-              if (_dataComp!==undefined) {
-                if (_dataComp[_idFt]) {
-                  if (_dataComp[_idFt][_aCode]) {
-                    if (!_wtCode) {
-                      _valueComp += _dataComp[_idFt][_aCode];
-                    } else {
-                      var _wtComp = _dataComp[_idFt][_wtCode];
-                      if (_wtComp) {
-                        _valueCompXWt +=  _dataComp[_idFt][_aCode] * _wtComp;
-                        _valueCompSumWt += _wtComp;
-                      }
-                    }
-                  }
-                }
-              }
-            });
-
-            if (_wtCode) {
-              if (_valueMainSumWt>0) {
-                _valueMain = _valueMainXWt / _valueMainSumWt;
-              }
-              if (_valueCompSumWt>0) {
-                _valueComp = _valueCompXWt / _valueCompSumWt;
-              }
-            }
-
-            var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
-            var curPCOption = selectedRadio ? selectedRadio.value : null;
-
-            // calculate final display value based on selection (absolute or change)
-            try {
-              if (curPCOption=='abs') { // absolute change
-              _valueDisp = _valueMain - _valueComp;
-              } else if (curPCOption=='pct') { // percent change
-                if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
-              }
-            } catch(err) {
-              _valueDisp = _valueMain;
-            }
-            
-            // If there's a display value for the given SEGID in the _dataMain object, set it
-            let attributes = {
-              ...feature.attributes,
-              dVal: _valueDisp  // Add the dVal to attributes
-            };
-
-            // Create a new graphic with the updated attributes
-            var graphic = new Graphic({
-              geometry: feature.geometry,
-              attributes: attributes
-            });
-
-            graphicsToAdd.push(graphic);  // Add graphic to the temporary array
-
-            
-          });
-        }
-
-        vizMapInstance.layerDisplay.on("error", function(event){
-          console.log("Layer error: ", event.error);
-        });
-
-        // Source modifications will not propagate after layer has been loaded. Please use .applyEdits() instead
-        vizMapInstance.layerDisplay.applyEdits({ addFeatures: graphicsToAdd })
-          .then(function(editsResult) {
-            if (editsResult.addFeatureResults.length > 0) {
-              console.log("Number of features added:", editsResult.addFeatureResults.length);
-              // Call this AFTER adding graphics to the feature layer
-              setRendererAndLegend();
-              
-              // update agg table
-              vizMapInstance.updateFilters();
-              vizMapInstance.updateAggregations();
-
-            } else {
-              console.log("No features were added.");
-            }
-        })
-        .catch(function(error) {
-          console.log("Error applying edits:", error);
-        });
-        // Add graphics to the FeatureLayer's source
-        //vizMapInstance.layerDisplay.source.addMany(graphicsToAdd);
-
-      });
     });
 
   }

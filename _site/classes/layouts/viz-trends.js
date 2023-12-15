@@ -141,7 +141,7 @@ require([
 
       var _filterGroup = [];
 
-      _filterGroup = this.scenarioMain().roadwayTrendData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      _filterGroup = this.scenarioMain().jsonData['roadway-trends'].attributes.find(item => item.aCode === this.getACode()).filterGroup;
 
       // Select all elements with an 'id' containing '_filter_container'
       const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
@@ -168,7 +168,7 @@ require([
 
       var _filterGroup = [];
 
-      _filterGroup = this.scenarioMain().roadwayTrendData.attributes.find(item => item.aCode === this.getACode()).filterGroup;
+      _filterGroup = this.scenarioMain().jsonData['roadway-trends'].attributes.find(item => item.aCode === this.getACode()).filterGroup;
 
       // Check if _filterGroup is not undefined
       if (_filterGroup) {
@@ -211,7 +211,7 @@ require([
       const segidOptions = [];
       const filter = this.getFilter();
   
-      const scenarioData = this.scenarioMain().roadwayTrendData.data[filter];
+      const scenarioData = this.scenarioMain().jsonData['roadway-trends'].data[filter];
       Object.keys(scenarioData).forEach(segId => {
           segidOptions.push(segId);
       });
@@ -410,7 +410,7 @@ require([
     
               chartData[aggIDsString][scnDisplay][scnYear] = 0;
     
-              const filteredScenario = scenarioData.roadwayTrendData.data[filter];
+              const filteredScenario = scenarioData.jsonData['roadway-trends'].data[filter];
     
               filteredFeatures.forEach(feature => {
     

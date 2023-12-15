@@ -17,15 +17,17 @@ require([
   class VizMap {
     constructor(data, layerTitle) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-viz-map'; // use provided id or generate one if not provided
+      this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
-      this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle)
+      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
+      this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle, this)
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
-      this.scenarioSelector = new VizMapScenarioSelector();
+      this.scenarioSelector = new VizMapScenarioSelector(this);
       
       // Global variable to store original label info
       this.originalLabelInfo = null;
@@ -64,6 +66,34 @@ require([
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
+    getScenarioMain() {
+      return this.scenarioSelector.getMain();
+    }
+
+    getScenarioComp() {
+      return this.scenarioSelector.getComp();
+    }
+    
+    getDataMain() {
+      return this.scenarioSelector.getMain().getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+    }
+
+    getDataComp() {
+      return this.scenarioSelector.getComp().getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+    }
+    
+    getACode() {
+      return this.sidebar.getACode();
+    }
+
+    getSelectedAggregator()  {
+      return this.sidebar.getSelectedAggregator();
+    }
+
+    getFilterGroup() {
+      return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+    }
+    
     hideLayers() {
       this.layerDisplay.visible = false;
       
@@ -310,8 +340,6 @@ require([
     afterUpdateSidebar() {
       console.log('afterUpdateSidebar');
       this.updateDisplay();
-      this.updateFilters();
-      this.updateAggregations();
     }
 
     afterUpdateAggregator() {
@@ -346,18 +374,18 @@ require([
       //let _filter = this.getFilter();
 
       // get main data
-      var _dataMain = this.dataMain();
+      var _dataMain = this.getDataMain();
 
       let mode = 'base'; //default is base
 
       // get compare data
-      if (this.scenarioComp() !== null) {
+      if (this.scenarioSelector.getComp() !== null) {
         mode = 'compare';
-        var _dataComp = this.dataComp();
+        var _dataComp = this.getDataComp();
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
-      if (this.incompleteScenarioComp()) {
+      if (this.scenarioSelector.isScenarioCompIncomplete()) {
         return;
       }
 
@@ -644,8 +672,8 @@ require([
                 setRendererAndLegend();
                 
                 // update agg table
-                vizMapInstance.updateFilters();
-                vizMapInstance.updateAggregations();
+                vizMapInstance.sidebar.updateFilters();
+                vizMapInstance.sidebar.updateAggregations();
 
               } else {
                 console.log("No features were added.");

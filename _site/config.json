@@ -15,6 +15,7 @@
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
+                  "jsonFileName": "roadway-vizmap",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
@@ -311,6 +312,16 @@
                   ],
                   "filters" : [
                     {
+                      "id"  : "fVeh",
+                      "text": "Filter Vehicle Type",
+                      "type": "select",
+                      "selected": "All",
+                      "options": [{"value":"All", "label":"All Vehicles" },
+                                  {"value":"LT" , "label":"Light Trucks" },
+                                  {"value":"MD" , "label":"Medium Trucks"},
+                                  {"value":"HV" , "label":"Heavy Trucks" }]
+                    },
+                    {
                       "id"  : "fTod",
                       "text": "Filter Time of Day",
                       "type": "select",
@@ -320,16 +331,6 @@
                                   {"value":"MD", "label":"Midday Period" },
                                   {"value":"PM", "label":"PM Period"     },
                                   {"value":"EV", "label":"Evening Period"}]
-                    },
-                    {
-                      "id"  : "fVeh",
-                      "text": "Filter Vehicle Type",
-                      "type": "select",
-                      "selected": "All",
-                      "options": [{"value":"All", "label":"All Vehicles" },
-                                  {"value":"LT" , "label":"Light Trucks" },
-                                  {"value":"MD" , "label":"Medium Trucks"},
-                                  {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }
@@ -454,6 +455,7 @@
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
+                  "jsonFileName": "transit-segments-riders",
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
@@ -749,6 +751,7 @@
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
+                  "jsonFileName": "zones-se-vizmap",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
