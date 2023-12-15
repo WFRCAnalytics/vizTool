@@ -38,6 +38,11 @@ require([
         label: item.agDisplayName,
         options: item.agOptions
       })), data.aggregatorSelected, data.comboSelected, false, data.aggregatorTitle, this)
+      this.divideByAttributes = (data.divideByAttributes || []).map(item => new Divider(item));
+        this.divideByAttributeSelect = new WijSelect(this.id + "_divider-selector", data.divideByAttributes.map(item => ({
+          value: item.aCode,
+          label: item.aDisplayName
+        })), data.divideByAttributeSelected, false, data.divideByAttributeTitle, this);
     }
     
     generateIdFromText(text) {
@@ -61,6 +66,7 @@ require([
       this.filters.forEach(filter => {
         container.appendChild(filter.render());
       });
+      container.appendChild(this.divideByAttributeSelect.render());
 
       var divSidebar = document.getElementById(this.sidebarDiv);
       divSidebar.innerHTML = '';
@@ -79,6 +85,10 @@ require([
 
     getACode() {
       return this.attributeSelect.selected;
+    }
+
+    getDCode() {
+      return this.divideByAttributeSelect.selected;
     }
 
     getComboboxOptions(){
@@ -187,7 +197,9 @@ require([
           return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
       } else if (aCode === 'aLMl') {
           return filterSelectionData.aLMl;
-      } 
+      } else {
+          return 0; // return 0 if nothing is found
+      }
 
       //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in viz-map L#272)
 
@@ -317,6 +329,7 @@ require([
   
     updateDisplay() {
       const aCode = this.getACode();
+      const dCode = this.getDCode();
       const comboCodes = this.getComboboxOptions();
       const combos = this.comboSelector;
       //const aggCode = this.getSelectedAggregator();
@@ -406,22 +419,103 @@ require([
         
                 if (filterSelectionData) {
                   const selectedValue = this.getChartData(aCode, filterSelectionData);
-    
-                  if (selectedValue !== null) {
+
+                  if (selectedValue == null | selectedValue == undefined) {
+                    //chartData[aggIDsString][scnDisplay][scnYear] += 0;
+                    console.log("null data found in here: " + aggIDsString + '_' + scnDisplay + '_' + scnYear)
+                  }
+
+                  if (selectedValue !== null & selectedValue !== undefined) {
                     chartData[aggIDsString][scnDisplay][scnYear] += selectedValue;
                   }
                 }
               })
             }
           });
-        
-          this.createLineChart(aCode, labels, chartData, aggIDsString);
-        
+
         })
         .catch(error => {
           console.error('Error reading the JSON file:', error);
         });
+      
+      var filteredTazes = {};
+      var filteredTazSeData = {};
+      console.log('Going to fetch the data now... agIDsString is ' + aggIDs);
+      fetch("data/tazWithAggFields.geojson")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Filter features where CO_FIPS is 35
+          filteredTazes = data.features.filter(feature => 
+            aggIDs.includes(feature.properties[this.comboSelector.selected.agCode])
+        );
 
+        var filteredTazList = [];
+        // Loop through filteredTazes and extract TAZID values
+        filteredTazes.forEach((taz) => {
+          // Assuming TAZID is always present in the properties object
+          if (taz.properties && taz.properties.TAZID) {
+            // Check if TAZID is not already in the array
+            if (!filteredTazList.includes(taz.properties.TAZID)) {
+              filteredTazList.push(taz.properties.TAZID);
+            }
+          }
+        });
+
+        //read in the zonesSeData
+        var sumAttribute = 0;
+        scnGroupYearCombos.forEach(combo => {
+          const scnDisplay = combo.scnDisplay;
+          const scnGroup = combo.scnGroup;
+          const scnYear = combo.scnYear;
+          const scenarioData = this.getScenario('v900', scnGroup, scnYear);
+          const filter = this.getFilter();
+  
+          if (scenarioData) {
+
+            const tazSeData = scenarioData.zoneSeData.data[""];
+            
+            //filter the zonesSeData to only those zones that are within filteredTazList
+            filteredTazSeData = Object.keys(tazSeData)
+            .filter((key) => filteredTazList.includes(parseInt(key)))
+            .reduce((result, key) => {
+              result[key] = tazSeData[key];
+              return result;
+            }, {});
+
+
+
+
+          }
+          //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+          for (const key in filteredTazSeData) {
+            if (filteredTazSeData[key][dCode] !== undefined) {
+              sumAttribute += filteredTazSeData[key][dCode];
+            }
+          }
+          console.log(sumAttribute);
+        });
+        
+        //loop through the chartData and divide all the values by the sum just calculated
+        for (const key1 in chartData) {
+          for (const key2 in chartData[key1]) {
+            for (const key3 in chartData[key1][key2]) {
+              chartData[key1][key2][key3] /= sumAttribute;
+            }
+          }
+        }
+        
+        this.createLineChart(aCode, labels, chartData, aggIDsString);
+
+        })
+        .catch(error => {
+          console.error('Error reading the JSON file:', error);
+        });
+  
       }
 
     getSidebarSelector(submenuTemplate) {

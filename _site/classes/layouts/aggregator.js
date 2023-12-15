@@ -7,3 +7,9 @@ class Aggregator {
         this.agGeoJson = data.agGeoJson;
     }
 }
+
+class Divider {
+    constructor(data){
+        this.aCode = data.aCode
+    }
+}
