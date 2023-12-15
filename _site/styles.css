@@ -64,12 +64,54 @@ th, td {
 }
 
 /* SIDEBARS */
-#mainSidebar {
-    width: 300px; /* or any other value */
+#mapSidebarContent {
+    width: 400px; /* or any other value */
     padding: 15px;
     height: calc(100vh - 144px);
     overflow: auto;
 }
+
+.sidebar-controls {
+    flex-direction: column; /* Stack header and content vertically */
+    height: calc(100vh - 144px - 350px);
+    max-height: calc(100vh - 144px - 350px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+
+}
+
+.sidebar-chart {
+    height: 350px; /* Each row takes 1/3 of the sidebar height */
+    flex-direction: column; /* Stack header and content vertically */
+    background-color: #FF6666; /* Optional: Add a background color */
+
+}
+
+.row {
+    display: flex;
+    flex-direction: column; /* Stack header and content vertically */
+    min-height: 0; /* Prevent rows from shrinking smaller than their content */
+}
+
+.header {
+    display: flex; /* Enable Flexbox */
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Align items vertically */
+    background-color: #f2f2f2; /* Optional: Add a background color */
+}
+
+.content {
+    display: flex;
+    overflow: hidden; /* Hide initially */
+}
+
+.col {
+    height: 100%;
+    flex: 1;
+    overflow-y: auto; /* Enable vertical scrollbar */
+    /* Style your columns */
+}
+
+
 #logSidebar {
     width: 300px; /* or any other value */
     padding: 15px;

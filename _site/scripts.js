@@ -154,6 +154,22 @@ function(esriConfig, Map, MapView, BasemapToggle,) {
       }
     });
 
+    document.querySelectorAll('.toggle').forEach(button => {
+      button.addEventListener('click', function() {
+        const content = this.parentElement.nextElementSibling;
+        // Toggle content visibility
+        content.style.display = content.style.display === 'none' ? 'flex' : 'none';
+
+        // Update button text based on content visibility
+        if (content.style.display === 'flex') {
+          this.textContent = 'Collapse'; // Content is visible
+        } else {
+          this.textContent = 'Expand'; // Content is hidden
+        }
+      });
+    });
+  
+
     init();
   }
 

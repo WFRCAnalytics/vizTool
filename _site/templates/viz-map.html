@@ -1,8 +1,37 @@
 <div id="mainVizMap">
-  <div id="mainSidebar">
-    <div id="sidebarContent" tabindex="0">
-      <p>Welcome to the vizTool.</p>
-      <p>Please select what content you want to view.</p>
+  <div id="mapSidebar">
+    <div id="mapSidebarContent" tabindex="0">
+
+      <div class="sidebar-controls">
+        <!-- Row 1  Attribute Selector -->
+        <div class="row">
+          <div class="header">
+            <span><b>Attribute Selection</b></span>
+            <button class="toggle">Collapse</button>
+          </div>
+          <div class="content">
+              <div class="col" id="vizMapAttributes">Attributes</div>
+              <div class="col" id="vizMapAttributeFilters">Filters</div>
+          </div>
+        </div>
+
+        <!-- Row 2 Divide by Selector -->
+        <div class="row">
+            <div class="header">
+                <span><b>Divide by Selection</b></span>
+                <button class="toggle">Expand</button>
+            </div>
+            <div class="content" style="display:none">
+                <div class="col" id="vizMapDividers">Attributes</div>
+                <div class="col" id="vizMapDividerFilters">Filters</div>
+            </div>
+        </div>
+
+      </div>
+      <!-- Row 3 Chart Selector-->
+      <div class="sidebar-chart">
+          <!-- Content for the third row -->
+      </div>
     </div>
   </div>
   <div id="mainMap">

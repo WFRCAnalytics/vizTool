@@ -16,31 +16,17 @@ require([
 
   class VizMap {
     constructor(data, layerTitle) {
-      this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
-      this.sidebarDiv = "sidebarContent";
+      this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-viz-map'; // use provided id or generate one if not provided
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
-      this.attributeTitle = data.attributeTitle;
       this.attributes = (data.attributes || []).map(item => new Attribute(item));
-      this.attributeSelect = new WijRadio(this.id & "_attribute-selector", data.attributes.map(item => ({
-        value: item.aCode,
-        label: item.aDisplayName
-      })), data.attributeSelected, data.hidden, data.attributeTitle, this);
-      this.filters = (data.filters || []).map(item => new Filter(item, this));
+      this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle)
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
-      this.initListeners();
-      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
-      // Check if data.aggregator exists before initializing aggregatorSelect
-      if (data.aggregators) {
-        this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector", data.aggregators.map(item => ({
-          value: item.agCode,
-          label: item.agDisplayName
-        })), data.aggregatorSelected, false, data.aggregatorTitle, this);
-      }
-
+      this.scenarioSelector = new VizMapScenarioSelector();
+      
       // Global variable to store original label info
       this.originalLabelInfo = null;
 
@@ -65,205 +51,26 @@ require([
       })
       .then(data => {
         this.baseGeometryGeoJson = data;
-
-          // Now call the rest of your code that depends on this.aggregatorGeoJson
-          // For example, you might need to refactor the remaining code into a new function and call it here
       })
       .catch(error => {
         console.error('Error reading the JSON file:', error);
         // Handle the error appropriately
         });
-
-
-    }
-
-    hideLayout() {
-      console.log('hideLayout');
-
+        
     }
     
     generateIdFromText(text) {
       console.log('generateIdFromText');
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
-    
-    getScenario(_modVersion, _scnGroup, _scnYear) {
-      return dataScenarios.find(scenario =>
-        scenario.modVersion === _modVersion &&
-        scenario.scnGroup   === _scnGroup   &&
-        scenario.scnYear    === _scnYear
-      ) || null;
-    }
 
-    scenarioMain() {
-      return this.getScenario(         document.getElementById('selectModMain' ).value,
-                                       document.getElementById('selectGrpMain' ).value,
-                              parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
-    }
-
-    scenarioComp() {
-      return this.getScenario(         document.getElementById('selectModComp' ).value,
-                                       document.getElementById('selectGrpComp' ).value,
-                              parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
-    }
-
-    findAllCombinationsOfFilters(lists, prefix = '', separator = '_') {
-      // If there are no more lists to process, return the current prefix as the result
-      if (lists.length === 0) {
-        return [prefix];
-      }
-  
-      // Get the first list and the remaining lists
-      const firstList = lists[0];
-      const remainingLists = lists.slice(1);
-  
-      // Combine the elements of the first list with the recursive results of the remaining lists
-      let combinations = [];
-      firstList.forEach(element => {
-          const newPrefix = prefix ? prefix + separator + element : element;
-          combinations = combinations.concat(this.findAllCombinationsOfFilters(remainingLists, newPrefix, separator));
-      });
-  
-      return combinations;
-    }
-
-    dataMain() {
-      console.log('dataMain');
-      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
-        return this.scenarioMain().roadwaySegData.data[this.getFilter()]
-      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
-        return this.scenarioMain().zoneModeData.data[this.getFilter()]
-      } else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
-        //return this.scenarioMain().transitSegData.data[this.getFilter()]
-
-        // loop through attributes and get every single combination...
-        
-        // for each filter, add all options to list of options
-        const listOfOptions = this.filters.map(filter => filter.getSelectedOptionsAsList());
-
-        // Initialize an object to hold the aggregated sums
-        let aggregatedSums = {};
-
-        const _parent = this;
-
-        // Modified sumFields function to handle the summing of specific attributes for each key
-        function sumFields(data) {
-          Object.keys(data).forEach(key => {
-            if (!aggregatedSums[key]) {
-              aggregatedSums[key] = {};
-            }
-
-            _parent.attributes.forEach(attr => {
-              if (data[key].hasOwnProperty(attr.aCode)) {
-                if (!aggregatedSums[key][attr.aCode]) {
-                  aggregatedSums[key][attr.aCode] = 0;
-                }
-                aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
-              }
-            });
-          });
-        }
-
-        // Loop through each combination of filters
-        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
-          let data = _parent.scenarioMain().transitSegData.data[combo];
-
-          // Sum the fields in the data object
-          if (data) {
-            sumFields(data);
-          }
-        });
-
-        return aggregatedSums;
+    hideLayers() {
+      this.layerDisplay.visible = false;
+      
+      if (this.legend) {
+        mapView.ui.remove(this.legend);
       }
     }
-
-    dataComp() {
-      console.log('dataComp');
-      if (this.attributeTitle=="Roadway Segment Attribute") {                 // for roadway segs
-        return this.scenarioComp().roadwaySegData.data[this.getFilter()]
-      } else if (this.attributeTitle=="Mode Share Attributes") {              // for zone mode share
-        return this.scenarioComp().zoneModeData.data[this.getFilter()]
-      }  else if (this.attributeTitle=="Transit Segment Attribute") {          // for transit
-        //return this.scenarioMain().transitSegData.data[this.getFilter()]
-
-        // loop through attributes and get every single combination...
-        
-        // for each filter, add all options to list of options
-        const listOfOptions = this.filters.map(filter => filter.getSelectedOptionsAsList());
-
-        // Initialize an object to hold the aggregated sums
-        let aggregatedSums = {};
-
-        const _parent = this;
-
-        // Modified sumFields function to handle the summing of specific attributes for each key
-        function sumFields(data) {
-          Object.keys(data).forEach(key => {
-            if (!aggregatedSums[key]) {
-              aggregatedSums[key] = {};
-            }
-
-            _parent.attributes.forEach(attr => {
-              if (data[key].hasOwnProperty(attr.aCode)) {
-                if (!aggregatedSums[key][attr.aCode]) {
-                  aggregatedSums[key][attr.aCode] = 0;
-                }
-                aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
-              }
-            });
-          });
-        }
-
-        // Loop through each combination of filters
-        this.findAllCombinationsOfFilters(listOfOptions).forEach(function(combo) {
-          let data = _parent.scenarioComp().transitSegData.data[combo];
-
-          // Sum the fields in the data object
-          if (data) {
-            sumFields(data);
-          }
-        });
-
-        return aggregatedSums;
-      }
-    }
-
-    // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
-    incompleteScenarioComp() {
-      if (this.scenarioComp() === null) {
-        if ((document.getElementById('selectModComp' ).value !== "none" ||
-             document.getElementById('selectGrpComp' ).value !== "none" ||
-             document.getElementById('selectYearComp').value !== "none" )) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
-
-    getACode() {
-      return this.attributeSelect.selected;
-    }
-
-    getWeightCode() {
-      return this.attributes.find(item => item.aCode === this.getACode()).agWeightCode;
-    }
-
-    getSelectedAggregator() {
-
-      let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
-
-      if (foundAggregator) {
-        return foundAggregator;
-      }
-
-      return;
-    }
-
-
 
     getAttributeRendererCollection() {
       return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
@@ -469,81 +276,9 @@ require([
         map.add(this.layerDisplay);
       }
     }
-    // get the current filter
-    getFilter() {
-
-      var _filterGroup = [];
-
-      if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
-        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-      } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
-        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-      } else if (this.attributeTitle == "Transit Segment Attribute") {          // for transit segs
-        _filterGroup = this.scenarioMain().transitSegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-      }
-    
-      // Check if _filterGroup is not undefined
-      if (_filterGroup) {
-        // Split the _filterGroup by "_"
-        const _filterArray = _filterGroup.split("_");
-        
-        // Map selected options to an array and join with "_"
-        const _filter = _filterArray
-          .map(filterItem => {
-            var _fItem = this.filters.find(item => item.id === filterItem + '_' + this.id);
-            return _fItem ? _fItem.filterWij.selected : "";
-          })
-          .join("_");
-    
-        return _filter;
-      }
-    
-      return ""; // Return an empty string or a default value if _filterGroup is undefined
-    
-    }
 
     renderSidebar() {
-      const container = document.createElement('div');
-      container.id = this.id + "-viz-map-sidebar";
-
-      if (this.aggregatorSelect) {
-        container.appendChild(this.aggregatorSelect.render());
-      }
-      container.appendChild(this.attributeSelect.render());
-      this.filters.forEach(filter => {
-        container.appendChild(filter.render());
-      });
-
-      var divSidebar = document.getElementById(this.sidebarDiv);
-      divSidebar.innerHTML = '';
-      divSidebar.appendChild(container);  // Append the new element to the container
-    }
-
-    initListeners() {
-      console.log('initListeners');
-      
-      document.getElementById('selectModMain').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectGrpMain').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectYearMain').addEventListener('change', this.updateDisplay.bind(this));
-      
-      document.getElementById('selectModComp').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectGrpComp').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectYearComp').addEventListener('change', this.updateDisplay.bind(this));
-
-      // Get all radio buttons with the name "rcPcOption"
-      var radioButtons = document.querySelectorAll('input[name="rcPcOption"]');
-
-      // Assuming this is inside a class or object with a method named this.updateDisplay()
-      radioButtons.forEach(function(radio) {
-        radio.addEventListener('change', (event) => {  // Arrow function here
-            console.log(event.target.value);
-            this.updateDisplay();
-        });
-      });
-
-      document.getElementById('vizMapLabelToggle').addEventListener('change', (event) => {  // Arrow function here
-        this.toggleLabels(); // Replace with the actual function or code to show labels
-      });
+      this.sidebar.render();
     }
 
 
@@ -598,177 +333,6 @@ require([
       map.add(this.geojsonLayer);
       this.geojsonLayer.visible = false;
       this.afterUpdateSidebar();
-    }
-
-    updateFilters() {
-      console.log('updateFilters');
-      
-      var _filterGroup = [];
-    
-      if (this.attributeTitle == "Roadway Segment Attribute") {                 // for roadway segs
-        _filterGroup = this.scenarioMain().roadwaySegData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-      } else if (this.attributeTitle == "Mode Share Attributes") {              // for zone mode share
-        _filterGroup = this.scenarioMain().zoneModeData.attributes.find(item => item.aCode === this.getACode())?.filterGroup;
-      }
-    
-      // Select all elements with an 'id' containing '_filter_container'
-      const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
-    
-      if (_filterGroup) {
-        // Split the _filterGroup by "_"
-        const _filterArray = _filterGroup.split("_");
-        
-        filteredDivs.forEach(divElement => {
-          const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
-          divElement.style.display = containsFilterText ? 'block' : 'none';
-        });
-      } else {
-        console.log('_filterGroup is null or undefined. Hiding all divs.');
-        // Hide all divs if _filterGroup is null or undefined
-        filteredDivs.forEach(divElement => {
-          divElement.style.display = 'none';
-        });
-      }
-    }
-    
-
-    updateAggregations() {
-      console.log('updateAggregations');
-      
-      const aggNumeratorSelect = document.getElementById('aggNumerator');
-
-      if (aggNumeratorSelect === null || typeof aggNumeratorSelect === 'undefined') {
-        return;
-      }
-    
-
-      const selectedOption = aggNumeratorSelect.querySelector('calcite-option[selected]');
-      
-      var aggNumeratorContent = "";
-
-      if (selectedOption) {
-        aggNumeratorContent = selectedOption.textContent || selectedOption.innerText;
-        console.log(aggNumeratorContent); // Outputs the text content of the selected option
-      } else {
-        console.error('No option selected in aggNumerator.');
-      }
-
-      const aggDenominatorInput = document.getElementById('aggDenominator');
-
-      // get aggregation numberator
-      const aggNumerator = selectedOption.value;
-      const aggDenominator = aggDenominatorInput.value;
-
-      // Query the features
-      var query = new Query();
-      query.where = "1=1"; // Get all features. Adjust if you need a different condition.
-      query.returnGeometry = false; // We don't need geometries for aggregation.
-      query.outFields = [aggNumerator, "dVal", "DISTANCE"];
-  
-      this.layerDisplay.queryFeatures(query).then(function(results) {
-        var sumDistXVal  = {};
-        var sumDist      = {}; // For storing distances
-        var aggDistWtVal = {};
-        
-        results.features.forEach(function(feature) {
-          var agg = feature.attributes[aggNumerator];
-          var distxval = feature.attributes.dVal * feature.attributes.DISTANCE;
-          var dist = feature.attributes.DISTANCE;
-      
-          // Check if agg already exists in the objects
-          if (sumDistXVal[agg]) {
-            sumDistXVal[agg] += distxval;
-            sumDist    [agg] += dist;
-          } else {
-            sumDistXVal[agg] = distxval;
-            sumDist    [agg] = dist;
-          }
-        });
-        
-        // Calculate aggDistWtVal for each key
-        for (var key in sumDistXVal) {
-          aggDistWtVal[key] = sumDistXVal[key] / sumDist[key];
-        }
-        
-                        
-        // Sort the keys based on their values in aggDistWtVal in descending order
-        var sortedKeys = Object.keys(aggDistWtVal).sort(function(a, b) {
-          return aggDistWtVal[b] - aggDistWtVal[a];
-        });
-
-        // Construct a new object with sorted keys
-        var sortedAggDistWtVal = {};
-        for (var i = 0; i < sortedKeys.length; i++) {
-          sortedAggDistWtVal[sortedKeys[i]] = aggDistWtVal[sortedKeys[i]];
-        }
-
-        // Do something with the aggDistWtVal...
-        console.log(aggDistWtVal);
-        //table.style.fontSize = "0.8em"; // For smaller text
-
-        // Create a new table element
-        var table = document.createElement("table");
-        
-        // Create the table header
-        var thead = table.createTHead();
-        var headerRow = thead.insertRow();
-        var th1 = document.createElement("th");
-        th1.textContent = aggNumeratorContent;
-        headerRow.appendChild(th1);
-        var th2 = document.createElement("th");
-        th2.textContent = "";
-        //switch(this.getACode()) {
-        //  case 'aLanes':
-        //    th2.textContent = "Lane Miles";
-        //    break;
-        //  case 'aFt':
-        //    th2.textContent = "FT x Distance";
-        //    break;
-        //  case 'aFtClass':
-        //    th2.textContent = "ERROR";
-        //    break;
-        //  case 'aCap1HL':
-        //    th2.textContent = "Cap x Distance";
-        //    break;
-        //  case 'aVc' :
-        //    th2.textContent = "VC x Distance";
-        //    break;
-        //  case 'aVol':
-        //    th2.textContent = "VMT";
-        //    break;
-        //  case 'aSpd':
-        //  case 'aFfSpd':
-        //    th2.textContent = "Spd x Distance";
-        //    break;
-        //}
-        headerRow.appendChild(th2);
-
-        const formatNumber = (num) => {
-          return num.toLocaleString('en-US', {
-            minimumFractionDigits: 1, 
-            maximumFractionDigits: 1 
-          });
-        }
-
-        // Populate the table with data
-        for (var key in sortedAggDistWtVal) {
-          var row = table.insertRow();
-          var cell1 = row.insertCell();
-          cell1.textContent = key;
-          var cell2 = row.insertCell();
-          //cell2.style.textAlign = "right"; // Right-justify the text
-          cell2.textContent = formatNumber(sortedAggDistWtVal[key]);
-        }
-
-        // Append the table to the container div
-        var container = document.getElementById("tableContainer");
-        container.innerHTML = '';
-        container.appendChild(table);
-
-      }).catch(function(error) {
-          console.error("There was an error: ", error);
-      });
-
     }
 
     updateDisplay() {
@@ -1097,15 +661,6 @@ require([
       });
 
     }
-
-    hideLayers() {
-      this.layerDisplay.visible = false;
-      
-      if (this.legend) {
-        mapView.ui.remove(this.legend);
-      }
-    }
-    
 
   }
   
