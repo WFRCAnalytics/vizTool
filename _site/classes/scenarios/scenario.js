@@ -12,10 +12,10 @@ class Scenario {
 
     // Fetch and store data for each file
     this.fetchAndStoreData('roadway-vizmap');
-    this.fetchAndStoreData('zones-modeshare-vizmap');
     this.fetchAndStoreData('roadway-trends');
-    this.fetchAndStoreData('zones-se-vizmap');
     this.fetchAndStoreData('transit-segments-riders');
+    //this.fetchAndStoreData('zones-modeshare-vizmap');
+    //this.fetchAndStoreData('zones-se-vizmap');
   }
 
   // Function to fetch and store data
@@ -35,12 +35,12 @@ class Scenario {
   }
 
   getFilterGroupForAttribute(a_jsonDataKey, a_aCode) {
-    console.log('getFilterGroupForAttribute');
-    return this.jsonData[a_jsonDataKey].attributes.find(item => item.aCode === a_aCode)?.filterGroup;
+    console.log('getFilterGroupForAttribute:' + a_aCode);
+    return this.jsonData[a_jsonDataKey].attributes.find(item => item.aCode === a_aCode)?.filterGroup ?? "";
   }
   
   getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters) {
-    console.log('getDataForFilterOptionsList');
+    console.log('getDataForFilterOptionsList:' + a_lstFilters);
 
     // Initialize an object to hold the aggregated sums
     let aggregatedSums = {};

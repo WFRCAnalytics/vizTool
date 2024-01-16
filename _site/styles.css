@@ -1,3 +1,15 @@
+.scenario-selector-container {
+    width: 190px;
+    background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
+    padding: 10px;
+}
+
+.label-toggle-container {
+    width: 190px;
+    background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
+    padding: 10px;
+}
+
 .checkbox-container {
     max-height: 200px; /* Maximum height before scrollbar appears */
     overflow-y: auto; /* Show vertical scrollbar when needed */
@@ -66,55 +78,37 @@ th, td {
 /* SIDEBARS */
 #mapSidebar {
     width: 500px; /* or any other value */
-    height: calc(100vh - 144px);
+    height: calc(100vh - 114px);
     display: flex;
 }
 
 .colAttributesChart {
-    width: 300px; /* or any other value */
-    height: calc(100vh - 144px);
+    width: 250px; /* or any other value */
+    height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     /* Style your columns */
 }
 
 .colFiltersMore {
-    width: 200px; /* or any other value */
-    height: calc(100vh - 144px);
+    width: 250px; /* or any other value */
+    height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
+    background-color: #DDDDDD; /* Optional: Add a background color */
+}
+
+.colFilters{
     padding: 15px;
-    background-color: #CCCCCC; /* Optional: Add a background color */
 }
 
 .rowAttributes {
-    height: 70%;
+    height: 50%;
     padding: 15px;
-
 }
 
-.rowChart {
+/*.rowChart {
     height: 30%;
-    background-color: #FF0000; /* Optional: Add a background color */
-}
-
-
-#logSidebar {
-    width: 300px; /* or any other value */
-    padding: 15px;
-    height: calc(100vh - 144px);
-    overflow: auto;
-}
-#trendSidebar {
-    width: 300px; /* or any other value */
-    padding: 15px;
-    height: calc(100vh - 144px);
-    overflow: auto;
-}
-#matrixSidebar {
-    width: 300px; /* or any other value */
-    padding: 15px;
-    height: calc(100vh - 144px);
-    overflow: auto;
-}
+    /*background-color: #FF0000; *//* Optional: Add a background color */
+/*}*/
 
  /* MAIN CONTENT */
 #mainMap {
@@ -132,7 +126,7 @@ th, td {
     /* Main content styles */
     width: 1300px; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 144px);
+    height: calc(100vh - 114px);
 }
 #mainMatrix {
     /* Main content styles */
@@ -171,7 +165,7 @@ th, td {
 #halfTable {
     width: 50%; /* or any other value */
     padding: 15px;
-    height: calc(100vh - 144px);
+    height: calc(100vh - 114px);
     overflow: auto;
 }
 
@@ -180,29 +174,4 @@ th, td {
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
-}
-
-#overlay {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(255, 255, 255);
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000;
-    width: 350px;
-    max-height: 1000px; /* or a value bigger than your content's height */
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Added opacity for smoother collapse */
-    overflow: hidden;
-}
-
-.overlay-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.collapsed #overlay {
-    max-height: 0;
-    opacity: 0; /* This can make the collapse look smoother */
 }

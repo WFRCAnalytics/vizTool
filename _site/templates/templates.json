@@ -1,11 +1,12 @@
 [
   {
       "templateType": "vizMap",
-      "layoutHtml": "templates/viz-map.html"
+      "layoutHtml": "templates/vizmap.html",
+      "mapView": "mapView"
   },
   {
       "templateType": "vizTrends",
-      "layoutHtml": "templates/viz-trends.html"
+      "layoutHtml": "templates/viztrends.html"
   },
   {
       "templateType": "vizMatrix",

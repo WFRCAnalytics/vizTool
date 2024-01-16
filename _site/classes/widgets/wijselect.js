@@ -1,6 +1,7 @@
 class WijSelect {
   constructor(id, options, selected, hidden, text, vizLayout, parent) {
     this.id = id;
+    this.containerId = this.id + "-container"
     this.options = options;
     this.selected = selected;
     this.hidden = hidden !== undefined ? hidden : false;
@@ -11,8 +12,9 @@ class WijSelect {
 
   // Render the item based on its type
   render() {
+    console.log('wijselect:render:' + this.containerId)
     const container = document.createElement('div');
-    container.id = this.id + "_container";
+    container.id = this.containerId;
     
     let title = document.createElement("calcite-label");  // Create a new div element
     title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML

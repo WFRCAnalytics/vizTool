@@ -1,6 +1,7 @@
 class WijRadio {
   constructor(id, options, selected, hidden, text, vizLayout, parent) {
     this.id = id;
+    this.containerId = this.id + "-container"
     this.options = options;
     this.selected = selected;
     this.hidden = hidden !== undefined ? hidden : false;
@@ -11,8 +12,9 @@ class WijRadio {
 
   // Render the item based on its type
   render() {
+    console.log('wijradio:render:' + this.containerId)
     const container = document.createElement('div');
-    container.id = this.id + "_container";
+    container.id = this.containerId;
 
     const wijRadioInstance = this;
     
@@ -42,7 +44,7 @@ class WijRadio {
         const radioButton = e.currentTarget; // or e.target.closest('input[type="radioButton"]')
         const rbValue = radioButton.value;
         // Update renderer with value of radio button
-        console.log(this.id + ':' + rbValue + ' radio button change');
+        console.log('radio button change '+ this.id + ':' + rbValue );
         this.selected = rbValue;
         wijRadioInstance.vizLayout.afterUpdateSidebar();
       });

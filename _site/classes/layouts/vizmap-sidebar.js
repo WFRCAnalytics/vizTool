@@ -1,13 +1,13 @@
 class VizMapSidebar {
   constructor(attributeTitle, attributes, attributeSelected, hidden, filters, aggregators, aggregatorSelected, aggregatorTitle, vizMap) {
-    this.id = this.generateIdFromText(attributeTitle) + "-viz-map-sidebar"; // use provided id or generate one if not provided
-    this.dataArrayCode = 
+    this.id = this.generateIdFromText(attributeTitle) + "-vizmap-sidebar"; // use provided id or generate one if not provided
+    this.vizMap = vizMap;
     this.attributeTitle = attributeTitle;
-    this.attributeSelect = new WijRadio(this.id & "_attribute-selector", attributes.map(item => ({
+    this.attributeSelect = new WijRadio(this.id + "-attribute-selector", attributes.map(item => ({
       value: item.aCode,
       label: item.aDisplayName
     })), attributeSelected, hidden, attributeTitle, this);
-    this.filters = (filters || []).map(item => new Filter(item, this));
+    this.filters = (filters || []).map(item => new Filter(item, this.vizMap));
     this.aggregators = (aggregators || []).map(item => new Aggregator(item));
     // Check if aggregator exists before initializing aggregatorSelect
     if (aggregators) {
@@ -16,16 +16,13 @@ class VizMapSidebar {
         label: item.agDisplayName
       })), aggregatorSelected, false, aggregatorTitle, this);
     }
-    this.vizMap = vizMap;
   }
 
   hideLayout() {
-    console.log('hideLayout');
-
+    console.log('vizmap-sidebar:hideLayout');
   }
   
   generateIdFromText(text) {
-    console.log('generateIdFromText');
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
@@ -51,7 +48,10 @@ class VizMapSidebar {
   }
 
   getListOfSelectedFilterOptions() {
-    return this.findAllCombinationsOfLists(this.filters.map(filter => filter.getSelectedOptionsAsList()));
+    const _listsOfEachFilter = this.filters
+                                   .filter(filter => !filter.isHidden()) // Only include filters where isHidden is false
+                                   .map(filter => filter.getSelectedOptionsAsList())
+    return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
   getACode() {
@@ -69,8 +69,6 @@ class VizMapSidebar {
     if (foundAggregator) {
       return foundAggregator;
     }
-
-    return;
   }
 
   getAttributeRendererCollection() {
@@ -93,34 +91,35 @@ class VizMapSidebar {
     return this.getAttributeRendererCollection().compare_pct.renderer;
   }
 
-  // get the current filter
-  getFilter() {
-    
-    var _filterGroup = [];
-  
-    _filterGroup = this.vizMap.getFilterGroup();
-  
-    // Check if _filterGroup is not undefined
-    if (_filterGroup) {
-      // Split the _filterGroup by "_"
-      const _filterArray = _filterGroup.split("_");
-      
-      // Map selected options to an array and join with "_"
-      const _filter = _filterArray
-        .map(filterItem => {
-          var _fItem = this.filters.find(item => item.id === filterItem + '_' + this.id);
-          return _fItem ? _fItem.filterWij.selected : "";
-        })
-        .join("_");
-  
-      return _filter;
-    }
-  
-    return ""; // Return an empty string or a default value if _filterGroup is undefined
-  
-  }
+  //// get the current filter
+  //getFilter() {
+  //  
+  //  var _filterGroup = [];
+  //
+  //  _filterGroup = this.vizMap.getFilterGroup();
+  //
+  //  // Check if _filterGroup is not undefined
+  //  if (_filterGroup) {
+  //    // Split the _filterGroup by "_"
+  //    const _filterArray = _filterGroup.split("_");
+  //    
+  //    // Map selected options to an array and join with "_"
+  //    const _filter = _filterArray
+  //      .map(filterItem => {
+  //        var _fItem = this.filters.find(item => item.id === filterItem + '_' + this.id);
+  //        return _fItem ? _fItem.filterWij.selected : "";
+  //      })
+  //      .join("_");
+  //
+  //    return _filter;
+  //  }
+  //
+  //  return ""; // Return an empty string or a default value if _filterGroup is undefined
+  //
+  //}
 
   render() {
+    console.log('vizmap-sidebar:render:' + this.id);
 
     // render aggregators, attributes and filters
     const containerAttributes = document.createElement('div');
@@ -185,12 +184,12 @@ class VizMapSidebar {
   
   afterUpdateSidebar() {
     this.vizMap.afterUpdateSidebar();
-    this.updateFilters();
+    this.updateFilterDisplay();
     this.updateAggregations();
   }
 
   afterUpdateAggregator() {
-    console.log('afterUpdateAggregator');
+    console.log('vizmap-sidebar:afterUpdateAggregator');
     
     // remove aggregator geometry
     if (this.geojsonLayer) {
@@ -210,36 +209,37 @@ class VizMapSidebar {
     this.vizMap.afterUpdateSidebar();
   }
 
-  updateFilters() {
-    console.log('updateFilters');
+  updateFilterDisplay() {
+    console.log('vizmap-sidebar:updateFilterDisplay');
     
-    var _filterGroup = [];
+    var _filterGroupArray = this.vizMap.getFilterGroupArray();
   
-    _filterGroup = this.vizMap.getFilterGroup();
-  
-    // Select all elements with an 'id' containing '_filter_container'
-    const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
-  
-    if (_filterGroup) {
-      // Split the _filterGroup by "_"
-      const _filterArray = _filterGroup.split("_");
-      
-      filteredDivs.forEach(divElement => {
-        const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
-        divElement.style.display = containsFilterText ? 'block' : 'none';
+    if (_filterGroupArray) {
+      this.filters.forEach(filterObject => {
+        const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
+        if (containsFilterText) {
+          if (filterObject.isHidden()) {
+            filterObject.show();
+          }
+        } else {
+          if (!filterObject.isHidden()) {
+            filterObject.hide();
+          }
+        }
       });
     } else {
-      console.log('_filterGroup is null or undefined. Hiding all divs.');
       // Hide all divs if _filterGroup is null or undefined
-      filteredDivs.forEach(divElement => {
-        divElement.style.display = 'none';
+      this.filters.forEach(filterObject => {
+        if (!filterObject.isHidden()) {
+          filterObject.hide();
+        }
       });
     }
   }
   
 
   updateAggregations() {
-    console.log('updateAggregations');
+    console.log('vizmap-sidebar:updateAggregations');
     
     const aggNumeratorSelect = document.getElementById('aggNumerator');
 

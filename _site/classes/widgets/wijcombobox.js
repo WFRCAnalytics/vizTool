@@ -1,6 +1,7 @@
 class WijCombobox {
   constructor(id, options, selected, comboSelected, hidden, text, vizLayout, parent) {
     this.id = id;
+    this.containerId = this.id + "-container";
     this.options = options;
     this.selected = selected;
     this.comboSelected = comboSelected;
@@ -12,9 +13,9 @@ class WijCombobox {
 
   // Render the item based on its type
   render() {
+    console.log('wijcombobox:render:' + this.containerId)
     const container = document.createElement('div');
-    container.id = this.id + "_container";
-
+    container.id = this.containerId;
     const wijComboInstance = this;
 
     const aggCode = this.vizLayout.getSelectedAggregator();

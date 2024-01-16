@@ -10,7 +10,6 @@
             "menuIconStart": "driving-distance",
             "modelEntities": [
               {
-                "submenuId": "roadSegs",
                 "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
@@ -19,7 +18,7 @@
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
-                  "popupTitle": "Segment Details",
+                  "popupTitle": "Roadway Segments",
                   "attributeTitle": "Roadway Segment Attribute",
                   "attributeSelected": "aLanes",
                   "attributes": [
@@ -85,9 +84,9 @@
                           "name": "Change in Functional Type",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change" },
-                            { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Change"    },
-                            { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Change"    }  
+                            { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
+                            { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Decrease" },
+                            { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#1111FF", "width": 2.5000 }, "label": "Increase" }
                           ]
                         },
                         "compare_pct": {
@@ -336,7 +335,6 @@
                 }
               },
               {
-                "submenuId": "roadTrends",
                 "submenuText": "Trends",
                 "submenuIconStart": "graph-line-series",
                 "jsonFile": "roadway-trends.json",
@@ -445,12 +443,10 @@
             ]
           },
           {
-            "id": "transit",
             "menuText": "Transit",
             "menuIconStart": "",
             "modelEntities": [
               {
-                "submenuId": "transitSegs",
                 "submenuText": "Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
@@ -459,7 +455,7 @@
                   "baseGeometryFile": "data/segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
-                  "popupTitle": "Segment Details",
+                  "popupTitle": "Transit Segments",
                   "attributeTitle": "Transit Segment Attribute",
                   "attributeSelected": "aR",
                   "attributes": [
@@ -742,7 +738,6 @@
             ]
           },
           {
-            "id": "trips",
             "menuText": "Trips",
             "menuIconStart": "tour",
             "modelEntities": [

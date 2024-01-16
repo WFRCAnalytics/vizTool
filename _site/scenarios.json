@@ -1,5 +1,15 @@
 [
+    { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2019, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
     { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2023, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
     { "modVersion": "v900", "scnGroup": "TIP"      , "scnYear": 2028, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
-    { "modVersion": "v900", "scnGroup": "RTP"      , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"}
+    { "modVersion": "v900", "scnGroup": "RTP"      , "scnYear": 2032, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "RTP"      , "scnYear": 2042, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "RTP"      , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": 2032, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": 2042, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "NoBuild"  , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2032, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2042, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "Needs MAG", "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"}
 ]

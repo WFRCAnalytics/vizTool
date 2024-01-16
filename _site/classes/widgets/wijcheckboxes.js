@@ -1,6 +1,7 @@
 class WijCheckboxes {
   constructor(id, options, selected, comboSelected, hidden, text, vizLayout, parent) {
     this.id = id;
+    this.containerId = this.id + "-container";
     this.options = options;
     this.selected = selected;
     this.comboSelected = comboSelected;
@@ -11,8 +12,9 @@ class WijCheckboxes {
   }
 
   render() {
+    console.log('wijcheckboxes:render:' + this.containerId)
     const mainContainer = document.createElement('div');
-    mainContainer.id = this.id + "_mainContainer";
+    mainContainer.id = this.containerId;
 
     const checkboxContainer = document.createElement('div');
     checkboxContainer.classList.add('checkbox-container');

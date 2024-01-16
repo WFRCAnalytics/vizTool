@@ -74,7 +74,7 @@ require([
     }
     
     afterUpdateSidebar() {
-      console.log('afterSidebarUpdate');
+      console.log('viztrends:afterSidebarUpdate');
       this.updateFilters();
       this.updateDisplay();
     }
@@ -123,8 +123,8 @@ require([
     }
 
     afterUpdateAggregator() {
-      console.log('afterUpdateAggregator');
-      //document.getElementById(this.comboSelector.id + '_container').innerHTML = '';
+      console.log('viztrends:afterUpdateAggregator');
+      //document.getElementById(this.comboSelector.id + '-container').innerHTML = '';
       this.comboSelector.render();
       this.renderSidebar();
       this.afterUpdateSidebar();
@@ -137,14 +137,14 @@ require([
     }
 
     updateFilters() {
-      console.log('updateFilters');
+      console.log('viztrends:updateFilters');
 
       var _filterGroup = [];
 
       _filterGroup = this.scenarioMain().jsonData['roadway-trends'].attributes.find(item => item.aCode === this.getACode()).filterGroup;
 
-      // Select all elements with an 'id' containing '_filter_container'
-      const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "_filter_container']"));
+      // Select all elements with an 'id' containing '-filter-container'
+      const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "-filter-container']"));
     
       if (_filterGroup) {
         // Split the _filterGroup by "_"
@@ -155,7 +155,7 @@ require([
           divElement.style.display = containsFilterText ? 'block' : 'none';
         });
       } else {
-        console.log('_filterGroup is null or undefined. Hiding all divs.');
+        console.log('viztrends:_filterGroup is null or undefined. Hiding all divs.');
         // Hide all divs if _filterGroup is null or undefined
         filteredDivs.forEach(divElement => {
           divElement.style.display = 'none';
@@ -201,7 +201,7 @@ require([
           return 0; // return 0 if nothing is found
       }
 
-      //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in viz-map L#272)
+      //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in vizmap L#272)
 
       // Handle other display names if needed
       return null;
@@ -220,7 +220,7 @@ require([
     }
 
     createLineChart(aCode, labels, chartData, aggIDsString) {
-      console.log('Creating the chart...');
+      console.log('viztrends:Creating the chart...');
       console.log("Selected radio button option under 'Display':", aCode);
 
       const containerElement = document.getElementById('mainTrend');
@@ -375,7 +375,7 @@ require([
       } else if (comboCodes.length === 1) {
           aggIDsString = comboCodes[0].toString();
       }
-      console.log('Going to fetch the data now... agIDsString is ' + aggIDs);
+      console.log('viztrends:Going to fetch the data now... agIDsString is ' + aggIDs);
       fetch("data/segmentsWithAggFields.geojson")
         .then(response => {
           if (!response.ok) {
@@ -440,7 +440,7 @@ require([
       
       var filteredTazes = {};
       var filteredTazSeData = {};
-      console.log('Going to fetch the data now... agIDsString is ' + aggIDs);
+      console.log('viztrends:Going to fetch the data now... agIDsString is ' + aggIDs);
       fetch("data/tazWithAggFields.geojson")
         .then(response => {
           if (!response.ok) {

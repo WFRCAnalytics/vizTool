@@ -16,7 +16,8 @@ require([
 
   class VizMap {
     constructor(data, layerTitle) {
-      this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-viz-map'; // use provided id or generate one if not provided
+      this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
+      console.log('vizmap:construct:' + this.id);
       this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
@@ -27,7 +28,6 @@ require([
       this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle, this)
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
-      this.scenarioSelector = new VizMapScenarioSelector(this);
       
       // Global variable to store original label info
       this.originalLabelInfo = null;
@@ -58,30 +58,73 @@ require([
         console.error('Error reading the JSON file:', error);
         // Handle the error appropriately
         });
-        
+      
     }
     
     generateIdFromText(text) {
-      console.log('generateIdFromText');
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
     getScenarioMain() {
-      return this.scenarioSelector.getMain();
+      return this.getMain();
     }
 
     getScenarioComp() {
-      return this.scenarioSelector.getComp();
+      return this.getComp();
     }
     
     getDataMain() {
-      return this.scenarioSelector.getMain().getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      const _scenario = this.getMain()
+      if (_scenario) {
+        return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      }
     }
 
     getDataComp() {
-      return this.scenarioSelector.getComp().getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      const _scenario = this.getComp()
+      if (_scenario) {
+        return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      }
     }
-    
+
+    getScenario(_modVersion, _scnGroup, _scnYear) {
+      return dataScenarios.find(scenario =>
+        scenario.modVersion === _modVersion &&
+        scenario.scnGroup   === _scnGroup   &&
+        scenario.scnYear    === _scnYear
+      ) || null;
+    }
+
+    getMain() {
+      return this.getScenario(         document.getElementById('selectModMain' ).value,
+                                       document.getElementById('selectGrpMain' ).value,
+                              parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+    }
+
+    getComp() {
+      return this.getScenario(         document.getElementById('selectModComp' ).value,
+                                       document.getElementById('selectGrpComp' ).value,
+                              parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
+    }
+
+
+
+    // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
+    isScenarioCompIncomplete() {
+      if (this.getComp() === null) {
+        if ((document.getElementById('selectModComp' ).value !== "none" ||
+            document.getElementById('selectGrpComp' ).value !== "none" ||
+            document.getElementById('selectYearComp').value !== "none" )) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
+
     getACode() {
       return this.sidebar.getACode();
     }
@@ -92,6 +135,15 @@ require([
 
     getFilterGroup() {
       return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+    }
+
+    getFilterGroupArray() {
+      var _filterGroup = this.getFilterGroup();
+    
+      if (_filterGroup) {
+        // Split the _filterGroup by "_"
+        return _filterGroup.split("_");
+      }
     }
     
     hideLayers() {
@@ -314,6 +366,7 @@ require([
 
     // Function to be called when checkbox status changes
     toggleLabels() {
+      console.log('vizmap:toggleLabels')
       var labelCheckbox = document.getElementById('vizMapLabelToggle');
       
       if (this.layerDisplay) {
@@ -338,12 +391,12 @@ require([
     }
     
     afterUpdateSidebar() {
-      console.log('afterUpdateSidebar');
+      console.log('vizmap:afterUpdateSidebar');
       this.updateDisplay();
     }
 
     afterUpdateAggregator() {
-      console.log('afterUpdateAggregator');
+      console.log('vizmap:afterUpdateAggregator');
       
       // remove aggregator geometry
       if (this.geojsonLayer) {
@@ -364,14 +417,10 @@ require([
     }
 
     updateDisplay() {
-      console.log('updateDisplay');
+      console.log('vizmap:updateDisplay');
       
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
-
-      // remove other vizMap displays??? MAYBE ADD HERE
-      
-      //let _filter = this.getFilter();
 
       // get main data
       var _dataMain = this.getDataMain();
@@ -379,13 +428,13 @@ require([
       let mode = 'base'; //default is base
 
       // get compare data
-      if (this.scenarioSelector.getComp() !== null) {
+      if (this.getComp() !== null) {
         mode = 'compare';
         var _dataComp = this.getDataComp();
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
-      if (this.scenarioSelector.isScenarioCompIncomplete()) {
+      if (this.isScenarioCompIncomplete()) {
         return;
       }
 
@@ -513,8 +562,8 @@ require([
                 }
               }
 
-              var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
-              var curPCOption = selectedRadio ? selectedRadio.value : null;
+              var compareType = document.getElementById('selectCompareType');
+              var curPCOption = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
@@ -627,8 +676,8 @@ require([
                 }
               }
 
-              var selectedRadio = document.querySelector('input[name="rcPcOption"]:checked');
-              var curPCOption = selectedRadio ? selectedRadio.value : null;
+              var compareType = document.getElementById('selectCompareType');
+              var curPCOption = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
@@ -672,7 +721,7 @@ require([
                 setRendererAndLegend();
                 
                 // update agg table
-                vizMapInstance.sidebar.updateFilters();
+                vizMapInstance.sidebar.updateFilterDisplay();
                 vizMapInstance.sidebar.updateAggregations();
 
               } else {
