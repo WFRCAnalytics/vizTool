@@ -515,15 +515,130 @@ require([
       divSidebar.appendChild(container);  // Append the new element to the container
     }
 
+     // When a different model is selected, update the available groups and years
+     updateSelectorModelMain() {
+      const model = document.getElementById('selectModMain').value;
+      const selectGroup = document.getElementById('selectGrpMain');
+      const matchGroup = [];
+      
+      // loop through the scenarios to find the groups with the selected model
+      dataScenarios.forEach(entry=>{
+        if(entry.modVersion == model) {
+          matchGroup.push(entry.scnGroup);
+        }
+      });
+      let i = 0;
+      // Select the first valid group, disable invalid groups
+      for (i = selectGroup.length-1; i >= 0; i--) {
+        if (matchGroup.includes(selectGroup[i].innerHTML)) {
+              selectGroup[i].disabled = false;
+              selectGroup[i].selected = true;
+        }
+        else {
+              selectGroup[i].disabled =true;
+        }
+      }
+      this.updateSelectorGroupMain();
+    }
+
+    // When a different comparison model is update the groups
+    updateSelectorModelCompare() {
+      const model = document.getElementById('selectModComp').value;
+      const selectGroup = document.getElementById('selectGrpComp');
+      const matchGroup = [];
+
+      if(model == 'none'){
+        selectGroup[0].selected = true;
+        selectGroup.disabled = true;
+      }
+      else {
+        selectGroup.disabled = false;
+        dataScenarios.forEach(entry=>{
+          if(entry.modVersion == model) {
+            matchGroup.push(entry.scnGroup);
+          }
+        });
+        let i = 0;
+        for (i = selectGroup.length-1; i >= 0; i--) {
+          if (matchGroup.includes(selectGroup[i].innerHTML)) {
+                selectGroup[i].disabled = false;
+                selectGroup[i].selected = true;
+          }
+          else {
+                selectGroup[i].disabled =true;
+          }
+        }
+      }
+      this.updateSelectorGroupCompare();
+    }
+
+    // Update the selectable years when the group changes
+    updateSelectorGroupMain() {
+      const model = document.getElementById('selectModMain').value;
+      const group = document.getElementById('selectGrpMain').value;
+      const selectYear = document.getElementById('selectYearMain');
+      const matchYears = [];
+
+      dataScenarios.forEach(entry=>{
+        if(entry.scnGroup == group && entry.modVersion == model) {
+          matchYears.push(entry.scnYear);
+        }
+      });
+      let i = 0;
+      for (i = selectYear.length-1; i >= 0; i--) {
+        if (matchYears.includes(parseInt(selectYear[i].innerHTML))) {
+              selectYear[i].disabled = false;
+              selectYear[i].selected = true;
+        }
+        else {
+              selectYear[i].disabled =true;
+        }
+      }
+      this.updateDisplay();
+    }
+
+    // Update the selectable comparison years when the group changes
+    updateSelectorGroupCompare() {
+      const modelSelector = document.getElementById('selectModComp');
+      const selectGroup = document.getElementById('selectGrpComp');
+      const group = selectGroup.value;
+      const selectYear = document.getElementById('selectYearComp');
+      const matchYears = [];
+
+      if(group == 'none'){
+        selectYear[0].selected = true;
+        selectYear.disabled = true;
+      }
+      else{
+        selectYear.disabled = false;
+        dataScenarios.forEach(entry=>{
+          if(entry.modVersion && entry.scnGroup == group) {
+            matchYears.push(entry.scnYear);
+          }
+        });
+        let i = 0;
+        for (i = selectYear.length-1; i >= 0; i--) {
+          if (matchYears.includes(parseInt(selectYear[i].innerHTML))) {
+                selectYear[i].disabled = false;
+                selectYear[i].selected = true;
+          }
+          else {
+                selectYear[i].disabled =true;
+          }
+        }
+      }
+      this.updateDisplay();
+    }
+
     initListeners() {
       console.log('initListeners');
       
-      document.getElementById('selectModMain').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectGrpMain').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectModMain').addEventListener('change', this.updateSelectorModelMain.bind(this));
+      document.getElementById('selectGrpMain').addEventListener('change', this.updateSelectorGroupMain.bind(this));
       document.getElementById('selectYearMain').addEventListener('change', this.updateDisplay.bind(this));
       
-      document.getElementById('selectModComp').addEventListener('change', this.updateDisplay.bind(this));
-      document.getElementById('selectGrpComp').addEventListener('change', this.updateDisplay.bind(this));
+      document.getElementById('selectModComp').addEventListener('change',  this.updateSelectorModelCompare.bind(this));
+      document.getElementById('selectGrpComp').addEventListener('change', this.updateSelectorGroupCompare.bind(this));
       document.getElementById('selectYearComp').addEventListener('change', this.updateDisplay.bind(this));
 
       // Get all radio buttons with the name "rcPcOption"
