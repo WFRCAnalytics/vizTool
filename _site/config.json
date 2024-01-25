@@ -855,9 +855,21 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Motorized Trips"
-                        },
-                        "compare_pct": {
+                          "name": "Change in Motorized Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
+                        },                        "compare_pct": {
                           "name": "Percent Change in Motorized Trips"
                         }
                       }
@@ -883,9 +895,21 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Auto Trips"
-                        },
-                        "compare_pct": {
+                          "name": "Change in Auto Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
+                        },                        "compare_pct": {
                           "name": "Percent Change in Auto Trips"
                         }
                       }
@@ -911,9 +935,21 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Transit Trips"
-                        },
-                        "compare_pct": {
+                          "name": "Change in Transit Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
+                        },                        "compare_pct": {
                           "name": "Percent Change in Transit Trips"
                         }
                       }
@@ -939,9 +975,21 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Non-Motorized Trips"
-                        },
-                        "compare_pct": {
+                          "name": "Change in Non-Motorized Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
+                        },                        "compare_pct": {
                           "name": "Percent Change in Non-Motorized Trips"
                         }
                       }
@@ -967,9 +1015,21 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Walk Trips"
-                        },
-                        "compare_pct": {
+                          "name": "Change in Walk Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
+                        },                        "compare_pct": {
                           "name": "Percent Change in Walk Trips"
                         }
                       }
@@ -995,7 +1055,20 @@
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Bike Trips"
+                          "name": "Change in Bike Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
                         },
                         "compare_pct": {
                           "name": "Percent Change in Bike Trips"
