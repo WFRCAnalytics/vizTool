@@ -606,7 +606,7 @@ require([
           } else if (this.baseGeometryGeoJson.features) {
 
             const _idAgFieldName = this.getSelectedAggregator().agCode;
-            const _wtCode = this.getWeightCode();
+            const _wtCode = this.sidebar.getWeightCode() || "";
 
             // go through display geometry features
             result.features.forEach((feature) => {

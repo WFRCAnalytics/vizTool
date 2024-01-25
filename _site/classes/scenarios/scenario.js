@@ -14,7 +14,7 @@ class Scenario {
     this.fetchAndStoreData('roadway-vizmap');
     this.fetchAndStoreData('roadway-trends');
     this.fetchAndStoreData('transit-segments-riders');
-    //this.fetchAndStoreData('zones-modeshare-vizmap');
+    this.fetchAndStoreData('zones-modetrips-vizmap');
     //this.fetchAndStoreData('zones-se-vizmap');
   }
 

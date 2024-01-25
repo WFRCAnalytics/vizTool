@@ -59,7 +59,14 @@ class VizMapSidebar {
   }
 
   getWeightCode() {
-    return this.attributes.find(item => item.aCode === this.getACode()).agWeightCode;
+    const aCode = this.getACode();
+    const item = this.vizMap.attributes.find(item => item.aCode === aCode);
+  
+    if (item && item.agWeightCode) {
+      return item.agWeightCode;
+    }
+  
+    return ""; // Or return a default value or `undefined` as needed
   }
 
   getSelectedAggregator() {
@@ -123,20 +130,23 @@ class VizMapSidebar {
 
     // render aggregators, attributes and filters
     const containerAttributes = document.createElement('div');
-    const containerAttributeFilters = document.createElement('div');
-    
-    if (this.aggregatorSelect) {
-      containerAttributes.appendChild(this.aggregatorSelect.render());
-    }
     containerAttributes.appendChild(this.attributeSelect.render());
-
-    this.filters.forEach(filter => {
-      containerAttributeFilters.appendChild(filter.render());
-    });
-
     var divAttributes = document.getElementById("vizMapAttributes");
     divAttributes.innerHTML = '';
     divAttributes.appendChild(containerAttributes);  // Append the new element to the container
+
+    const containerAggregator = document.createElement('div');
+    if (this.aggregatorSelect) {
+      containerAggregator.appendChild(this.aggregatorSelect.render());
+    }
+    var divAggregator = document.getElementById("vizMapAggregator");
+    divAggregator.innerHTML = '';
+    divAggregator.appendChild(containerAggregator);  // Append the new element to the container
+
+    const containerAttributeFilters = document.createElement('div');
+    this.filters.forEach(filter => {
+      containerAttributeFilters.appendChild(filter.render());
+    });
 
     var divAttributeFilters = document.getElementById("vizMapAttributeFilters");
     divAttributeFilters.innerHTML = '';
@@ -189,24 +199,7 @@ class VizMapSidebar {
   }
 
   afterUpdateAggregator() {
-    console.log('vizmap-sidebar:afterUpdateAggregator');
-    
-    // remove aggregator geometry
-    if (this.geojsonLayer) {
-      map.remove(this.geojsonLayer);
-    }
-
-    // ADD GEOJSONS
-    // need to check geometry type before adding!!
-    this.geojsonLayer = new GeoJSONLayer({
-      url: this.getSelectedAggregator().agGeoJson,
-      title: "Aggregator Layer"
-    });
-
-    // add new geometry
-    map.add(this.geojsonLayer);
-    this.geojsonLayer.visible = false;
-    this.vizMap.afterUpdateSidebar();
+    this.vizMap.afterUpdateAggregator();
   }
 
   updateFilterDisplay() {

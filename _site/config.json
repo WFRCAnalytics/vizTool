@@ -742,17 +742,17 @@
             "menuIconStart": "tour",
             "modelEntities": [
               {
-                "submenuText": "Zone Mode Share",
+                "submenuText": "Zone Trips by Mode",
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "zones-se-vizmap",
+                  "jsonFileName": "zones-modetrips-vizmap",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
                   "aggregatorTitle": "Select Zone Geography",
-                  "aggregatorSelected" : "TAZID",
+                  "aggregatorSelected" : "CITY_UGRC",
                   "aggregators": [
                     {
                       "agCode": "TAZID",
@@ -790,314 +790,231 @@
                       "agGeoJson": "data/counties.geojson"
                     }
                   ],
-                  "attributeTitle": "Mode Share Attributes",
+                  "attributeTitle": "Zone Trip Attributes",
                   "attributeSelected": "aSTrn",
                   "attributes": [
                     {
-                      "aCode": "aT",
-                      "aDisplayName": "Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                      "aCode": "a0",
+                      "aDisplayName": "All Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
+                          "name": "All Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":     0, "maxValue":       0, "symbol": { "type": "simple-fill", "color": "#FFFFFF", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "                 0 Trips"},
-                            { "minValue":     0, "maxValue":    1000, "symbol": { "type": "simple-fill", "color": "#FFEBEB", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "       0 to  1,000 Trips"},
-                            { "minValue":  1000, "maxValue":    2000, "symbol": { "type": "simple-fill", "color": "#FFD6D6", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   1,000 to  2,000 Trips"},
-                            { "minValue":  2000, "maxValue":    4000, "symbol": { "type": "simple-fill", "color": "#FFC2C2", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   2,000 to  4,000 Trips"},
-                            { "minValue":  4000, "maxValue":    6000, "symbol": { "type": "simple-fill", "color": "#FFADAD", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   4,000 to  6,000 Trips"},
-                            { "minValue":  6000, "maxValue":    8000, "symbol": { "type": "simple-fill", "color": "#FF9999", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   6,000 to  8,000 Trips"},
-                            { "minValue":  8000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": "#FF8585", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "   8,000 to 10,000 Trips"},
-                            { "minValue": 10000, "maxValue":   12000, "symbol": { "type": "simple-fill", "color": "#FF7070", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  10,000 to 12,000 Trips"},
-                            { "minValue": 12000, "maxValue":   14000, "symbol": { "type": "simple-fill", "color": "#FF5C5C", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  12,000 to 14,000 Trips"},
-                            { "minValue": 14000, "maxValue":   16000, "symbol": { "type": "simple-fill", "color": "#FF4747", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": "  14,000 to 16,000 Trips"},
-                            { "minValue": 16000, "maxValue": 9999999, "symbol": { "type": "simple-fill", "color": "#FF0000", "outline": {"color": "#FFFFFF", "width": 0.5 }}, "label": " 16,000 to 999,999 Trips"}
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ]
                         },
                         "compare_abs": {
-                          "name": "Change in Trips"
+                          "name": "Change in All Trips",
+                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ]
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Trips"
+                          "name": "Percent Change in All Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSAll",
-                      "aDisplayName": "Share of All Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aM",
+                      "aDisplayName": "Motorized Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of All Trips"
+                          "name": "Motorized Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change in Share of All Trips"
+                          "name": "Change in Motorized Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Share of All Trips"
+                          "name": "Percent Change in Motorized Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSMot",
-                      "aDisplayName": "Share of Motorized Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aA",
+                      "aDisplayName": "Auto Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Motorized Trips"
+                          "name": "Auto Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change in Share of Motorized Trips"
+                          "name": "Change in Auto Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Share of Motorized Trips"
+                          "name": "Percent Change in Auto Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSAut",
-                      "aDisplayName": "Share of Auto Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aT",
+                      "aDisplayName": "Transit Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Auto Trips"
+                          "name": "Transit Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change in Share of Auto Trips"
+                          "name": "Change in Transit Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Share of Auto Trips"
+                          "name": "Percent Change in Transit Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSTrn",
-                      "aDisplayName": "Share of Transit Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aN",
+                      "aDisplayName": "Non-Motorized Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Transit Trips"
+                          "name": "Non-Motorized Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change in Share of Transit Trips"
+                          "name": "Change in Non-Motorized Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Share of Transit Trips"
+                          "name": "Percent Change in Non-Motorized Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSLcl",
-                      "aDisplayName": "Share of Local Bus",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aW",
+                      "aDisplayName": "Walk Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Local Bus"
+                          "name": "Walk Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change in Share of Local Bus"
+                          "name": "Change in Walk Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Share of Local Bus"
+                          "name": "Percent Change in Walk Trips"
                         }
                       }
                     },
                     {
-                      "aCode": "aSCor",
-                      "aDisplayName": "Share of Core Bus",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
+                      "aCode": "aB",
+                      "aDisplayName": "Bike Trips",
+                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal, '#,##0'))",
                       "rendererCollection": {
                         "main": {
-                          "name": "Share of Core Bus"
+                          "name": "Bike Trips",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ]
                         },
                         "compare_abs": {
-                          "name": "Change Share of Core Bus"
+                          "name": "Change in Bike Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change Share of Core Bus"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSExp",
-                      "aDisplayName": "Share of Express Bus",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Express Bus"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Express Bus"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Express Bus"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSBrt",
-                      "aDisplayName": "Share of Bus-Rapid Transit",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Bus-Rapid Transit"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Bus-Rapid Transit"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Bus-Rapid Transit"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSLrt",
-                      "aDisplayName": "Share of Light-Rail Transit",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Light-Rail Transit"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Light-Rail Transit"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Light-Rail Transit"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSCrt",
-                      "aDisplayName": "Share of Commuter-Rail Transit",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Commuter-Rail Transit"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Commuter-Rail Transit"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Commuter-Rail Transit"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSNon",
-                      "aDisplayName": "Share of Non-Motorized Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Non-Motorized Trips"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Non-Motorized Trips"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Non-Motorized Trips"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSWlk",
-                      "aDisplayName": "Share of Walk Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Walk Trips"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Walk Trips"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Walk Trips"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aSBik",
-                      "aDisplayName": "Share of Bike Trips",
-                      "agWeightCode": "aT",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal * 100, '#,##0.0') + '%')",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Share of Bike Trips"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Share of Bike Trips"
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Share of Bike Trips"
+                          "name": "Percent Change in Bike Trips"
                         }
                       }
                     }
                   ],
                   "filters" : [
-                    
-                    {
-                      "id"  : "fMode",
-                      "text": "Filter Mode",
-                      "type": "select",
-                      "selected": "wCrt",
-                      "options": [{"value": "Mot" , "label": "All Motorized"                      },
-                                  {"value": "Aut" , "label": "Auto: All"                          },
-                                  {"value": "da"  , "label": "Auto: Drive-Alone"                  },
-                                  {"value": "sr2" , "label": "Auto: Shared-Ride 2"                },
-                                  {"value": "sr3p", "label": "Auto: Shared-Ride 3+"               },
-                                  {"value": "scDp", "label": "Auto: School Drop Off"              },
-                                  {"value": "scSf", "label": "Auto: School Self Drive"            },
-                                  {"value": "Trn" , "label": "All Transit: All Access"            },
-                                  {"value": "dTrn", "label": "All Transit: Drive Access"          },
-                                  {"value": "wTrn", "label": "All Transit: Walk Access"           },
-                                  {"value": "Crt" , "label": "Commuter Rail Transit: All Access"  },
-                                  {"value": "dCrt", "label": "Commuter-Rail Transit: Drive Access"},
-                                  {"value": "wCrt", "label": "Commuter Rail Transit: Walk Access" },
-                                  {"value": "Lcl" , "label": "Local Bus: All Access"              },
-                                  {"value": "dLcl", "label": "Local Bus: Drive Access"            },
-                                  {"value": "wLcl", "label": "Local Bus: Walk Access"             },
-                                  {"value": "Exp" , "label": "Express Bus: All Access"            },
-                                  {"value": "wExp", "label": "Express Bus: Walk Access"           },
-                                  {"value": "dExp", "label": "Express Bus: Drive Access"          },
-                                  {"value": "Lrt" , "label": "Light-Rail Transit: All Access"     },
-                                  {"value": "wLrt", "label": "Light-Rail Transit: Walk Access"    },
-                                  {"value": "dLrt", "label": "Light-Rail Transit: Drive Access"   },
-                                  {"value": "Cor" , "label": "Core Bus: All Access"               },
-                                  {"value": "wCor", "label": "Core Bus: Walk Access"              },
-                                  {"value": "dCor", "label": "Core Bus: Drive Access"             },
-                                  {"value": "Brt" , "label": "Bus-Rapid Transit: All Access"      },
-                                  {"value": "wBrt", "label": "Bus-Rapid Transit: Walk Access"     },
-                                  {"value": "dBrt", "label": "Bus-Rapid Transit: Drive Access"    },
-                                  {"value": "Non" , "label": "All Non-Motorized"                  },
-                                  {"value": "Bik" , "label": "Bike: All"                          },
-                                  {"value": "nsBk", "label": "Bike: Non-School"                   },
-                                  {"value": "scBk", "label": "Bike: School"                       },
-                                  {"value": "Wlk" , "label": "Walk: All"                          },
-                                  {"value": "nsWk", "label": "Walk: Non-School"                   },
-                                  {"value": "scWk", "label": "Walk: School"                       }]
-                    },
                     {
                       "id"  : "fPurp",
                       "text": "Filter Purpose",
                       "type": "select",
-                      "selected": "AllPurp",
-                      "options": [{"value":"AllPurp", "label": "All Purposes"      },
-                                  {"value":"HBO"    , "label": "Home-Based Other"  },
-                                  {"value":"HBSch"  , "label": "Home-Based School" },
-                                  {"value":"HBW"    , "label": "Home-Based Work"   },
-                                  {"value":"NHB"    , "label": "Non-Home-Based"    },
-                                  {"value":"HBC"    , "label": "Home-Based College"}]
+                      "selected": "All",
+                      "options": [{"value":"All"  , "label": "All Purposes"      },
+                                  {"value":"HBC"  , "label": "Home-Based College"},
+                                  {"value":"HBO"  , "label": "Home-Based Other"  },
+                                  {"value":"HBSch", "label": "Home-Based School" },
+                                  {"value":"HBW"  , "label": "Home-Based Work"   },
+                                  {"value":"NHB"  , "label": "Non-Home-Based"    }]
                     },
                     {
                       "id"  : "fTod",
@@ -1112,9 +1029,29 @@
                       "id"  : "fPA",
                       "text": "Filter Production/Attraction",
                       "type": "select",
-                      "selected": "P",
-                      "options": [{"value":"P", "label":"Production" },
-                                  {"value":"A", "label":"Attraction" }]
+                      "selected": "p",
+                      "options": [{"value":"p", "label":"Production" },
+                                  {"value":"a", "label":"Attraction" }]
+                    },
+                    {
+                      "id"  : "fMd",
+                      "text": "Filter Mode",
+                      "type": "checkboxes",
+                      "selected": ["LCL","EXP","COR","BRT","LRT","CRT"],
+                      "options": [{"value": "LCL", "label": "Local Bus"            },
+                                  {"value": "EXP", "label": "Express Bus"          },
+                                  {"value": "COR", "label": "Core Bus"             },
+                                  {"value": "BRT", "label": "Bus Rapid Transit"    },
+                                  {"value": "LRT", "label": "Light Rail Transit"   },
+                                  {"value": "CRT", "label": "Commuter Rail Transit"}]
+                    },
+                    {
+                      "id"  : "fMdA",
+                      "text": "Filter Access Mode",
+                      "type": "checkboxes",
+                      "selected": ["D","W"],
+                      "options": [{"value": "D", "label": "Drive"},
+                                  {"value": "W", "label": "Walk" }]
                     }
                   ]
                 }
