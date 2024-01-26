@@ -76,27 +76,27 @@ th, td {
 }
 
 /* SIDEBARS */
-#mapSidebar {
+.sidebar {
     width: 500px; /* or any other value */
     height: calc(100vh - 114px);
     display: flex;
 }
 
-.colAttributesChart {
+.colAttributes {
     width: 250px; /* or any other value */
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     /* Style your columns */
 }
 
-.colFiltersMore {
+.colFilters {
     width: 250px; /* or any other value */
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     background-color: #DDDDDD; /* Optional: Add a background color */
 }
 
-.colFilters{
+.rowFilters{
     padding: 15px;
 }
 

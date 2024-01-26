@@ -1,31 +1,38 @@
-class VizMapSidebar {
+class VizSidebar {
   constructor(attributeTitle, attributes, attributeSelected, hidden, filters, aggregators, aggregatorSelected, aggregatorTitle, vizMap) {
-    this.id = this.generateIdFromText(attributeTitle) + "-vizmap-sidebar"; // use provided id or generate one if not provided
-    this.vizMap = vizMap;
+    this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    this.vizLayout = vizMap;
     this.attributeTitle = attributeTitle;
-    this.attributeSelect = new WijRadio(this.id + "-attribute-selector", attributes.map(item => ({
-      value: item.aCode,
-      label: item.aDisplayName
-    })), attributeSelected, hidden, attributeTitle, this);
-    this.filters = (filters || []).map(item => new Filter(item, this.vizMap));
+    this.attributeSelect = new WijRadio(this.id + "-attribute-selector",
+                                        attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
+                                        attributeSelected,
+                                        hidden,
+                                        attributeTitle,
+                                        this);
+    this.filters = (filters || []).map(item => new Filter(item, this.vizLayout));
     this.aggregators = (aggregators || []).map(item => new Aggregator(item));
     // Check if aggregator exists before initializing aggregatorSelect
     if (aggregators) {
-      this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector", aggregators.map(item => ({
-        value: item.agCode,
-        label: item.agDisplayName
-      })), aggregatorSelected, false, aggregatorTitle, this);
+      this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector",
+                                            aggregators.map(item => ({ value: item.agCode, label: item.agDisplayName })),
+                                            aggregatorSelected,
+                                            false,
+                                            aggregatorTitle,
+                                            this);
     }
   }
 
   hideLayout() {
-    console.log('vizmap-sidebar:hideLayout');
+    console.log('vizsidebar:hideLayout');
   }
   
   generateIdFromText(text) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
+  getDiv(suffix) {
+    return this.vizLayout.constructor.name.charAt(0).toLowerCase() + this.vizLayout.constructor.name.slice(1) + suffix;
+  }
   
   findAllCombinationsOfLists(lists, prefix = '', separator = '_') {
     // If there are no more lists to process, return the current prefix as the result
@@ -60,7 +67,7 @@ class VizMapSidebar {
 
   getWeightCode() {
     const aCode = this.getACode();
-    const item = this.vizMap.attributes.find(item => item.aCode === aCode);
+    const item = this.vizLayout.attributes.find(item => item.aCode === aCode);
   
     if (item && item.agWeightCode) {
       return item.agWeightCode;
@@ -103,7 +110,7 @@ class VizMapSidebar {
   //  
   //  var _filterGroup = [];
   //
-  //  _filterGroup = this.vizMap.getFilterGroup();
+  //  _filterGroup = this.vizLayout.getFilterGroup();
   //
   //  // Check if _filterGroup is not undefined
   //  if (_filterGroup) {
@@ -126,50 +133,49 @@ class VizMapSidebar {
   //}
 
   render() {
-    console.log('vizmap-sidebar:render:' + this.id);
+    console.log('vizsidebar:render:' + this.id);
 
-    // render aggregators, attributes and filters
-    const containerAttributes = document.createElement('div');
-    containerAttributes.appendChild(this.attributeSelect.render());
-    var divAttributes = document.getElementById("vizMapAttributes");
-    divAttributes.innerHTML = '';
-    divAttributes.appendChild(containerAttributes);  // Append the new element to the container
-
-    const containerAggregator = document.createElement('div');
-    if (this.aggregatorSelect) {
-      containerAggregator.appendChild(this.aggregatorSelect.render());
+    // Function to create and append a container
+    function createAndAppendContainer(parentId, containerId) {
+      const parentDiv = document.getElementById(parentId);
+      if (parentDiv) {
+          parentDiv.innerHTML = '';
+          const containerDiv = document.createElement('div');
+          containerDiv.id = containerId;
+          parentDiv.appendChild(containerDiv);
+          return containerDiv;
+      }
     }
-    var divAggregator = document.getElementById("vizMapAggregator");
-    divAggregator.innerHTML = '';
-    divAggregator.appendChild(containerAggregator);  // Append the new element to the container
 
-    const containerAttributeFilters = document.createElement('div');
-    this.filters.forEach(filter => {
-      containerAttributeFilters.appendChild(filter.render());
+    // Define the elements to process
+    const elements = [
+      { name: "Attributes"      , render: () => this.attributeSelect.render()                                 },
+      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render())                   },
+      { name: "Aggregator"      , render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
+      { name: "Dividers"                                                                                      },
+      { name: "DividerFilters"                                                                                }
+    ];
+
+    // Process each element
+    elements.forEach(element => {
+      const divId = this.getDiv(element.name);
+      const container = createAndAppendContainer(divId, `container${element.name}`);
+
+      if (container && element.render) {
+          const content = element.render();
+          if (Array.isArray(content)) {
+              content.forEach(child => container.appendChild(child));
+          } else if (content) {
+              container.appendChild(content);
+          }
+      }
     });
-
-    var divAttributeFilters = document.getElementById("vizMapAttributeFilters");
-    divAttributeFilters.innerHTML = '';
-    divAttributeFilters.appendChild(containerAttributeFilters);  // Append the new element to the container
-
-    // render dividers
-
-    const containerDividers = document.createElement('div');
-    const containerDividerFilters = document.createElement('div');
-
-    var divAttributes = document.getElementById("vizMapDividers");
-    divAttributes.innerHTML = '';
-    divAttributes.appendChild(containerDividers);  // Append the new element to the container
-
-    var divAttributeFilters = document.getElementById("vizMapDividerFilters");
-    divAttributeFilters.innerHTML = '';
-    divAttributeFilters.appendChild(containerDividerFilters);  // Append the new element to the container
 
   }
 
   // Function to be called when checkbox status changes
   toggleLabels() {
-    var labelCheckbox = document.getElementById('vizMapLabelToggle');
+    var labelCheckbox = document.getElementById('vizsidebar:toggleLabels');
     
     if (this.layerDisplay) {
       if (labelCheckbox.checked) {
@@ -193,46 +199,48 @@ class VizMapSidebar {
   }
   
   afterUpdateSidebar() {
-    this.vizMap.afterUpdateSidebar();
+    this.vizLayout.afterUpdateSidebar();
     this.updateFilterDisplay();
     this.updateAggregations();
   }
 
   afterUpdateAggregator() {
-    this.vizMap.afterUpdateAggregator();
+    this.vizLayout.afterUpdateAggregator();
   }
 
   updateFilterDisplay() {
-    console.log('vizmap-sidebar:updateFilterDisplay');
-    
-    var _filterGroupArray = this.vizMap.getFilterGroupArray();
+    console.log('vizsidebar:updateFilterDisplay');
   
-    if (_filterGroupArray) {
-      this.filters.forEach(filterObject => {
-        const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
-        if (containsFilterText) {
-          if (filterObject.isHidden()) {
-            filterObject.show();
+    // Check if the getFilterGroupArray function exists
+    if (typeof this.vizLayout.getFilterGroupArray === 'function') {
+      var _filterGroupArray = this.vizLayout.getFilterGroupArray();
+  
+      if (_filterGroupArray) {
+        this.filters.forEach(filterObject => {
+          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
+          if (containsFilterText) {
+            if (filterObject.isHidden()) {
+              filterObject.show();
+            }
+          } else {
+            if (!filterObject.isHidden()) {
+              filterObject.hide();
+            }
           }
-        } else {
+        });
+      } else {
+        // Hide all divs if _filterGroupArray is null or undefined
+        this.filters.forEach(filterObject => {
           if (!filterObject.isHidden()) {
             filterObject.hide();
           }
-        }
-      });
-    } else {
-      // Hide all divs if _filterGroup is null or undefined
-      this.filters.forEach(filterObject => {
-        if (!filterObject.isHidden()) {
-          filterObject.hide();
-        }
-      });
+        });
+      }
     }
   }
   
-
   updateAggregations() {
-    console.log('vizmap-sidebar:updateAggregations');
+    console.log('vizsidebar:updateAggregations');
     
     const aggNumeratorSelect = document.getElementById('aggNumerator');
 

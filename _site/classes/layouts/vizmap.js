@@ -18,14 +18,24 @@ require([
     constructor(data, layerTitle) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
       console.log('vizmap:construct:' + this.id);
+
+      this.sidebar = new VizSidebar(data.attributeTitle,
+                                    data.attributes,
+                                    data.attributeSelected,
+                                    false,
+                                    data.filters,
+                                    data.aggregators,
+                                    data.aggregatorSelected,
+                                    data.aggregatorTitle,
+                                    this)
       this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
-      this.attributes = (data.attributes || []).map(item => new Attribute(item));
+      this.attributes =  (data.attributes  || []).map(item => new Attribute (item));
       this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
-      this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle, this)
+
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       
@@ -44,25 +54,30 @@ require([
       
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
-      fetch(this.baseGeometryFile)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(data => {
-        this.baseGeometryGeoJson = data;
-      })
-      .catch(error => {
-        console.error('Error reading the JSON file:', error);
-        // Handle the error appropriately
-        });
-      
+      if (this.baseGeometryFile!="") {
+        fetch(this.baseGeometryFile)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+          this.baseGeometryGeoJson = data;
+        })
+        .catch(error => {
+          console.error('Error reading the JSON file:', error);
+          // Handle the error appropriately
+          });
+      }
     }
     
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    renderSidebar() {
+      this.sidebar.render();
     }
 
     getScenarioMain() {
@@ -358,11 +373,6 @@ require([
         map.add(this.layerDisplay);
       }
     }
-
-    renderSidebar() {
-      this.sidebar.render();
-    }
-
 
     // Function to be called when checkbox status changes
     toggleLabels() {

@@ -45,7 +45,6 @@ class WijSelect {
     
         
     let space = document.createElement("calcite-label");  // Create a new div element
-    space.innerHTML = "<br/>";  // Set its innerHTML
     container.appendChild(space);  // Append the new element to the container
     
     // Check if this.hidden is true and hide the container if it is

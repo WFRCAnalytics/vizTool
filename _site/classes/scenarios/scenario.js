@@ -11,11 +11,13 @@ class Scenario {
     this.jsonData = {};
 
     // Fetch and store data for each file
+    // AUTOMATE USING CONFIG
     this.fetchAndStoreData('roadway-vizmap');
     this.fetchAndStoreData('roadway-trends');
     this.fetchAndStoreData('transit-segments-riders');
     this.fetchAndStoreData('zones-modetrips-vizmap');
-    //this.fetchAndStoreData('zones-se-vizmap');
+    this.fetchAndStoreData('zones-se-vizmap');
+    this.fetchAndStoreData('zones-jobhh-vizmap');
   }
 
   // Function to fetch and store data
