@@ -291,15 +291,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                           "valueExpression": "var v  = $feature.dVal; if (v<=-1.00) { return 'class_1'; } else if (v< -0.50) { return 'class_2'; } else if (v< -0.15) { return 'class_3'; } else if (v< -0.05) { return 'class_4'; } else if (v<  0.05) { return 'class_5'; } else if (v<  0.15) { return 'class_6'; } else if (v<  0.50) { return 'class_7'; } else if (v<  1.00) { return 'class_8'; } else { return 'class_9'; }",
                           "uniqueValueInfos": [
-                            { "value": "class_9", "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +1.00"},
-                            { "value": "class_8", "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+0.50 to +1.00" },
-                            { "value": "class_7", "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+0.15 to +0.50" },
-                            { "value": "class_6", "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+0.05 to +0.15" },
+                            { "value": "class_9", "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +1.00"},
+                            { "value": "class_8", "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+0.50 to +1.00" },
+                            { "value": "class_7", "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+0.15 to +0.50" },
+                            { "value": "class_6", "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+0.05 to +0.15" },
                             { "value": "class_5", "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-0.05 to +0.05" },
-                            { "value": "class_4", "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-0.05 to -0.15" },
-                            { "value": "class_3", "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-0.05 to -0.15" },
-                            { "value": "class_2", "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-0.15 to -0.50" },
-                            { "value": "class_1", "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -1.00"}
+                            { "value": "class_4", "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-0.05 to -0.15" },
+                            { "value": "class_3", "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-0.05 to -0.15" },
+                            { "value": "class_2", "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-0.15 to -0.50" },
+                            { "value": "class_1", "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -1.00"}
                           ]
                         },
                         "compare_pct": {
