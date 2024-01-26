@@ -1550,15 +1550,15 @@
                           "name": "Jobs",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Jobs"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Jobs"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Jobs"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Jobs"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Jobs"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Jobs"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Jobs"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Jobs"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Jobs"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1576,15 +1576,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Jobs" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Jobs"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Jobs"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Jobs"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Jobs"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Jobs"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Jobs" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Jobs" }
                             ]
                         },
                         "compare_pct": {
@@ -1601,15 +1601,15 @@
                           "name": "Households",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Households"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Households"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Households"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Households"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Households"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Households"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Households"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Households"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Households"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1627,15 +1627,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Households" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Households" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Households"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Households"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Households"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Households"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Households"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Households" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Households" }
                             ]
                         },
                         "compare_pct": {
@@ -1652,15 +1652,15 @@
                           "name": "Access to Jobs",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000"},
-                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000"},
-                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
-                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
-                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000"},
-                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000"},
-                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
-                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
-                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
+                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Jobs"},
+                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000 Jobs"},
+                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000 Jobs"},
+                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000 Jobs"},
+                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000 Jobs"},
+                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000 Jobs"},
+                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000 Jobs"},
+                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000 Jobs"},
+                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "More than 500,000 Jobs"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1678,15 +1678,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs"},
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Jobs"},
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Jobs"  },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Jobs"     },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Jobs"      },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Jobs"     },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Jobs"  },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Jobs"},
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Jobs"}
                             ]
                         },
                         "compare_pct": {
@@ -1703,15 +1703,15 @@
                           "name": "Access to Households",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 5,00"},
-                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000"},
-                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
-                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
-                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000"},
-                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000"},
-                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
-                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
-                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
+                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Households"},
+                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000 Households"},
+                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000 Households"},
+                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000 Households"},
+                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000 Households"},
+                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000 Households"},
+                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000 Households"},
+                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000 Households"},
+                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "More than 500,000 Households"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1729,15 +1729,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Households" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Households" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Households"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Households"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Households"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Households"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Households"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Households" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Households" }
                             ]
                         },
                         "compare_pct": {
@@ -1754,15 +1754,15 @@
                           "name": "Access to Jobs+Households",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000"},
-                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000"},
-                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
-                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
-                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000"},
-                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000"},
-                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
-                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
-                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
+                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Jobs+Households"},
+                            { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000 Jobs+Households"},
+                            { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000 Jobs+Households"},
+                            { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000 Jobs+Households"},
+                            { "minValue": 100000, "maxValue":   199999, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 200,000 Jobs+Households"},
+                            { "minValue": 200000, "maxValue":   299999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "200,000 to 300,000 Jobs+Households"},
+                            { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000 Jobs+Households"},
+                            { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000 Jobs+Households"},
+                            { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "More than 500,000 Jobs+Households"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1780,15 +1780,15 @@
                           "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs+Households" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Jobs+Households" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Jobs+Households"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Jobs+Households"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Jobs+Households"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Jobs+Households"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Jobs+Households"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Jobs+Households" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Jobs+Households" }
                             ]
                         },
                         "compare_pct": {
@@ -1815,9 +1815,9 @@
                       "fOwnCol": false,
                       "col": "",
                       "selected": "C",
-                      "options": [{"value": "C", "label": "Congested"     },
-                                  {"value": "F", "label": "Freeflow"      },
-                                  {"value": "S", "label": "Straight-line" }]
+                      "options": [{"value": "C", "label": "Congested (Auto) and Transit"},
+                                  {"value": "F", "label": "Freeflow (Auto-Only)"        },
+                                  {"value": "S", "label": "Straight-line (Auto-Only)"   }]
                     }
                   ]
                 }
