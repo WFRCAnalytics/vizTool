@@ -1559,7 +1559,17 @@
                             { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
                             { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
                             { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Jobs"
                         },
                         "compare_abs": {
                           "name": "Change in Jobs",
@@ -1576,7 +1586,8 @@
                             { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ]
-                        },                        "compare_pct": {
+                        },
+                        "compare_pct": {
                           "name": "Percent Change in Jobs"
                         }
                       }
@@ -1599,7 +1610,17 @@
                             { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
                             { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
                             { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Households"
                         },
                         "compare_abs": {
                           "name": "Change in Households",
@@ -1616,7 +1637,8 @@
                             { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ]
-                        },                        "compare_pct": {
+                        },
+                        "compare_pct": {
                           "name": "Percent Change in Households"
                         }
                       }
@@ -1630,7 +1652,7 @@
                           "name": "Access to Jobs",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 5,00"},
+                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000"},
                             { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000"},
                             { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
                             { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
@@ -1639,7 +1661,17 @@
                             { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
                             { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
                             { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Jobs"
                         },
                         "compare_abs": {
                           "name": "Change in Access to Jobs",
@@ -1656,7 +1688,8 @@
                             { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ]
-                        },                        "compare_pct": {
+                        },
+                        "compare_pct": {
                           "name": "Percent Change in Access to Jobs"
                         }
                       }
@@ -1679,7 +1712,17 @@
                             { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
                             { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
                             { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Households"
                         },
                         "compare_abs": {
                           "name": "Change in Access to Households",
@@ -1696,7 +1739,8 @@
                             { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ]
-                        },                        "compare_pct": {
+                        },
+                        "compare_pct": {
                           "name": "Percent Change in Access to Households"
                         }
                       }
@@ -1710,7 +1754,7 @@
                           "name": "Access to Jobs+Households",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 5,00"},
+                            { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000"},
                             { "minValue":   5000, "maxValue":    24999, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 25,000"},
                             { "minValue":  25000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
                             { "minValue":  50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
@@ -1719,7 +1763,17 @@
                             { "minValue": 300000, "maxValue":   399999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "300,000 to 400,000"},
                             { "minValue": 400000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "400,000 to 500,000"},
                             { "minValue": 500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 500,000" }
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Jobs+Households"
                         },
                         "compare_abs": {
                           "name": "Change in Access to Jobs+Households",
@@ -1736,7 +1790,8 @@
                             { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ]
-                        },                        "compare_pct": {
+                        },
+                        "compare_pct": {
                           "name": "Percent Change in Access to Jobs+Households"
                         }
                       }

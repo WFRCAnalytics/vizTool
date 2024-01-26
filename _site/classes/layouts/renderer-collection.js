@@ -19,6 +19,12 @@ require([
       const renderer = new ClassBreaksRenderer();
       renderer.field = data.field;
       renderer.classBreakInfos = data.classBreakInfos;
+      if (data.defaultSymbol !== undefined) {
+        renderer.defaultSymbol = data.defaultSymbol;
+      }
+      if (data.defaultLabel !== undefined) {
+        renderer.defaultLabel = data.defaultLabel;
+      }    
       return renderer;
     } else if (data.valueExpression && data.uniqueValueInfos) {
       const renderer = new UniqueValueRenderer();
