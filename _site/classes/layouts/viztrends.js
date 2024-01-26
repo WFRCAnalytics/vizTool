@@ -13,8 +13,6 @@ class VizTrends {
                                   data.aggregatorTitle,
                                   this)
     this.jsonFileName = data.jsonFileName;
-    this.filters = (data.filters || []).map(item => new Filter(item, this));
-    this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
     this.divideByAttributes = (data.divideByAttributes || []).map(item => new Divider(item));
     this.divideByAttributeSelect = new WijSelect(this.id + "_divider-selector",
                                                  data.divideByAttributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
@@ -45,7 +43,7 @@ class VizTrends {
 
   // get the attributed code that is selected
   getACode() {
-    return this.attributeSelect.selected;
+    return this.sidebar.getACode();
   }
 
   // get the divider code that is selected
@@ -75,13 +73,7 @@ class VizTrends {
   }
 
   getSelectedAggregator() {
-    let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
-
-    if (foundAggregator) {
-      return foundAggregator;
-    }
-
-    return;
+    return this.sidebar.getSelectedAggregator();
   }
 
   afterUpdateAggregator() {
@@ -124,34 +116,6 @@ class VizTrends {
       });
     }
   }
-
-//  // get the current filter
-//  getFilter() {
-//
-//    var _filterGroup = [];
-//
-//    _filterGroup = this.scenarioMain().jsonData['roadway-trends'].attributes.find(item => item.aCode === this.getACode()).filterGroup;
-//
-//    // Check if _filterGroup is not undefined
-//    if (_filterGroup) {
-//      // Split the _filterGroup by "_"
-//      const _filterArray = _filterGroup.split("_");
-//      
-//      // Map selected options to an array and join with "_"
-//      const _filter = _filterArray
-//        .map(filterItem => {
-//          var _fItem = this.filters.find(item => item.id === filterItem + '_' + this.id);
-//          return _fItem ? _fItem.filterWij.selected : "";
-//        })
-//        .join("_");
-//  
-//      return _filter;
-//    }
-//  
-//    return ""; // Return an empty string or a default value if _filterGroup is undefined
-//  
-//  }
-
 
   getFilterGroup() {
     return this.scenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());

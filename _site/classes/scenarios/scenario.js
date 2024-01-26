@@ -69,11 +69,15 @@ class Scenario {
 
     // Loop through each combination of filters
     a_lstFilters.forEach(function(filter) {
-      let data = _parent.jsonData[a_jsonDataKey].data[filter];
+      let _data = [];
+      if (_parent.jsonData[a_jsonDataKey]) {
+        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+      }
+      
 
       // Sum the fields in the data object
-      if (data) {
-        sumFields(data);
+      if (_data) {
+        sumFields(_data);
       }
     });
 

@@ -33,9 +33,6 @@ require([
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
-      this.attributes =  (data.attributes  || []).map(item => new Attribute (item));
-      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
-
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       
@@ -122,7 +119,9 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
-
+    getLabelInfo() {
+      return this.sidebar.getAttributeLabelExpressionInfo();
+    }
 
     // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
     isScenarioCompIncomplete() {
@@ -169,24 +168,16 @@ require([
       }
     }
 
-    getAttributeRendererCollection() {
-      return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
-    }
-    
-    getAttributeLabelExpressionInfo() {
-      return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
-    }
-
     getMainRenderer() {
-      return this.getAttributeRendererCollection().main.renderer;
+      return this.sidebar.getAttributeRendererCollection().main.renderer;
     }
 
     getCompareAbsRenderer() {
-      return this.getAttributeRendererCollection().compare_abs.renderer;
+      return this.sidebar.getAttributeRendererCollection().compare_abs.renderer;
     }
 
     getComparePctRenderer() {
-      return this.getAttributeRendererCollection().compare_pct.renderer;
+      return this.sidebar.getAttributeRendererCollection().compare_pct.renderer;
     }
 
     initializeLayer() {
@@ -254,7 +245,7 @@ require([
               {
                 name: "formatDisplayValue",
                 title: "Formatted Display Value",
-                expression: this.getAttributeLabelExpressionInfo()
+                expression: this.getLabelInfo()
               }
             ]
           },
@@ -271,7 +262,7 @@ require([
               }
             },
             labelPlacement: "center-along",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
           }],
           renderer: {
             type: "simple",  // Use a simple renderer
@@ -339,7 +330,7 @@ require([
               {
                 name: "formatDisplayValue",
                 title: "Formatted Display Value",
-                expression: this.getAttributeLabelExpressionInfo()
+                expression: this.getLabelInfo()
               }
             ]
           },
@@ -356,7 +347,7 @@ require([
               }
             },
             labelPlacement: "always-horizontal",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
           }],
           renderer: {
             type: "simple",  // Use a simple renderer
@@ -547,7 +538,7 @@ require([
 
           
           // NO AGGREGATOR
-          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
+          if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
             
             result.features.forEach((feature) => {
 

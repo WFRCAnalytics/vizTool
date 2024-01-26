@@ -10,6 +10,7 @@ class VizSidebar {
                                         attributeTitle,
                                         this);
     this.filters = (filters || []).map(item => new Filter(item, this.vizLayout));
+    this.attributes  = (attributes  || []).map(item => new Attribute(item));
     this.aggregators = (aggregators || []).map(item => new Aggregator(item));
     // Check if aggregator exists before initializing aggregatorSelect
     if (aggregators) {
@@ -90,7 +91,9 @@ class VizSidebar {
   }
   
   getAttributeLabelExpressionInfo() {
-    return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
+    if (this.attributes.find(item => item.aCode === this.getACode())) {
+      return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
+    }
   }
 
   getMainRenderer() {
@@ -160,7 +163,12 @@ class VizSidebar {
     elements.forEach(element => {
       const divId = this.getDiv(element.name);
       const container = createAndAppendContainer(divId, `container${element.name}`);
-
+      if (element.name === "Aggregator" && (!this.aggregatorSelect)) {
+        document.getElementById(divId).style.display='none';
+      } else {
+        document.getElementById(divId).style.display='block';
+      }
+  
       if (container && element.render) {
           const content = element.render();
           if (Array.isArray(content)) {
@@ -170,7 +178,7 @@ class VizSidebar {
           }
       }
     });
-
+    this.updateFilterDisplay();
   }
 
   // Function to be called when checkbox status changes
@@ -199,9 +207,9 @@ class VizSidebar {
   }
   
   afterUpdateSidebar() {
-    this.vizLayout.afterUpdateSidebar();
     this.updateFilterDisplay();
     this.updateAggregations();
+    this.vizLayout.afterUpdateSidebar();
   }
 
   afterUpdateAggregator() {
