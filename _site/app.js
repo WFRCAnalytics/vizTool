@@ -101,8 +101,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     modMain .value = scenarioModel.size > 0 ? scenarioModel.values().next().value : 'none';
     grpMain .value = scenarioGroup.size > 0 ? scenarioGroup.values().next().value : 'none';
     yearMain.value = scenarioYear .size > 0 ? scenarioYear .values().next().value : 'none';
-    modComp.value = 'none';
-    grpComp.value = 'none';
+    modComp .value = 'none';
+    grpComp .value = 'none';
     yearComp.value = 'none';
   }
 
@@ -146,30 +146,30 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       });
     }
 
-    document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
-    document.getElementById('selectYearMain-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearMain')));
-
-    document.getElementById('selectYearComp-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearComp')));
-    document.getElementById('selectYearComp-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearComp')));
-    
-    function selectPrevOption(selectElement) {
-      const options = Array.from(selectElement.querySelectorAll('calcite-option'));
-      const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
-      if (currentIndex > 0) {
-        selectElement.value = options[currentIndex - 1].value;
-        updateActiveVizMap();
-      }
-    }
-    
-    function selectNextOption(selectElement) {
-      console.log('app:value:' + selectElement.value)
-      const options = Array.from(selectElement.querySelectorAll('calcite-option'));
-      const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
-      if (currentIndex < options.length - 1) {
-        selectElement.value = options[currentIndex + 1].value;
-        updateActiveVizMap();
-      }
-    }
+    //document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
+    //document.getElementById('selectYearMain-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearMain')));
+    //
+    //document.getElementById('selectYearComp-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearComp')));
+    //document.getElementById('selectYearComp-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearComp')));
+    //
+    //function selectPrevOption(selectElement) {
+    //  const options = Array.from(selectElement.querySelectorAll('calcite-option'));
+    //  const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
+    //  if (currentIndex > 0) {
+    //    selectElement.value = options[currentIndex - 1].value;
+    //    updateActiveVizMap();
+    //  }
+    //}
+    //
+    //function selectNextOption(selectElement) {
+    //  console.log('app:value:' + selectElement.value)
+    //  const options = Array.from(selectElement.querySelectorAll('calcite-option'));
+    //  const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
+    //  if (currentIndex < options.length - 1) {
+    //    selectElement.value = options[currentIndex + 1].value;
+    //    updateActiveVizMap();
+    //  }
+    //}
     
     document.getElementById('vizMapLabelToggle').addEventListener('calciteCheckboxChange', (event) => {  // Arrow function here
       console.log(dataMenu);
@@ -279,19 +279,19 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         // Append the calcite-select to the flex container
         flexContainer.appendChild(calciteSelect);
 
-        // Check if the current select is 'selectYearMain' or 'selectYearComp'
-        if (id === 'selectYearMain' || id === 'selectYearComp') {
-            // Create and append buttons within the flex container
-            const buttonPrev = document.createElement('calcite-button');
-            buttonPrev.id = id + '-prev';
-            buttonPrev.textContent = '<';
-            flexContainer.appendChild(buttonPrev);
-
-            const buttonNext = document.createElement('calcite-button');
-            buttonNext.id = id + '-next';
-            buttonNext.textContent = '>';
-            flexContainer.appendChild(buttonNext);
-        }
+        //// Check if the current select is 'selectYearMain' or 'selectYearComp'
+        //if (id === 'selectYearMain' || id === 'selectYearComp') {
+        //    // Create and append buttons within the flex container
+        //    const buttonPrev = document.createElement('calcite-button');
+        //    buttonPrev.id = id + '-prev';
+        //    buttonPrev.textContent = '<';
+        //    flexContainer.appendChild(buttonPrev);
+        //  
+        //    const buttonNext = document.createElement('calcite-button');
+        //    buttonNext.id = id + '-next';
+        //    buttonNext.textContent = '>';
+        //    flexContainer.appendChild(buttonNext);
+        //}
 
         // Append the flex container to the content container
         contentContainer.appendChild(flexContainer);
