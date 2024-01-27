@@ -504,7 +504,7 @@
                           "field": "dVal",
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":     "Less than 50"},
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":          "1 to 50"},
                             { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
                             { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":       "250 to 500"},
                             { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":     "500 to 1,000"},
@@ -513,7 +513,13 @@
                             { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":  "5,000 to 10,000"},
                             { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": "10,000 to 15,000"},
                             { "minValue": 15000, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "More than 15,000"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Riders"
                         },
                         "compare_abs": {
                           "name": "Change in Riders",
@@ -793,43 +799,96 @@
                   "attributeSelected": "aR",
                   "attributes": [
                     {
-                      "aCode": "aR",
-                      "aDisplayName": "Riders",
+                      "aCode": "aB",
+                      "aDisplayName": "Boardings",
                       "rendererCollection": {
                         "main": {
-                          "name": "Riders",
+                          "name": "Boardings",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "More than 15,000"}
-                          ]
+                            { "minValue":  0.01, "maxValue":    50, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":          "1 to 50"},
+                            { "minValue":    50, "maxValue":   250, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":   500, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":  1000, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":  2500, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":  5000, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue": 10000, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue": 15000, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Boardings"
                         },
                         "compare_abs": {
-                          "name": "Change in Riders",
+                          "name": "Change in Boardings",
                           "field": "dVal",
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +5,000" }
                             ]
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Lanes"
+                          "name": "Percent Change in Boardings"
+                        }
+                      }
+                    },
+                    {
+                      "aCode": "aA",
+                      "aDisplayName": "Alightings",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Alightings",
+                          "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "classBreakInfos": [
+                            { "minValue":   0.5, "maxValue":    50, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":          "1 to 50"},
+                            { "minValue":    50, "maxValue":   250, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":   500, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":  1000, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":  2500, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":  5000, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue": 10000, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue": 15000, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": "10,000 to 15,000"},
+                            { "minValue": 15000, "maxValue":999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Alightings"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Alightings",
+                          "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +5,000" }
+                            ]
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Alightings"
                         }
                       }
                     }
@@ -1237,18 +1296,18 @@
                       "rendererCollection": {
                         "main": {
                           "name": "All Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1266,14 +1325,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1298,18 +1357,18 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1327,14 +1386,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1359,18 +1418,18 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Auto Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1388,14 +1447,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1420,18 +1479,18 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Transit Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1449,14 +1508,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1481,18 +1540,18 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Non-Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1510,14 +1569,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1542,17 +1601,17 @@
                       "rendererCollection": {
                         "main": {
                           "name": "Walk Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":   0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":    50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":   250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":   500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue":  1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue":  2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
                             { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
@@ -1571,14 +1630,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1600,21 +1659,21 @@
                     {
                       "aCode": "aB",
                       "aDisplayName": "Bike Trips",
-                      "labelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal, '#,##0'))",
+                      "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Bike Trips",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color":[141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color":[235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color":[229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
                           ],
                           "defaultSymbol": {
                             "type": "simple-fill",
@@ -1632,14 +1691,14 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
                             { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
                             ],
                             "defaultSymbol": {
@@ -1900,7 +1959,7 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Jobs"},
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50 Jobs"},
                             { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Jobs"},
                             { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Jobs"},
                             { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Jobs"},
@@ -1961,7 +2020,7 @@
                           "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Households"},
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50 Households"},
                             { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Households"},
                             { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":[  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Households"},
                             { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":[108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Households"},
