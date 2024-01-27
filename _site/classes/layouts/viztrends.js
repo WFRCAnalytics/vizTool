@@ -1,19 +1,22 @@
 class VizTrends {
-  constructor(data) {
+  constructor(data, modelEntity) {
     this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
     console.log('viztrends:construct:' + this.id);
+
+    // link to parent
+    this.modelEntity = modelEntity;
 
     this.jsonFileName = data.jsonFileName;
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
                                   data.attributeTitle,
+                                  data.filters,
                                   data.aggregators,
                                   data.aggregatorSelected,
                                   data.aggregatorTitle,
-                                  data.dividebyAttributes,
-                                  data.divideByAttributeSelect,
-                                  data.divideByAttributeTitle,
-                                  data.filters,
+                                  data.dividers,
+                                  data.dividerSelected,
+                                  data.dividerTitle,
                                   this)
   }
   
@@ -34,7 +37,8 @@ class VizTrends {
     console.log('viztrends:afterUpdateAggregator');
     //document.getElementById(this.comboSelector.id + '-container').innerHTML = '';
     //this.comboSelector.render();
-    this.renderSidebar();
+    //this.renderSidebar();
+    this.sidebar.render();
     this.afterUpdateSidebar();
   }
 
@@ -57,32 +61,20 @@ class VizTrends {
   }
 
   
-  // get the attributed code that is selected
+  // get the attribute code that is selected
   getACode() {
     return this.sidebar.getACode();
   }
 
   // get the divider code that is selected
   getDCode() {
-    return this.divideByAttributeSelect.selected;
+    return this.sidebar.getDCode();
   }
 
   getSelectedAggregator() {
     return this.sidebar.getSelectedAggregator();
   }
   
-  getComboboxOptions(){
-    const comboOptions = Array.isArray(this.comboSelector.comboSelected) ? this.comboSelector.comboSelected : [this.comboSelector.comboSelected];
-    if (
-      this.comboSelector.selected.agCode === 'CO_FIPS' ||
-      this.comboSelector.selected.agCode === 'DISTMED' ||
-      this.comboSelector.selected.agCode === 'DISTLRG'
-    ) {
-      return comboOptions.map(str => parseInt(str,10));
-    } else {
-      return comboOptions;
-    }
-  }
 
   getFilterGroup() {
     return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
@@ -130,7 +122,7 @@ class VizTrends {
     console.log('viztrends:Creating the chart...');
     console.log("Selected radio button option under 'Display':", aCode);
 
-    const containerElement = document.getElementById('mainTrend');
+    const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
       
     
@@ -145,8 +137,8 @@ class VizTrends {
     containerElement.appendChild(chartContainer);
 
     const canvas = document.createElement('canvas');
-    canvas.width = 400;
-    canvas.height = 200;
+    //canvas.width = 400;
+    //canvas.height = 200;
     chartContainer.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
@@ -236,8 +228,7 @@ class VizTrends {
   updateDisplay() {
     const aCode = this.getACode();
     const dCode = this.getDCode();
-    const comboCodes = this.getComboboxOptions();
-    const combos = this.comboSelector;
+    var comboCodes = this.sidebar.aggregatorFilter.getSelectedOptionsAsList();
     //const aggCode = this.getSelectedAggregator();
     //const segId = "0006_146.9"; // Change this to your desired SEGID
     //const segOptions = this.getSegidOptions();
@@ -273,6 +264,21 @@ class VizTrends {
     const chartData = {};
     var filteredFeatures = {};
 
+    function recastArrayIfNumeric(arr) {
+      // Check if every item in the array is a numeric string
+      const allNumeric = arr.every(item => !isNaN(item) && typeof item === 'string');
+  
+      // If all items are numeric strings, convert them to integers
+      if (allNumeric) {
+        return arr.map(item => parseInt(item, 10));
+      } else {
+        // Return the original array if not all items are numeric strings
+        return arr;
+      }
+    }
+
+    comboCodes = recastArrayIfNumeric(comboCodes);
+
     var aggIDs = comboCodes//[35,49];
     
     let aggIDsString = '';
@@ -292,7 +298,7 @@ class VizTrends {
       .then(data => {
         // Filter features where CO_FIPS is 35
         filteredFeatures = data.features.filter(feature => 
-          aggIDs.includes(feature.properties[this.comboSelector.selected.agCode])
+          aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
       );
 
         // Now you have an array of features where CO_FIPS is 35
@@ -356,7 +362,7 @@ class VizTrends {
       .then(data => {
         // Filter features where CO_FIPS is 35
         filteredTazes = data.features.filter(feature => 
-          aggIDs.includes(feature.properties[this.comboSelector.selected.agCode])
+          aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
       );
 
       var filteredTazList = [];

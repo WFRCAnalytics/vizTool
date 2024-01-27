@@ -386,40 +386,246 @@
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
-                  "attributeTitle": "Roadway Segment Trends",
+                  "attributeTitle": "Roadway Trends",
                   "attributeSelected": "aVmt",
-                  "divideByAttributeTitle": "Divide By",
-                  "divideByAttributeSelected": "aTotHh",
+                  "dividerTitle": "Divide By",
+                  "dividerSelected": "aTotHh",
                   "aggregators": [
                     {
                       "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
-                      "agOptions": ["UDOT","MAG","WFRC"]
+                      "agSelected": ["WFRC"],
+                      "agOptions": [{"value":"UDOT", "label":"UDOT"},
+                                    {"value":"MAG" , "label":"MAG" },
+                                    {"value":"WFRC", "label":"WFRC"}]
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agOptions": [3, 11, 35, 49, 57]
+                      "agSelected": ["35"],
+                      "agOptions": [{"value": "3", "label":"Box Elder"},
+                                    {"value":"57", "label":"Weber"    },
+                                    {"value":"11", "label":"Davis"    },
+                                    {"value":"35", "label":"Salt Lake"},
+                                    {"value":"49", "label":"Utah"     }]
                     },
                     {
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agOptions": ["Elberta","Genola","Spanish Fork","Eastside Mountains","Box Elder County North","Springville","Orem","American Fork","Bluffdale","Sandy","Murray","South Salt Lake","North Salt Lake","Centerville","Kaysville","Clearfield","Ogden","Farr West","Balance of BOX ELDER","West Point","West Haven","Weber County","HAFB","SL County East Cyns","Mosida","Saratoga Springs","South Jordan","West Valley City","Fairfield","Eagle Mountain","Alpine","Lake Shore","SL County West","Davis County","Pleasant Grove","South Ogden","Pleasant View","Perry","Syracuse","Sunset","Holladay","Salem","Vineyard","Copperton","North Ogden","Emigration Canyon","Deer Ridge","Goshen","Santaquin","Mapleton","Brigham City","Payson","Provo","Lindon","Lehi","Draper","Midvale","Mill Creek","Salt Lake City","Bountiful","Farmington","Layton","Riverdale","Marriott-Slaterville","Box Elder County South","Clinton","Hooper","Roy","West Jordan","South Weber","West Bountiful","Lake Mountain","Riverton","Taylorsville","Woods Cross","Cedar Fort","Highland","Benjamin","Palmyra","SL County East Cyns - Parleys","Herriman","Fruit Heights","Harrisville","Willard","Cedar Hills","Magna","Plain City","Cottonwood Heights","Kearns","Brighton","Alta","Mantua","Elk Ridge","Washington Terrace"]
+                      "agSelected": ["Salt Lake City"],
+                      "agOptions": [{"value":"Alpine"                        ,"label":"Alpine"                        },
+                                    {"value":"Alta"                          ,"label":"Alta"                          },
+                                    {"value":"American Fork"                 ,"label":"American Fork"                 },
+                                    {"value":"Balance of BOX ELDER"          ,"label":"Balance of BOX ELDER"          },
+                                    {"value":"Benjamin"                      ,"label":"Benjamin"                      },
+                                    {"value":"Bluffdale"                     ,"label":"Bluffdale"                     },
+                                    {"value":"Bountiful"                     ,"label":"Bountiful"                     },
+                                    {"value":"Box Elder County North"        ,"label":"Box Elder County North"        },
+                                    {"value":"Box Elder County South"        ,"label":"Box Elder County South"        },
+                                    {"value":"Brigham City"                  ,"label":"Brigham City"                  },
+                                    {"value":"Brighton"                      ,"label":"Brighton"                      },
+                                    {"value":"Cedar Fort"                    ,"label":"Cedar Fort"                    },
+                                    {"value":"Cedar Hills"                   ,"label":"Cedar Hills"                   },
+                                    {"value":"Centerville"                   ,"label":"Centerville"                   },
+                                    {"value":"Clearfield"                    ,"label":"Clearfield"                    },
+                                    {"value":"Clinton"                       ,"label":"Clinton"                       },
+                                    {"value":"Copperton"                     ,"label":"Copperton"                     },
+                                    {"value":"Cottonwood Heights"            ,"label":"Cottonwood Heights"            },
+                                    {"value":"Davis County"                  ,"label":"Davis County"                  },
+                                    {"value":"Deer Ridge"                    ,"label":"Deer Ridge"                    },
+                                    {"value":"Draper"                        ,"label":"Draper"                        },
+                                    {"value":"Eagle Mountain"                ,"label":"Eagle Mountain"                },
+                                    {"value":"Eastside Mountains"            ,"label":"Eastside Mountains"            },
+                                    {"value":"Elberta"                       ,"label":"Elberta"                       },
+                                    {"value":"Elk Ridge"                     ,"label":"Elk Ridge"                     },
+                                    {"value":"Emigration Canyon"             ,"label":"Emigration Canyon"             },
+                                    {"value":"Fairfield"                     ,"label":"Fairfield"                     },
+                                    {"value":"Farmington"                    ,"label":"Farmington"                    },
+                                    {"value":"Farr West"                     ,"label":"Farr West"                     },
+                                    {"value":"Fruit Heights"                 ,"label":"Fruit Heights"                 },
+                                    {"value":"Genola"                        ,"label":"Genola"                        },
+                                    {"value":"Goshen"                        ,"label":"Goshen"                        },
+                                    {"value":"HAFB"                          ,"label":"HAFB"                          },
+                                    {"value":"Harrisville"                   ,"label":"Harrisville"                   },
+                                    {"value":"Herriman"                      ,"label":"Herriman"                      },
+                                    {"value":"Highland"                      ,"label":"Highland"                      },
+                                    {"value":"Holladay"                      ,"label":"Holladay"                      },
+                                    {"value":"Hooper"                        ,"label":"Hooper"                        },
+                                    {"value":"Kaysville"                     ,"label":"Kaysville"                     },
+                                    {"value":"Kearns"                        ,"label":"Kearns"                        },
+                                    {"value":"Lake Mountain"                 ,"label":"Lake Mountain"                 },
+                                    {"value":"Lake Shore"                    ,"label":"Lake Shore"                    },
+                                    {"value":"Layton"                        ,"label":"Layton"                        },
+                                    {"value":"Lehi"                          ,"label":"Lehi"                          },
+                                    {"value":"Lindon"                        ,"label":"Lindon"                        },
+                                    {"value":"Magna"                         ,"label":"Magna"                         },
+                                    {"value":"Mantua"                        ,"label":"Mantua"                        },
+                                    {"value":"Mapleton"                      ,"label":"Mapleton"                      },
+                                    {"value":"Marriott-Slaterville"          ,"label":"Marriott-Slaterville"          },
+                                    {"value":"Midvale"                       ,"label":"Midvale"                       },
+                                    {"value":"Mill Creek"                    ,"label":"Mill Creek"                    },
+                                    {"value":"Mosida"                        ,"label":"Mosida"                        },
+                                    {"value":"Murray"                        ,"label":"Murray"                        },
+                                    {"value":"North Ogden"                   ,"label":"North Ogden"                   },
+                                    {"value":"North Salt Lake"               ,"label":"North Salt Lake"               },
+                                    {"value":"Ogden"                         ,"label":"Ogden"                         },
+                                    {"value":"Orem"                          ,"label":"Orem"                          },
+                                    {"value":"Palmyra"                       ,"label":"Palmyra"                       },
+                                    {"value":"Payson"                        ,"label":"Payson"                        },
+                                    {"value":"Perry"                         ,"label":"Perry"                         },
+                                    {"value":"Plain City"                    ,"label":"Plain City"                    },
+                                    {"value":"Pleasant Grove"                ,"label":"Pleasant Grove"                },
+                                    {"value":"Pleasant View"                 ,"label":"Pleasant View"                 },
+                                    {"value":"Provo"                         ,"label":"Provo"                         },
+                                    {"value":"Riverton"                      ,"label":"Riverton"                      },
+                                    {"value":"Riverdale"                     ,"label":"Riverdale"                     },
+                                    {"value":"Roy"                           ,"label":"Roy"                           },
+                                    {"value":"Salem"                         ,"label":"Salem"                         },
+                                    {"value":"Salt Lake City"                ,"label":"Salt Lake City"                },
+                                    {"value":"Sandy"                         ,"label":"Sandy"                         },
+                                    {"value":"Santaquin"                     ,"label":"Santaquin"                     },
+                                    {"value":"Saratoga Springs"              ,"label":"Saratoga Springs"              },
+                                    {"value":"SL County East Cyns"           ,"label":"SL County East Cyns"           },
+                                    {"value":"SL County East Cyns - Parleys" ,"label":"SL County East Cyns - Parleys" },
+                                    {"value":"SL County West"                ,"label":"SL County West"                },
+                                    {"value":"South Jordan"                  ,"label":"South Jordan"                  },
+                                    {"value":"South Ogden"                   ,"label":"South Ogden"                   },
+                                    {"value":"South Salt Lake"               ,"label":"South Salt Lake"               },
+                                    {"value":"South Weber"                   ,"label":"South Weber"                   },
+                                    {"value":"Spanish Fork"                  ,"label":"Spanish Fork"                  },
+                                    {"value":"Springville"                   ,"label":"Springville"                   },
+                                    {"value":"Sunset"                        ,"label":"Sunset"                        },
+                                    {"value":"Syracuse"                      ,"label":"Syracuse"                      },
+                                    {"value":"Taylorsville"                  ,"label":"Taylorsville"                  },
+                                    {"value":"Vineyard"                      ,"label":"Vineyard"                      },
+                                    {"value":"Washington Terrace"            ,"label":"Washington Terrace"            },
+                                    {"value":"Weber County"                  ,"label":"Weber County"                  },
+                                    {"value":"West Bountiful"                ,"label":"West Bountiful"                },
+                                    {"value":"West Haven"                    ,"label":"West Haven"                    },
+                                    {"value":"West Jordan"                   ,"label":"West Jordan"                   },
+                                    {"value":"West Point"                    ,"label":"West Point"                    },
+                                    {"value":"West Valley City"              ,"label":"West Valley City"              },
+                                    {"value":"Willard"                       ,"label":"Willard"                       },
+                                    {"value":"Woods Cross"                   ,"label":"Woods Cross"                   }]
                     },
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
-                      "agOptions": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71]
+                      "agSelected": ["1"],
+                      "agOptions": [{"value": "1","label": "Medium District 1"},
+                                    {"value": "2","label": "Medium District 2"},
+                                    {"value": "3","label": "Medium District 3"},
+                                    {"value": "4","label": "Medium District 4"},
+                                    {"value": "5","label": "Medium District 5"},
+                                    {"value": "6","label": "Medium District 6"},
+                                    {"value": "7","label": "Medium District 7"},
+                                    {"value": "8","label": "Medium District 8"},
+                                    {"value": "9","label": "Medium District 9"},
+                                    {"value":"10","label":"Medium District 10"},
+                                    {"value":"11","label":"Medium District 11"},
+                                    {"value":"12","label":"Medium District 12"},
+                                    {"value":"13","label":"Medium District 13"},
+                                    {"value":"14","label":"Medium District 14"},
+                                    {"value":"15","label":"Medium District 15"},
+                                    {"value":"16","label":"Medium District 16"},
+                                    {"value":"17","label":"Medium District 17"},
+                                    {"value":"18","label":"Medium District 18"},
+                                    {"value":"19","label":"Medium District 19"},
+                                    {"value":"20","label":"Medium District 20"},
+                                    {"value":"21","label":"Medium District 21"},
+                                    {"value":"22","label":"Medium District 22"},
+                                    {"value":"23","label":"Medium District 23"},
+                                    {"value":"24","label":"Medium District 24"},
+                                    {"value":"25","label":"Medium District 25"},
+                                    {"value":"26","label":"Medium District 26"},
+                                    {"value":"27","label":"Medium District 27"},
+                                    {"value":"28","label":"Medium District 28"},
+                                    {"value":"29","label":"Medium District 29"},
+                                    {"value":"30","label":"Medium District 30"},
+                                    {"value":"31","label":"Medium District 31"},
+                                    {"value":"32","label":"Medium District 32"},
+                                    {"value":"33","label":"Medium District 33"},
+                                    {"value":"34","label":"Medium District 34"},
+                                    {"value":"35","label":"Medium District 35"},
+                                    {"value":"36","label":"Medium District 36"},
+                                    {"value":"37","label":"Medium District 37"},
+                                    {"value":"38","label":"Medium District 38"},
+                                    {"value":"39","label":"Medium District 39"},
+                                    {"value":"40","label":"Medium District 40"},
+                                    {"value":"41","label":"Medium District 41"},
+                                    {"value":"42","label":"Medium District 42"},
+                                    {"value":"43","label":"Medium District 43"},
+                                    {"value":"44","label":"Medium District 44"},
+                                    {"value":"45","label":"Medium District 45"},
+                                    {"value":"46","label":"Medium District 46"},
+                                    {"value":"47","label":"Medium District 47"},
+                                    {"value":"48","label":"Medium District 48"},
+                                    {"value":"49","label":"Medium District 49"},
+                                    {"value":"50","label":"Medium District 50"},
+                                    {"value":"51","label":"Medium District 51"},
+                                    {"value":"52","label":"Medium District 52"},
+                                    {"value":"53","label":"Medium District 53"},
+                                    {"value":"54","label":"Medium District 54"},
+                                    {"value":"55","label":"Medium District 55"},
+                                    {"value":"56","label":"Medium District 56"},
+                                    {"value":"57","label":"Medium District 57"},
+                                    {"value":"58","label":"Medium District 58"},
+                                    {"value":"59","label":"Medium District 59"},
+                                    {"value":"60","label":"Medium District 60"},
+                                    {"value":"61","label":"Medium District 61"},
+                                    {"value":"62","label":"Medium District 62"},
+                                    {"value":"63","label":"Medium District 63"},
+                                    {"value":"64","label":"Medium District 64"},
+                                    {"value":"65","label":"Medium District 65"},
+                                    {"value":"66","label":"Medium District 66"},
+                                    {"value":"67","label":"Medium District 67"},
+                                    {"value":"68","label":"Medium District 68"},
+                                    {"value":"69","label":"Medium District 69"},
+                                    {"value":"70","label":"Medium District 70"},
+                                    {"value":"71","label":"Medium District 71"}]
                     },
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
-                      "agOptions": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+                      "agSelected": ["1"],
+                      "agOptions": [{"value":" 1","label": "Large District 1"},
+                                    {"value":" 2","label": "Large District 2"},
+                                    {"value":" 3","label": "Large District 3"},
+                                    {"value":" 4","label": "Large District 4"},
+                                    {"value":" 5","label": "Large District 5"},
+                                    {"value":" 6","label": "Large District 6"},
+                                    {"value":" 7","label": "Large District 7"},
+                                    {"value":" 8","label": "Large District 8"},
+                                    {"value":" 9","label": "Large District 9"},
+                                    {"value":"10","label":"Large District 10"},
+                                    {"value":"11","label":"Large District 11"},
+                                    {"value":"12","label":"Large District 12"},
+                                    {"value":"13","label":"Large District 13"},
+                                    {"value":"14","label":"Large District 14"},
+                                    {"value":"15","label":"Large District 15"},
+                                    {"value":"16","label":"Large District 16"},
+                                    {"value":"17","label":"Large District 17"},
+                                    {"value":"18","label":"Large District 18"},
+                                    {"value":"19","label":"Large District 19"},
+                                    {"value":"20","label":"Large District 20"},
+                                    {"value":"21","label":"Large District 21"},
+                                    {"value":"22","label":"Large District 22"},
+                                    {"value":"23","label":"Large District 23"},
+                                    {"value":"24","label":"Large District 24"},
+                                    {"value":"25","label":"Large District 25"}]
                     },
                     {
                       "agCode": "SmallArea",
                       "agDisplayName": "Small Area",
-                      "agOptions": ["Box Elder County (WFRC)", "North Weber County", "South Weber County", "North Davis County","South Davis County", "North Salt Lake County", "Southwest Salt Lake County", "Southeast Salt Lake County"]
+                      "agSelected": ["North Salt Lake County"],
+                      "agOptions": [{"value":"Box Elder County (WFRC)"   ,"label":"Box Elder County (WFRC)"   },
+                                    {"value":"North Weber County"        ,"label":"North Weber County"        },
+                                    {"value":"South Weber County"        ,"label":"South Weber County"        },
+                                    {"value":"North Davis County"        ,"label":"North Davis County"        },
+                                    {"value":"South Davis County"        ,"label":"South Davis County"        },
+                                    {"value":"North Salt Lake County"    ,"label":"North Salt Lake County"    },
+                                    {"value":"Southwest Salt Lake County","label":"Southwest Salt Lake County"},
+                                    {"value":"Southeast Salt Lake County","label":"Southeast Salt Lake County"}]
                     }
                   ],
                   "attributes": [
@@ -436,7 +642,7 @@
                       "aDisplayName": "Lane-Miles"
                     }
                   ],
-                  "divideByAttributes": [
+                  "dividers": [
                     {"aCode": "",
                       "aDisplayName":"Nothing"
                     },
@@ -1123,111 +1329,6 @@
                                     {"value":"BRT", "label":"Bus Rapid Transit"    },
                                     {"value":"LRT", "label":"Light Rail Transit"   },
                                     {"value":"CRT", "label":"Commuter Rail Transit"}]
-                    }
-                  ]
-                }
-              },
-              {
-                "submenuText": "Transit Trends",
-                "submenuIconStart": "graph-line-series",
-                "jsonFile": "roadway-trends.json",
-                "template": "vizTrends",
-                "templateSettings": {
-                  "aggregatorTitle": "Select Summary Geography",
-                  "aggregatorSelected" : "CO_FIPS",
-                  "comboSelected": "",
-                  "aggregators": [
-                    {
-                      "agCode": "PLANAREA",
-                      "agDisplayName": "Plan Area",
-                      "agOptions": ["UDOT","MAG","WFRC"]
-                    },
-                    {
-                      "agCode": "CO_FIPS",
-                      "agDisplayName": "County",
-                      "agOptions": [3, 11, 35, 49, 57]
-                    },
-                    {
-                      "agCode": "CITY_NAME",
-                      "agDisplayName": "City",
-                      "agOptions": ["Elberta","Genola","Spanish Fork","Eastside Mountains","Box Elder County North","Springville","Orem","American Fork","Bluffdale","Sandy","Murray","South Salt Lake","North Salt Lake","Centerville","Kaysville","Clearfield","Ogden","Farr West","Balance of BOX ELDER","West Point","West Haven","Weber County","HAFB","SL County East Cyns","Mosida","Saratoga Springs","South Jordan","West Valley City","Fairfield","Eagle Mountain","Alpine","Lake Shore","SL County West","Davis County","Pleasant Grove","South Ogden","Pleasant View","Perry","Syracuse","Sunset","Holladay","Salem","Vineyard","Copperton","North Ogden","Emigration Canyon","Deer Ridge","Goshen","Santaquin","Mapleton","Brigham City","Payson","Provo","Lindon","Lehi","Draper","Midvale","Mill Creek","Salt Lake City","Bountiful","Farmington","Layton","Riverdale","Marriott-Slaterville","Box Elder County South","Clinton","Hooper","Roy","West Jordan","South Weber","West Bountiful","Lake Mountain","Riverton","Taylorsville","Woods Cross","Cedar Fort","Highland","Benjamin","Palmyra","SL County East Cyns - Parleys","Herriman","Fruit Heights","Harrisville","Willard","Cedar Hills","Magna","Plain City","Cottonwood Heights","Kearns","Brighton","Alta","Mantua","Elk Ridge","Washington Terrace"]
-                    },
-                    {
-                      "agCode": "DISTMED",
-                      "agDisplayName": "Medium District",
-                      "agOptions": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71]
-                    },
-                    {
-                      "agCode": "DISTLRG",
-                      "agDisplayName": "Large District",
-                      "agOptions": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-                    },
-                    {
-                      "agCode": "SmallArea",
-                      "agDisplayName": "Small Area",
-                      "agOptions": ["Box Elder County (WFRC)", "North Weber County", "South Weber County", "North Davis County","South Davis County", "North Salt Lake County", "Southwest Salt Lake County", "Southeast Salt Lake County"]
-                    }
-                  ],
-                  "attributeTitle": "Transit Trends",
-                  "attributeSelected": "aVmt",
-                  "attributes": [
-                    {
-                      "aCode": "aB",
-                      "aDisplayName": "Boardings"
-                    },
-                    {
-                      "aCode": "aTrips",
-                      "aDisplayName": "Vehicle-Hours Traveled"
-                    },
-                    {
-                      "aCode": "aLMl",
-                      "aDisplayName": "Lane-Miles"
-                    }
-                  ],
-                  "divideByAttributeTitle": "Divide By",
-                  "divideByAttributeSelected": "aTotHh",
-                  "divideByAttributes": [
-                    {"aCode": "",
-                      "aDisplayName":"Nothing"
-                    },
-                    {
-                      "aCode": "aTotHh",
-                      "aDisplayName": "Total Households"
-                    },
-                    {
-                      "aCode": "aTotWrk",
-                      "aDisplayName": "Total Workers"
-                    },
-                    {
-                      "aCode": "aTotEmp",
-                      "aDisplayName": "Total Employment"
-                    },
-                    {
-                      "aCode": "aHhPop",
-                      "aDisplayName": "Total Population"
-                    }
-                  ],
-                  "filters" : [
-                    {
-                      "fCode"    : "dTod",
-                      "fName"    : "Filter Time of Day",
-                      "fWidget"  : "select",
-                      "fSelected": "DY",
-                      "fOptions" : [{"value":"DY", "label":"Daily"     },
-                                    {"value":"AM", "label":"AM Period"   },
-                                    {"value":"MD", "label":"Midday Period" },
-                                    {"value":"PM", "label":"PM Period"   },
-                                    {"value":"EV", "label":"Evening Period"}]
-                    },
-                    {
-                      "fCode"    : "dVeh",
-                      "fName"    : "Filter Vehicle Type",
-                      "fWidget"  : "select",
-                      "fSelected": "All",
-                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                                    {"value":"LT" , "label":"Light Trucks" },
-                                    {"value":"MD" , "label":"Medium Trucks"},
-                                    {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }

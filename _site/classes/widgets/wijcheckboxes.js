@@ -35,10 +35,12 @@ class WijCheckboxes {
       var checkbox = document.createElement("calcite-checkbox");
 
       checkbox.value = option.value;
-      checkbox.checked = true;
 
-      if (checkbox.checked) {
-          lstChecked.push(checkbox.value);
+      if (this.selected.includes(option.value)) {
+        checkbox.checked = true;
+        lstChecked.push(checkbox.value);
+      } else {
+        checkbox.checked = false;
       }
 
       // Listen for changes to the checkbox

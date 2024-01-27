@@ -1,36 +1,93 @@
 class VizSidebar {
-  constructor(attributes, attributeSelected, attributeTitle, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, filters, vizLayout) {
+  constructor(attributes, attributeSelected, attributeTitle, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
     this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
 
-    this.attributes  = (attributes  || []).map(item => new Attribute (item));
-    this.aggregators = (aggregators || []).map(item => new Aggregator(item));
-    this.dividers    = (dividers    || []).map(item => new Divider   (item));
-    this.filters     = (filters     || []).map(item => new Filter    (item, vizLayout));
+    // link to parent
+    this.vizLayout = vizLayout;
+    
+    this.attributes       = (attributes  || []).map(item => new Attribute (item));
+    this.aggregators      = (aggregators || []).map(item => new Aggregator(item));
+    this.dividers         = (dividers    || []).map(item => new Divider   (item));
 
     if (attributes) {
-      this.attributeSelect    = new WijRadio(this.id + "-attribute-selector",
-                                             attributeTitle,
-                                             attributeSelected,
-                                             attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
-                                             this);
+      this.attributeSelect   = new WijRadio(this.id + "-attribute-selector",
+                                            attributeTitle,
+                                            attributeSelected,
+                                            attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
+                                            this);
+      this.filters = (filters || []).map(item => new Filter (item, this.vizLayout));
     }
+
     if (aggregators) {
       this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector",
                                             aggregatorTitle,
                                             aggregatorSelected,
                                             aggregators.map(item => ({ value: item.agCode, label: item.agDisplayName })),
                                             this);
+      if (vizLayout.modelEntity.template==='vizTrends') {
+        this.aggregatorFilter = new Filter ((this.aggregators.find(item => item.agCode === aggregatorSelected) || []).filterData, this.vizLayout);
+      }
     }
+
     if (dividers) {
       this.dividerSelect    = new WijSelect(this.id + "_divider-selector",
                                             dividerTitle,
                                             dividerSelected,
                                             dividers.map(item => ({ value: item.aCode, label: item.aDisplayName })),
                                             this);
+      //this.dividerFilters = (dividerFilters || []).map(item => new Filter (item, vizLayout));
     }
 
-    // link to parent
-    this.vizLayout = vizLayout;
+  }
+
+  render() {
+    console.log('vizsidebar:render:' + this.id);
+
+    // Function to create and append a container
+    function createAndAppendContainer(parentId, containerId) {
+      const parentDiv = document.getElementById(parentId);
+      if (parentDiv) {
+          parentDiv.innerHTML = '';
+          const containerDiv = document.createElement('div');
+          containerDiv.id = containerId;
+          parentDiv.appendChild(containerDiv);
+          return containerDiv;
+      }
+    }
+
+    // Define the elements to process
+    const elements = [
+      { name: "Attributes"       , render: () => this.attributeSelect ? this.attributeSelect.render() : null   },
+      { name: "AttributeFilters" , render: () => this.filters.map(filter => filter.render())                   },
+      { name: "Aggregator"       , render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
+      { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
+      { name: "Dividers"         , render: () => this.dividerSelect ? this.dividerSelect.render() : null       },
+      { name: "DividerFilters"                                                                                 }
+    ];
+
+    // Process each element
+    elements.forEach(element => {
+      const divId = this.getDiv(element.name);
+      const container = createAndAppendContainer(divId, `container${element.name}`);
+      var divElement = document.getElementById(divId);
+      if (divElement) {
+        if ((element.name==="Aggregator" || element.name==="AggregatorFilters") && (!this.aggregatorSelect)) {
+          divElement.style.display='none';
+        } else {
+          divElement.style.display='block';
+        }
+      }
+
+      if (container && element.render) {
+          const content = element.render();
+          if (Array.isArray(content)) {
+              content.forEach(child => container.appendChild(child));
+          } else if (content) {
+              container.appendChild(content);
+          }
+      }
+    });
+    this.updateFilterDisplay();
   }
 
   hideLayout() {
@@ -72,11 +129,16 @@ class VizSidebar {
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
+  // get the attribute code that is selected
   getACode() {
     return this.attributeSelect.selected;
   }
 
-  
+  // get the divider code that is selected
+  getDCode() {
+    return this.dividerSelect.selected;
+  }
+
   getADisplayName() {
     const aCode = this.getACode();
     const item = this.attributes.find(item => item.aCode === aCode);
@@ -139,51 +201,6 @@ class VizSidebar {
   //
   //}
 
-  render() {
-    console.log('vizsidebar:render:' + this.id);
-
-    // Function to create and append a container
-    function createAndAppendContainer(parentId, containerId) {
-      const parentDiv = document.getElementById(parentId);
-      if (parentDiv) {
-          parentDiv.innerHTML = '';
-          const containerDiv = document.createElement('div');
-          containerDiv.id = containerId;
-          parentDiv.appendChild(containerDiv);
-          return containerDiv;
-      }
-    }
-
-    // Define the elements to process
-    const elements = [
-      { name: "Attributes"      , render: () => this.attributeSelect.render()                                 },
-      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render())                   },
-      { name: "Aggregator"      , render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
-      { name: "Dividers"                                                                                      },
-      { name: "DividerFilters"                                                                                }
-    ];
-
-    // Process each element
-    elements.forEach(element => {
-      const divId = this.getDiv(element.name);
-      const container = createAndAppendContainer(divId, `container${element.name}`);
-      if (element.name === "Aggregator" && (!this.aggregatorSelect)) {
-        document.getElementById(divId).style.display='none';
-      } else {
-        document.getElementById(divId).style.display='block';
-      }
-  
-      if (container && element.render) {
-          const content = element.render();
-          if (Array.isArray(content)) {
-              content.forEach(child => container.appendChild(child));
-          } else if (content) {
-              container.appendChild(content);
-          }
-      }
-    });
-    this.updateFilterDisplay();
-  }
 
   // Function to be called when checkbox status changes
   toggleLabels() {
@@ -217,6 +234,9 @@ class VizSidebar {
   }
 
   afterUpdateAggregator() {
+    if (this.vizLayout.modelEntity.template==='vizTrends') {
+      this.aggregatorFilter = new Filter ((this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData, this.vizLayout);
+    }
     this.vizLayout.afterUpdateAggregator();
   }
 

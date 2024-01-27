@@ -1,6 +1,8 @@
 class Filter {
   constructor(data, vizLayout) {
     this.id = vizLayout.id + '-' + data.fCode;
+    console.log('filter-construct:' + this.id);
+
     this.vizLayout = vizLayout;
     
     const _id = this.id + '-filter'

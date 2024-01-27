@@ -12,9 +12,12 @@ require([
   // Now you can use Graphic inside this callback function
 
   class VizMap {
-    constructor(data, layerTitle) {
+    constructor(data, layerTitle, modelEntity) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
       console.log('vizmap:construct:' + this.id);
+      
+      // link to parent
+      this.modelEntity = modelEntity;
 
       this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
@@ -33,13 +36,13 @@ require([
       this.sidebar = new VizSidebar(data.attributes,
                                     data.attributeSelected,
                                     data.attributeTitle,
+                                    data.filters,
                                     data.aggregators,
                                     data.aggregatorSelected,
                                     data.aggregatorTitle,
                                     data.dividers,
                                     data.dividerSelected,
                                     data.dividerTitle,
-                                    data.filters,
                                     this)
 
       // ADD GEOJSONS

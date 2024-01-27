@@ -121,11 +121,13 @@ th, td {
     flex-grow: 1;
     white-space: pre-line; /* Prevent text from wrapping */
 }
-#mainTrend {
-    /* Main content styles */
-    width: 1300px; /* or any other value */
+#trendMain {
     padding: 15px;
-    height: calc(100vh - 114px);
+    height: calc(100vh - 144px); /* Adjust height as needed */
+    flex-grow: 1; /* Grow to fill available space */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    min-width: 0; /* Optional: Ensures it can shrink below its content's intrinsic width */
+    /* Add any additional styling you need */
 }
 #mainMatrix {
     /* Main content styles */

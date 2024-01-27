@@ -6,9 +6,9 @@ class ModelEntity {
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
     if (data.template=='vizMap') {
-      this.vizLayout = new VizMap(data.templateSettings, data.submenuText);
+      this.vizLayout = new VizMap(data.templateSettings, data.submenuText, this);
     } else if (data.template=='vizTrends') {
-      this.vizLayout = new VizTrends(data.templateSettings);
+      this.vizLayout = new VizTrends(data.templateSettings, this);
     }
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
