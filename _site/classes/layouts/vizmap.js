@@ -49,7 +49,7 @@ require([
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
         url: this.baseGeometryFile,
-        title: "Zone Aggregation"
+        title: "dummy layer"
       });
       map.add(this.geojsonLayer);
       this.geojsonLayer.visible = false;
@@ -184,7 +184,10 @@ require([
     }
 
     getFilterGroup() {
-      return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+      const _scenario = this.getScenarioMain();
+      if (_scenario) {
+        return _scenario.getFilterGroupForAttribute(this.jsonFileName, this.getACode())
+      }
     }
 
     getFilterGroupArray() {
@@ -444,6 +447,11 @@ require([
 
       // get main data
       var _dataMain = this.getDataMain();
+
+      // return if no data!
+      if (!_dataMain) {
+        return;
+      }
 
       // get compare data
       if (this.getComp() !== null) {

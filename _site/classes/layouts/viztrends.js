@@ -124,12 +124,11 @@ class VizTrends {
 
     const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
-      
     
     const aggCode = this.getSelectedAggregator();
     const title = document.createElement('div');
     title.id = 'charttitle';
-    title.innerHTML = '<h1>' + aggCode.agDisplayName + ' Trends</h1>'
+    title.innerHTML = '<h1>' + this.sidebar.getADisplayName() + ' Trends</h1><b>' + aggCode.agDisplayName + ": " + aggIDsString + '</b>'
     containerElement.appendChild(title);
 
     const chartContainer = document.createElement('div');
@@ -153,10 +152,10 @@ class VizTrends {
       }
       
       const scenarioGroups = [
-        {"name": "RTP"},
-        {"name": "NoBuild"},
-        {"name": "Needs"},
-        {"name": "Needs MAG"}
+        {name: "v9.0 RTP"      },
+        {name: "v9.0 NoBuild"  },
+        {name: "v9.0 Needs"    },
+        {name: "v9.0 Needs MAG"}
       ];
 
       currentChart = new Chart(ctx, {
@@ -234,30 +233,30 @@ class VizTrends {
     //const segOptions = this.getSegidOptions();
   
     const scnGroupYearCombos = [
-        { scnDisplay: 'RTP'      , scnGroup: 'Base'     , scnYear: 2019 },
-        { scnDisplay: 'RTP'      , scnGroup: 'Base'     , scnYear: 2023 },
-        { scnDisplay: 'RTP'      , scnGroup: 'TIP'      , scnYear: 2028 },
-        { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2032 },
-        { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2042 },
-        { scnDisplay: 'RTP'      , scnGroup: 'RTP'      , scnYear: 2050 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'Base'     , scnYear: 2019 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'Base'     , scnYear: 2023 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'TIP'      , scnYear: 2028 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2032 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2042 },
-        { scnDisplay: 'NoBuild'  , scnGroup: 'NoBuild'  , scnYear: 2050 },
-        { scnDisplay: 'Needs'    , scnGroup: 'Base'     , scnYear: 2019 },
-        { scnDisplay: 'Needs'    , scnGroup: 'Base'     , scnYear: 2023 },
-        { scnDisplay: 'Needs'    , scnGroup: 'TIP'      , scnYear: 2028 },
-        { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2032 },
-        { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2042 },
-        { scnDisplay: 'Needs'    , scnGroup: 'Needs'    , scnYear: 2050 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'Base'     , scnYear: 2019 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'Base'     , scnYear: 2023 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'TIP'      , scnYear: 2028 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'Needs'    , scnYear: 2032 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'Needs'    , scnYear: 2042 },
-        { scnDisplay: 'Needs MAG', scnGroup: 'Needs MAG', scnYear: 2050 }
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2032, modVersion: "v900", scnGroup: 'RTP'       },
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2042, modVersion: "v900", scnGroup: 'RTP'       },
+        { scnDisplay: 'v9.0 RTP'      , scnYear: 2050, modVersion: "v900", scnGroup: 'RTP'       },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2032, modVersion: "v900", scnGroup: 'NoBuild'   },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2042, modVersion: "v900", scnGroup: 'NoBuild'   },
+        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2050, modVersion: "v900", scnGroup: 'NoBuild'   },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2032, modVersion: "v900", scnGroup: 'Needs'     },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2042, modVersion: "v900", scnGroup: 'Needs'     },
+        { scnDisplay: 'v9.0 Needs'    , scnYear: 2050, modVersion: "v900", scnGroup: 'Needs'     },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2032, modVersion: "v900", scnGroup: 'Needs'     },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2042, modVersion: "v900", scnGroup: 'Needs'     },
+        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2050, modVersion: "v900", scnGroup: 'Needs MAG' }
     ];
 
     const labels = [2019,2023,2028,2032,2042,2050];
@@ -299,16 +298,17 @@ class VizTrends {
         // Filter features where CO_FIPS is 35
         filteredFeatures = data.features.filter(feature => 
           aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
-      );
+        );
 
         // Now you have an array of features where CO_FIPS is 35
         console.log(filteredFeatures);
 
         scnGroupYearCombos.forEach(combo => {
           const _scnDisplay = combo.scnDisplay;
-          const _scnGroup = combo.scnGroup;
           const _scnYear = combo.scnYear;
-          const _scenario = this.getScenario('v900', _scnGroup, _scnYear);
+          const _modVersion = combo.modVersion;
+          const _scnGroup = combo.scnGroup;
+          const _scenario = this.getScenario(_modVersion, _scnGroup, _scnYear);
   
           if (_scenario) {
       
@@ -349,7 +349,7 @@ class VizTrends {
         console.error('Error reading the JSON file:', error);
       });
     
-    var filteredTazes = {};
+    var filteredTaz = {};
     var filteredTazSeData = {};
     console.log('viztrends:Going to fetch the data now... agIDsString is ' + aggIDs);
     fetch("data/tazWithAggFields.geojson")
@@ -361,63 +361,65 @@ class VizTrends {
       })
       .then(data => {
         // Filter features where CO_FIPS is 35
-        filteredTazes = data.features.filter(feature => 
+        filteredTaz = data.features.filter(feature => 
           aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
-      );
+        );
 
-      var filteredTazList = [];
-      // Loop through filteredTazes and extract TAZID values
-      filteredTazes.forEach((taz) => {
-        // Assuming TAZID is always present in the properties object
-        if (taz.properties && taz.properties.TAZID) {
-          // Check if TAZID is not already in the array
-          if (!filteredTazList.includes(taz.properties.TAZID)) {
-            filteredTazList.push(taz.properties.TAZID);
+        var filteredTazList = [];
+        // Loop through filteredTaz and extract TAZID values
+        filteredTaz.forEach((taz) => {
+          // Assuming TAZID is always present in the properties object
+          if (taz.properties && taz.properties['TAZID']) {
+            // Check if TAZID is not already in the array
+            if (!filteredTazList.includes(taz.properties['TAZID'])) {
+              filteredTazList.push(taz.properties['TAZID']);
+            }
+          }
+        });
+
+        //read in the zonesSeData
+        var sumAttribute = 0;
+        scnGroupYearCombos.forEach(combo => {
+          const _scnDisplay = combo.scnDisplay;
+          const _scnYear = combo.scnYear;
+          const _modVersion = combo.modVersion;
+          const _scnGroup = combo.scnGroup;
+          const _scenarioDivideBy = this.getScenario(_modVersion, _scnGroup, _scnYear);
+
+          if (_scenarioDivideBy) {
+
+            const tazSeData = _scenarioDivideBy.jsonData['zones-se-vizmap'].data[""];
+            
+            //filter the zonesSeData to only those zones that are within filteredTazList
+            filteredTazSeData = Object.keys(tazSeData)
+            .filter((key) => filteredTazList.includes(parseInt(key)))
+            .reduce((result, key) => {
+              result[key] = tazSeData[key];
+              return result;
+            }, {});
+
+          }
+          //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+          for (const key in filteredTazSeData) {
+            if (filteredTazSeData[key][dCode] !== undefined) {
+              sumAttribute += filteredTazSeData[key][dCode];
+            }
+          }
+          console.log(sumAttribute);
+        });
+        
+        if (sumAttribute>0) {
+          //loop through the chartData and divide all the values by the sum just calculated
+          for (const key1 in chartData) {
+            for (const key2 in chartData[key1]) {
+              for (const key3 in chartData[key1][key2]) {
+                chartData[key1][key2][key3] /= sumAttribute;
+              }
+            }
           }
         }
-      });
-
-      //read in the zonesSeData
-      var sumAttribute = 0;
-      scnGroupYearCombos.forEach(combo => {
-        const scnDisplay = combo.scnDisplay;
-        const scnGroup = combo.scnGroup;
-        const scnYear = combo.scnYear;
-        const scenarioData = this.getScenario('v900', scnGroup, scnYear);
-        const filter = this.getFilterGroup();
-
-        if (scenarioData) {
-
-          const tazSeData = scenarioData.jsonData['zones-se-vizmap'].data[""];
-          
-          //filter the zonesSeData to only those zones that are within filteredTazList
-          filteredTazSeData = Object.keys(tazSeData)
-          .filter((key) => filteredTazList.includes(parseInt(key)))
-          .reduce((result, key) => {
-            result[key] = tazSeData[key];
-            return result;
-          }, {});
-
-        }
-        //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
-        for (const key in filteredTazSeData) {
-          if (filteredTazSeData[key][dCode] !== undefined) {
-            sumAttribute += filteredTazSeData[key][dCode];
-          }
-        }
-        console.log(sumAttribute);
-      });
-      
-      //loop through the chartData and divide all the values by the sum just calculated
-      for (const key1 in chartData) {
-        for (const key2 in chartData[key1]) {
-          for (const key3 in chartData[key1][key2]) {
-            chartData[key1][key2][key3] /= sumAttribute;
-          }
-        }
-      }
-      
-      this.createLineChart(aCode, labels, chartData, aggIDsString);
+        
+        this.createLineChart(aCode, labels, chartData, aggIDsString);
 
       })
       .catch(error => {
