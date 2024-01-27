@@ -1,29 +1,23 @@
 class Filter {
   constructor(data, vizLayout) {
-    this.id = data.id + '_' + vizLayout.id;
+    this.id = vizLayout.id + '-' + data.fCode;
     this.vizLayout = vizLayout;
+    
+    const _id = this.id + '-filter'
+    const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
+    const _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
+    const _selected = data.fSelected;
 
-    if (data.type === "select") {
-      this.filterWij = new WijSelect(this.id + '_filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.hidden, data.text, this.vizLayout, this);
-    } else if (data.type === "radio") {
-      this.filterWij = new WijRadio(this.id + '_filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.hidden, '', this.vizLayout, this);
-    } else if (data.type === "checkboxes") {
-      this.filterWij = new WijCheckboxes(this.id + '_filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.selected, data.hidden, data.text, this.vizLayout, this);
-    } else if (data.type === "combobox") {
-      this.filterWij = new WijCombobox(this.id + '_filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.selected, data.hidden, '', this.vizLayout, this);
+    if (data.fWidget === 'select') {
+      this.filterWij = new WijSelect(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'radio') {
+      this.filterWij = new WijRadio(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'checkboxes') {
+      this.filterWij = new WijCheckboxes(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'combobox') {
+      this.filterWij = new WijCombobox(_id, _name, _selected, _options, vizLayout, true);
     }
+  
   }
 
   render() {
@@ -32,6 +26,20 @@ class Filter {
 
   getSelectedOptionsAsList() {
     return this.filterWij.getSelectedOptionsAsList();
+  }
+
+  isHidden() {
+    return document.getElementById(this.filterWij.containerId).style.display === 'none';
+  }
+
+  hide() {
+    console.log('hide: ' + this.filterWij.id);
+    document.getElementById(this.filterWij.containerId).style.display = 'none';
+  }
+
+  show() {
+    console.log('show: ' + this.filterWij.id);
+    document.getElementById(this.filterWij.containerId).style.display = 'block';
   }
 
 }

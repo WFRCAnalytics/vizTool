@@ -1,0 +1,5 @@
+[
+    { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2023, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "TIP"      , "scnYear": 2028, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"},
+    { "modVersion": "v900", "scnGroup": "RTP"      , "scnYear": 2050, "scnDesc": "", "geoJsonSeg":"data/segments.geojson"}
+]

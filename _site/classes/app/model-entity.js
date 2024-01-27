@@ -1,6 +1,7 @@
 class ModelEntity {
   constructor(data, menuItem) {
-    this.id = data.id || this.generateIdFromText(data.submenuText); // use provided id or generate one if not provided
+    console.log('modelentity-construct:' + data.submenuText)
+    this.id = menuItem.id + '-' + this.generateIdFromText(data.submenuText) + '-modelentity'; // use provided id or generate one if not provided
     this.submenuText = data.submenuText;
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
@@ -9,7 +10,6 @@ class ModelEntity {
     } else if (data.template=='vizTrends') {
       this.vizLayout = new VizTrends(data.templateSettings);
     }
-    this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
     this.menuItem = menuItem;
@@ -20,7 +20,7 @@ class ModelEntity {
   }
 
   createModelEntityElement() {
-    console.log('createModelEntityElement');
+    console.log('model-entity:createModelEntityElement');
     const modelEntity = document.createElement('calcite-menu-item');
     modelEntity.setAttribute('id', this.id);
     modelEntity.setAttribute('text', this.submenuText);
@@ -30,12 +30,12 @@ class ModelEntity {
     const modelEntityInstance = this;
 
     modelEntity.addEventListener('click', function() {
-      let mainSidebarItems2 = document.querySelectorAll('calcite-menu-item');
-      mainSidebarItems2.forEach(item2 => {
-        if(item2.text === modelEntityInstance.menuText) {  // Use the saved instance context here
-          item2.active = true;
+      let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
+      mainSidebarItems.forEach(item => {
+        if(item.text === modelEntityInstance.menuText) {  // Use the saved instance context here
+          item.active = true;
         } else {
-          item2.active = false;
+          item.active = false;
         }
       });
 
@@ -50,6 +50,8 @@ class ModelEntity {
         // ... (Any additional specific logic for the template type)
       }
 
+      // set app global model entity to keep track of what is actively being used
+      activeModelEntity= modelEntityInstance;
       
       modelEntityInstance.menuItem.userLayout.hideAllUserLayoutLayers()
 
