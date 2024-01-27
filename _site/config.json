@@ -1721,7 +1721,7 @@
                   "filters" : [
                     {
                       "fCode"    : "fPurp",
-                      "fName"    : "Filter Purpose",
+                      "fName"    : "Filter Trip Purpose",
                       "fWidget"  : "select",
                       "fSelected": "All",
                       "fOptions" : [{"value":"All"  , "label": "All Purposes"      },
