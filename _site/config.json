@@ -24,11 +24,11 @@
                     {
                       "aCode": "aLanes",
                       "aDisplayName": "Lanes",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Number of Lanes",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#CCCCCC", "width": 0.50 }, "label": "3 Lanes or Less" },
                             { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 0.75 }, "label": "4 to 5 Lanes"    },
@@ -44,6 +44,7 @@
                         "compare_abs": {
                           "name": "Change in Lanes",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-4 or More Lanes"},
                             { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-3 Lanes"        },
@@ -64,11 +65,11 @@
                     {
                       "aCode": "aFt",
                       "aDisplayName": "Functional Type",
-                      "aLabelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
                       "rendererCollection": {
                         "main": {
                           "name": "Functional Type",
                           "field": "dVal",
+                          "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
                           "classBreakInfos": [
                             { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 0.50 }, "label": "Minor Collector"    },
                             { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 1.00 }, "label": "Major Collector"    },
@@ -82,6 +83,7 @@
                         "compare_abs": {
                           "name": "Change in Functional Type",
                           "field": "dVal",
+                          "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
                           "classBreakInfos": [
                             { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
                             { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Decrease" },
@@ -96,12 +98,12 @@
                     {
                       "aCode": "aCap1HL",
                       "aDisplayName": "Capacity",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Capacity per Hour per Lane",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":      799, "symbol": { "type": "simple-line", "color": [ 49, 57,138], "width": 0.25}, "label":  "Less than 800"},
                             { "minValue":  800, "maxValue":      999, "symbol": { "type": "simple-line", "color": [ 27,169,230], "width": 1.1 }, "label":    "800 to 1000"},
@@ -116,9 +118,9 @@
                         },
                         "compare_abs": {
                           "name": "Change in Capacity per Hour per Lane",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":    2500, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +2500"},
                             { "minValue":    1000, "maxValue":     2499, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+1000 to +2500" },
@@ -139,11 +141,11 @@
                     {
                       "aCode": "aFfSpd",
                       "aDisplayName": "Free-flow Speed",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Free-flow Speed",
                           "type": "ClassBreaksRenderer",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
@@ -159,8 +161,8 @@
                         },
                         "compare_abs": {
                           "name": "Change in Free-flow Speed",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
                             { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
@@ -181,11 +183,11 @@
                     {
                       "aCode": "aVol",
                       "aDisplayName": "Volume",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Volume",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":   0.01, "maxValue":     5999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":    "Less than 6,000"},
                             { "minValue":   6000, "maxValue":    17999, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":    "6,000 to 18,000"},
@@ -200,8 +202,8 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":   -25001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -25,000"  },
                             { "minValue":   -25000, "maxValue":   -10001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-25,000 to -10,000" },
@@ -222,11 +224,11 @@
                     {
                       "aCode": "aSpd",
                       "aDisplayName": "Speed",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Speed",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
                             { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15 mph"     },
@@ -241,8 +243,8 @@
                         },
                         "compare_abs": {
                           "name": "Change in Speed",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
                             { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
@@ -263,10 +265,10 @@
                     {
                       "aCode": "aMaxVc",
                       "aDisplayName": "Max V/C Ratio",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Max Volume-to-Capacity Ratio",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                           "valueExpression": "var v  = $feature.dVal; if (v==0  ) { return 'nodata'  ; } else if (v< 0.7) { return 'class_00'; } else if (v< 0.8) { return 'class_01'; } else if (v< 0.9) { return 'class_02'; } else if (v< 1.0) { return 'class_03'; } else if (v< 1.1) { return 'class_r0'; } else if (v< 1.2) { return 'class_r1'; } else if (v< 1.3) { return 'class_r2'; } else if (v< 1.4) { return 'class_r3'; } else if (v< 1.5) { return 'class_r4'; } else if (v< 1.6) { return 'class_r5'; } else if (v< 1.7) { return 'class_r6'; } else if (v< 1.8) { return 'class_r7'; } else if (v< 1.9) { return 'class_r8'; } else if (v< 2.0) { return 'class_r9'; } else if (v>=2.0) { return 'class_b0'; } ",
                           "uniqueValueInfos" : [
                             { "value": "class_00", "symbol": { "type": "simple-line", "color": "#00FF00", "width": 0.25}, "label": "Less than 0.7" },
@@ -288,7 +290,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Volume-to-Capacity Ratio",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                           "valueExpression": "var v  = $feature.dVal; if (v<=-1.00) { return 'class_1'; } else if (v< -0.50) { return 'class_2'; } else if (v< -0.15) { return 'class_3'; } else if (v< -0.05) { return 'class_4'; } else if (v<  0.05) { return 'class_5'; } else if (v<  0.15) { return 'class_6'; } else if (v<  0.50) { return 'class_7'; } else if (v<  1.00) { return 'class_8'; } else { return 'class_9'; }",
                           "uniqueValueInfos": [
                             { "value": "class_9", "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +1.00"},
@@ -454,11 +456,11 @@
                     {
                       "aCode": "aR",
                       "aDisplayName": "Riders",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Riders",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":     "Less than 50"},
                             { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
@@ -473,7 +475,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Riders",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
@@ -751,11 +753,11 @@
                     {
                       "aCode": "aR",
                       "aDisplayName": "Riders",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Riders",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":     "Less than 50"},
                             { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":        "50 to 250"},
@@ -770,8 +772,8 @@
                         },
                         "compare_abs": {
                           "name": "Change in Riders",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
                             { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
@@ -1190,10 +1192,10 @@
                     {
                       "aCode": "a0",
                       "aDisplayName": "All Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "All Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1209,7 +1211,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in All Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1231,10 +1233,10 @@
                     {
                       "aCode": "aM",
                       "aDisplayName": "Motorized Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Motorized Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1250,7 +1252,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Motorized Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1271,10 +1273,10 @@
                     {
                       "aCode": "aA",
                       "aDisplayName": "Auto Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Auto Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1290,7 +1292,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Auto Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1311,10 +1313,10 @@
                     {
                       "aCode": "aT",
                       "aDisplayName": "Transit Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Transit Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1330,7 +1332,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Transit Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1351,10 +1353,10 @@
                     {
                       "aCode": "aN",
                       "aDisplayName": "Non-Motorized Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Non-Motorized Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1370,7 +1372,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Non-Motorized Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1391,10 +1393,10 @@
                     {
                       "aCode": "aW",
                       "aDisplayName": "Walk Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Walk Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50"},
@@ -1410,7 +1412,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Walk Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1431,7 +1433,7 @@
                     {
                       "aCode": "aB",
                       "aDisplayName": "Bike Trips",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal, '#,##0'))",
+                      "labelExpressionInfo": "IIF(IsEmpty($feature.d al), '', Text($feature.dVal, '#,##0'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Bike Trips",
@@ -1450,7 +1452,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Bike Trips",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -1526,7 +1528,7 @@
             ]
           },
           {
-            "menuText": "Opportunities",
+            "menuText": "Access to Opportunities",
             "menuIconStart": "desktop",
             "modelEntities": [
               {
@@ -1539,117 +1541,15 @@
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "attributeTitle": "Jobs and Households",
-                  "attributeSelected": "aJ",
+                  "attributeSelected": "aJA",
                   "attributes": [
-                    {
-                      "aCode": "aJ",
-                      "aDisplayName": "Jobs",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Jobs",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Jobs"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Jobs"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Jobs"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Jobs"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Jobs"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Jobs"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Jobs"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Jobs"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Jobs"}
-                          ],
-                          "defaultSymbol": {
-                            "type": "simple-fill",
-                            "color": "#DDDDDD",
-                            "outline": {
-                              "type": "simple-line",
-                              "color": "#FFFFFF",
-                              "width": 1
-                            }
-                          },
-                          "defaultLabel": "No Jobs"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Jobs",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Jobs" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Jobs"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Jobs"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Jobs"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Jobs"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Jobs"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Jobs" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Jobs" }
-                            ]
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Jobs"
-                        }
-                      }
-                    },
-                    {
-                      "aCode": "aH",
-                      "aDisplayName": "Households",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
-                      "rendererCollection": {
-                        "main": {
-                          "name": "Households",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Households"},
-                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Households"},
-                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Households"},
-                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Households"},
-                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Households"},
-                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Households"},
-                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Households"},
-                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Households"},
-                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Households"}
-                          ],
-                          "defaultSymbol": {
-                            "type": "simple-fill",
-                            "color": "#DDDDDD",
-                            "outline": {
-                              "type": "simple-line",
-                              "color": "#FFFFFF",
-                              "width": 1
-                            }
-                          },
-                          "defaultLabel": "No Households"
-                        },
-                        "compare_abs": {
-                          "name": "Change in Households",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
-                          "field": "dVal",
-                          "classBreakInfos": [
-                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Households" },
-                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Households" },
-                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Households"   },
-                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Households"      },
-                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Households"       },
-                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Households"      },
-                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Households"   },
-                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Households" },
-                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Households" }
-                            ]
-                        },
-                        "compare_pct": {
-                          "name": "Percent Change in Households"
-                        }
-                      }
-                    },
                     {
                       "aCode": "aJA",
                       "aDisplayName": "Access to Jobs",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Jobs",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Jobs"},
@@ -1675,7 +1575,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Access to Jobs",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs"},
@@ -1697,10 +1597,10 @@
                     {
                       "aCode": "aHA",
                       "aDisplayName": "Access to Households",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Households"},
@@ -1726,7 +1626,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Access to Households",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Households" },
@@ -1748,10 +1648,10 @@
                     {
                       "aCode": "aCA",
                       "aDisplayName": "Access to Jobs+Households",
-                      "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Jobs+Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.0100, "maxValue":     4999, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 5,000 Jobs+Households"},
@@ -1777,7 +1677,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Access to Jobs+Households",
-                          "aLabelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs+Households" },
@@ -1793,6 +1693,108 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Access to Jobs+Households"
+                        }
+                      }
+                    },
+                    {
+                      "aCode": "aJ",
+                      "aDisplayName": "Jobs",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Jobs",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Jobs"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Jobs"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Jobs"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Jobs"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Jobs"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Jobs"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Jobs"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Jobs"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Jobs"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Jobs"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Jobs",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Jobs" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Jobs"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Jobs"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Jobs"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Jobs"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Jobs"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Jobs" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Jobs" }
+                            ]
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Jobs"
+                        }
+                      }
+                    },
+                    {
+                      "aCode": "aH",
+                      "aDisplayName": "Households",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.01, "maxValue":     49, "symbol": { "type": "simple-fill", "color":"#31398a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "Less than 50 Households"},
+                            { "minValue":    50, "maxValue":    249, "symbol": { "type": "simple-fill", "color":"#1ba9e6", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250 Households"},
+                            { "minValue":   250, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#00a74e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500 Households"},
+                            { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#6cb74a", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000 Households"},
+                            { "minValue":  1000, "maxValue":   2499, "symbol": { "type": "simple-fill", "color":"#8dc348", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500 Households"},
+                            { "minValue":  2500, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E09d2e", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000 Households"},
+                            { "minValue":  5000, "maxValue":   9999, "symbol": { "type": "simple-fill", "color":"#Eb672d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000 Households"},
+                            { "minValue": 10000, "maxValue":  14999, "symbol": { "type": "simple-fill", "color":"#E5272d", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000 Households"},
+                            { "minValue": 15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#Af2944", "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000 Households"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": "#DDDDDD",
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Households"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":"#005CC4", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Households" },
+                            { "minValue":    -5000, "maxValue":  -1001, "symbol": { "type": "simple-fill", "color":"#0070FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000 Households" },
+                            { "minValue":    -1000, "maxValue":   -501, "symbol": { "type": "simple-fill", "color":"#73B2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500 Households"   },
+                            { "minValue":     -500, "maxValue":    -51, "symbol": { "type": "simple-fill", "color":"#BED2FF", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50 Households"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":"#AAAAAA", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50 Households"       },
+                            { "minValue":       50, "maxValue":    499, "symbol": { "type": "simple-fill", "color":"#FFBEBE", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500 Households"      },
+                            { "minValue":      500, "maxValue":    999, "symbol": { "type": "simple-fill", "color":"#FF7F7F", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000 Households"   },
+                            { "minValue":     1000, "maxValue":   4999, "symbol": { "type": "simple-fill", "color":"#E60000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000 Households" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":"#510000", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000 Households" }
+                            ]
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Households"
                         }
                       }
                     }

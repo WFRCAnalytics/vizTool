@@ -8,9 +8,9 @@ require([
   
   class RendererCollection {
     constructor(data) {
-      this.main        = {"name": data.main.name       , "renderer": createRenderer(data.main       ) };
-      this.compare_abs = {"name": data.compare_abs.name, "renderer": createRenderer(data.compare_abs) };
-      this.compare_pct = {"name": data.compare_pct.name, "renderer": createRenderer(data.compare_pct) };
+      this.main        = {"name": data.main       .name, "renderer": createRenderer(data.main       ) , "labelExpressionInfo": data.main       .labelExpressionInfo};
+      this.compare_abs = {"name": data.compare_abs.name, "renderer": createRenderer(data.compare_abs) , "labelExpressionInfo": data.compare_abs.labelExpressionInfo};
+      this.compare_pct = {"name": data.compare_pct.name, "renderer": createRenderer(data.compare_pct) , "labelExpressionInfo": data.compare_pct.labelExpressionInfo};
     }
   }
 

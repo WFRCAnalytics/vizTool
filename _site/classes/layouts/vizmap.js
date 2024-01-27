@@ -35,7 +35,9 @@ require([
       this.popupTitle = data.popupTitle;
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
-      
+      this.mode = 'main'; //default is main  other option is compare
+      this.modeCompare = 'abs' //default is abs  other option is pct
+
       // Global variable to store original label info
       this.originalLabelInfo = null;
 
@@ -119,10 +121,6 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
-    getLabelInfo() {
-      return this.sidebar.getAttributeLabelExpressionInfo();
-    }
-
     // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
     isScenarioCompIncomplete() {
       if (this.getComp() === null) {
@@ -137,7 +135,6 @@ require([
         return false;
       }
     }
-
 
     getACode() {
       return this.sidebar.getACode();
@@ -167,17 +164,26 @@ require([
         mapView.ui.remove(this.legend);
       }
     }
-
-    getMainRenderer() {
-      return this.sidebar.getAttributeRendererCollection().main.renderer;
+    
+    getLabelInfo() {
+      let attributeRenderer = this.getAttributeRendererPath();
+      return attributeRenderer ? attributeRenderer.labelExpressionInfo : null;
     }
-
-    getCompareAbsRenderer() {
-      return this.sidebar.getAttributeRendererCollection().compare_abs.renderer;
+    
+    getRenderer() {
+      let attributeRenderer = this.getAttributeRendererPath();
+      return attributeRenderer ? attributeRenderer.renderer : null;
     }
-
-    getComparePctRenderer() {
-      return this.sidebar.getAttributeRendererCollection().compare_pct.renderer;
+    
+    getAttributeRendererPath() {
+      const collection = this.sidebar.getAttributeRendererCollection();
+      if (this.mode == 'main') {
+        return collection.main;
+      } else if (this.mode == 'compare') {
+        return this.modeCompare == 'abs' ? collection.compare_abs :
+               this.modeCompare == 'pct' ? collection.compare_pct : null;
+      }
+      return null;
     }
 
     initializeLayer() {
@@ -426,11 +432,9 @@ require([
       // get main data
       var _dataMain = this.getDataMain();
 
-      let mode = 'base'; //default is base
-
       // get compare data
       if (this.getComp() !== null) {
-        mode = 'compare';
+        this.mode = 'compare';
         var _dataComp = this.getDataComp();
       }
 
@@ -446,7 +450,7 @@ require([
       const setRendererAndLegend = () => {
 
         if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
-          if (mode==='base') {
+          if (this.mode==='main') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
               field: "dVal", // replace with the field name of your data
@@ -456,7 +460,7 @@ require([
               ]
             });
           }
-          else if (mode==='compare') {
+          else if (this.mode==='compare') {
             var colorVisVar = {
               type: "color",
               field: "dVal", // Replace with your field name
@@ -482,11 +486,7 @@ require([
             visualVariables: [colorVisVar]
           });
         } else {
-          if (mode==='base') {
-            this.layerDisplay.renderer = this.getMainRenderer();
-          } else if (mode==='compare') {
-            this.layerDisplay.renderer = this.getCompareAbsRenderer() 
-          }
+          this.layerDisplay.renderer = this.getRenderer();
         }
 
         this.layerDisplay.refresh();
@@ -564,13 +564,13 @@ require([
               }
 
               var compareType = document.getElementById('selectCompareType');
-              var curPCOption = compareType ? compareType.selectedOption.value : null;
+              this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (curPCOption=='abs') { // absolute change
+                if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (curPCOption=='pct') { // percent change
+                } else if (this.modeCompare=='pct') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
                 }
               } catch(err) {
@@ -678,13 +678,13 @@ require([
               }
 
               var compareType = document.getElementById('selectCompareType');
-              var curPCOption = compareType ? compareType.selectedOption.value : null;
+              this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (curPCOption=='abs') { // absolute change
+                if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (curPCOption=='pct') { // percent change
+                } else if (this.modeCompare=='pct') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
                 }
               } catch(err) {

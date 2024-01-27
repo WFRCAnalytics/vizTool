@@ -89,24 +89,6 @@ class VizSidebar {
   getAttributeRendererCollection() {
     return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
   }
-  
-  getAttributeLabelExpressionInfo() {
-    if (this.attributes.find(item => item.aCode === this.getACode())) {
-      return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
-    }
-  }
-
-  getMainRenderer() {
-    return this.getAttributeRendererCollection().main.renderer;
-  }
-
-  getCompareAbsRenderer() {
-    return this.getAttributeRendererCollection().compare_abs.renderer;
-  }
-
-  getComparePctRenderer() {
-    return this.getAttributeRendererCollection().compare_pct.renderer;
-  }
 
   //// get the current filter
   //getFilter() {
