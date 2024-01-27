@@ -3,24 +3,18 @@ class VizTrends {
     this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
     console.log('viztrends:construct:' + this.id);
 
-    this.sidebar = new VizSidebar(data.attributeTitle,
-                                  data.attributes,
+    this.jsonFileName = data.jsonFileName;
+    this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
-                                  false,
-                                  data.filters,
+                                  data.attributeTitle,
                                   data.aggregators,
                                   data.aggregatorSelected,
                                   data.aggregatorTitle,
+                                  data.dividebyAttributes,
+                                  data.divideByAttributeSelect,
+                                  data.divideByAttributeTitle,
+                                  data.filters,
                                   this)
-    this.jsonFileName = data.jsonFileName;
-    this.divideByAttributes = (data.divideByAttributes || []).map(item => new Divider(item));
-    this.divideByAttributeSelect = new WijSelect(this.id + "_divider-selector",
-                                                 data.divideByAttributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
-                                                 data.divideByAttributeSelected,
-                                                 false,
-                                                 data.divideByAttributeTitle,
-                                                 this);
-
   }
   
   generateIdFromText(text) {
@@ -33,14 +27,36 @@ class VizTrends {
 
   afterUpdateSidebar() {
     console.log('viztrends:afterSidebarUpdate');
-    this.updateFilters();
     this.updateDisplay();
+  }
+  
+  afterUpdateAggregator() {
+    console.log('viztrends:afterUpdateAggregator');
+    //document.getElementById(this.comboSelector.id + '-container').innerHTML = '';
+    //this.comboSelector.render();
+    this.renderSidebar();
+    this.afterUpdateSidebar();
   }
 
   afterFilterUpdate() {
 
   }
 
+  getScenarioMain() {
+    return this.getScenario(         document.getElementById('selectModMain' ).value,
+                                     document.getElementById('selectGrpMain' ).value,
+                            parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+  }
+
+  getScenario(_modVersion, _scnGroup, _scnYear) {
+    return dataScenarios.find(scenario =>
+                              scenario.modVersion === _modVersion &&
+                              scenario.scnGroup   === _scnGroup   &&
+                              scenario.scnYear    === _scnYear
+                              ) || null;
+  }
+
+  
   // get the attributed code that is selected
   getACode() {
     return this.sidebar.getACode();
@@ -51,6 +67,10 @@ class VizTrends {
     return this.divideByAttributeSelect.selected;
   }
 
+  getSelectedAggregator() {
+    return this.sidebar.getSelectedAggregator();
+  }
+  
   getComboboxOptions(){
     const comboOptions = Array.isArray(this.comboSelector.comboSelected) ? this.comboSelector.comboSelected : [this.comboSelector.comboSelected];
     if (
@@ -64,66 +84,13 @@ class VizTrends {
     }
   }
 
-  getScenario(_modVersion, _scnGroup, _scnYear) {
-    return dataScenarios.find(scenario =>
-      scenario.modVersion === _modVersion &&
-      scenario.scnGroup   === _scnGroup   &&
-      scenario.scnYear    === _scnYear
-    ) || null;
-  }
-
-  getSelectedAggregator() {
-    return this.sidebar.getSelectedAggregator();
-  }
-
-  afterUpdateAggregator() {
-    console.log('viztrends:afterUpdateAggregator');
-    //document.getElementById(this.comboSelector.id + '-container').innerHTML = '';
-    //this.comboSelector.render();
-    this.renderSidebar();
-    this.afterUpdateSidebar();
-  }
-
-  scenarioMain() {
-    return this.getScenario(         document.getElementById('selectModMain' ).value,
-                                     document.getElementById('selectGrpMain' ).value,
-                            parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
-  }
-
-  updateFilters() {
-    console.log('viztrends:updateFilters');
-
-    var _filterGroup = [];
-
-    _filterGroup = this.scenarioMain().jsonData['roadway-trends'].attributes.find(item => item.aCode === this.getACode()).filterGroup;
-
-    // Select all elements with an 'id' containing '-filter-container'
-    const filteredDivs = Array.from(document.querySelectorAll("div[id$='_" + this.id + "-filter-container']"));
-  
-    if (_filterGroup) {
-      // Split the _filterGroup by "_"
-      const _filterArray = _filterGroup.split("_");
-      
-      filteredDivs.forEach(divElement => {
-        const containsFilterText = _filterArray.some(filterText => divElement.id.includes(filterText));
-        divElement.style.display = containsFilterText ? 'block' : 'none';
-      });
-    } else {
-      console.log('viztrends:_filterGroup is null or undefined. Hiding all divs.');
-      // Hide all divs if _filterGroup is null or undefined
-      filteredDivs.forEach(divElement => {
-        divElement.style.display = 'none';
-      });
-    }
-  }
-
   getFilterGroup() {
-    return this.scenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+    return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
   }
 
   getFilterGroupArray() {
     var _filterGroup = this.getFilterGroup();
-
+  
     if (_filterGroup) {
       // Split the _filterGroup by "_"
       return _filterGroup.split("_");
@@ -151,7 +118,7 @@ class VizTrends {
     const segidOptions = [];
     const filter = this.getFilterGroup();
 
-    const scenarioData = this.scenarioMain().jsonData['roadway-trends'].data[filter];
+    const scenarioData = this.getScenarioMain().jsonData['roadway-trends'].data[filter];
     Object.keys(scenarioData).forEach(segId => {
         segidOptions.push(segId);
     });
@@ -265,7 +232,6 @@ class VizTrends {
 
     return colors[index % colors.length];
   }
-
 
   updateDisplay() {
     const aCode = this.getACode();

@@ -2,16 +2,13 @@ require([
   "esri/layers/GeoJSONLayer",
   "esri/Graphic",
   "esri/layers/FeatureLayer",
-  "esri/renderers/ClassBreaksRenderer",
-  "esri/renderers/UniqueValueRenderer",
   "esri/renderers/SimpleRenderer",
   "esri/renderers/visualVariables/ColorVariable",
-  "esri/symbols/SimpleLineSymbol",
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query"
-], function(GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, ColorVariable, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -19,15 +16,6 @@ require([
       this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
       console.log('vizmap:construct:' + this.id);
 
-      this.sidebar = new VizSidebar(data.attributeTitle,
-                                    data.attributes,
-                                    data.attributeSelected,
-                                    false,
-                                    data.filters,
-                                    data.aggregators,
-                                    data.aggregatorSelected,
-                                    data.aggregatorTitle,
-                                    this)
       this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
@@ -40,6 +28,19 @@ require([
 
       // Global variable to store original label info
       this.originalLabelInfo = null;
+
+      // sidebar
+      this.sidebar = new VizSidebar(data.attributes,
+                                    data.attributeSelected,
+                                    data.attributeTitle,
+                                    data.aggregators,
+                                    data.aggregatorSelected,
+                                    data.aggregatorTitle,
+                                    data.dividers,
+                                    data.dividerSelected,
+                                    data.dividerTitle,
+                                    data.filters,
+                                    this)
 
       // ADD GEOJSONS
       // need to check geometry type before adding!!
@@ -71,6 +72,32 @@ require([
       }
     }
     
+    afterUpdateSidebar() {
+      console.log('vizmap:afterUpdateSidebar');
+      this.updateDisplay();
+    }
+
+    afterUpdateAggregator() {
+      console.log('vizmap:afterUpdateAggregator');
+      
+      // remove aggregator geometry
+      if (this.geojsonLayer) {
+        map.remove(this.geojsonLayer);
+      }
+
+      // ADD GEOJSONS
+      // need to check geometry type before adding!!
+      this.geojsonLayer = new GeoJSONLayer({
+        url: this.getSelectedAggregator().agGeoJson,
+        title: "Aggregator Layer"
+      });
+
+      // add new geometry
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+      this.afterUpdateSidebar();
+    }
+
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
@@ -103,10 +130,10 @@ require([
 
     getScenario(_modVersion, _scnGroup, _scnYear) {
       return dataScenarios.find(scenario =>
-        scenario.modVersion === _modVersion &&
-        scenario.scnGroup   === _scnGroup   &&
-        scenario.scnYear    === _scnYear
-      ) || null;
+                                scenario.modVersion === _modVersion &&
+                                scenario.scnGroup   === _scnGroup   &&
+                                scenario.scnYear    === _scnYear
+                                ) || null;
     }
 
     getMain() {
@@ -125,8 +152,8 @@ require([
     isScenarioCompIncomplete() {
       if (this.getComp() === null) {
         if ((document.getElementById('selectModComp' ).value !== "none" ||
-            document.getElementById('selectGrpComp' ).value !== "none" ||
-            document.getElementById('selectYearComp').value !== "none" )) {
+             document.getElementById('selectGrpComp' ).value !== "none" ||
+             document.getElementById('selectYearComp').value !== "none" )) {
           return true;
         } else {
           return false;
@@ -140,6 +167,15 @@ require([
       return this.sidebar.getACode();
     }
 
+    getADisplayName() {
+      return this.sidebar.getADisplayName();
+    }
+
+    // get the divider code that is selected
+    getDCode() {
+      return this.divideByAttributeSelect.selected;
+    }
+  
     getSelectedAggregator()  {
       return this.sidebar.getSelectedAggregator();
     }
@@ -396,32 +432,6 @@ require([
         this.layerDisplay.refresh(); // Refresh the layer to apply changes
       }
     }
-    
-    afterUpdateSidebar() {
-      console.log('vizmap:afterUpdateSidebar');
-      this.updateDisplay();
-    }
-
-    afterUpdateAggregator() {
-      console.log('vizmap:afterUpdateAggregator');
-      
-      // remove aggregator geometry
-      if (this.geojsonLayer) {
-        map.remove(this.geojsonLayer);
-      }
-
-      // ADD GEOJSONS
-      // need to check geometry type before adding!!
-      this.geojsonLayer = new GeoJSONLayer({
-        url: this.getSelectedAggregator().agGeoJson,
-        title: "Aggregator Layer"
-      });
-
-      // add new geometry
-      map.add(this.geojsonLayer);
-      this.geojsonLayer.visible = false;
-      this.afterUpdateSidebar();
-    }
 
     updateDisplay() {
       console.log('vizmap:updateDisplay');
@@ -504,7 +514,7 @@ require([
           view: mapView,
           layerInfos: [{
             layer: this.layerDisplay,
-            title: this.popupTitle// + (_filter !== "" ? " - Filtered by " + _filter : "")
+            title: this.getADisplayName()// + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
         mapView.ui.add(this.legend, "bottom-right");

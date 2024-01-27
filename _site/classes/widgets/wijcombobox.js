@@ -1,17 +1,15 @@
 class WijCombobox {
-  constructor(id, options, selected, comboSelected, hidden, text, vizLayout, parent) {
+  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
     this.id = id;
-    this.containerId = this.id + "-container";
-    this.options = options;
+    this.title = title;
     this.selected = selected;
-    this.comboSelected = comboSelected;
-    this.hidden = hidden !== undefined ? hidden : false;
-    this.text = text;
+    this.options = options;
     this.vizLayout = vizLayout;
-    this.parentEntity = parent;
+    this.spaceafter = spaceafter;
+
+    this.containerId = this.id + "-container";
   }
 
-  // Render the item based on its type
   render() {
     console.log('wijcombobox:render:' + this.containerId)
     const container = document.createElement('div');
@@ -51,7 +49,7 @@ class WijCombobox {
       });
     } else { // if not agregator
       let title = document.createElement("calcite-label");  // Create a new div element
-      title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
+      title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
       container.appendChild(title);  // Append the new element to the container
   
       // Create radio buttons
@@ -95,9 +93,11 @@ class WijCombobox {
     if (this.hidden) {
       container.style.display = "none";
     }
-
-    const lineBreak = document.createElement('br');
-    container.appendChild(lineBreak);
+    
+    if (this.spaceafter) {
+      const lineBreak = document.createElement('br');
+      container.appendChild(lineBreak); // Append a line break after the checkbox container
+    }
 
     return container;
   }

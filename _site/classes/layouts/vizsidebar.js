@@ -1,26 +1,36 @@
 class VizSidebar {
-  constructor(attributeTitle, attributes, attributeSelected, hidden, filters, aggregators, aggregatorSelected, aggregatorTitle, vizMap) {
+  constructor(attributes, attributeSelected, attributeTitle, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, filters, vizLayout) {
     this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
-    this.vizLayout = vizMap;
-    this.attributeTitle = attributeTitle;
-    this.attributeSelect = new WijRadio(this.id + "-attribute-selector",
-                                        attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
-                                        attributeSelected,
-                                        hidden,
-                                        attributeTitle,
-                                        this);
-    this.filters = (filters || []).map(item => new Filter(item, this.vizLayout));
-    this.attributes  = (attributes  || []).map(item => new Attribute(item));
+
+    this.attributes  = (attributes  || []).map(item => new Attribute (item));
     this.aggregators = (aggregators || []).map(item => new Aggregator(item));
-    // Check if aggregator exists before initializing aggregatorSelect
+    this.dividers    = (dividers    || []).map(item => new Divider   (item));
+    this.filters     = (filters     || []).map(item => new Filter    (item, vizLayout));
+
+    if (attributes) {
+      this.attributeSelect    = new WijRadio(this.id + "-attribute-selector",
+                                             attributeTitle,
+                                             attributeSelected,
+                                             attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
+                                             this);
+    }
     if (aggregators) {
       this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector",
-                                            aggregators.map(item => ({ value: item.agCode, label: item.agDisplayName })),
-                                            aggregatorSelected,
-                                            false,
                                             aggregatorTitle,
+                                            aggregatorSelected,
+                                            aggregators.map(item => ({ value: item.agCode, label: item.agDisplayName })),
                                             this);
     }
+    if (dividers) {
+      this.dividerSelect    = new WijSelect(this.id + "_divider-selector",
+                                            dividerTitle,
+                                            dividerSelected,
+                                            dividers.map(item => ({ value: item.aCode, label: item.aDisplayName })),
+                                            this);
+    }
+
+    // link to parent
+    this.vizLayout = vizLayout;
   }
 
   hideLayout() {
@@ -66,9 +76,21 @@ class VizSidebar {
     return this.attributeSelect.selected;
   }
 
+  
+  getADisplayName() {
+    const aCode = this.getACode();
+    const item = this.attributes.find(item => item.aCode === aCode);
+  
+    if (item && item.aDisplayName) {
+      return item.aDisplayName;
+    }
+  
+    return ""; // Or return a default value or `undefined` as needed
+  }
+
   getWeightCode() {
     const aCode = this.getACode();
-    const item = this.vizLayout.attributes.find(item => item.aCode === aCode);
+    const item = this.attributes.find(item => item.aCode === aCode);
   
     if (item && item.agWeightCode) {
       return item.agWeightCode;

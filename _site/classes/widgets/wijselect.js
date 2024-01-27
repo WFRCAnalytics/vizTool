@@ -1,23 +1,22 @@
 class WijSelect {
-  constructor(id, options, selected, hidden, text, vizLayout, parent) {
+  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
     this.id = id;
-    this.containerId = this.id + "-container"
-    this.options = options;
+    this.title = title;
     this.selected = selected;
-    this.hidden = hidden !== undefined ? hidden : false;
-    this.text = text;
+    this.options = options;
     this.vizLayout = vizLayout;
-    this.parentEntity = parent;
+    this.spaceafter = spaceafter;
+
+    this.containerId = this.id + "-container";
   }
 
-  // Render the item based on its type
   render() {
     console.log('wijselect:render:' + this.containerId)
     const container = document.createElement('div');
     container.id = this.containerId;
     
     let title = document.createElement("calcite-label");  // Create a new div element
-    title.innerHTML = "<b>" + this.text + "</b>";  // Set its innerHTML
+    title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
     container.appendChild(title);  // Append the new element to the container
 
     // Call a type-specific rendering method
@@ -50,6 +49,11 @@ class WijSelect {
     // Check if this.hidden is true and hide the container if it is
     if (this.hidden) {
       container.style.display = "none";
+    }
+
+    if (this.spaceafter) {
+      const lineBreak = document.createElement('br');
+      container.appendChild(lineBreak);
     }
 
     return container;
