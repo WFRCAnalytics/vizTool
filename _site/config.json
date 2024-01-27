@@ -2101,7 +2101,7 @@
             "menuIconStart": "urban-model",
             "modelEntities": [
               {
-                "submenuText": " ",
+                "submenuText": "Stay Tuned!",
                 "submenuIconStart": "",
                 "template": "vizLog"
               }
