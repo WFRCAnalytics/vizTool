@@ -2,41 +2,54 @@ require([
   "esri/layers/GeoJSONLayer",
   "esri/Graphic",
   "esri/layers/FeatureLayer",
-  "esri/renderers/ClassBreaksRenderer",
-  "esri/renderers/UniqueValueRenderer",
   "esri/renderers/SimpleRenderer",
   "esri/renderers/visualVariables/ColorVariable",
-  "esri/symbols/SimpleLineSymbol",
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query"
-], function(GeoJSONLayer, Graphic, FeatureLayer, ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, ColorVariable, SimpleLineSymbol, Color, PopupTemplate, Legend, Query) {
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
-    constructor(data, layerTitle) {
+    constructor(data, layerTitle, modelEntity) {
       this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
       console.log('vizmap:construct:' + this.id);
+      
+      // link to parent
+      this.modelEntity = modelEntity;
+
       this.jsonFileName = data.jsonFileName;
       this.baseGeometryFile = data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
-      this.attributes = (data.attributes || []).map(item => new Attribute(item));
-      this.aggregators = (data.aggregators || []).map(item => new Aggregator(item));
-      this.sidebar = new VizMapSidebar(data.attributeTitle, data.attributes, data.attributeSelected, false, data.filters, data.aggregators, data.aggregatorSelected, data.aggregatorTitle, this)
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
-      
+      this.mode = 'main'; //default is main  other option is compare
+      this.modeCompare = 'abs' //default is abs  other option is pct
+
       // Global variable to store original label info
       this.originalLabelInfo = null;
+
+      // sidebar
+      this.sidebar = new VizSidebar(data.attributes,
+                                    data.attributeSelected,
+                                    data.attributeTitle,
+                                    data.filters,
+                                    data.aggregators,
+                                    data.aggregatorSelected,
+                                    data.aggregatorTitle,
+                                    data.dividers,
+                                    data.dividerSelected,
+                                    data.dividerTitle,
+                                    this)
 
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
         url: this.baseGeometryFile,
-        title: "Zone Aggregation"
+        title: "dummy layer"
       });
       map.add(this.geojsonLayer);
       this.geojsonLayer.visible = false;
@@ -44,25 +57,56 @@ require([
       
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
-      fetch(this.baseGeometryFile)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(data => {
-        this.baseGeometryGeoJson = data;
-      })
-      .catch(error => {
-        console.error('Error reading the JSON file:', error);
-        // Handle the error appropriately
-        });
-      
+      if (this.baseGeometryFile!="") {
+        fetch(this.baseGeometryFile)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+          this.baseGeometryGeoJson = data;
+        })
+        .catch(error => {
+          console.error('Error reading the JSON file:', error);
+          // Handle the error appropriately
+          });
+      }
     }
     
+    afterUpdateSidebar() {
+      console.log('vizmap:afterUpdateSidebar');
+      this.updateDisplay();
+    }
+
+    afterUpdateAggregator() {
+      console.log('vizmap:afterUpdateAggregator');
+      
+      // remove aggregator geometry
+      if (this.geojsonLayer) {
+        map.remove(this.geojsonLayer);
+      }
+
+      // ADD GEOJSONS
+      // need to check geometry type before adding!!
+      this.geojsonLayer = new GeoJSONLayer({
+        url: this.getSelectedAggregator().agGeoJson,
+        title: "Aggregator Layer"
+      });
+
+      // add new geometry
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+      this.afterUpdateSidebar();
+    }
+
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    renderSidebar() {
+      this.sidebar.render();
     }
 
     getScenarioMain() {
@@ -89,10 +133,10 @@ require([
 
     getScenario(_modVersion, _scnGroup, _scnYear) {
       return dataScenarios.find(scenario =>
-        scenario.modVersion === _modVersion &&
-        scenario.scnGroup   === _scnGroup   &&
-        scenario.scnYear    === _scnYear
-      ) || null;
+                                scenario.modVersion === _modVersion &&
+                                scenario.scnGroup   === _scnGroup   &&
+                                scenario.scnYear    === _scnYear
+                                ) || null;
     }
 
     getMain() {
@@ -107,14 +151,12 @@ require([
                               parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
     }
 
-
-
     // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
     isScenarioCompIncomplete() {
       if (this.getComp() === null) {
         if ((document.getElementById('selectModComp' ).value !== "none" ||
-            document.getElementById('selectGrpComp' ).value !== "none" ||
-            document.getElementById('selectYearComp').value !== "none" )) {
+             document.getElementById('selectGrpComp' ).value !== "none" ||
+             document.getElementById('selectYearComp').value !== "none" )) {
           return true;
         } else {
           return false;
@@ -124,17 +166,28 @@ require([
       }
     }
 
-
     getACode() {
       return this.sidebar.getACode();
     }
 
+    getADisplayName() {
+      return this.sidebar.getADisplayName();
+    }
+
+    // get the divider code that is selected
+    getDCode() {
+      return this.divideByAttributeSelect.selected;
+    }
+  
     getSelectedAggregator()  {
       return this.sidebar.getSelectedAggregator();
     }
 
     getFilterGroup() {
-      return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+      const _scenario = this.getScenarioMain();
+      if (_scenario) {
+        return _scenario.getFilterGroupForAttribute(this.jsonFileName, this.getACode())
+      }
     }
 
     getFilterGroupArray() {
@@ -153,25 +206,26 @@ require([
         mapView.ui.remove(this.legend);
       }
     }
-
-    getAttributeRendererCollection() {
-      return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
+    
+    getLabelInfo() {
+      let attributeRenderer = this.getAttributeRendererPath();
+      return attributeRenderer ? attributeRenderer.labelExpressionInfo : null;
     }
     
-    getAttributeLabelExpressionInfo() {
-      return this.attributes.find(item => item.aCode === this.getACode()).aLabelExpressionInfo;
+    getRenderer() {
+      let attributeRenderer = this.getAttributeRendererPath();
+      return attributeRenderer ? attributeRenderer.renderer : null;
     }
-
-    getMainRenderer() {
-      return this.getAttributeRendererCollection().main.renderer;
-    }
-
-    getCompareAbsRenderer() {
-      return this.getAttributeRendererCollection().compare_abs.renderer;
-    }
-
-    getComparePctRenderer() {
-      return this.getAttributeRendererCollection().compare_pct.renderer;
+    
+    getAttributeRendererPath() {
+      const collection = this.sidebar.getAttributeRendererCollection();
+      if (this.mode == 'main') {
+        return collection.main;
+      } else if (this.mode == 'compare') {
+        return this.modeCompare == 'abs' ? collection.compare_abs :
+               this.modeCompare == 'pct' ? collection.compare_pct : null;
+      }
+      return null;
     }
 
     initializeLayer() {
@@ -239,7 +293,7 @@ require([
               {
                 name: "formatDisplayValue",
                 title: "Formatted Display Value",
-                expression: this.getAttributeLabelExpressionInfo()
+                expression: this.getLabelInfo()
               }
             ]
           },
@@ -256,7 +310,7 @@ require([
               }
             },
             labelPlacement: "center-along",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
           }],
           renderer: {
             type: "simple",  // Use a simple renderer
@@ -324,7 +378,7 @@ require([
               {
                 name: "formatDisplayValue",
                 title: "Formatted Display Value",
-                expression: this.getAttributeLabelExpressionInfo()
+                expression: this.getLabelInfo()
               }
             ]
           },
@@ -341,7 +395,7 @@ require([
               }
             },
             labelPlacement: "always-horizontal",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getAttributeLabelExpressionInfo() }  // Define the expression for the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
           }],
           renderer: {
             type: "simple",  // Use a simple renderer
@@ -358,11 +412,6 @@ require([
         map.add(this.layerDisplay);
       }
     }
-
-    renderSidebar() {
-      this.sidebar.render();
-    }
-
 
     // Function to be called when checkbox status changes
     toggleLabels() {
@@ -389,32 +438,6 @@ require([
         this.layerDisplay.refresh(); // Refresh the layer to apply changes
       }
     }
-    
-    afterUpdateSidebar() {
-      console.log('vizmap:afterUpdateSidebar');
-      this.updateDisplay();
-    }
-
-    afterUpdateAggregator() {
-      console.log('vizmap:afterUpdateAggregator');
-      
-      // remove aggregator geometry
-      if (this.geojsonLayer) {
-        map.remove(this.geojsonLayer);
-      }
-
-      // ADD GEOJSONS
-      // need to check geometry type before adding!!
-      this.geojsonLayer = new GeoJSONLayer({
-        url: this.getSelectedAggregator().agGeoJson,
-        title: "Aggregator Layer"
-      });
-
-      // add new geometry
-      map.add(this.geojsonLayer);
-      this.geojsonLayer.visible = false;
-      this.afterUpdateSidebar();
-    }
 
     updateDisplay() {
       console.log('vizmap:updateDisplay');
@@ -425,11 +448,14 @@ require([
       // get main data
       var _dataMain = this.getDataMain();
 
-      let mode = 'base'; //default is base
+      // return if no data!
+      if (!_dataMain) {
+        return;
+      }
 
       // get compare data
       if (this.getComp() !== null) {
-        mode = 'compare';
+        this.mode = 'compare';
         var _dataComp = this.getDataComp();
       }
 
@@ -445,7 +471,7 @@ require([
       const setRendererAndLegend = () => {
 
         if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
-          if (mode==='base') {
+          if (this.mode==='main') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
               field: "dVal", // replace with the field name of your data
@@ -455,7 +481,7 @@ require([
               ]
             });
           }
-          else if (mode==='compare') {
+          else if (this.mode==='compare') {
             var colorVisVar = {
               type: "color",
               field: "dVal", // Replace with your field name
@@ -481,11 +507,7 @@ require([
             visualVariables: [colorVisVar]
           });
         } else {
-          if (mode==='base') {
-            this.layerDisplay.renderer = this.getMainRenderer();
-          } else if (mode==='compare') {
-            this.layerDisplay.renderer = this.getCompareAbsRenderer() 
-          }
+          this.layerDisplay.renderer = this.getRenderer();
         }
 
         this.layerDisplay.refresh();
@@ -503,7 +525,7 @@ require([
           view: mapView,
           layerInfos: [{
             layer: this.layerDisplay,
-            title: this.popupTitle// + (_filter !== "" ? " - Filtered by " + _filter : "")
+            title: this.getADisplayName()// + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
         mapView.ui.add(this.legend, "bottom-right");
@@ -537,7 +559,7 @@ require([
 
           
           // NO AGGREGATOR
-          if (this.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
+          if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
             
             result.features.forEach((feature) => {
 
@@ -563,13 +585,13 @@ require([
               }
 
               var compareType = document.getElementById('selectCompareType');
-              var curPCOption = compareType ? compareType.selectedOption.value : null;
+              this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (curPCOption=='abs') { // absolute change
+                if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (curPCOption=='pct') { // percent change
+                } else if (this.modeCompare=='pct') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
                 }
               } catch(err) {
@@ -606,7 +628,7 @@ require([
           } else if (this.baseGeometryGeoJson.features) {
 
             const _idAgFieldName = this.getSelectedAggregator().agCode;
-            const _wtCode = this.getWeightCode();
+            const _wtCode = this.sidebar.getWeightCode() || "";
 
             // go through display geometry features
             result.features.forEach((feature) => {
@@ -677,13 +699,13 @@ require([
               }
 
               var compareType = document.getElementById('selectCompareType');
-              var curPCOption = compareType ? compareType.selectedOption.value : null;
+              this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (curPCOption=='abs') { // absolute change
+                if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (curPCOption=='pct') { // percent change
+                } else if (this.modeCompare=='pct') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
                 }
               } catch(err) {

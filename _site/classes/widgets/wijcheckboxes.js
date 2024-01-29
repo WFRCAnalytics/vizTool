@@ -1,14 +1,13 @@
 class WijCheckboxes {
-  constructor(id, options, selected, comboSelected, hidden, text, vizLayout, parent) {
+  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
     this.id = id;
-    this.containerId = this.id + "-container";
-    this.options = options;
+    this.title = title;
     this.selected = selected;
-    this.comboSelected = comboSelected;
-    this.hidden = hidden !== undefined ? hidden : false;
-    this.text = text;
+    this.options = options;
     this.vizLayout = vizLayout;
-    this.parentEntity = parent;
+    this.spaceafter = spaceafter;
+
+    this.containerId = this.id + "-container";
   }
 
   render() {
@@ -22,7 +21,7 @@ class WijCheckboxes {
     const wijCheckBoxesInstance = this;
 
     let title = document.createElement("calcite-label");
-    title.innerHTML = "<b>" + this.text + "</b>";
+    title.innerHTML = "<b>" + this.title + "</b>";
     mainContainer.appendChild(title); // Append the title to the main container
 
     var lstChecked = [];
@@ -36,10 +35,12 @@ class WijCheckboxes {
       var checkbox = document.createElement("calcite-checkbox");
 
       checkbox.value = option.value;
-      checkbox.checked = true;
 
-      if (checkbox.checked) {
-          lstChecked.push(checkbox.value);
+      if (this.selected.includes(option.value)) {
+        checkbox.checked = true;
+        lstChecked.push(checkbox.value);
+      } else {
+        checkbox.checked = false;
       }
 
       // Listen for changes to the checkbox
@@ -53,7 +54,7 @@ class WijCheckboxes {
           }
         }
         
-          wijCheckBoxesInstance.comboSelected = lstChecked;
+          wijCheckBoxesInstance.selected = lstChecked;
           wijCheckBoxesInstance.vizLayout.updateDisplay();
       });
 
@@ -68,18 +69,18 @@ class WijCheckboxes {
     }
 
     mainContainer.appendChild(checkboxContainer); // Append the checkbox container to the main container
-
     
-    const lineBreak = document.createElement('br');
-    mainContainer.appendChild(lineBreak); // Append a line break after the checkbox container
-
-
+    if (this.spaceafter) {
+      const lineBreak = document.createElement('br');
+      mainContainer.appendChild(lineBreak); // Append a line break after the checkbox container
+    }
+    
     return mainContainer;
   }
 
 
   getSelectedOptionsAsList() {
-    return this.comboSelected;
+    return this.selected;
   }
 
 }

@@ -1,15 +1,15 @@
 class ModelEntity {
   constructor(data, menuItem) {
+    console.log('modelentity-construct:' + data.submenuText)
     this.id = menuItem.id + '-' + this.generateIdFromText(data.submenuText) + '-modelentity'; // use provided id or generate one if not provided
     this.submenuText = data.submenuText;
     this.submenuIconStart = data.submenuIconStart;
     this.template = data.template;
     if (data.template=='vizMap') {
-      this.vizLayout = new VizMap(data.templateSettings, data.submenuText);
+      this.vizLayout = new VizMap(data.templateSettings, data.submenuText, this);
     } else if (data.template=='vizTrends') {
-      this.vizLayout = new VizTrends(data.templateSettings);
+      this.vizLayout = new VizTrends(data.templateSettings, this);
     }
-    this.mapSidebarItems = (data.mapSidebarItems || []).map(item => new MapSidebarItem(item, this));
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
     this.menuItem = menuItem;

@@ -1,29 +1,25 @@
 class Filter {
   constructor(data, vizLayout) {
-    this.id = vizLayout.id + '-' + data.id;
-    this.vizLayout = vizLayout;
+    this.id = vizLayout.id + '-' + data.fCode;
+    console.log('filter-construct:' + this.id);
 
-    if (data.type === "select") {
-      this.filterWij = new WijSelect(this.id + '-filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, true, data.text, this.vizLayout, this);
-    } else if (data.type === "radio") {
-      this.filterWij = new WijRadio(this.id + '-filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, true, '', this.vizLayout, this);
-    } else if (data.type === "checkboxes") {
-      this.filterWij = new WijCheckboxes(this.id + '-filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.selected, true, data.text, this.vizLayout, this);
-    } else if (data.type === "combobox") {
-      this.filterWij = new WijCombobox(this.id + '-filter', data.options.map(item => ({
-        value: item.value,
-        label: item.label
-      })), data.selected, data.selected, true, '', this.vizLayout, this);
+    this.vizLayout = vizLayout;
+    
+    const _id = this.id + '-filter'
+    const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
+    const _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
+    const _selected = data.fSelected;
+
+    if (data.fWidget === 'select') {
+      this.filterWij = new WijSelect(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'radio') {
+      this.filterWij = new WijRadio(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'checkboxes') {
+      this.filterWij = new WijCheckboxes(_id, _name, _selected, _options, vizLayout, true);
+    } else if (data.fWidget === 'combobox') {
+      this.filterWij = new WijCombobox(_id, _name, _selected, _options, vizLayout, true);
     }
+  
   }
 
   render() {

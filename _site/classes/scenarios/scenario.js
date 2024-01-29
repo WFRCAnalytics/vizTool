@@ -11,11 +11,13 @@ class Scenario {
     this.jsonData = {};
 
     // Fetch and store data for each file
+    // AUTOMATE USING CONFIG
     this.fetchAndStoreData('roadway-vizmap');
     this.fetchAndStoreData('roadway-trends');
     this.fetchAndStoreData('transit-segments-riders');
-    //this.fetchAndStoreData('zones-modeshare-vizmap');
-    //this.fetchAndStoreData('zones-se-vizmap');
+    this.fetchAndStoreData('zones-modetrips-vizmap');
+    this.fetchAndStoreData('zones-se-vizmap');
+    this.fetchAndStoreData('zones-jobhh-vizmap');
   }
 
   // Function to fetch and store data
@@ -67,11 +69,15 @@ class Scenario {
 
     // Loop through each combination of filters
     a_lstFilters.forEach(function(filter) {
-      let data = _parent.jsonData[a_jsonDataKey].data[filter];
+      let _data = [];
+      if (_parent.jsonData[a_jsonDataKey]) {
+        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+      }
+      
 
       // Sum the fields in the data object
-      if (data) {
-        sumFields(data);
+      if (_data) {
+        sumFields(_data);
       }
     });
 

@@ -5,6 +5,15 @@ class Aggregator {
         this.agOptions = data.agOptions;
         this.agWeightCode = data.agWeightCode;
         this.agGeoJson = data.agGeoJson;
+        this.selected = data.agSelected
+    
+        this.filterData = {
+          fCode    : this.agCode       ,
+          fName    : this.agDisplayName,
+          fWidget  : "checkboxes"      ,
+          fOptions : this.agOptions    ,
+          fSelected: this.selected   
+        }
     }
 }
 
