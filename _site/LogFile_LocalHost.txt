@@ -1,0 +1,6 @@
+Starting VizTool: 
+Root directory: D:\GitHub\TDM-vizTool-and-Dashboard\_site
+Opening local host...
+
+
+**Note: closing the command prompt may result in a Cube python warning message**
