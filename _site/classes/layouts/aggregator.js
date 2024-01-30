@@ -16,9 +16,3 @@ class Aggregator {
         }
     }
 }
-
-class Divider {
-    constructor(data){
-        this.aCode = data.aCode
-    }
-}

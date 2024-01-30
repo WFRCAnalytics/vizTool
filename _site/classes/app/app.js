@@ -1,5 +1,7 @@
 let globalTemplates = [];
-let dataScenarios = [];
+let dataScenarios = []; // this object contains all the scenarios and their data
+let dataScenarioTrends = []; // this object contains all the scneario trends definitions
+let dataGeojsons = {}; // this object contains 
 let map;
 let geojsonSegments;
 let mapView;
@@ -34,10 +36,55 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataScenario;
   }
 
+  async function fetchScenarioTrendData() {
+    console.log('app:fetchScenarioData');
+    const response = await fetch('scenario-trends.json');
+    const dataScenarioTrend = await response.json();
+    return dataScenarioTrend;
+  }
+
   async function loadScenarios() {
     console.log('app:loadScenarios');
+
+    // load scenario data
     const jsonScenario = await fetchScenarioData();
     dataScenarios = jsonScenario.map(item => new Scenario(item));
+
+    // load scenario trend data
+    const jsonScenarioTrend = await fetchScenarioTrendData();
+    dataScenarioTrends = jsonScenarioTrend.map(item => new ScenarioTrend(item));
+  
+
+    dataGeojsons = {};
+
+    const _geojsonfilenames = new Set();
+
+    dataScenarios.forEach(scenario => {
+      let _geojsons = Object.values(scenario.geojsons);
+
+      _geojsons.forEach((_geojson) => {
+        _geojsonfilenames.add(_geojson);
+      });
+    });
+
+
+    _geojsonfilenames.forEach(_geojsonfilename => {
+      fetchAndStoreGeoJsonData(_geojsonfilename);
+    });
+
+    await populateScenarioSelections();
+    
+  }
+
+  // Function to fetch and store data
+  function fetchAndStoreGeoJsonData(fileName) {
+    fetch(`data/${fileName}`)
+      .then(response => response.json())
+      .then(jsonData => {
+        // Store the processed data in the object with the filename as key
+        dataGeojsons[fileName] = jsonData;
+      })
+      .catch(error => console.error(`Error fetching data from ${fileName}:`, error));
   }
 
   async function loadMenuAndItems() {
@@ -58,9 +105,24 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     dataMenu.forEach(menuItem => {
       calciteMenu.appendChild(menuItem.createMenuItemElement());
     });
+
+    // populate jsons for scenarios
+    dataScenarios.forEach(scenario => {
+      scenario.loadData(dataMenu);
+    });
   }
 
   async function populateScenarioSelections() {
+
+    function addCalciteOption(calciteSelect, value) {
+      if (!calciteSelect) return; // Guard clause to prevent errors
+      const option = document.createElement('calcite-option');
+      option.value = value;
+      option.textContent = value;
+  
+      calciteSelect.appendChild(option);
+    };
+
     console.log('app:populateScenarioSelections');
     const modMain  = document.getElementById('selectModMain');
     const grpMain  = document.getElementById('selectGrpMain');
@@ -71,6 +133,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     const scenarioModel = new Set();
     const scenarioGroup = new Set();
     const scenarioYear  = new Set();
+
+    if (!modMain || !grpMain || !yearMain || !modComp || !grpComp || !yearComp) {
+      console.error('One or more select elements not found');
+      return;
+    }
 
     // Add 'none' option
     addCalciteOption(modComp, 'none');
@@ -106,24 +173,14 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     yearComp.value = 'none';
   }
 
-
-  function addCalciteOption(calciteSelect, value) {
-    const option = document.createElement('calcite-option');
-    option.value = value;
-    option.textContent = value;
-
-    calciteSelect.appendChild(option);
-  }
-
   async function init() {
     console.log('app:init');
-    const menuStructure = await loadMenuAndItems();
     await loadScenarios();
-    await populateScenarioSelections();
-    initVizMapListeners();
+    await initVizMapListeners();
+    const menuStructure = await loadMenuAndItems();
   }
 
-  function initVizMapListeners() {
+  async function initVizMapListeners() {
     console.log('app:initVizMapListeners');
             
     document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
@@ -184,7 +241,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     });
   }
 
-  function populateTemplates() {
+  async function populateTemplates() {
     console.log('app:populateTemplates');
 
     const container = document.getElementById('main');

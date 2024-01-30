@@ -1,0 +1,46 @@
+[
+  {
+    "scnTrend": "v9.0 RTP",
+    "modelruns" : [
+      { "modVersion": "v900", "scnGroup": "Base", "scnYear": 2019 },
+      { "modVersion": "v900", "scnGroup": "Base", "scnYear": 2023 },
+      { "modVersion": "v900", "scnGroup": "TIP" , "scnYear": 2028 },
+      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2032 },
+      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2042 },
+      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.0 Needs",
+    "modelruns" : [
+      { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2019 },
+      { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2023 },
+      { "modVersion": "v900", "scnGroup": "TIP"  , "scnYear": 2028 },
+      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2032 },
+      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2042 },
+      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.0 Needs MAG",
+    "modelruns" : [
+      { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2019 },
+      { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2023 },
+      { "modVersion": "v900", "scnGroup": "TIP"      , "scnYear": 2028 },
+      { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2032 },
+      { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2042 },
+      { "modVersion": "v900", "scnGroup": "Needs MAG", "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.0 No Build",
+    "modelruns" : [
+        { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2019 },
+        { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2023 },
+        { "modVersion": "v900", "scnGroup": "TIP"    , "scnYear": 2028 },
+        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2032 },
+        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2042 },
+        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2050 }
+    ]
+  }
+]

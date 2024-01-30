@@ -137,6 +137,16 @@ th, td {
     min-width: 0; /* Optional: Ensures it can shrink below its content's intrinsic width */
     /* Add any additional styling you need */
 }
+
+#trendScenarios {
+    width: 190px;
+    background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
+    padding: 10px;
+    height: calc(100vh - 134px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+    /* Style your columns */
+}
+
 #mainMatrix {
     /* Main content styles */
     flex-grow: 1;
