@@ -17,7 +17,7 @@ h1 {
 }
 
 .checkbox-container {
-    max-height: 200px; /* Maximum height before scrollbar appears */
+    max-height: 350px; /* Maximum height before scrollbar appears */
     overflow-y: auto; /* Show vertical scrollbar when needed */
     width: 100%; /* Adjust width as needed */
     padding-left: 5px;

@@ -5,5 +5,6 @@ class Divider {
         this.baseGeoJsonId = data.baseGeoJsonId;
         this.aCode = data.aCode;
         this.aDisplayName = data.aDisplayName;
+        this.filter = data.filter
     }
 }

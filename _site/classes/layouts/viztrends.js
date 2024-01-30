@@ -4,6 +4,7 @@ class VizTrends {
     console.log('viztrends:construct:' + this.id);
 
     this.baseGeoJsonKey = data.baseGeoJsonKey;
+    this.baseGeoJsonId = data.baseGeoJsonId;
     this.jsonFileName = data.jsonFileName;
      
     // link to parent
@@ -24,9 +25,12 @@ class VizTrends {
     
     // set up scenario checker
     const _scenariocheckerdiv = document.getElementById('trendScenarios');
-    const _scenariochecker_checkboxes = new WijCheckboxes('scenario-checker', 'Select your scenarios:', dataScenarioTrends.map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
-    _scenariocheckerdiv.appendChild(_scenariochecker_checkboxes.render());
 
+    // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
+    if (_scenariocheckerdiv.innerHTML.trim() === '') {
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select your scenarios:', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
+      _scenariocheckerdiv.appendChild(scenarioChecker.render());
+    }
   }
   
   generateIdFromText(text) {
@@ -34,6 +38,10 @@ class VizTrends {
   }
 
   renderSidebar() {
+    
+    // since shared scenario checker, have to make sure vizLayout is set correctly in checkboxes
+    scenarioChecker.vizLayout = this;
+
     this.sidebar.render();
   }
 
@@ -84,6 +92,11 @@ class VizTrends {
     return this.sidebar.getSelectedAggregator();
   }
   
+  getAgNameFromAgId(id) {
+    if (this.sidebar.aggregators) {
+      return this.getSelectedAggregator().filterData.fOptions.find(a => a.value === String(id)).label || '';
+    }
+  }
 
   getFilterGroup() {
     return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
@@ -137,7 +150,7 @@ class VizTrends {
     const aggCode = this.getSelectedAggregator();
     const title = document.createElement('div');
     title.id = 'charttitle';
-    title.innerHTML = '<h1>' + this.sidebar.getADisplayName() + ' Trends</h1><b>' + aggCode.agDisplayName + ": " + agIdsString + '</b>'
+    title.innerHTML = '<h1>' + this.sidebar.getADisplayName() + ' Trends</h1><b>' + aggCode.agDisplayName + " : " + agIdsString.map(a=>(this.getAgNameFromAgId(a))) + '</b>'
     containerElement.appendChild(title);
 
     const chartContainer = document.createElement('div');
@@ -160,12 +173,12 @@ class VizTrends {
           currentChart.destroy();
       }
       
-      const scenarioGroups = [
-        {name: "v9.0 RTP"      },
-        {name: "v9.0 No Build" },
-        {name: "v9.0 Needs"    },
-        {name: "v9.0 Needs MAG"}
-      ];
+
+      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend)).map(item => {
+        return {
+          name: item.scnTrend
+        };
+      });
 
       currentChart = new Chart(ctx, {
         type: 'scatter', // Use scatter chart type
@@ -183,7 +196,7 @@ class VizTrends {
               });
       
               return {
-                label: `${name}`,
+                label: this.getAgNameFromAgId(agId) + ':' + name,
                 data: dataPoints,
                 fill: false,
                 borderColor: this.getRandomColor(),
@@ -265,10 +278,11 @@ class VizTrends {
     const chartData = {};
 
     var _data_divide;
-    var _geojsondata_divide;
+    var _geojsondata_divide;  
 
+    const dataScenarioTrends_selected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend));
 
-    dataScenarioTrends.forEach(trend => {
+    dataScenarioTrends_selected.forEach(trend => {
 
       const _trendName = trend.scnTrend;
 
@@ -291,9 +305,8 @@ class VizTrends {
           _data_divide = {};
           _geojsondata_divide = {};
 
-          if (_dCode!="") {
-            console.log("IMPORTANT>>>>ASSUME EMPTY FILTER FOR DIVIDED DATA!")
-            _data_divide = _scenario.jsonData[_selectedDivider.jsonFileName].data[""];
+          if (_dCode!="Nothing") {
+            _data_divide = _scenario.jsonData[_selectedDivider.jsonFileName].data[_selectedDivider.filter];
             _geojsondata_divide = dataGeojsons[_scenario.geojsons[_selectedDivider.baseGeoJsonKey]];
           }
 
@@ -303,7 +316,7 @@ class VizTrends {
               feature.properties[_agCode]==agId
             );
 
-            if (_dCode!="") {
+            if (_dCode!="Nothing") {
 
               var _sumDivide = 0;
 
@@ -351,8 +364,8 @@ class VizTrends {
 
             _filteredFeatures.forEach(feature => {
 
-              const segId = feature.properties.SEGID;
-              const filterSelectionData = _filteredScenario[segId];
+              const baseId = feature.properties[this.baseGeoJsonId];
+              const filterSelectionData = _filteredScenario[baseId];
       
               if (filterSelectionData) {
                 //const selectedValue = this.getChartData(_aCode, filterSelectionData);
@@ -369,7 +382,7 @@ class VizTrends {
               }
             })
 
-            if (_dCode!="") {
+            if (_dCode!="Nothing") {
               chartData[agId][_trendName][_scnYear] /= _sumDivide;
             }
           });

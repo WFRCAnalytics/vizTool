@@ -9,6 +9,7 @@ let layerDisplay;
 let dummyFeature;
 let dataMenu;
 let activeModelEntity;
+let scenarioChecker;
 
 require([
   "esri/config",
