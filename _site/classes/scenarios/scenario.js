@@ -1,23 +1,34 @@
 // Class for Scenario
 class Scenario {
-  constructor(data) {
-    this.modVersion       = data.modVersion;
-    this.scnGroup         = data.scnGroup  ;
-    this.scnYear          = data.scnYear   ;
-    this.scnDesc          = data.scnDesc   ;
-    this.geoJsonSeg       = data.geoJsonSeg;
-    this.scnFolder        = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
-    // Array to store the data
-    this.jsonData = {};
+  constructor(data, dataMenu) {
+    this.modVersion = data.modVersion;
+    this.scnGroup   = data.scnGroup;
+    this.scnYear    = data.scnYear; 
+    this.scnDesc    = data.scnDesc;
+    this.scnFolder  = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
+    this.geojsons   = data.geojsons;
+    this.jsonData   = {}; // Array to store the data
+  }
 
-    // Fetch and store data for each file
-    // AUTOMATE USING CONFIG
-    this.fetchAndStoreData('roadway-vizmap');
-    this.fetchAndStoreData('roadway-trends');
-    this.fetchAndStoreData('transit-segments-riders');
-    this.fetchAndStoreData('zones-modetrips-vizmap');
-    this.fetchAndStoreData('zones-se-vizmap');
-    this.fetchAndStoreData('zones-jobhh-vizmap');
+  // loadData has to be called after menuItems is loaded
+  loadData(dataMenu) {
+
+    let jsonFileNames = new Set();
+    
+    dataMenu.forEach(menuItem => {
+      if (menuItem.modelEntities) {
+        menuItem.modelEntities.forEach(modelEntity => {
+          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonFileName) {
+            jsonFileNames.add(modelEntity.vizLayout.jsonFileName);
+          }
+        });
+      }
+    });
+
+    jsonFileNames.forEach(uniqueFileName => {
+      this.fetchAndStoreData(uniqueFileName);
+    });
+    
   }
 
   // Function to fetch and store data

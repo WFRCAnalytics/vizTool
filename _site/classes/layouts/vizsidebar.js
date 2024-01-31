@@ -30,10 +30,14 @@ class VizSidebar {
     }
 
     if (dividers) {
+      if (dividerSelected=="") {
+        dividerSelected = "Nothing";
+      }
+      const _nothing = { value: "Nothing", label: "Nothing" };
       this.dividerSelect    = new WijSelect(this.id + "_divider-selector",
                                             dividerTitle,
                                             dividerSelected,
-                                            dividers.map(item => ({ value: item.aCode, label: item.aDisplayName })),
+                                            [_nothing, ...dividers.map(item => ({ value: item.aCode, label: item.aDisplayName }))],
                                             this);
       //this.dividerFilters = (dividerFilters || []).map(item => new Filter (item, vizLayout));
     }

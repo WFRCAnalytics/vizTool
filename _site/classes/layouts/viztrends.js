@@ -3,6 +3,10 @@ class VizTrends {
     this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
     console.log('viztrends:construct:' + this.id);
 
+    this.baseGeoJsonKey = data.baseGeoJsonKey;
+    this.baseGeoJsonId = data.baseGeoJsonId;
+    this.jsonFileName = data.jsonFileName;
+     
     // link to parent
     this.modelEntity = modelEntity;
 
@@ -18,6 +22,15 @@ class VizTrends {
                                   data.dividerSelected,
                                   data.dividerTitle,
                                   this)
+    
+    // set up scenario checker
+    const _scenariocheckerdiv = document.getElementById('trendScenarios');
+
+    // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
+    if (_scenariocheckerdiv.innerHTML.trim() === '') {
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select your scenarios:', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
+      _scenariocheckerdiv.appendChild(scenarioChecker.render());
+    }
   }
   
   generateIdFromText(text) {
@@ -25,6 +38,10 @@ class VizTrends {
   }
 
   renderSidebar() {
+    
+    // since shared scenario checker, have to make sure vizLayout is set correctly in checkboxes
+    scenarioChecker.vizLayout = this;
+
     this.sidebar.render();
   }
 
@@ -75,6 +92,11 @@ class VizTrends {
     return this.sidebar.getSelectedAggregator();
   }
   
+  getAgNameFromAgId(id) {
+    if (this.sidebar.aggregators) {
+      return this.getSelectedAggregator().filterData.fOptions.find(a => a.value === String(id)).label || '';
+    }
+  }
 
   getFilterGroup() {
     return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
@@ -89,22 +111,22 @@ class VizTrends {
     }
   }
 
-  getChartData(aCode, filterSelectionData) {
-    if (aCode === 'aVmt') {
-        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
-    } else if (aCode === 'aVht') {
-        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
-    } else if (aCode === 'aLMl') {
-        return filterSelectionData.aLMl;
-    } else {
-        return 0; // return 0 if nothing is found
-    }
-
-    //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in vizmap L#272)
-
-    // Handle other display names if needed
-    return null;
-  }
+//  getChartData(aCode, filterSelectionData) {
+//    if (aCode === 'aVmt') {
+//        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
+//    } else if (aCode === 'aVht') {
+//        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
+//    } else if (aCode === 'aLMl') {
+//        return filterSelectionData.aLMl;
+//    } else {
+//        return 0; // return 0 if nothing is found
+//    }
+//
+//    //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in vizmap L#272)
+//
+//    // Handle other display names if needed
+//    return null;
+//  }
 
   getSegidOptions() {
     const segidOptions = [];
@@ -118,7 +140,7 @@ class VizTrends {
     return segidOptions;
   }
 
-  createLineChart(aCode, labels, chartData, aggIDsString) {
+  createLineChart(aCode, labels, chartData, agIdsString) {
     console.log('viztrends:Creating the chart...');
     console.log("Selected radio button option under 'Display':", aCode);
 
@@ -128,7 +150,7 @@ class VizTrends {
     const aggCode = this.getSelectedAggregator();
     const title = document.createElement('div');
     title.id = 'charttitle';
-    title.innerHTML = '<h1>' + this.sidebar.getADisplayName() + ' Trends</h1><b>' + aggCode.agDisplayName + ": " + aggIDsString + '</b>'
+    title.innerHTML = '<h1>' + aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends</h1>'
     containerElement.appendChild(title);
 
     const chartContainer = document.createElement('div');
@@ -143,7 +165,7 @@ class VizTrends {
     const ctx = canvas.getContext('2d');
     let currentChart = null;
 
-    const aggIds = Object.keys(chartData);
+    const agIds = Object.keys(chartData);
 
     const createChart = () => {
       if (currentChart) {
@@ -151,21 +173,21 @@ class VizTrends {
           currentChart.destroy();
       }
       
-      const scenarioGroups = [
-        {name: "v9.0 RTP"      },
-        {name: "v9.0 NoBuild"  },
-        {name: "v9.0 Needs"    },
-        {name: "v9.0 Needs MAG"}
-      ];
+
+      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend)).map(item => {
+        return {
+          name: item.scnTrend
+        };
+      });
 
       currentChart = new Chart(ctx, {
         type: 'scatter', // Use scatter chart type
         data: {
-          datasets: aggIds.flatMap(aggId => {
-            // For each aggId, create a dataset for each scenario group
+          datasets: agIds.flatMap(agId => {
+            // For each agId, create a dataset for each scenario group
             return scenarioGroups.map(scenarioGroup => {
               const name = scenarioGroup.name;
-              const values = chartData[aggId][name];
+              const values = chartData[agId][name];
               const dataPoints = Object.keys(values).map(year => {
                 return { 
                   x: parseInt(year, 10), // Ensure the year is a number
@@ -174,7 +196,7 @@ class VizTrends {
               });
       
               return {
-                label: `${name}`,
+                label: this.getAgNameFromAgId(agId) + ':' + name,
                 data: dataPoints,
                 fill: false,
                 borderColor: this.getRandomColor(),
@@ -225,43 +247,17 @@ class VizTrends {
   }
 
   updateDisplay() {
-    const aCode = this.getACode();
-    const dCode = this.getDCode();
-    var comboCodes = this.sidebar.aggregatorFilter.getSelectedOptionsAsList();
-    //const aggCode = this.getSelectedAggregator();
-    //const segId = "0006_146.9"; // Change this to your desired SEGID
-    //const segOptions = this.getSegidOptions();
-  
-    const scnGroupYearCombos = [
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2032, modVersion: "v900", scnGroup: 'RTP'       },
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2042, modVersion: "v900", scnGroup: 'RTP'       },
-        { scnDisplay: 'v9.0 RTP'      , scnYear: 2050, modVersion: "v900", scnGroup: 'RTP'       },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2032, modVersion: "v900", scnGroup: 'NoBuild'   },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2042, modVersion: "v900", scnGroup: 'NoBuild'   },
-        { scnDisplay: 'v9.0 NoBuild'  , scnYear: 2050, modVersion: "v900", scnGroup: 'NoBuild'   },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2032, modVersion: "v900", scnGroup: 'Needs'     },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2042, modVersion: "v900", scnGroup: 'Needs'     },
-        { scnDisplay: 'v9.0 Needs'    , scnYear: 2050, modVersion: "v900", scnGroup: 'Needs'     },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2019, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2023, modVersion: "v900", scnGroup: 'Base'      },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2028, modVersion: "v900", scnGroup: 'TIP'       },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2032, modVersion: "v900", scnGroup: 'Needs'     },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2042, modVersion: "v900", scnGroup: 'Needs'     },
-        { scnDisplay: 'v9.0 Needs MAG', scnYear: 2050, modVersion: "v900", scnGroup: 'Needs MAG' }
-    ];
+    console.log("viztrends:updateDisplay");
 
-    const labels = [2019,2023,2028,2032,2042,2050];
-    const chartData = {};
-    var filteredFeatures = {};
+    const _aCode = this.getACode();
+    const _dCode = this.getDCode();
+    const _agCode =  this.getSelectedAggregator().agCode;
+
+    var _selectedDivider;
+
+    if (this.sidebar.dividers) {
+      _selectedDivider = this.sidebar.dividers.find(divider => divider.aCode === _dCode) || null;
+    }
 
     function recastArrayIfNumeric(arr) {
       // Check if every item in the array is a numeric string
@@ -276,82 +272,129 @@ class VizTrends {
       }
     }
 
-    comboCodes = recastArrayIfNumeric(comboCodes);
-
-    var aggIDs = comboCodes//[35,49];
-    
-    let aggIDsString = '';
-    if (comboCodes.length > 1) {
-        aggIDsString = comboCodes.join('_');
-    } else if (comboCodes.length === 1) {
-        aggIDsString = comboCodes[0].toString();
-    }
-    console.log('viztrends:Going to fetch the data now... agIDsString is ' + aggIDs);
-    fetch("data/segmentsWithAggFields.geojson")
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Filter features where CO_FIPS is 35
-        filteredFeatures = data.features.filter(feature => 
-          aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
-        );
-
-        // Now you have an array of features where CO_FIPS is 35
-        console.log(filteredFeatures);
-
-        scnGroupYearCombos.forEach(combo => {
-          const _scnDisplay = combo.scnDisplay;
-          const _scnYear = combo.scnYear;
-          const _modVersion = combo.modVersion;
-          const _scnGroup = combo.scnGroup;
-          const _scenario = this.getScenario(_modVersion, _scnGroup, _scnYear);
+    const _agIds = recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
   
-          if (_scenario) {
-      
-            if (!chartData[aggIDsString]) {
-                chartData[aggIDsString] = {};
+    const labels = [2019,2023,2028,2032,2042,2050];
+    const chartData = {};
+
+    var _data_divide;
+    var _geojsondata_divide;  
+
+    const dataScenarioTrends_selected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend));
+
+    dataScenarioTrends_selected.forEach(trend => {
+
+      const _trendName = trend.scnTrend;
+
+      trend.modelruns.forEach(modelrun => {
+        
+        const _scnYear    = modelrun.scnYear;
+        const _modVersion = modelrun.modVersion;
+        const _scnGroup   = modelrun.scnGroup;
+        const _scenario   = this.getScenario(_modVersion, _scnGroup, _scnYear);
+        
+        if (_scenario) {
+        
+          // get geojson key data
+          const _geojsondata = dataGeojsons[_scenario.geojsons[this.baseGeoJsonKey]];
+
+          if (!_geojsondata) {
+            return;
+          }
+
+          _data_divide = {};
+          _geojsondata_divide = {};
+
+          if (_dCode!="Nothing") {
+            _data_divide = _scenario.jsonData[_selectedDivider.jsonFileName].data[_selectedDivider.filter];
+            _geojsondata_divide = dataGeojsons[_scenario.geojsons[_selectedDivider.baseGeoJsonKey]];
+          }
+
+          _agIds.forEach(agId => {
+            
+            const _filteredFeatures = _geojsondata.features.filter(feature => 
+              feature.properties[_agCode]==agId
+            );
+
+            if (_dCode!="Nothing") {
+
+              var _sumDivide = 0;
+
+              // get divide features with the same agId
+              const filteredFeatures_divide = _geojsondata_divide.features.filter(feature => 
+                feature.properties[_agCode]==agId
+              );
+
+              // loop through divide features and baseGeoJsonIds
+              var filteredFeatures_divide_set = new Set();
+              filteredFeatures_divide.forEach((feature) => {
+                if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
+                  filteredFeatures_divide_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
+                }
+              });
+
+              const _filteredFeatures_divide_list = [...filteredFeatures_divide_set];
+
+              //filter the zonesSeData to only those zones that are within filteredTazList
+              const filtered_geojsondata_divide = Object.keys(_geojsondata_divide)
+                .filter((key) => _filteredFeatures_divide_list.includes(parseInt(key)))
+                .reduce((result, key) => {
+                  result[key] = _geojsondata_divide[key];
+                  return result;
+              }, {});
+
+              //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+              for (const key in _filteredFeatures_divide_list) {
+                if (_data_divide[_filteredFeatures_divide_list[key]][_dCode] !== undefined) {
+                  _sumDivide += _data_divide[_filteredFeatures_divide_list[key]][_dCode];
+                }
+              }
             }
-            if (!chartData[aggIDsString][_scnDisplay]) {
-                chartData[aggIDsString][_scnDisplay] = {};
-            }
-  
-            chartData[aggIDsString][_scnDisplay][_scnYear] = 0;
 
-            const filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
-  
-            filteredFeatures.forEach(feature => {
-  
-              const segId = feature.properties.SEGID;
-              const filterSelectionData = filteredScenario[segId];
+            if (!chartData[agId]) {
+              chartData[agId] = {};
+            }
+            if (!chartData[agId][_trendName]) {
+              chartData[agId][_trendName] = {};
+            }
+
+            chartData[agId][_trendName][_scnYear] = 0;
+
+            const _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+
+            _filteredFeatures.forEach(feature => {
+
+              const baseId = feature.properties[this.baseGeoJsonId];
+              const filterSelectionData = _filteredScenario[baseId];
       
               if (filterSelectionData) {
-                const selectedValue = this.getChartData(aCode, filterSelectionData);
+                //const selectedValue = this.getChartData(_aCode, filterSelectionData);
+
+                const selectedValue = filterSelectionData[_aCode];
 
                 if (selectedValue == null | selectedValue == undefined) {
-                  //chartData[aggIDsString][scnDisplay][scnYear] += 0;
-                  console.log("null data found in here: " + aggIDsString + '_' + _scnDisplay + '_' + _scnYear)
+                  console.log("null data found in here: " + agId + '_' + _trendName + '_' + _scnYear)
                 }
 
                 if (selectedValue !== null & selectedValue !== undefined) {
-                  chartData[aggIDsString][_scnDisplay][_scnYear] += selectedValue;
+                  chartData[agId][_trendName][_scnYear] += selectedValue;
                 }
               }
             })
-          }
-        });
 
-      })
-      .catch(error => {
-        console.error('Error reading the JSON file:', error);
+            if (_dCode!="Nothing") {
+              chartData[agId][_trendName][_scnYear] /= _sumDivide;
+            }
+          });
+        }
       });
-    
+    });
+
+    this.createLineChart(_aCode, labels, chartData, _agIds);
+    /*
     var filteredTaz = {};
     var filteredTazSeData = {};
-    console.log('viztrends:Going to fetch the data now... agIDsString is ' + aggIDs);
+    console.log('viztrends:Going to fetch the data now... agIDsString is ' + _agIds);
     fetch("data/tazWithAggFields.geojson")
       .then(response => {
         if (!response.ok) {
@@ -362,7 +405,7 @@ class VizTrends {
       .then(data => {
         // Filter features where CO_FIPS is 35
         filteredTaz = data.features.filter(feature => 
-          aggIDs.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
+          _agIds.includes(feature.properties[this.sidebar.aggregatorSelect.selected])
         );
 
         var filteredTazList = [];
@@ -401,8 +444,8 @@ class VizTrends {
           }
           //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
           for (const key in filteredTazSeData) {
-            if (filteredTazSeData[key][dCode] !== undefined) {
-              sumAttribute += filteredTazSeData[key][dCode];
+            if (filteredTazSeData[key][_dCode] !== undefined) {
+              sumAttribute += filteredTazSeData[key][_dCode];
             }
           }
           console.log(sumAttribute);
@@ -419,13 +462,13 @@ class VizTrends {
           }
         }
         
-        this.createLineChart(aCode, labels, chartData, aggIDsString);
+        this.createLineChart(_aCode, labels, chartData, _agIdsString);
 
       })
       .catch(error => {
         console.error('Error reading the JSON file:', error);
       });
-
+*/
     }
 
 }

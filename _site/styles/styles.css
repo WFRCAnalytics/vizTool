@@ -17,7 +17,7 @@ h1 {
 }
 
 .checkbox-container {
-    max-height: 200px; /* Maximum height before scrollbar appears */
+    max-height: 350px; /* Maximum height before scrollbar appears */
     overflow-y: auto; /* Show vertical scrollbar when needed */
     width: 100%; /* Adjust width as needed */
     padding-left: 5px;
@@ -137,6 +137,16 @@ th, td {
     min-width: 0; /* Optional: Ensures it can shrink below its content's intrinsic width */
     /* Add any additional styling you need */
 }
+
+#trendScenarios {
+    width: 190px;
+    background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
+    padding: 10px;
+    height: calc(100vh - 134px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+    /* Style your columns */
+}
+
 #mainMatrix {
     /* Main content styles */
     flex-grow: 1;
