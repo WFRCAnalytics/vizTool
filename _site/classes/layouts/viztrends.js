@@ -150,7 +150,7 @@ class VizTrends {
     const aggCode = this.getSelectedAggregator();
     const title = document.createElement('div');
     title.id = 'charttitle';
-    title.innerHTML = '<h1>' + this.sidebar.getADisplayName() + ' Trends</h1><b>' + aggCode.agDisplayName + " : " + agIdsString.map(a=>(this.getAgNameFromAgId(a))) + '</b>'
+    title.innerHTML = '<h1>' + aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends</h1>'
     containerElement.appendChild(title);
 
     const chartContainer = document.createElement('div');
