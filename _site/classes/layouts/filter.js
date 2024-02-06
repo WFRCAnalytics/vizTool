@@ -7,9 +7,14 @@ class Filter {
     
     const _id = this.id + '-filter'
     const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
-    const _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
+    var _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
     const _selected = data.fSelected;
 
+    if (data.subAgDisplayName) {
+      this.filterSubAgWij = new WijSelect(_id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, vizLayout, true, this);
+      _options = data.fOptions.map(item => ({ value: item.value, label: item.label, subag: item.subag}));
+    }
+  
     if (data.fWidget === 'select') {
       this.filterWij = new WijSelect(_id, _name, _selected, _options, vizLayout, true);
     } else if (data.fWidget === 'radio') {
@@ -19,11 +24,24 @@ class Filter {
     } else if (data.fWidget === 'combobox') {
       this.filterWij = new WijCombobox(_id, _name, _selected, _options, vizLayout, true);
     }
-  
+
   }
 
   render() {
-    return this.filterWij.render();
+    const filterContainer = document.createElement('div');
+    filterContainer.id = this.containerId;
+
+    // append sub aggregation widget if exists
+    if (typeof this.filterSubAgWij!='undefined') {
+      filterContainer.appendChild(this.filterSubAgWij.render());
+    }
+    
+    filterContainer.appendChild(this.filterWij.render());
+    return filterContainer;
+  }
+
+  afterUpdateSubAg() {
+    this.filterWij.applySubAg(this.filterSubAgWij.selected);
   }
 
   getSelectedOptionsAsList() {

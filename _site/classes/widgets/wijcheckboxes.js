@@ -30,7 +30,9 @@ class WijCheckboxes {
       // create checkboxes
       var checkboxLabel = document.createElement("calcite-label");
       checkboxLabel.setAttribute('layout', 'inline');
+      checkboxLabel.setAttribute('id', this.id + '-chk-' + option.value);
       checkboxLabel.classList.add('pointer-cursor');
+      
 
       var checkbox = document.createElement("calcite-checkbox");
 
@@ -78,6 +80,18 @@ class WijCheckboxes {
     return mainContainer;
   }
 
+  applySubAg(_subag) {
+    
+    this.options.forEach((option, index) => {
+      // create checkboxes
+      var checkboxLabel = document.getElementById(this.id + '-chk-' + option.value);
+      if (option.subag.includes(_subag)) {
+        checkboxLabel.style.display = "block";
+      } else {
+        checkboxLabel.style.display = "none";
+      }
+    });
+  }
 
   getSelectedOptionsAsList() {
     return this.selected;
