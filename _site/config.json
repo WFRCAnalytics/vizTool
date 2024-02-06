@@ -413,7 +413,7 @@
                     {
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agSelected": ["Salt Lake City"],
+                      "agSelected": ["Bountiful"],
                       "subAgDisplayName":"Subfilter Cities by County",
                       "subAgSelected": "All",
                       "subAgOptions": [
@@ -520,6 +520,13 @@
                         {"value":"Willard"                       ,"label":"Willard"                       ,"subag":["All","3"]},
                         {"value":"Woods Cross"                   ,"label":"Woods Cross"                   ,"subag":["All","11"]}
                       ]
+                    },
+                    {
+                      "agCode": "EFA",
+                      "agDisplayName": "Equity Focus Areas",
+                      "agSelected": ["EFA"],
+                      "agOptions": [{"value":"EFA" , "label":"EFA" },
+                                    {"value":"", "label":"Non-EFA"}]
                     },
                     {
                       "agCode": "DISTMED",
@@ -1045,7 +1052,7 @@
                     {
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agSelected": ["Salt Lake City"],
+                      "agSelected": ["Bountiful"],
                       "subAgDisplayName":"Subfilter Cities by County",
                       "subAgSelected": "All",
                       "subAgOptions": [
@@ -1152,6 +1159,13 @@
                         {"value":"Willard"                       ,"label":"Willard"                       ,"subag":["All","3"]},
                         {"value":"Woods Cross"                   ,"label":"Woods Cross"                   ,"subag":["All","11"]}
                       ]
+                    },
+                    {
+                      "agCode": "EFA",
+                      "agDisplayName": "Equity Focus Areas",
+                      "agSelected": ["EFA"],
+                      "agOptions": [{"value":"EFA" , "label":"EFA" },
+                                    {"value":"", "label":"Non-EFA"}]
                     },
                     {
                       "agCode": "DISTMED",
@@ -2126,7 +2140,7 @@
                     {
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agSelected": ["Salt Lake City"],
+                      "agSelected": ["Bountiful"],
                       "subAgDisplayName":"Subfilter Cities by County",
                       "subAgSelected": "All",
                       "subAgOptions": [
@@ -2233,6 +2247,13 @@
                         {"value":"Willard"                       ,"label":"Willard"                       ,"subag":["All","3"]},
                         {"value":"Woods Cross"                   ,"label":"Woods Cross"                   ,"subag":["All","11"]}
                       ]
+                    },
+                    {
+                      "agCode": "EFA",
+                      "agDisplayName": "Equity Focus Areas",
+                      "agSelected": ["EFA"],
+                      "agOptions": [{"value":"EFA" , "label":"EFA" },
+                                    {"value":"", "label":"Non-EFA"}]
                     },
                     {
                       "agCode": "DISTMED",
@@ -3014,7 +3035,7 @@
                     {
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agSelected": ["Salt Lake City"],
+                      "agSelected": ["Bountiful"],
                       "subAgDisplayName":"Subfilter Cities by County",
                       "subAgSelected": "All",
                       "subAgOptions": [
@@ -3121,6 +3142,13 @@
                         {"value":"Willard"                       ,"label":"Willard"                       ,"subag":["All","3"]},
                         {"value":"Woods Cross"                   ,"label":"Woods Cross"                   ,"subag":["All","11"]}
                       ]
+                    },
+                    {
+                      "agCode": "EFA",
+                      "agDisplayName": "Equity Focus Areas",
+                      "agSelected": ["EFA"],
+                      "agOptions": [{"value":"EFA" , "label":"EFA" },
+                                    {"value":"", "label":"Non-EFA"}]
                     },
                     {
                       "agCode": "DISTMED",
