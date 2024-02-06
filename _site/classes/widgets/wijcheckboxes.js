@@ -24,17 +24,38 @@ class WijCheckboxes {
     title.innerHTML = "<b>" + this.title + "</b>";
     mainContainer.appendChild(title); // Append the title to the main container
 
+
+    if (this.options.length>5) {
+      let uncheckall = document.createElement("calcite-button");
+      uncheckall.setAttribute('id', this.id + '-check-all-toggle');
+  
+      uncheckall.classList.add('check-all-toggle-button');
+  
+      uncheckall.innerHTML = "Uncheck All";
+  
+      uncheckall.addEventListener('click', () => {
+          // This is where you define what happens when the button is clicked.
+          // For example, to uncheck all checkboxes:
+        this.checkAllToggle();
+      });
+  
+      mainContainer.appendChild(uncheckall); // Append the title to the main container
+  
+    }
+
     var lstChecked = [];
 
     this.options.forEach((option, index) => {
       // create checkboxes
       var checkboxLabel = document.createElement("calcite-label");
       checkboxLabel.setAttribute('layout', 'inline');
-      checkboxLabel.setAttribute('id', this.id + '-chk-' + option.value);
+      checkboxLabel.setAttribute('id', this.id + '-chklabel-' + option.value);
       checkboxLabel.classList.add('pointer-cursor');
       
 
       var checkbox = document.createElement("calcite-checkbox");
+
+      checkbox.setAttribute('id', this.id + '-chk-' + option.value);
 
       checkbox.value = option.value;
 
@@ -81,10 +102,9 @@ class WijCheckboxes {
   }
 
   applySubAg(_subag) {
-    
     this.options.forEach((option, index) => {
       // create checkboxes
-      var checkboxLabel = document.getElementById(this.id + '-chk-' + option.value);
+      var checkboxLabel = document.getElementById(this.id + '-chklabel-' + option.value);
       if (option.subag.includes(_subag)) {
         checkboxLabel.style.display = "block";
       } else {
@@ -95,6 +115,38 @@ class WijCheckboxes {
 
   getSelectedOptionsAsList() {
     return this.selected;
+  }
+
+  checkAllToggle() {
+    console.log(this.id + '-checkAllToggle')
+
+    let uncheckall = document.getElementById(this.id + '-check-all-toggle');
+
+    
+    // updated selected and display
+    var lstChecked = [];
+
+
+    if (uncheckall.innerHTML==="Uncheck All") {
+      this.options.forEach((option, index) => {
+        // create checkboxes
+        var checkbox = document.getElementById(this.id + '-chk-' + option.value);
+        checkbox.checked = false;
+      });
+      uncheckall.innerHTML = 'Check All';
+    } else {
+      this.options.forEach((option, index) => {
+        // create checkboxes
+        var checkbox = document.getElementById(this.id + '-chk-' + option.value);
+        checkbox.checked = true;
+        lstChecked.push(option.value);
+      });
+      uncheckall.innerHTML = 'Uncheck All';
+    }
+
+    this.selected = lstChecked;
+    this.vizLayout.updateDisplay();
+
   }
 
 }

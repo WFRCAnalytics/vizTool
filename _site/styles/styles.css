@@ -3,6 +3,12 @@ h1 {
     margin-bottom: 0;
 }
 
+.check-all-toggle-button {
+    height: 20px; /* Custom height */
+    font-size: 10px; /* Adjusted font size */
+    padding: 0 5px; /* Adjusted padding */
+    /* Additional styles if needed */
+}
 
 .scenario-selector-container {
     width: 190px;
