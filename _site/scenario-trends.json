@@ -13,7 +13,7 @@
   },
   {
     "scnTrend": "v9.0 Needs",
-    "displayByDefault": true,
+    "displayByDefault": false,
     "modelruns" : [
       { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2019 },
       { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2023 },
@@ -37,7 +37,7 @@
   },
   {
     "scnTrend": "v9.0 No Build",
-    "displayByDefault": true,
+    "displayByDefault": false,
     "modelruns" : [
         { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2019 },
         { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2023 },

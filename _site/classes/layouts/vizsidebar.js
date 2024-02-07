@@ -128,7 +128,7 @@ class VizSidebar {
 
   getListOfSelectedFilterOptions() {
     const _listsOfEachFilter = this.filters
-                                   .filter(filter => !filter.isHidden()) // Only include filters where isHidden is false
+                                   .filter(filter => !filter.isVisible()) // Only include filters where isVisible is false
                                    .map(filter => filter.getSelectedOptionsAsList())
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
@@ -255,11 +255,11 @@ class VizSidebar {
         this.filters.forEach(filterObject => {
           const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
           if (containsFilterText) {
-            if (filterObject.isHidden()) {
+            if (filterObject.isVisible()) {
               filterObject.show();
             }
           } else {
-            if (!filterObject.isHidden()) {
+            if (!filterObject.isVisible()) {
               filterObject.hide();
             }
           }
@@ -267,7 +267,7 @@ class VizSidebar {
       } else {
         // Hide all divs if _filterGroupArray is null or undefined
         this.filters.forEach(filterObject => {
-          if (!filterObject.isHidden()) {
+          if (!filterObject.isVisible()) {
             filterObject.hide();
           }
         });

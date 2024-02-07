@@ -403,7 +403,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agSelected": ["35"],
+                      "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
                                     {"value":"11", "label":"Davis"    },
@@ -414,10 +414,10 @@
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
                       "agSelected": ["Bountiful"],
-                      "subAgDisplayName":"Subfilter Cities by County",
+                      "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
                       "subAgOptions": [
-                          {"value":"All","label":"All"},
+                          {"value":"All","label":"All Counties"},
                           {"value":"3","label":"Box Elder County"},
                           {"value":"57","label":"Weber County"},
                           {"value":"11","label":"Davis County"},
@@ -788,7 +788,8 @@
                       "fName"    : "Filter Trip Purpose",
                       "fWidget"  : "checkboxes",
                       "fSelected": ["All"],
-                      "fOptions" : [{"value":"All", "label":"All Purposes"}]
+                      "fOptions" : [{"value":"All", "label":"All Purposes"}],
+                      "fUserModifiable" : false
                     },
                     {
                       "fCode"    : "fTod",
@@ -1042,7 +1043,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agSelected": ["35"],
+                      "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
                                     {"value":"11", "label":"Davis"    },
@@ -1053,10 +1054,10 @@
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
                       "agSelected": ["Bountiful"],
-                      "subAgDisplayName":"Subfilter Cities by County",
+                      "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
                       "subAgOptions": [
-                          {"value":"All","label":"All"},
+                          {"value":"All","label":"All Counties"},
                           {"value":"3","label":"Box Elder County"},
                           {"value":"57","label":"Weber County"},
                           {"value":"11","label":"Davis County"},
@@ -1290,11 +1291,11 @@
                   "attributes": [
                     {
                       "aCode": "aB",
-                      "aDisplayName": "Boardings"
+                      "aDisplayName": "PA Boardings"
                     },
                     {
                       "aCode": "aA",
-                      "aDisplayName": "Alightings"
+                      "aDisplayName": "PA Alightings"
                     }
                   ],
                   "dividers": [
@@ -1337,7 +1338,8 @@
                       "fName"    : "Filter Trip Purpose",
                       "fWidget"  : "checkboxes",
                       "fSelected": ["All"],
-                      "fOptions" : [{"value":"All", "label":"All Purposes"}]
+                      "fOptions" : [{"value":"All", "label":"All Purposes"}],
+                      "fUserModifiable" : false
                     },
                     {
                       "fCode"    : "fTod",
@@ -2130,7 +2132,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agSelected": ["35"],
+                      "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
                                     {"value":"11", "label":"Davis"    },
@@ -2141,10 +2143,10 @@
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
                       "agSelected": ["Bountiful"],
-                      "subAgDisplayName":"Subfilter Cities by County",
+                      "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
                       "subAgOptions": [
-                          {"value":"All","label":"All"},
+                          {"value":"All","label":"All Counties"},
                           {"value":"3","label":"Box Elder County"},
                           {"value":"57","label":"Weber County"},
                           {"value":"11","label":"Davis County"},
@@ -3025,7 +3027,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agSelected": ["35"],
+                      "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
                                     {"value":"11", "label":"Davis"    },
@@ -3036,10 +3038,10 @@
                       "agCode": "CITY_NAME",
                       "agDisplayName": "City",
                       "agSelected": ["Bountiful"],
-                      "subAgDisplayName":"Subfilter Cities by County",
+                      "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
                       "subAgOptions": [
-                          {"value":"All","label":"All"},
+                          {"value":"All","label":"All Counties"},
                           {"value":"3","label":"Box Elder County"},
                           {"value":"57","label":"Weber County"},
                           {"value":"11","label":"Davis County"},

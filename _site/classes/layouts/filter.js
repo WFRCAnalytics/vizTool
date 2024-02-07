@@ -9,9 +9,11 @@ class Filter {
     const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
     var _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
     const _selected = data.fSelected;
+    
+    this.modifiable = data.fUserModifiable === undefined ? true : data.fUserModifiable; // set to true if undefined
 
     if (data.subAgDisplayName) {
-      this.filterSubAgWij = new WijSelect(_id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, vizLayout, true, this);
+      this.filterSubAgWij = new WijSelect(_id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, vizLayout, true);
       _options = data.fOptions.map(item => ({ value: item.value, label: item.label, subag: item.subag}));
     }
   
@@ -28,15 +30,19 @@ class Filter {
   }
 
   render() {
+
     const filterContainer = document.createElement('div');
     filterContainer.id = this.containerId;
 
-    // append sub aggregation widget if exists
-    if (typeof this.filterSubAgWij!='undefined') {
-      filterContainer.appendChild(this.filterSubAgWij.render());
+    // only render if the user can modify widget... otherwise needed settings are all preserved in object
+    if (this.modifiable) {
+      // append sub aggregation widget if exists
+      if (typeof this.filterSubAgWij!='undefined') {
+        filterContainer.appendChild(this.filterSubAgWij.render());
+      }
+      
+      filterContainer.appendChild(this.filterWij.render());
     }
-    
-    filterContainer.appendChild(this.filterWij.render());
     return filterContainer;
   }
 
@@ -48,18 +54,36 @@ class Filter {
     return this.filterWij.getSelectedOptionsAsList();
   }
 
-  isHidden() {
-    return document.getElementById(this.filterWij.containerId).style.display === 'none';
+  isVisible() {
+    if (this.modifiable) {
+      //Debug
+      //console.log('debug filter isVisible containerId: ' + this.filterWij.containerId)
+      return document.getElementById(this.filterWij.containerId).style.display === 'none';
+    }
   }
 
   hide() {
-    console.log('hide: ' + this.filterWij.id);
-    document.getElementById(this.filterWij.containerId).style.display = 'none';
+    if (this.modifiable) {
+      console.log('hide: ' + this.filterWij.id);
+      document.getElementById(this.filterWij.containerId).style.display = 'none';
+  
+      // append sub aggregation widget if exists
+      if (typeof this.filterSubAgWij!='undefined') {
+        document.getElementById(this.filterSubAgWij.containerId).style.display = 'none';
+      }
+    }
   }
 
   show() {
-    console.log('show: ' + this.filterWij.id);
-    document.getElementById(this.filterWij.containerId).style.display = 'block';
+    if (this.modifiable) {
+      console.log('show: ' + this.filterWij.id);
+      document.getElementById(this.filterWij.containerId).style.display = 'block';
+      
+      // append sub aggregation widget if exists
+      if (typeof this.filterSubAgWij!='undefined') {
+        document.getElementById(this.filterSubAgWij.containerId).style.display = 'block';
+      }
+    }
   }
 
 }

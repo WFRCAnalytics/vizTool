@@ -53,7 +53,7 @@ class Scenario {
   }
   
   getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters) {
-    console.log('getDataForFilterOptionsList:' + a_lstFilters);
+    //console.log('getDataForFilterOptionsList:' + a_lstFilters);
 
     // Initialize an object to hold the aggregated sums
     let aggregatedSums = {};

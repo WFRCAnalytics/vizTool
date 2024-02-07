@@ -1,12 +1,11 @@
 class WijSelect {
-  constructor(id, title, selected, options, vizLayout, spaceafter=false, filter) {
+  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
     this.id = id;
     this.title = title;
     this.selected = selected;
     this.options = options;
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
-    this.filter = filter;
 
     this.containerId = this.id + "-container";
   }
@@ -36,7 +35,7 @@ class WijSelect {
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
       if (this.id.includes('subag')) {
-        this.filter.afterUpdateSubAg();
+        this.vizLayout.sidebar.aggregatorFilter.afterUpdateSubAg();
       } else {
         if (this.id.includes('_aggregator-selector')) { // run only if aggregator
           this.vizLayout.afterUpdateAggregator();

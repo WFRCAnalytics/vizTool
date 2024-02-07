@@ -114,6 +114,21 @@ th, td {
     padding-right: 15px;
 }
 
+.filterTitle {
+    display: flex; /* This will enable flexbox for the container */
+    justify-content: space-between; /* This will space out the child elements */
+    align-items: center; /* This will vertically center the child elements */
+}
+
+.filterName {
+    /* Additional styling for the name */
+    flex-grow: 1; /* This will allow the name to take up any available space */
+}
+  
+.filterButton {
+    padding: 0px; /* Add padding around the button */
+}
+
 .rowAttributes {
     padding: 15px;
 }
@@ -144,7 +159,7 @@ th, td {
     /* Add any additional styling you need */
 }
 
-#trendScenarios {
+#trendSettings {
     width: 190px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;

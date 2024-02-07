@@ -28,8 +28,23 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariocheckerdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select your scenarios:', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
       _scenariocheckerdiv.appendChild(scenarioChecker.render());
+    }
+
+    this.modeOptions = [{ value: 'regular'   , label: 'Values'         , title:''                  },
+                        { value: 'pct_change', label: 'Percent Change' , title:' - Percent Change from Base Year' },
+                        { value: 'abs_change', label: 'Absolute Change', title:' - Absolute Change from Base Year'}];
+
+    // add settings in header
+    const _header = document.getElementById('trendChange');
+    if (_header.innerHTML.trim() === '') {
+      modeSelect  = new WijSelect(this.id + "-mode-select",
+                                      "Select Chart Mode",
+                                      "regular",
+                                      this.modeOptions,
+                                      this);
+      _header.appendChild(modeSelect.render());
     }
   }
   
@@ -41,17 +56,18 @@ class VizTrends {
     
     // since shared scenario checker, have to make sure vizLayout is set correctly in checkboxes
     scenarioChecker.vizLayout = this;
+    modeSelect.vizLayout = this;
 
     this.sidebar.render();
   }
 
   afterUpdateSidebar() {
-    console.log('viztrends:afterSidebarUpdate');
+    console.log('viztrends:afterSidebarUpdate:' + this.id);
     this.updateDisplay();
   }
   
   afterUpdateAggregator() {
-    console.log('viztrends:afterUpdateAggregator');
+    console.log('viztrends:afterUpdateAggregator:' + this.id);
     //document.getElementById(this.comboSelector.id + '-container').innerHTML = '';
     //this.comboSelector.render();
     //this.renderSidebar();
@@ -139,47 +155,72 @@ class VizTrends {
 
     return segidOptions;
   }
-
+    
   createLineChart(aCode, labels, chartData, agIdsString) {
-    console.log('viztrends:Creating the chart...');
+    console.log('viztrends:Creating the chart:' + this.id);
     console.log("Selected radio button option under 'Display':", aCode);
+
+    var mode = "";
+    if (modeSelect) {
+      mode = modeSelect.selected;
+    } else {
+      mode = 'regular';
+    }
+
+    const _aggCode = this.getSelectedAggregator();
+    const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
 
     const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
     
-    const aggCode = this.getSelectedAggregator();
     const title = document.createElement('div');
     title.id = 'charttitle';
-    title.innerHTML = '<h1>' + aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends</h1>'
+    title.innerHTML = '<h1>' + _title + '</h1>';
     containerElement.appendChild(title);
-
+  
     const chartContainer = document.createElement('div');
     chartContainer.id = 'chartContainer';
     containerElement.appendChild(chartContainer);
-
+  
     const canvas = document.createElement('canvas');
-    //canvas.width = 400;
-    //canvas.height = 200;
     chartContainer.appendChild(canvas);
-
+  
     const ctx = canvas.getContext('2d');
     let currentChart = null;
-
+  
     const agIds = Object.keys(chartData);
-
-    const createChart = () => {
-      if (currentChart) {
-          // Destroy existing Chart instance
-          currentChart.destroy();
-      }
-      
-
-      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend)).map(item => {
-        return {
-          name: item.scnTrend
+  
+    const calculatePercentChange = (currentValue, initialValue) => ((currentValue - initialValue) / initialValue) * 100;
+  
+    const calculateAbsoluteChange = (currentValue, initialValue) => currentValue - initialValue;
+  
+    const modifyDataForChange = (values, changeType) => {
+      const initialValue = values[Object.keys(values)[0]]; // Assuming the first value is the baseline
+      return Object.keys(values).map(year => {
+        const currentValue = +values[year];
+        let change;
+        if (changeType === 'pct_change') {
+          change = calculatePercentChange(currentValue, +initialValue);
+        } else if (changeType === 'abs_change') {
+          change = calculateAbsoluteChange(currentValue, +initialValue);
+        }
+        return { 
+          x: parseInt(year, 10), // Ensure the year is a number
+          y: change // Calculate change based on the mode
         };
       });
-
+    };
+  
+    const createChart = () => {
+      if (currentChart) {
+        // Destroy existing Chart instance
+        currentChart.destroy();
+      }
+  
+      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend)).map(item => {
+        return { name: item.scnTrend };
+      });
+  
       currentChart = new Chart(ctx, {
         type: 'scatter', // Use scatter chart type
         data: {
@@ -187,14 +228,19 @@ class VizTrends {
             // For each agId, create a dataset for each scenario group
             return scenarioGroups.map(scenarioGroup => {
               const name = scenarioGroup.name;
-              const values = chartData[agId][name];
-              const dataPoints = Object.keys(values).map(year => {
-                return { 
-                  x: parseInt(year, 10), // Ensure the year is a number
-                  y: +values[year].toPrecision(4) // Round y values to 4 significant figures
-                };
-              });
-      
+              let values = chartData[agId][name];
+              let dataPoints;
+              if (mode === 'pct_change' || mode === 'abs_change') {
+                dataPoints = modifyDataForChange(values, mode);
+              } else { // mode === 'regular'
+                dataPoints = Object.keys(values).map(year => {
+                  return { 
+                    x: parseInt(year, 10), // Ensure the year is a number
+                    y: +values[year].toPrecision(4) // Round y values to 4 significant figures
+                  };
+                });
+              }
+  
               return {
                 label: this.getAgNameFromAgId(agId) + ':' + name,
                 data: dataPoints,
@@ -212,42 +258,56 @@ class VizTrends {
             x: {
               type: 'linear',
               position: 'bottom',
-              min: 2019, 
+              min: 2019,
               ticks: {
                 callback: function(value) {
-                  // Convert value to string and remove commas
                   return value.toString().replace(/,/g, '');
                 }
               }
             },
             y: {
-              beginAtZero: true
+              beginAtZero: mode !== 'pct_change' && mode !== 'abs_change',
+              ticks: {
+                callback: function(value) {
+                  let sign = value > 0 ? "+" : ""; // Determine the sign for positive values
+                  if (mode === 'pct_change') {
+                    return sign + Number(value).toFixed(0) + '%'; // Format as percent for pct_change mode
+                  } else if (mode === 'abs_change') {
+                    // Format with commas for abs_change mode for better readability
+                    return sign + Number(value).toLocaleString(); 
+                  } else {
+                    // Format with commas for regular mode
+                    return Number(value).toLocaleString(); 
+                  }
+                }
+              }
             }
           }
         }
       });
-    }
-      
+    };
+  
     // Initial chart creation
     createChart();
   }
+  
 
   getRandomColor(index) {
     // Generate a random color based on index
     const colors = [
-        'rgba(75, 192, 192, 1)',
-        'rgba(255, 99, 132, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(54, 162, 235, 1)',
+        'rgba( 75, 192, 192, 1)',
+        'rgba(255,  99, 132, 1)',
+        'rgba(255, 206,  86, 1)',
+        'rgba( 54, 162, 235, 1)',
         'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+        'rgba(255, 159,  64, 1)'
     ];
 
     return colors[index % colors.length];
   }
 
   updateDisplay() {
-    console.log("viztrends:updateDisplay");
+    console.log('viztrends:updateDisplay:' + this.id);
 
     const _aCode = this.getACode();
     const _dCode = this.getDCode();

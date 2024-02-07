@@ -20,28 +20,44 @@ class WijCheckboxes {
 
     const wijCheckBoxesInstance = this;
 
-    let title = document.createElement("calcite-label");
-    title.innerHTML = "<b>" + this.title + "</b>";
-    mainContainer.appendChild(title); // Append the title to the main container
+    let _filterLabel = document.createElement("calcite-label");
 
+    // define filter title divs
+    const _filterTitle = document.createElement('div');
+    const _filterName = document.createElement('div');
+    const _filterButton = document.createElement('div');
 
-    if (this.options.length>5) {
-      let uncheckall = document.createElement("calcite-button");
-      uncheckall.setAttribute('id', this.id + '-check-all-toggle');
+    // set properties and styles
+    _filterTitle.className = 'filterTitle';
+    _filterName.className = 'filterName';
+    _filterButton.className = 'filterButton';
+    _filterName.textContent = 'Name of the Filter'; // Set the name
+
+    // set name
+    _filterName.innerHTML = "<b>" + this.title + "</b>";
+    _filterTitle.appendChild(_filterName); // Add the name to the title container
+
+    // set button if 5+ options
+    if (this.options.length>=5) {
+      let buttonCheckToggle = document.createElement("calcite-button");
+      buttonCheckToggle.setAttribute('id', this.id + '-check-all-toggle');
+      buttonCheckToggle.classList.add('check-all-toggle-button');
+      buttonCheckToggle.innerHTML = "Uncheck All";
   
-      uncheckall.classList.add('check-all-toggle-button');
-  
-      uncheckall.innerHTML = "Uncheck All";
-  
-      uncheckall.addEventListener('click', () => {
+      buttonCheckToggle.addEventListener('click', () => {
           // This is where you define what happens when the button is clicked.
           // For example, to uncheck all checkboxes:
         this.checkAllToggle();
       });
   
-      mainContainer.appendChild(uncheckall); // Append the title to the main container
-  
+      _filterButton.appendChild(buttonCheckToggle); // Append the _filterLabel to the main container
     }
+
+    _filterTitle.appendChild(_filterButton); // Add the button container to the title container
+
+    _filterLabel.appendChild(_filterTitle);
+
+    mainContainer.appendChild(_filterLabel); // Append the _filterLabel to the main container
 
     var lstChecked = [];
 
@@ -52,6 +68,8 @@ class WijCheckboxes {
       checkboxLabel.setAttribute('id', this.id + '-chklabel-' + option.value);
       checkboxLabel.classList.add('pointer-cursor');
       
+      // set display explicitly since some code layer checks for this when subaggregating
+      checkboxLabel.style.display = 'block'; // This sets the display style to block
 
       var checkbox = document.createElement("calcite-checkbox");
 
@@ -102,16 +120,33 @@ class WijCheckboxes {
   }
 
   applySubAg(_subag) {
+    let atleastonechecked = false; // Declare outside the loop to maintain its value across iterations
+  
     this.options.forEach((option, index) => {
-      // create checkboxes
+      // Create checkboxes
       var checkboxLabel = document.getElementById(this.id + '-chklabel-' + option.value);
-      if (option.subag.includes(_subag)) {
+      if (option.subag && option.subag.includes(_subag)) { // Ensure option.subag exists before calling includes
         checkboxLabel.style.display = "block";
       } else {
         checkboxLabel.style.display = "none";
       }
+  
+      // Check to see if at least one is checked
+      var checkbox = document.getElementById(this.id + '-chk-' + option.value);
+      if (checkbox.checked) { // Simplified condition
+        atleastonechecked = true;
+      }
     });
+  
+    // Corrected to use assignment `=`
+    let uncheckall = document.getElementById(this.id + '-check-all-toggle');
+    if (atleastonechecked) {
+      uncheckall.innerHTML = "Uncheck All";
+    } else {
+      uncheckall.innerHTML = "Check All";
+    }
   }
+  
 
   getSelectedOptionsAsList() {
     return this.selected;
@@ -121,32 +156,36 @@ class WijCheckboxes {
     console.log(this.id + '-checkAllToggle')
 
     let uncheckall = document.getElementById(this.id + '-check-all-toggle');
-
     
-    // updated selected and display
-    var lstChecked = [];
-
-
     if (uncheckall.innerHTML==="Uncheck All") {
       this.options.forEach((option, index) => {
-        // create checkboxes
         var checkbox = document.getElementById(this.id + '-chk-' + option.value);
-        checkbox.checked = false;
+        const checkboxLabel = document.getElementById(this.id + '-chklabel-' + option.value);
+        if (checkboxLabel.style.display=="block") {
+          checkbox.checked = false;
+          // remove from selected if there
+          const lstIndex = this.selected.indexOf(option.value);
+          if (lstIndex > -1) {
+            this.selected.splice(lstIndex, 1); // Remove item if found
+          }
+        }
       });
       uncheckall.innerHTML = 'Check All';
     } else {
       this.options.forEach((option, index) => {
-        // create checkboxes
         var checkbox = document.getElementById(this.id + '-chk-' + option.value);
-        checkbox.checked = true;
-        lstChecked.push(option.value);
+        const checkboxLabel = document.getElementById(this.id + '-chklabel-' + option.value);
+        if (checkboxLabel.style.display=="block") {
+          checkbox.checked = true;
+          // add to selected if not there
+          if (!this.selected.includes(option.value)) {
+            this.selected.push(option.value);
+          }
+        }
       });
       uncheckall.innerHTML = 'Uncheck All';
     }
-
-    this.selected = lstChecked;
     this.vizLayout.updateDisplay();
-
   }
 
 }

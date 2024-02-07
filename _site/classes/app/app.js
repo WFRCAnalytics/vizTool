@@ -9,7 +9,8 @@ let layerDisplay;
 let dummyFeature;
 let dataMenu;
 let activeModelEntity;
-let scenarioChecker;
+let scenarioChecker; // vizTrends global item
+let modeSelect; // vizTrends global item
 
 require([
   "esri/config",
@@ -38,7 +39,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   }
 
   async function fetchScenarioTrendData() {
-    console.log('app:fetchScenarioData');
+    console.log('app:fetchScenarioTrendData');
     const response = await fetch('scenario-trends.json');
     const dataScenarioTrend = await response.json();
     return dataScenarioTrend;
