@@ -170,6 +170,8 @@ class VizTrends {
     const _aggCode = this.getSelectedAggregator();
     const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
 
+    const _yaxisTitle = this.sidebar.getADisplayName() + this.modeOptions.find(option => option.value===mode).title;
+
     const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
     
@@ -280,6 +282,10 @@ class VizTrends {
                     return Number(value).toLocaleString(); 
                   }
                 }
+              },
+              title: {
+                display: true,
+                text: _yaxisTitle, // Replace with your actual label text
               }
             }
           }
