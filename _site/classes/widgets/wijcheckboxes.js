@@ -59,8 +59,6 @@ class WijCheckboxes {
 
     mainContainer.appendChild(_filterLabel); // Append the _filterLabel to the main container
 
-    var lstChecked = [];
-
     this.options.forEach((option, index) => {
       // create checkboxes
       var checkboxLabel = document.createElement("calcite-label");
@@ -79,7 +77,6 @@ class WijCheckboxes {
 
       if (this.selected.includes(option.value)) {
         checkbox.checked = true;
-        lstChecked.push(checkbox.value);
       } else {
         checkbox.checked = false;
       }
@@ -88,15 +85,13 @@ class WijCheckboxes {
       checkbox.addEventListener("calciteCheckboxChange", function (e) {
         const curValue = e.currentTarget.value;
         if (e.currentTarget.checked == false) {
-          lstChecked = lstChecked.filter(item => item !== curValue);
+          wijCheckBoxesInstance.selected = wijCheckBoxesInstance.selected.filter(item => item !== curValue);
         } else {
-          if (!lstChecked.includes(curValue)) {
-            lstChecked.push(curValue);
+          if (!wijCheckBoxesInstance.selected.includes(curValue)) {
+            wijCheckBoxesInstance.selected.push(curValue);
           }
         }
-        
-          wijCheckBoxesInstance.selected = lstChecked;
-          wijCheckBoxesInstance.vizLayout.updateDisplay();
+        wijCheckBoxesInstance.vizLayout.updateDisplay();
       });
 
       checkboxLabel.appendChild(checkbox);
