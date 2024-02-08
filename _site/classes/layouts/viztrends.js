@@ -53,7 +53,6 @@ class VizTrends {
   }
 
   renderSidebar() {
-    
     // since shared scenario checker, have to make sure vizLayout is set correctly in checkboxes
     scenarioChecker.vizLayout = this;
     modeSelect.vizLayout = this;
@@ -92,7 +91,6 @@ class VizTrends {
                               scenario.scnYear    === _scnYear
                               ) || null;
   }
-
   
   // get the attribute code that is selected
   getACode() {
@@ -166,9 +164,9 @@ class VizTrends {
     } else {
       mode = 'regular';
     }
-
+    
     const _aggCode = this.getSelectedAggregator();
-    const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
+    const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
 
     const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
 
