@@ -176,6 +176,31 @@ class WijCheckboxes {
     return this.selected;
   }
 
+  getSelectedOptionsAsListOfLabels() {
+    if (this.options.length>=this.numOptionsForCheckAll & this.checkIfAllOptionsSelected()) {
+      return 'All'
+    } else {
+      return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
+    }
+  }
+
+  checkIfAllOptionsSelected() {
+    if (this.options.length>=this.numOptionsForCheckAll) {
+      var numChecked = 0;
+      this.options.forEach((option, index) => {
+        var checkbox = document.getElementById(this.id + '-chk-' + option.value);
+        if (checkbox.checked) { // Simplified condition
+          numChecked++;
+        }
+      });
+      if (numChecked==this.options.length) {
+        return true;
+      } else { 
+        return false;
+      }
+    }
+  }
+
   checkAllToggle() {
     console.log(this.id + '-checkAllToggle')
 

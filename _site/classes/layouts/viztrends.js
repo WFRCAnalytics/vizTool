@@ -170,6 +170,8 @@ class VizTrends {
     const _aggCode = this.getSelectedAggregator();
     const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
 
+    const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
+
     // build y-axis title
     var _yaxisTitle = this.sidebar.getADisplayName();
 
@@ -181,14 +183,22 @@ class VizTrends {
 
     _yaxisTitle += this.modeOptions.find(option => option.value===mode).title;
 
+    const containerHeaderElement = document.getElementById('trendHeader');
+    containerHeaderElement.innerHTML = '';
+    
+    const _titleDiv = document.createElement('div');
+    _titleDiv.id = 'charttitle';
+    _titleDiv.innerHTML = '<h1>' + _title + '</h1>';
+    containerHeaderElement.appendChild(_titleDiv);
+
+    const _subTitleDiv = document.createElement('div');
+    _subTitleDiv.id = 'chartsubtitle';
+    _subTitleDiv.innerHTML = _subTitle;
+    containerHeaderElement.appendChild(_subTitleDiv);
+  
     const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
-    
-    const title = document.createElement('div');
-    title.id = 'charttitle';
-    title.innerHTML = '<h1>' + _title + '</h1>';
-    containerElement.appendChild(title);
-  
+
     const chartContainer = document.createElement('div');
     chartContainer.id = 'chartContainer';
     containerElement.appendChild(chartContainer);
@@ -221,7 +231,7 @@ class VizTrends {
         };
       });
     };
-  
+      
     const createChart = () => {
       if (currentChart) {
         // Destroy existing Chart instance

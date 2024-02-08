@@ -67,4 +67,8 @@ class WijSelect {
     return [this.selected];
   }
   
+  getSelectedOptionsAsListOfLabels() {
+    return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
+  }
+
 }

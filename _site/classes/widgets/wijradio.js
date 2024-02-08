@@ -67,4 +67,8 @@ class WijRadio {
     return [this.selected];
   }
   
+  getSelectedOptionsAsListOfLabels() {
+    return this.options.filter(option => getSelectedOptionsAsList().includes(option.value)).map(option => option.label).join(', ');
+  }
+  
 }

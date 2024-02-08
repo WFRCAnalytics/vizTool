@@ -106,4 +106,13 @@ class WijCombobox {
     return this.comboSelected;
   }
 
+  getSelectedOptionsAsListOfLabels() {
+    return this.options.filter(option => this.comboSelected.includes(option.value))
+                       .map(option => option.label);
+  }
+  
+  getSelectedOptionsAsListOfLabels() {
+    return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
+  }
+
 }

@@ -133,6 +133,11 @@ class VizSidebar {
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
+  getSelectedOptionsAsLongText() {
+    return this.filters.filter(filter => !filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
+  }
+  
+
   // get the attribute code that is selected
   getACode() {
     return this.attributeSelect.selected;

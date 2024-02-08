@@ -54,6 +54,10 @@ class Filter {
     return this.filterWij.getSelectedOptionsAsList();
   }
 
+  getSelectedOptionsAsListOfLabels() {
+    return this.filterWij.getSelectedOptionsAsListOfLabels();
+  }
+
   isVisible() {
     if (this.modifiable) {
       //Debug

@@ -75,6 +75,7 @@ th, td {
     display: flex; /* Enables flexbox layout */
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
+
 }
 #matrixMainDisplay {
     display: flex; /* Enables flexbox layout */
@@ -92,6 +93,11 @@ th, td {
     width: 500px; /* or any other value */
     height: calc(100vh - 114px);
     display: flex;
+}
+
+#trendMain{
+    width: 100px; /* or any other value */
+    overflow-y: auto; /* Enable vertical scrollbar */
 }
 
 .colAttributes {
