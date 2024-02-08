@@ -46,7 +46,12 @@ class WijCheckboxes {
       let buttonCheckToggle = document.createElement("calcite-button");
       buttonCheckToggle.setAttribute('id', this.id + '-check-all-toggle');
       buttonCheckToggle.classList.add('check-all-toggle-button');
-      buttonCheckToggle.innerHTML = this.textUncheckAll;
+      if (this.selected.length>0) {
+        buttonCheckToggle.innerHTML = this.textUncheckAll;
+      } else {
+        buttonCheckToggle.innerHTML = this.textCheckAll;
+      }
+      
   
       buttonCheckToggle.addEventListener('click', () => {
           // This is where you define what happens when the button is clicked.
