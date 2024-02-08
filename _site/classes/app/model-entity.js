@@ -32,7 +32,7 @@ class ModelEntity {
     modelEntity.addEventListener('click', function() {
       let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
       mainSidebarItems.forEach(item => {
-        if(item.text === modelEntityInstance.menuText) {  // Use the saved instance context here
+        if(item.text === modelEntityInstance.submenuText || item.text === modelEntityInstance.menuItem.menuText) {  // Use the saved instance context here
           item.active = true;
         } else {
           item.active = false;
