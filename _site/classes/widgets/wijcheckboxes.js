@@ -98,24 +98,24 @@ class WijCheckboxes {
         
         // manage uncheck/check all button
         if (_thisInstance.options.length>=_thisInstance.numOptionsForCheckAll) {
-          var numChecked = 0;
+          var numCheckedVisible = 0;
           var numVisible = 0;
           _thisInstance.options.forEach((option, index) => {
             var checkboxLabel = document.getElementById(_thisInstance.id + '-chklabel-' + option.value);
             if (checkboxLabel.style.display=="block") {
               numVisible++;
-            }
-      
-            // Check to see if at least one is checked
-            var checkbox = document.getElementById(_thisInstance.id + '-chk-' + option.value);
-            if (checkbox.checked) { // Simplified condition
-              numChecked++;
+
+              // Check to see if at least one is checked
+              var checkbox = document.getElementById(_thisInstance.id + '-chk-' + option.value);
+              if (checkbox.checked) { // Simplified condition
+                numCheckedVisible++;
+              }
             }
           });
           let uncheckall = document.getElementById(_thisInstance.id + '-check-all-toggle');
-          if (numChecked==numVisible) {
+          if (numCheckedVisible==numVisible) {
             uncheckall.innerHTML = _thisInstance.textUncheckAll;
-          } else if (numChecked==0) { 
+          } else if (numCheckedVisible==0) { 
             uncheckall.innerHTML = _thisInstance.textCheckAll;
           }
         }
