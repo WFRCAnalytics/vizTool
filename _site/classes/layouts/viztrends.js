@@ -170,7 +170,16 @@ class VizTrends {
     const _aggCode = this.getSelectedAggregator();
     const _title = _aggCode.agDisplayName + ' ' + this.sidebar.getADisplayName() + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
 
-    const _yaxisTitle = this.sidebar.getADisplayName() + this.modeOptions.find(option => option.value===mode).title;
+    // build y-axis title
+    var _yaxisTitle = this.sidebar.getADisplayName();
+
+    if (this.sidebar.dividers) {
+      if (this.getDCode()!="Nothing") {
+        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.aCode === this.getDCode()).aDisplayName;
+      }
+    }
+
+    _yaxisTitle += this.modeOptions.find(option => option.value===mode).title;
 
     const containerElement = document.getElementById('trendContent');
     containerElement.innerHTML = '';
