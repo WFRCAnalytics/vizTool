@@ -388,18 +388,16 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
       // Create the Expand widget
       const expandScenario = new Expand({
-          view: mapView,
-          content: contentContainer,
-          expandIcon: "collection",
-          expanded: true,
-          expandTooltip: 'Scenario Selector',
-          group: "top-right"
+        view: mapView,
+        content: contentContainer,
+        expandIcon: "collection",
+        expanded: true,
+        expandTooltip: 'Scenario Selector',
+        group: "top-right"
       });
 
       // Add the Expand widget to the view
-      mapView.
-      ui.add(expandScenario, "top-right");
-
+      mapView.ui.add(expandScenario, "top-right");
 
       // ADD LABEL TOGGLE
 

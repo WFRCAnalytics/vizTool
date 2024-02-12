@@ -7,8 +7,9 @@ require([
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
-  "esri/rest/support/Query"
-], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query) {
+  "esri/rest/support/Query",
+  "esri/widgets/Expand"
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Expand) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -36,6 +37,7 @@ require([
       this.sidebar = new VizSidebar(data.attributes,
                                     data.attributeSelected,
                                     data.attributeTitle,
+                                    data.attributeInfoTextHtml,
                                     data.filters,
                                     data.aggregators,
                                     data.aggregatorSelected,
@@ -139,6 +141,18 @@ require([
                                 ) || null;
     }
 
+    getMainScenarioDisplayName() {
+      return document.getElementById('selectModMain' ).value + ' ' +
+             document.getElementById('selectGrpMain' ).value + ' ' +
+             document.getElementById('selectYearMain').value;
+    }
+
+    getCompScenarioDisplayName() {
+      return document.getElementById('selectModComp' ).value + ' ' +
+             document.getElementById('selectGrpComp' ).value + ' ' +
+             document.getElementById('selectYearComp').value;
+    }
+
     getMain() {
       return this.getScenario(         document.getElementById('selectModMain' ).value,
                                        document.getElementById('selectGrpMain' ).value,
@@ -204,6 +218,7 @@ require([
       
       if (this.legend) {
         mapView.ui.remove(this.legend);
+        mapView.ui.remove(this.expandLengend);
       }
     }
     
@@ -519,6 +534,7 @@ require([
 
         if (this.legend) {
           mapView.ui.remove(this.legend);
+          mapView.ui.remove(this.expandLengend);
         }
 
         this.legend = new Legend({
@@ -528,13 +544,59 @@ require([
             title: this.getADisplayName()// + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
-        mapView.ui.add(this.legend, "bottom-right");
+        //mapView.ui.add(this.legend, "bottom-right");
         
+        // Create the Expand widget
+        this.expandLengend = new Expand({
+          view: mapView,
+          content: this.legend,
+          expandIcon: "legend",
+          expanded: true,
+          expandTooltip: 'Show Legend',
+          group: "bottom-right"
+        });
+
+        // Add the Expand widget to the view
+        mapView.ui.add(this.expandLengend, "bottom-right");
+
         // toggle labels based on checkbox
         this.originalLabelInfo = this.layerDisplay.labelingInfo;
         this.toggleLabels();
 
       };
+
+      // set map header
+      var _title = "";
+      
+      _title += this.modelEntity.submenuText + ' - ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '');
+
+      if (this.sidebar.aggregators.length>0) {
+        const _aggCode = this.sidebar.getSelectedAggregator();
+        _title += ' by ' + _aggCode.agDisplayName;
+      }
+
+      if (this.mode==='main') {
+        _title += ' - ' + this.getMainScenarioDisplayName();
+      } else if(this.mode==='compare' & this.modeCompare==='abs') {
+        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
+      } else if(this.mode==='compare' & this.modeCompare==='pct') {
+        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
+      }
+
+      const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
+
+      const containerHeaderElement = document.getElementById('mapHeader');
+      containerHeaderElement.innerHTML = '';
+      
+      const _titleDiv = document.createElement('div');
+      _titleDiv.id = 'mapTitle';
+      _titleDiv.innerHTML = '<h1>' + _title + '</h1>';
+      containerHeaderElement.appendChild(_titleDiv);
+  
+      const _subTitleDiv = document.createElement('div');
+      _subTitleDiv.id = 'mapSubtitle';
+      _subTitleDiv.innerHTML = _subTitle;
+      containerHeaderElement.appendChild(_subTitleDiv);
 
       const vizMapInstance = this;
 
@@ -559,7 +621,8 @@ require([
 
           
           // NO AGGREGATOR
-          if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() && this.getSelectedAggregator().agCode == this.baseGeoField)) {
+          if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() &&
+                                                        this.getSelectedAggregator().agCode == this.baseGeoField)) {
             
             result.features.forEach((feature) => {
 
