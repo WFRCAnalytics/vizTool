@@ -408,7 +408,7 @@
                   "comboSelected": "",
                   "attributeTitle": "Road Trends",
                   "attributeSelected": "aVmt",
-                  "attributeInfoTextHtml": "<b>Vehicle-Miles Traveled</b> total miles traveled by all vehicles in a specified area over a given period of time.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by all vehicles traveling within a specified area over a given period of time.<br/><b>Lane-Miles</b> total length of lanes on roadways calculated by multiplying the length of a road segment by the number of lanes in that segment.",
+                  "attributeInfoTextHtml": "<b>Vehicle-Miles Traveled</b> is the total miles traveled by all vehicles in a specified area over a given period of time.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by all vehicles traveling within a specified area over a given period of time.<br/><b>Lane-Miles</b> is the total length of lanes on roadways calculated by multiplying the length of a road segment by the number of lanes in that segment.",
                   "dividerTitle": "Divide By",
                   "dividerSelected": "",
                   "aggregators": [
