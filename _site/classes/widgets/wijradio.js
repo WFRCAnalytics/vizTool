@@ -1,12 +1,12 @@
 class WijRadio {
-  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
+  constructor(id, title, selected, options, vizLayout, infoTextHtml="", spaceafter=false) {
     this.id = id;
     this.title = title;
     this.selected = selected;
     this.options = options;
     this.vizLayout = vizLayout;
+    this.infoTextHtml = infoTextHtml;
     this.spaceafter = spaceafter;
-
     this.containerId = this.id + "-container"
   }
 
@@ -16,11 +16,32 @@ class WijRadio {
     container.id = this.containerId;
 
     const wijRadioInstance = this;
-    
-    let title = document.createElement("calcite-label");  // Create a new div element
-    title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
-    container.appendChild(title);  // Append the new element to the container
+        
+    // Inside the render() method, modify the title setup
 
+    let titleContainer = document.createElement("span"); // Or "div" with inline styling
+    titleContainer.classList.add("title");
+    titleContainer.innerHTML = `<b>${this.title}</b>`; // Keep your title as is
+    titleContainer.style.display = "inline-block"; // Ensures inline display
+
+    if (this.infoTextHtml) {
+      let infoIcon = document.createElement("span");
+      infoIcon.classList.add("info-icon");
+      infoIcon.textContent = "i"; // The info icon text
+      infoIcon.style.display = "inline-block"; // Ensures the icon is inline
+  
+      let popupDescription = document.createElement("span");
+      popupDescription.classList.add("popup");
+      popupDescription.innerHTML = this.infoTextHtml;
+  
+      // Append the info icon and popup to the titleContainer, not directly to the title
+      titleContainer.appendChild(infoIcon);
+      titleContainer.appendChild(popupDescription);  
+    }
+
+    // Finally, append the titleContainer to the container, not the title directly
+    container.appendChild(titleContainer);
+    
     // Call a type-specific rendering method
     this.options.forEach((option) => {
       // Create radio buttons

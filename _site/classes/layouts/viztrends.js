@@ -14,6 +14,7 @@ class VizTrends {
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
                                   data.attributeTitle,
+                                  data.attributeInfoTextHtml,
                                   data.filters,
                                   data.aggregators,
                                   data.aggregatorSelected,

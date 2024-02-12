@@ -1,5 +1,5 @@
 class VizSidebar {
-  constructor(attributes, attributeSelected, attributeTitle, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
+  constructor(attributes, attributeSelected, attributeTitle, attributeInfoTextHtml, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
     this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
 
     // link to parent
@@ -14,7 +14,8 @@ class VizSidebar {
                                             attributeTitle,
                                             attributeSelected,
                                             attributes.map(item => ({ value: item.aCode, label: item.aDisplayName })),
-                                            this);
+                                            this,
+                                            attributeInfoTextHtml);
       this.filters = (filters || []).map(item => new Filter (item, this.vizLayout));
     }
 

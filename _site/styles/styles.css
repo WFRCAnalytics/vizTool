@@ -144,18 +144,29 @@ th, td {
     /*background-color: #FF0000; *//* Optional: Add a background color */
 /*}*/
 
- /* MAIN CONTENT */
+/* MAIN CONTENT */
 #mainMap {
-    /* Main content styles */
-    flex-grow: 1;
-    display: flex;
-    flex-wrap: wrap;
+    display: flex; /* Use flex layout */
+    flex-direction: column; /* Stack children vertically */
+    padding: 15px;
+    height: calc(100vh - 114px); /* Adjust height as needed */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    width: 100%; /* Ensure it fills the width of its parent */
+
 }
+
+#mapView {
+    flex-grow: 1; /* Grow to fill available space */
+    /* No need to set height to 100% as it will automatically fill the available space */
+    width: 100%; /* Ensure it fills the width of its parent */
+}
+
 #mainLog {
     /* Main content styles */
     flex-grow: 1;
     white-space: pre-line; /* Prevent text from wrapping */
 }
+
 #trendMain {
     padding: 15px;
     height: calc(100vh - 144px); /* Adjust height as needed */
@@ -203,11 +214,6 @@ th, td {
 }
 
 
-#mapView {
-    flex-grow: 1;
-    height: 100%;
-}
-
 #halfTable {
     width: 50%; /* or any other value */
     padding: 15px;
@@ -221,3 +227,45 @@ th, td {
     display: flex;
     flex-wrap: wrap;
 }
+
+.title { /* Assuming you have or add a class for the title */
+    display: inline-block;
+    margin-bottom: 10px; /* Adjust as needed */
+    font-size: 105%; /* Makes the font size 20% larger than the inherited size */
+
+}
+
+.info-icon {
+    display: inline-block;
+    width: 15px; /* Smaller width */
+    height: 15px; /* Smaller height */
+    background-color: rgb(0, 122, 194); /* More navy blue color */
+    color: white;
+    text-align: center;
+    font-style: italic;
+    line-height: 15px; /* Adjusted line-height for the smaller icon */
+    margin-left: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    vertical-align: middle; /* Ensure it aligns in the middle of the text line */
+    font-size: 12px; /* Adjust font size as needed */
+    margin-bottom: 10px;
+  }
+  
+  .popup {
+    display: none;
+    position: absolute;
+    width: 200px;
+    background-color: #f9f9f9;
+    color: #000;
+    text-align: left;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 1;
+    left: 20px; /* Adjust based on the exact positioning you need */
+    top: 32px; /* Adjust to ensure the popup shows correctly */
+  }
+  
+  .info-icon:hover + .popup {
+    display: block;
+  }
