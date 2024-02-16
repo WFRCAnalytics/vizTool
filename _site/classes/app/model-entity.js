@@ -27,6 +27,12 @@ class ModelEntity {
     modelEntity.setAttribute('icon-start', this.submenuIconStart);
     modelEntity.setAttribute('text-enabled', '');
 
+
+    // Set the disabled attribute to true
+    modelEntity.setAttribute('disabled', true);
+    modelEntity.setAttribute('draggable', true);
+    modelEntity.setAttribute('text-enabled', false);
+    
     const modelEntityInstance = this;
 
     modelEntity.addEventListener('click', function() {
@@ -38,7 +44,6 @@ class ModelEntity {
           item.active = false;
         }
       });
-
       // Show corresponding template
       const allTemplates = document.querySelectorAll('.template');
       allTemplates.forEach(template => template.hidden = true);

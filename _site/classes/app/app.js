@@ -380,7 +380,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
       const optionPc = document.createElement('calcite-option');
       optionPc.value = 'pct';
-      optionPc.textContent = 'Percent Change';
+      optionPc.textContent = 'Percent Change (coming soon)';
       calciteSelectCompare.appendChild(optionPc);
 
       // Append the calcite-select to the content container
