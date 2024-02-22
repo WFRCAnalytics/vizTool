@@ -7,15 +7,37 @@ class Aggregator {
         this.agGeoJson = data.agGeoJson;
         this.selected = data.agSelected
     
-        this.filterData = {
-          fCode           : this.agCode          ,
-          fName           : this.agDisplayName   ,
-          fWidget         : "checkboxes"         ,
-          fOptions        : this.agOptions       ,
-          fSelected       : this.selected        ,
-          subAgDisplayName: data.subAgDisplayName,
-          subAgSelected   : data.subAgSelected   ,
-          subAgOptions    : data.subAgOptions
+
+        // only run if it is vizTrends and has an agGeoJson defined
+        if (this.agGeoJson) {
+          const response = await fetch(this.agGeoJson);
+          const dataGeoJson = await response.json();
+
+          const _options = dataGeoJson.features.map(feature => ({ value: feature.FIPS, label: feature.NAME }));
+
+          this.filterData = {
+            fCode           : this.agCode          ,
+            fName           : this.agDisplayName   ,
+            fWidget         : "checkboxes"         ,
+            fOptions        : _options             ,
+            fSelected       : this.selected        ,
+            subAgDisplayName: data.subAgDisplayName,
+            subAgSelected   : data.subAgSelected   ,
+            subAgOptions    : data.subAgOptions
+          }
+
+        } else {
+          this.filterData = {
+            fCode           : this.agCode          ,
+            fName           : this.agDisplayName   ,
+            fWidget         : "checkboxes"         ,
+            fOptions        : this.agOptions       ,
+            fSelected       : this.selected        ,
+            subAgDisplayName: data.subAgDisplayName,
+            subAgSelected   : data.subAgSelected   ,
+            subAgOptions    : data.subAgOptions
+          }
         }
+
     }
 }

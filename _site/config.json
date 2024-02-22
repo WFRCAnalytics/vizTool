@@ -422,6 +422,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agGeoJson": "data/counties.geojson",
                       "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
