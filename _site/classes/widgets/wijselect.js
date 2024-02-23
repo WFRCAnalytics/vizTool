@@ -35,7 +35,13 @@ class WijSelect {
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
       if (this.id.includes('subag')) {
-        this.vizLayout.sidebar.aggregatorFilter.afterUpdateSubAg();
+        if (this.id.includes('filter-subag')) {
+          const modifiedId = this.id.replace(/-filter-subag$/, '');
+          this.vizLayout.sidebar.filters.find(o => o.id === modifiedId).afterUpdateSubAg();
+        }
+        else {
+          this.vizLayout.sidebar.aggregatorFilter.afterUpdateSubAg();
+        }
       } else {
         if (this.id.includes('_aggregator-selector')) { // run only if aggregator
           this.vizLayout.afterUpdateAggregator();
