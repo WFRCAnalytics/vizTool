@@ -851,7 +851,8 @@
                       "fSelected": ["IB", "OB", "N/A"],
                       "fOptions" : [{"value":"IB" , "label":"In-Bound" },
                                     {"value":"OB" , "label":"Out-Bound"},
-                                    {"value":"N/A", "label":"N/A"      }]
+                                    {"value":"N/A", "label":"N/A"      }],
+                                    "fUserModifiable" : false
                     },
                     {
                       "fCode"    : "fMd",
