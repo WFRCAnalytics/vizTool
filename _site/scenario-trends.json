@@ -12,18 +12,6 @@
     ]
   },
   {
-    "scnTrend": "v9.0 RTP Amendment 1",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2019 },
-      { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2023 },
-      { "modVersion": "v900", "scnGroup": "TIP"    , "scnYear": 2028 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1" , "scnYear": 2032 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1" , "scnYear": 2042 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1" , "scnYear": 2050 }
-    ]
-  },
-  {
     "scnTrend": "v9.0 Needs",
     "displayByDefault": false,
     "modelruns" : [

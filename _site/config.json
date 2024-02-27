@@ -14,7 +14,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "j-roadway-segments",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Roadway Segments",
@@ -884,16 +884,16 @@
                       "aDisplayName": "Vehicle-Hours Traveled"
                     },
                     {
+                      "aCode": "aVhd",
+                      "aDisplayName": "Vehicle-Hours of Delay"
+                    },
+                    {
+                      "aCode": "aDis",
+                      "aDisplayName": "Centerline-Miles"
+                    },
+                    {
                       "aCode": "aLMl",
                       "aDisplayName": "Lane-Miles"
-                    },
-                    {
-                      "aCode": "cVhd",
-                      "aDisplayName": "Vehicle-Hours of Delay (coming soon)"
-                    },
-                    {
-                      "aCode": "cCMl",
-                      "aDisplayName": "Centerline-Miles (coming soon)"
                     }
                   ],
                   "dividers": [
@@ -932,7 +932,17 @@
                   ],
                   "filters" : [
                     {
-                      "fCode"    : "dTod",
+                      "fCode"    : "fVeh",
+                      "fName"    : "Filter Vehicle Type",
+                      "fWidget"  : "select",
+                      "fSelected": "All",
+                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
+                                    {"value":"LT" , "label":"Light Trucks" },
+                                    {"value":"MD" , "label":"Medium Trucks"},
+                                    {"value":"HV" , "label":"Heavy Trucks" }]
+                    },
+                    {
+                      "fCode"    : "fTod",
                       "fName"    : "Filter Time of Day",
                       "fWidget"  : "select",
                       "fSelected": "DY",
@@ -941,16 +951,6 @@
                                     {"value":"MD", "label":"Midday Period" },
                                     {"value":"PM", "label":"PM Period"     },
                                     {"value":"EV", "label":"Evening Period"}]
-                    },
-                    {
-                      "fCode"    : "dVeh",
-                      "fName"    : "Filter Vehicle Type",
-                      "fWidget"  : "select",
-                      "fSelected": "All",
-                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                                    {"value":"LT" , "label":"Light Trucks" },
-                                    {"value":"MD" , "label":"Medium Trucks"},
-                                    {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }
@@ -962,7 +962,7 @@
                 "templateSettings": {
                   "baseGeoJsonKey": "segment",
                   "baseGeoJsonId": "SEGID",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
                   "baseGeoField": "SEGID",
                   "jsonFileName": "j-roadway-trends",
                   "aggregatorTitle": "Select Summary Geography",
@@ -972,8 +972,6 @@
                   "attributeTitle": "Road Trends",
                   "attributeSelected": "aVmt",
                   "attributeInfoTextHtml": "<b>Vehicle-Miles Traveled</b> is the total miles traveled by all vehicles in a specified area over a given period of time.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by all vehicles traveling within a specified area over a given period of time.<br/><b>Lane-Miles</b> is the total length of lanes on roadways calculated by multiplying the length of a road segment by the number of lanes in that segment.",
-                  "dividerTitle": "Divide By",
-                  "dividerSelected": "",
                   "aggregators": [
                     {
                       "agCode": "TAZID",
@@ -1194,6 +1192,182 @@
                       }
                     },
                     {
+                      "aCode": "aVhd",
+                      "aDisplayName": "Vehicle-Hours of Delay",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Vehicle-Hours of Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.50, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":           "1 to 500"},
+                            { "minValue":   500, "maxValue":    2500, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "500 to 2,500"},
+                            { "minValue":  2500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "2,500 to 5,000"},
+                            { "minValue":  5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 10,000"},
+                            { "minValue": 10000, "maxValue":   25000, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "10,000 to 25,000"},
+                            { "minValue": 25000, "maxValue":   50000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "25,000 to 50,000"},
+                            { "minValue": 50000, "maxValue":  100000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "50,000 to 100,000"},
+                            { "minValue":100000, "maxValue":  150000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "100,000 to 150,000"},
+                            { "minValue":150000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "More than 150,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle-Hours of Delay"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Vehicle-Hours of Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -99999990, "maxValue":  -50000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -50,000" },
+                            { "minValue":    -50000, "maxValue":  -10000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000"},
+                            { "minValue":    -10000, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10,000 to -5,000" },
+                            { "minValue":     -5000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -500"    },
+                            { "minValue":      -500, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to +500"      },
+                            { "minValue":       500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +5,000"    },
+                            { "minValue":      5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +10,000" },
+                            { "minValue":     10000, "maxValue":   50000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10,000 to +50,000"},
+                            { "minValue":     50000, "maxValue":99999990, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +50,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Vehicle-Hours of Delay"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Vehicle-Hours Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.00000%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle-Hours of Delay"
+                        }
+                      }
+                    },
+                    {
+                      "aCode": "aDis",
+                      "aDisplayName": "Centerline-Miles",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Centerline-Miles",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.05, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":0.050, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":         "1 to 50"},
+                            { "minValue":   50, "maxValue":    100, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "50 to 100"},
+                            { "minValue":  100, "maxValue":    150, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "100 to 150"},
+                            { "minValue":  150, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "150 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "250 to 500"},
+                            { "minValue":  500, "maxValue":    750, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "500 to 750"},
+                            { "minValue":  750, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "750 to 1000"},
+                            { "minValue": 1000, "maxValue":   1500, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "1,000 to 1,500"},
+                            { "minValue": 1500, "maxValue":9999990, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 1,500"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Centerline-Miles"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Centerline-Miles",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999990, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000"},
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"},
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":    "-1000 to -500"},
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":      "-500 to -50"},
+                            { "minValue":      -10, "maxValue":     10, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":       "-10 to +10"},
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":      "+50 to +500"},
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":   "+500 to +1,000"},
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"},
+                            { "minValue":     5000, "maxValue":9999990, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"}
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Centerline-Miles"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Centerline-Miles",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.0%')",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -1.00, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    1.00, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Centerline-Miles"
+                        }
+                      }
+                    },
+                    {
                       "aCode": "aLMl",
                       "aDisplayName": "Lane-Miles",
                       "rendererCollection": {
@@ -1280,53 +1454,21 @@
                           "defaultLabel": "No Lane-Miles"
                         }
                       }
-                    },
-                    {
-                      "aCode": "cVhd",
-                      "aDisplayName": "Vehicle-Hours of Delay (coming soon)"
-                    },
-                    {
-                      "aCode": "cCMl",
-                      "aDisplayName": "Centerline-Miles (coming soon)"
-                    }
-                  ],
-                  "dividers": [
-                    {
-                      "jsonFileName": "j-zones-se",
-                      "baseGeoJsonKey": "taz",
-                      "baseGeoJsonId": "TAZID",
-                      "aCode": "aTotHh",
-                      "aDisplayName": "Total Households",
-                      "filter": ""
-                    },
-                    {
-                      "jsonFileName": "j-zones-se",
-                      "baseGeoJsonKey": "taz",
-                      "baseGeoJsonId": "TAZID",
-                      "aCode": "aWrk",
-                      "aDisplayName": "Total Workers",
-                      "filter": ""
-                    },
-                    {
-                      "jsonFileName": "j-zones-se",
-                      "baseGeoJsonKey": "taz",
-                      "baseGeoJsonId": "TAZID",
-                      "aCode": "aTotEmp",
-                      "aDisplayName": "Total Jobs",
-                      "filter": ""
-                    },
-                    {
-                      "jsonFileName": "j-zones-se",
-                      "baseGeoJsonKey": "taz",
-                      "baseGeoJsonId": "TAZID",
-                      "aCode": "aHhPop",
-                      "aDisplayName": "Total Population",
-                      "filter": ""
                     }
                   ],
                   "filters" : [
                     {
-                      "fCode"    : "dTod",
+                      "fCode"    : "fVeh",
+                      "fName"    : "Filter Vehicle Type",
+                      "fWidget"  : "select",
+                      "fSelected": "All",
+                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
+                                    {"value":"LT" , "label":"Light Trucks" },
+                                    {"value":"MD" , "label":"Medium Trucks"},
+                                    {"value":"HV" , "label":"Heavy Trucks" }]
+                    },
+                    {
+                      "fCode"    : "fTod",
                       "fName"    : "Filter Time of Day",
                       "fWidget"  : "select",
                       "fSelected": "DY",
@@ -1335,16 +1477,6 @@
                                     {"value":"MD", "label":"Midday Period" },
                                     {"value":"PM", "label":"PM Period"     },
                                     {"value":"EV", "label":"Evening Period"}]
-                    },
-                    {
-                      "fCode"    : "dVeh",
-                      "fName"    : "Filter Vehicle Type",
-                      "fWidget"  : "select",
-                      "fSelected": "All",
-                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                                    {"value":"LT" , "label":"Light Trucks" },
-                                    {"value":"MD" , "label":"Medium Trucks"},
-                                    {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }
@@ -1355,7 +1487,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "j-transit-segments-riders",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Transit Segments",
