@@ -61,25 +61,37 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     const _geojsonfilenames = new Set();
 
-    dataScenarios.forEach(scenario => {
-      let _geojsons = Object.values(scenario.geojsons);
+    for (const dataScenario of dataScenarios) {
+      let _geojsons = Object.values(dataScenario.geojsons);
 
-      _geojsons.forEach((_geojson) => {
+      for (const _geojson of _geojsons) {
         _geojsonfilenames.add(_geojson);
-      });
-    });
+      }
+    }
 
+//    dataScenarios.forEach(scenario => {
+//      let _geojsons = Object.values(scenario.geojsons);
+//
+//      _geojsons.forEach((_geojson) => {
+//        _geojsonfilenames.add(_geojson);
+//      });
+//    });
 
-    _geojsonfilenames.forEach(_geojsonfilename => {
-      fetchAndStoreGeoJsonData(_geojsonfilename);
-    });
+    // Fetch and store GeoJSON data for each filename
+    for (const _geojsonfilename of _geojsonfilenames) {
+      await fetchAndStoreGeoJsonData(_geojsonfilename);
+    }
+
+    //_geojsonfilenames.forEach(_geojsonfilename => {
+    //  await fetchAndStoreGeoJsonData(_geojsonfilename);
+    //});
 
     await populateScenarioSelections();
     
   }
 
   // Function to fetch and store data
-  function fetchAndStoreGeoJsonData(fileName) {
+  async function fetchAndStoreGeoJsonData(fileName) {
     fetch(`data/${fileName}`)
       .then(response => response.json())
       .then(jsonData => {

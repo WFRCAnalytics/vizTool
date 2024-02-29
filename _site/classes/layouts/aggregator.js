@@ -5,39 +5,33 @@ class Aggregator {
         this.agOptions = data.agOptions;
         this.agWeightCode = data.agWeightCode;
         this.agGeoJson = data.agGeoJson;
+        this.agGeoJson = data.agGeoJson;
+        this.agGeoJsonLabelField = data.agGeoJsonLabelField,
+        this.agGeoJsonValueField = data.agGeoJsonValueField,
         this.selected = data.agSelected
     
+        let _options;
 
         // only run if it is vizTrends and has an agGeoJson defined
         if (this.agGeoJson) {
-          const response = await fetch(this.agGeoJson);
-          const dataGeoJson = await response.json();
-
-          const _options = dataGeoJson.features.map(feature => ({ value: feature.FIPS, label: feature.NAME }));
-
-          this.filterData = {
-            fCode           : this.agCode          ,
-            fName           : this.agDisplayName   ,
-            fWidget         : "checkboxes"         ,
-            fOptions        : _options             ,
-            fSelected       : this.selected        ,
-            subAgDisplayName: data.subAgDisplayName,
-            subAgSelected   : data.subAgSelected   ,
-            subAgOptions    : data.subAgOptions
-          }
-
+          _options = dataGeojsons[this.agGeoJson].features.map(feature => ({
+            value: feature.properties[this.agGeoJsonLabelField], // Assuming these are under `properties`
+            label: feature.properties[this.agGeoJsonValueField]  // Adjust if they are located elsewhere
+          }));
         } else {
-          this.filterData = {
-            fCode           : this.agCode          ,
-            fName           : this.agDisplayName   ,
-            fWidget         : "checkboxes"         ,
-            fOptions        : this.agOptions       ,
-            fSelected       : this.selected        ,
-            subAgDisplayName: data.subAgDisplayName,
-            subAgSelected   : data.subAgSelected   ,
-            subAgOptions    : data.subAgOptions
-          }
+          _options = this.agOptions;
         }
+
+      this.filterData = {
+        fCode           : this.agCode          ,
+        fName           : this.agDisplayName   ,
+        fWidget         : "checkboxes"         ,
+        fOptions        : _options             ,
+        fSelected       : this.selected        ,
+        subAgDisplayName: data.subAgDisplayName,
+        subAgSelected   : data.subAgSelected   ,
+        subAgOptions    : data.subAgOptions
+      }
 
     }
 }
