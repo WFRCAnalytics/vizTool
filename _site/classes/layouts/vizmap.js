@@ -695,7 +695,7 @@ require([
                 if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
                 } else if (this.modeCompare=='pct') { // percent change
-                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
                 _valueDisp = _valueMain;
