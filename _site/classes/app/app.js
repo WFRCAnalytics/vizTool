@@ -206,7 +206,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     }
 
     async function updateScenarioSelection(scenarioSelect) {
-      // see which selector changed
+      // short circuit if turning off the comparison scenario
+      // look into just enable/disable of comparison
       if (scenarioSelect.target.value === 'none') {
         let selectNone = document.getElementById('selectGrpComp');
         selectNone.childNodes[0].selected = true;
@@ -215,6 +216,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         selectNone.childNodes[0].selected = true;
         selectNone.childNodes[0].diabled = false;
       } else {
+        // see which selector changed
         const changedSelectorId = scenarioSelect.target.id;
         const changedSelector = scenarioSelect.target;
         const selectedValue = scenarioSelect.target.value;
@@ -229,7 +231,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         if (changedSelectorId.slice(6,9)== 'Mod') {
           isGroup = false;
         }
-
+        // get the selector to have items updated - and which model if it's the year
         if (isMain) {
           if (isGroup){
             updateSelector = document.getElementById('selectYearMain');
@@ -246,7 +248,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
           }      
         }
-
+        // find which scenarios match the selected items
         let validScenarios = [];
         if (isGroup){
           validScenarios = dataScenarios.filter(entry=> entry.modVersion === modelSelected && entry.scnGroup === selectedValue);
@@ -262,7 +264,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
             selectionGroupSet.add(validItem.scnGroup);
             selectionYearSet.add(validItem.scnYear.toString());
         });
-
+        // update the selector - if the selector updated was the group, send an event for the year
         if (isGroup) {
           manageSelectors(updateSelector, selectionYearSet);
         } else {
@@ -273,6 +275,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       updateActiveVizMap();
    }
 
+   // enable/disable selections base on the scenarios
     async function manageSelectors(whichSelector, whatValues)
     {
       for (let reverseIndex = whichSelector.childElementCount-1; reverseIndex >=0; reverseIndex--) {
