@@ -55,50 +55,44 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     // load scenario trend data
     const jsonScenarioTrend = await fetchScenarioTrendData();
     dataScenarioTrends = jsonScenarioTrend.map(item => new ScenarioTrend(item));
-  
 
     dataGeojsons = {};
 
     const _geojsonfilenames = new Set();
 
     for (const dataScenario of dataScenarios) {
-      let _geojsons = Object.values(dataScenario.geojsons);
-
-      for (const _geojson of _geojsons) {
-        _geojsonfilenames.add(_geojson);
-      }
+        let _geojsons = Object.values(dataScenario.geojsons);
+        for (const _geojson of _geojsons) {
+            _geojsonfilenames.add(_geojson);
+        }
     }
 
-//    dataScenarios.forEach(scenario => {
-//      let _geojsons = Object.values(scenario.geojsons);
-//
-//      _geojsons.forEach((_geojson) => {
-//        _geojsonfilenames.add(_geojson);
-//      });
-//    });
+    // Create an array to hold all fetch promises
+    let fetchPromises = [];
 
     // Fetch and store GeoJSON data for each filename
     for (const _geojsonfilename of _geojsonfilenames) {
-      await fetchAndStoreGeoJsonData(_geojsonfilename);
+        let fetchPromise = fetchAndStoreGeoJsonData(_geojsonfilename);
+        fetchPromises.push(fetchPromise);
     }
 
-    //_geojsonfilenames.forEach(_geojsonfilename => {
-    //  await fetchAndStoreGeoJsonData(_geojsonfilename);
-    //});
+    // Wait for all GeoJSON data fetching to complete
+    await Promise.all(fetchPromises);
 
+    // Now that all GeoJSON data is fetched, you can proceed with the rest
     await populateScenarioSelections();
-    
-  }
+}
 
   // Function to fetch and store data
   async function fetchAndStoreGeoJsonData(fileName) {
-    fetch(`data/${fileName}`)
-      .then(response => response.json())
-      .then(jsonData => {
-        // Store the processed data in the object with the filename as key
-        dataGeojsons[fileName] = jsonData;
-      })
-      .catch(error => console.error(`Error fetching data from ${fileName}:`, error));
+    try {
+      const response = await fetch(`data/${fileName}`);
+      const jsonData = await response.json();
+      // Store the processed data in the object with the filename as key
+      dataGeojsons[fileName] = jsonData;
+    } catch (error) {
+      console.error(`Error fetching data from ${fileName}:`, error);
+    }
   }
 
   async function loadMenuAndItems() {
@@ -187,11 +181,13 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     yearComp.value = 'none';
   }
 
+  // Adjust the init function to ensure it waits for loadScenarios to fully complete
   async function init() {
     console.log('app:init');
     await loadScenarios();
-    await initVizMapListeners();
+    // Only after loadScenarios completes, load the menu and items
     const menuStructure = await loadMenuAndItems();
+    await initVizMapListeners();
   }
 
   async function initVizMapListeners() {

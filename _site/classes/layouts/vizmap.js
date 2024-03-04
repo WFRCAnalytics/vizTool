@@ -21,7 +21,7 @@ require([
       this.modelEntity = modelEntity;
 
       this.jsonFileName = data.jsonFileName;
-      this.baseGeometryFile = data.baseGeometryFile;
+      this.baseGeometryFile = 'data/' + data.baseGeometryFile;
       this.baseGeoField = data.baseGeoField;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
@@ -93,7 +93,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: this.getSelectedAggregator().agGeoJson,
+        url: 'data/' + this.getSelectedAggregator().agGeoJson,
         title: "Aggregator Layer"
       });
 

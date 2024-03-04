@@ -14,7 +14,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "roadway-segments",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryFile": "segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Roadway Segments",
@@ -766,7 +766,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "transit-segments-riders",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "baseGeometryFile": "segmentsWithAggFields.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Transit Segments",
@@ -1637,7 +1637,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "zones-modetrips",
-                  "baseGeometryFile": "data/tazWithAggFields.geojson",
+                  "baseGeometryFile": "tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "popupTitle": "Zone Mode Share",
@@ -1647,37 +1647,37 @@
                     {
                       "agCode": "TAZID",
                       "agDisplayName": "TAZ",
-                      "agGeoJson": "data/tazWithAggFields.geojson"
+                      "agGeoJson": "tazWithAggFields.geojson"
                     },
                     {
                       "agCode": "CITY_UGRC",
                       "agDisplayName": "City",
-                      "agGeoJson": "data/cityUgrc.geojson"
+                      "agGeoJson": "cityUgrc.geojson"
                     },
                     {
                       "agCode": "DISTSML",
                       "agDisplayName": "Small Area",
-                      "agGeoJson": "data/districtsSmall.geojson"
+                      "agGeoJson": "areasSmall.geojson"
                     },
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
-                      "agGeoJson": "data/districtsMedium.geojson"
+                      "agGeoJson": "districtsMedium.geojson"
                     },
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
-                      "agGeoJson": "data/districtsLarge.geojson"
+                      "agGeoJson": "districtsLarge.geojson"
                     },
                     {
                       "agCode": "DISTSUPER",
                       "agDisplayName": "Super District",
-                      "agGeoJson": "data/districtsSuper.geojson"
+                      "agGeoJson": "districtsSuper.geojson"
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agGeoJson": "data/counties.geojson"
+                      "agGeoJson": "counties.geojson"
                     }
                   ],
                   "attributeTitle": "Trip Mode",
@@ -2548,7 +2548,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "zones-se",
-                  "baseGeometryFile": "data/tazWithAggFields.geojson",
+                  "baseGeometryFile": "tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "attributeTitle": "Socioeconomics",
@@ -2560,37 +2560,37 @@
                     {
                       "agCode": "TAZID",
                       "agDisplayName": "TAZ",
-                      "agGeoJson": "data/tazWithAggFields.geojson"
+                      "agGeoJson": "tazWithAggFields.geojson"
                     },
                     {
                       "agCode": "CITY_UGRC",
                       "agDisplayName": "City",
-                      "agGeoJson": "data/cityUgrc.geojson"
+                      "agGeoJson": "cityUgrc.geojson"
                     },
                     {
                       "agCode": "DISTSML",
                       "agDisplayName": "Small Area",
-                      "agGeoJson": "data/districtsSmall.geojson"
+                      "agGeoJson": "areasSmall.geojson"
                     },
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
-                      "agGeoJson": "data/districtsMedium.geojson"
+                      "agGeoJson": "districtsMedium.geojson"
                     },
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
-                      "agGeoJson": "data/districtsLarge.geojson"
+                      "agGeoJson": "districtsLarge.geojson"
                     },
                     {
                       "agCode": "DISTSUPER",
                       "agDisplayName": "Super District",
-                      "agGeoJson": "data/districtsSuper.geojson"
+                      "agGeoJson": "districtsSuper.geojson"
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
-                      "agGeoJson": "data/counties.geojson"
+                      "agGeoJson": "counties.geojson"
                     }
                   ],
                   "attributes": [
@@ -3453,7 +3453,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "zones-ato",
-                  "baseGeometryFile": "data/tazWithAggFields.geojson",
+                  "baseGeometryFile": "tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "attributeTitle": "Jobs and Households",
