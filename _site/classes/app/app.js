@@ -185,11 +185,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   async function initVizMapListeners() {
     console.log('app:initVizMapListeners');
             
-    document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectGrpMain'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('selectGrpMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('selectYearMain'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectModComp'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('selectModComp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('selectYearComp'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
     document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateActiveVizMap);
 
@@ -204,6 +204,87 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         });
       });
     }
+
+    async function updateScenarioSelection(scenarioSelect) {
+      // see which selector changed
+      if (scenarioSelect.target.value === 'none') {
+        let selectNone = document.getElementById('selectGrpComp');
+        selectNone.childNodes[0].selected = true;
+        selectNone.childNodes[0].diabled = false;
+        selectNone = document.getElementById('selectYearComp');
+        selectNone.childNodes[0].selected = true;
+        selectNone.childNodes[0].diabled = false;
+      } else {
+        const changedSelectorId = scenarioSelect.target.id;
+        const changedSelector = scenarioSelect.target;
+        const selectedValue = scenarioSelect.target.value;
+        let isMain = Boolean(true);
+        let isGroup = Boolean(true);
+        let updateSelector;
+        let modelSelected;
+
+        if (changedSelectorId.slice(-4) === 'Comp') {
+          isMain = false;
+        }
+        if (changedSelectorId.slice(6,9)== 'Mod') {
+          isGroup = false;
+        }
+
+        if (isMain) {
+          if (isGroup){
+            updateSelector = document.getElementById('selectYearMain');
+            modelSelected = document.getElementById('selectModMain').value;
+          } else {
+            updateSelector = document.getElementById('selectGrpMain');
+          }
+        } else {
+          if (isGroup){
+            updateSelector = document.getElementById('selectYearComp');
+            modelSelected = document.getElementById('selectModComp').value;
+          } else {
+            updateSelector = document.getElementById('selectGrpComp');
+
+          }      
+        }
+
+        let validScenarios = [];
+        if (isGroup){
+          validScenarios = dataScenarios.filter(entry=> entry.modVersion === modelSelected && entry.scnGroup === selectedValue);
+        } else {
+          validScenarios = dataScenarios.filter(entry=> entry.modVersion === selectedValue);
+        }
+
+        const selectionModelSet = new Set();
+        const selectionGroupSet = new Set();
+        const selectionYearSet = new Set();
+
+        validScenarios.forEach(validItem => {
+            selectionGroupSet.add(validItem.scnGroup);
+            selectionYearSet.add(validItem.scnYear.toString());
+        });
+
+        if (isGroup) {
+          manageSelectors(updateSelector, selectionYearSet);
+        } else {
+          manageSelectors(updateSelector, selectionGroupSet);
+          updateSelector.dispatchEvent(new Event('calciteSelectChange'));
+        }
+      }
+      updateActiveVizMap();
+   }
+
+    async function manageSelectors(whichSelector, whatValues)
+    {
+      for (let reverseIndex = whichSelector.childElementCount-1; reverseIndex >=0; reverseIndex--) {
+        if(whatValues.has(whichSelector.childNodes[reverseIndex].label)) {
+          whichSelector.childNodes[reverseIndex].disabled = false;
+          whichSelector.childNodes[reverseIndex].selected = true;
+        } else {
+          whichSelector.childNodes[reverseIndex].disabled = true;
+        }
+      }
+    }
+
 
     //document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
     //document.getElementById('selectYearMain-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearMain')));
