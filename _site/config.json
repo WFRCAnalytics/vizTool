@@ -1,20 +1,17 @@
 {
   "users": [
-    {
-      "userType": "planner",
+    { "userType": "planner",
       "userLayout": {
         "menuItems":[
-          {
-            "menuText": "Roads and Transit",
+          { "menuText": "Roads and Transit",
             "menuIconStart": "driving-distance",
             "modelEntities": [
-              {
-                "submenuText": "Road Segments",
+              { "submenuText": "Road Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "roadway-segments",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "jsonFileName": "j-roadway-segments",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Roadway Segments",
@@ -22,8 +19,7 @@
                   "attributeInfoTextHtml": "<b>Lanes</b> is total number of cross-section lanes, including high-occupancy, general purpose, collector-distributor, and arterial/collector lanes.<br/><b>Functional Type</b> is the FT value as defined in the travel demand model.<br/><b>Capacity per Hour per Lane</b> is the number of vehicles that can be served by her per lane. This includes reductions due to capacity factors and signals on arterials/collectors.<br/><b>Free-flow Speed</b> is the uncongested maximum speed in miles-per-hour.<br/><b>Volume</b> this is the total number of vehicles that are served during the time interval.<br/><b>Speed</b> is the congested travel speed for a given link.<br/><b>Max V/C Ratio</b> is the worst volume-over-capacity ratio by direction by time interval.",
                   "attributeSelected": "aLanes",
                   "attributes": [
-                    {
-                      "aCode": "aLanes",
+                    { "aCode": "aLanes",
                       "aDisplayName": "Lanes",
                       "rendererCollection": {
                         "main": {
@@ -62,32 +58,43 @@
                             { "minValue":   2, "maxValue":  2, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+2 Lanes"        },
                             { "minValue":   3, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+3 Lanes"        },
                             { "minValue":   4, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#00CC33", "width": 5.0000 }, "label": "+4 or More Lanes"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Lanes"
                         },
                         "compare_pct": {
                           "name": "Percent Change in Lanes",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
                           "field": "dVal",
                           "classBreakInfos": [
-                            { "minValue": -999999, "maxValue":   -100, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100 or More Lanes"},
-                            { "minValue":    -100, "maxValue":    -50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50 to -100 Lanes" },
-                            { "minValue":     -50, "maxValue":    -25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25 to -50 Lanes"  },
-                            { "minValue":     -25, "maxValue":    -10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10 to -25 Lanes"  },
-                            { "minValue":     -10, "maxValue":     -5, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5 to -10 Lanes"   },
-                            { "minValue":      -5, "maxValue":     -1, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1 to -5 Lanes"    },
-                            { "minValue":      -1, "maxValue":      1, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"         },
-                            { "minValue":       1, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "+1 to +5 Lanes"    },
-                            { "minValue":       5, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5 to +10 Lanes"   },
-                            { "minValue":      10, "maxValue":     25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10 to +25 Lanes"  },
-                            { "minValue":      25, "maxValue":     50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25 to +50 Lanes"  },
-                            { "minValue":      50, "maxValue":    100, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50 to +100 Lanes" },
-                            { "minValue":     100, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100 or More Lanes"}
-                          ]
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Lanes"
                         }
                       }
                     },
-                    {
-                      "aCode": "aFt",
+                    { "aCode": "aFt",
                       "aDisplayName": "Functional Type",
                       "rendererCollection": {
                         "main": {
@@ -108,7 +115,7 @@
                             "color": "#EEEEEE",
                             "width": 0.5
                           },
-                          "defaultLabel": "No FT"
+                          "defaultLabel": "No Functional Type"
                         },
                         "compare_abs": {
                           "name": "Change in Functional Type",
@@ -118,15 +125,43 @@
                             { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
                             { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Decrease" },
                             { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#1111FF", "width": 2.5000 }, "label": "Increase" }
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Functional Type"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Lanes"
+                          "name": "Percent Change in Functional Type",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Functional Type"
                         }
                       }
                     },
-                    {
-                      "aCode": "aCap1HL",
+                    { "aCode": "aCap1HL",
                       "aDisplayName": "Capacity per Hour per Lane",
                       "rendererCollection": {
                         "main": {
@@ -167,15 +202,43 @@
                             { "minValue":   -1000, "maxValue":     -501, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-500 to -1000"  },
                             { "minValue":   -2500, "maxValue":    -1001, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-1000 to -2500" },
                             { "minValue": -9999999, "maxValue":    -2501, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "Less than -2500"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Capacity"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Capacity per Hour per Lane"
+                          "name": "Percent Change in Capacity per Hour per Lane",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Capacity"
                         }
                       }
                     },
-                    {
-                      "aCode": "aFfSpd",
+                    { "aCode": "aFfSpd",
                       "aDisplayName": "Free-flow Speed",
                       "rendererCollection": {
                         "main": {
@@ -215,15 +278,43 @@
                             { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10 mph"    },
                             { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25 mph"   },
                             { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "Less than -25 mph"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Speed"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Lanes"
+                          "name": "Percent Change in Free-flow Speed",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Speed"
                         }
                       }
                     },
-                    {
-                      "aCode": "aVol",
+                    { "aCode": "aVol",
                       "aDisplayName": "Volume",
                       "rendererCollection": {
                         "main": {
@@ -262,15 +353,43 @@
                             { "minValue":     5000, "maxValue":     9999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+5,000 to +10,000"  },
                             { "minValue":    10000, "maxValue":    24999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+10,000 to +25,000" },
                             { "minValue":    25000, "maxValue": 99999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +25,000"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-line",
+                              "color": "#EEEEEE",
+                              "width": 0.5
+                            },
+                            "defaultLabel": "No Volume"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Lanes"
+                          "name": "Percent Change in Volume",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 4.0000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 2.5000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 1.8000 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 1.2000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 0.8000 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 0.8000 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 1.2000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 1.8000 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 2.5000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 4.0000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Volume"
                         }
                       }
                     },
-                    {
-                      "aCode": "aSpd",
+                    { "aCode": "aSpd",
                       "aDisplayName": "Speed",
                       "rendererCollection": {
                         "main": {
@@ -309,16 +428,44 @@
                             { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10 mph"    },
                             { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25 mph"   },
                             { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "Less than -25 mph"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Speed"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Speed"
+                          "name": "Percent Change in Speed",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 4.0000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 2.5000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 1.8000 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 1.2000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 0.8000 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 0.8000 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 1.2000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 1.8000 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 2.5000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 4.0000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Speed"
                         }
                       }
                     },
-                    {
-                      "aCode": "aMaxVc",
-                      "aDisplayName": "Max V/C Ratio",
+                    { "aCode": "aMaxVc",
+                      "aDisplayName": "Max V/C Ratio (temp)",
                       "rendererCollection": {
                         "main": {
                           "name": "Max Volume-to-Capacity Ratio",
@@ -362,17 +509,45 @@
                             { "value": "class_3", "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-0.05 to -0.15 V/C" },
                             { "value": "class_2", "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-0.15 to -0.50 V/C" },
                             { "value": "class_1", "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -1.00 V/C"}
-                          ]
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No V/C"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Volume-to-Capacity Ratio"
+                          "name": "Percent Change in Volume-to-Capacity Ratio",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No V/C"
                         }
                       }
                     }
                   ],
                   "filters" : [
-                    {
-                      "fCode"    : "fVeh",
+                    { "fCode"    : "fVeh",
                       "fName"    : "Filter Vehicle Type",
                       "fWidget"  : "select",
                       "fSelected": "All",
@@ -381,8 +556,7 @@
                                    {"value":"MD" , "label":"Medium Trucks"},
                                    {"value":"HV" , "label":"Heavy Trucks" }]
                     },
-                    {
-                      "fCode"    : "fTod",
+                    { "fCode"    : "fTod",
                       "fName"    : "Filter Time of Day",
                       "fWidget"  : "select",
                       "fSelected": "DY",
@@ -395,14 +569,13 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Road Trends",
+              { "submenuText": "Road Trends",
                 "submenuIconStart": "graph-line-series",
                 "template": "vizTrends",
                 "templateSettings": {
                   "baseGeoJsonKey": "segment",
                   "baseGeoJsonId": "SEGID",
-                  "jsonFileName": "roadway-trends",
+                  "jsonFileName": "j-roadway-trends",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
@@ -412,16 +585,16 @@
                   "dividerTitle": "Divide By",
                   "dividerSelected": "",
                   "aggregators": [
-                    {
-                      "agCode": "PLANAREA",
+                    { "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
+                      "agCodeNameField": "PLANAREA",
                       "agSelected": ["WFRC"],
                       "agOptions": [{"value":"MAG" , "label":"MAG" },
                                     {"value":"WFRC", "label":"WFRC"}]
                     },
-                    {
-                      "agCode": "CO_FIPS",
+                    { "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
@@ -550,6 +723,7 @@
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agSelected": ["1"],
                       "subAgDisplayName":"List Medium Districts for",
                       "subAgSelected": "All",
@@ -640,6 +814,7 @@
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agSelected": ["1"],
                       "agOptions": [
                         {"value": "1","label": "1: Box Elder Co. - WFRC"                 },
@@ -694,13 +869,21 @@
                       "aDisplayName": "Vehicle-Hours Traveled"
                     },
                     {
+                      "aCode": "aVhd",
+                      "aDisplayName": "Vehicle-Hours of Delay"
+                    },
+                    {
+                      "aCode": "aDis",
+                      "aDisplayName": "Centerline-Miles"
+                    },
+                    {
                       "aCode": "aLMl",
                       "aDisplayName": "Lane-Miles"
                     }
                   ],
                   "dividers": [
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotHh",
@@ -708,7 +891,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aWrk",
@@ -716,7 +899,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotEmp",
@@ -724,7 +907,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aHhPop",
@@ -734,7 +917,17 @@
                   ],
                   "filters" : [
                     {
-                      "fCode"    : "dTod",
+                      "fCode"    : "fVeh",
+                      "fName"    : "Filter Vehicle Type",
+                      "fWidget"  : "select",
+                      "fSelected": "All",
+                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
+                                    {"value":"LT" , "label":"Light Trucks" },
+                                    {"value":"MD" , "label":"Medium Trucks"},
+                                    {"value":"HV" , "label":"Heavy Trucks" }]
+                    },
+                    {
+                      "fCode"    : "fTod",
                       "fName"    : "Filter Time of Day",
                       "fWidget"  : "select",
                       "fSelected": "DY",
@@ -743,27 +936,16 @@
                                     {"value":"MD", "label":"Midday Period" },
                                     {"value":"PM", "label":"PM Period"     },
                                     {"value":"EV", "label":"Evening Period"}]
-                    },
-                    {
-                      "fCode"    : "dVeh",
-                      "fName"    : "Filter Vehicle Type",
-                      "fWidget"  : "select",
-                      "fSelected": "All",
-                      "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                                    {"value":"LT" , "label":"Light Trucks" },
-                                    {"value":"MD" , "label":"Medium Trucks"},
-                                    {"value":"HV" , "label":"Heavy Trucks" }]
                     }
                   ]
                 }
               },
-              {
-                "submenuText": "Transit Segments",
+              { "submenuText": "Transit Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "transit-segments-riders",
-                  "baseGeometryFile": "data/segmentsWithAggFields.geojson",
+                  "jsonFileName": "j-transit-segments-riders",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Transit Segments",
@@ -811,12 +993,53 @@
                             { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
                             { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
                             { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +5,000" }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-line",
+                              "color": "#EEEEEE",
+                              "width": 0.5
+                            },
+                            "defaultLabel": "No Riders"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Riders"
+                          "name": "Percent Change in Riders",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.5000 }, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#00E62E", "width": 5.0000 }, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#00CC29", "width": 5.5000 }, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#00B324", "width": 6.0000 }, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-line",
+                            "color": "#EEEEEE",
+                            "width": 0.5
+                          },
+                          "defaultLabel": "No Riders"
                         }
                       }
+                    },
+                    {
+                      "aCode": "aN",
+                      "aDisplayName": "Number of Routes (coming soon)"
+                    },
+                    {
+                      "aCode": "aBT",
+                      "aDisplayName": "Number of Buses/Trains per Hour (coming soon)"
+                    },
+                    {
+                      "aCode": "aTS",
+                      "aDisplayName": "Travel Speed (coming soon)"
                     }
                   ],
                   "filters" : [
@@ -1054,14 +1277,13 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Transit Boardings Trends",
+              { "submenuText": "Transit Boardings Trends",
                 "submenuIconStart": "graph-line-series",
                 "template": "vizTrends",
                 "templateSettings": {
                   "baseGeoJsonKey": "segment",
                   "baseGeoJsonId": "SEGID",
-                  "jsonFileName": "transit-boardings",
+                  "jsonFileName": "j-transit-boardings",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
@@ -1074,6 +1296,7 @@
                     {
                       "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
+                      "agCodeNameField": "PLANAREA",
                       "agSelected": ["WFRC"],
                       "agOptions": [{"value":"MAG" , "label":"MAG" },
                                     {"value":"WFRC", "label":"WFRC"}]
@@ -1081,6 +1304,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
@@ -1209,6 +1433,7 @@
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agSelected": ["1"],
                       "subAgDisplayName":"List Medium Districts for",
                       "subAgSelected": "All",
@@ -1299,6 +1524,7 @@
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agSelected": ["1"],
                       "agOptions": [
                         {"value": "1","label": "1: Box Elder Co. - WFRC"                 },
@@ -1355,7 +1581,7 @@
                   ],
                   "dividers": [
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotHh",
@@ -1363,7 +1589,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aWrk",
@@ -1371,7 +1597,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotEmp",
@@ -1379,7 +1605,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aHhPop",
@@ -1624,16 +1850,14 @@
               }
             ]
           },
-          {
-            "menuText": "Trips",
+          { "menuText": "Trips",
             "menuIconStart": "tour",
             "modelEntities": [
-              {
-                "submenuText": "Zone Trips by Mode",
+              { "submenuText": "Zone Trips by Mode",
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "zones-modetrips",
+                  "jsonFileName": "j-zones-modetrips",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
@@ -1641,39 +1865,38 @@
                   "aggregatorTitle": "Select Zone Geography",
                   "aggregatorSelected" : "TAZID",
                   "aggregators": [
-                    {
-                      "agCode": "TAZID",
+                    { "agCode": "TAZID",
                       "agDisplayName": "TAZ",
-                      "agGeoJson": "data/tazWithAggFields.geojson"
-                    },
-                    {
-                      "agCode": "CITY_UGRC",
+                      "agGeoJson": "data/tazWithAggFields.geojson" },
+                    { "agCode": "CITY_UGRC",
+                      "agCodeNameField": "CITY_NAME",
                       "agDisplayName": "City",
-                      "agGeoJson": "data/cityUgrc.geojson"
-                    },
-                    {
-                      "agCode": "DISTSML",
+                      "agGeoJson": "data/cityUgrc.geojson" },
+                    { "agCode": "DISTSML",
                       "agDisplayName": "Small Area",
-                      "agGeoJson": "data/districtsSmall.geojson"
-                    },
+                      "agGeoJson": "data/districtsSmall.geojson" },
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agGeoJson": "data/districtsMedium.geojson"
                     },
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agGeoJson": "data/districtsLarge.geojson"
                     },
                     {
                       "agCode": "DISTSUPER",
                       "agDisplayName": "Super District",
+                      "agCodeNameField": "DSUP_NAME",
                       "agGeoJson": "data/districtsSuper.geojson"
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agGeoJson": "data/counties.geojson"
                     }
                   ],
@@ -1738,7 +1961,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in All Trips"
+                          "name": "Percent Change in All Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
@@ -1799,7 +2049,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Motorized Trips"
+                          "name": "Percent Change in Motorized Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
@@ -1860,7 +2137,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Auto Trips"
+                          "name": "Percent Change in Auto Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
@@ -1921,7 +2225,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Transit Trips"
+                          "name": "Percent Change in Transit Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
@@ -1982,7 +2313,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Non-Motorized Trips"
+                          "name": "Percent Change in Non-Motorized Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
@@ -2043,18 +2401,45 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Walk Trips"
+                          "name": "Percent Change in Walk Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     },
                     {
                       "aCode": "aB",
                       "aDisplayName": "    Bike Trips",
-                      "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
                       "rendererCollection": {
                         "main": {
                           "name": "Bike Trips",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
                           "classBreakInfos": [
                             { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
                             { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
@@ -2079,8 +2464,8 @@
                         },
                         "compare_abs": {
                           "name": "Change in Bike Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "field": "dVal",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
                             { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
@@ -2104,7 +2489,34 @@
                             "defaultLabel": "No Trips"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Bike Trips"
+                          "name": "Percent Change in Bike Trips",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Trips"
                         }
                       }
                     }
@@ -2169,7 +2581,7 @@
                 "templateSettings": {
                   "baseGeoJsonKey": "taz",
                   "baseGeoJsonId": "TAZID",
-                  "jsonFileName": "zones-modetrips",
+                  "jsonFileName": "j-zones-modetrips",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
@@ -2182,6 +2594,7 @@
                     {
                       "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
+                      "agCodeNameField": "PLANAREA",
                       "agSelected": ["WFRC"],
                       "agOptions": [
                         {"value":"MAG" , "label":"MAG" },
@@ -2191,6 +2604,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agSelected": ["3","57","11","35","49"],
                       "agOptions": [
                         {"value": "3", "label":"Box Elder"},
@@ -2203,6 +2617,7 @@
                     {
                       "agCode": "CITY_UGRC",
                       "agDisplayName": "City (UGRC)",
+                      "agCodeNameField": "CITY_NAME",
                       "agSelected": ["BTF"],
                       "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
@@ -2303,6 +2718,7 @@
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agSelected": ["1"],
                       "subAgDisplayName":"List Medium Districts for",
                       "subAgSelected": "All",
@@ -2393,6 +2809,7 @@
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agSelected": ["1"],
                       "agOptions": [
                         {"value": "1","label": "1: Box Elder Co. - WFRC"                 },
@@ -2448,7 +2865,7 @@
                                 ],
                   "dividers": [
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotHh",
@@ -2456,7 +2873,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aWrk",
@@ -2464,7 +2881,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotEmp",
@@ -2472,7 +2889,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aHhPop",
@@ -2535,8 +2952,7 @@
               }
             ]
           },
-          {
-            "menuText": "Communities",
+          { "menuText": "Communities",
             "menuIconStart": "urban-model",
             "modelEntities": [
               {
@@ -2544,7 +2960,7 @@
                 "submenuIconStart": "layer-polygon",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "zones-se",
+                  "jsonFileName": "j-zones-se",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
@@ -2562,6 +2978,7 @@
                     {
                       "agCode": "CITY_UGRC",
                       "agDisplayName": "City",
+                      "agCodeNameField": "CITY_NAME",
                       "agGeoJson": "data/cityUgrc.geojson"
                     },
                     {
@@ -2572,21 +2989,25 @@
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agGeoJson": "data/districtsMedium.geojson"
                     },
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agGeoJson": "data/districtsLarge.geojson"
                     },
                     {
                       "agCode": "DISTSUPER",
                       "agDisplayName": "Super District",
+                      "agCodeNameField": "DSUP_NAME",
                       "agGeoJson": "data/districtsSuper.geojson"
                     },
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agGeoJson": "data/counties.geojson"
                     }
                   ],
@@ -2635,10 +3056,47 @@
                             { "minValue":      5000, "maxValue":    9999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +10,000 People"  },
                             { "minValue":     10000, "maxValue":   49999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10,000 to +50,000 People" },
                             { "minValue":     50000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +50,000 People"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Population"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Population"
+                          "name": "Percent Change in Population",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Population"
                         }
                       }
                     },
@@ -2686,10 +3144,47 @@
                             { "minValue":      5000, "maxValue":    9999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":  "+5,000 to +10,000 Households"},
                             { "minValue":     10000, "maxValue":   49999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10,000 to +50,000 Households"},
                             { "minValue":     50000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":  "More than +50,000 Households"}
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Households"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Households"
+                          "name": "Percent Change in Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Households"
                         }
                       }
                     },
@@ -2737,10 +3232,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Vehicles" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Vehicles"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Vehicles"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Vehicles"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Total Vehicles"
+                          "name": "Percent Change in Total Vehicles",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicles"
                         }
                       }
                     },
@@ -2788,10 +3320,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Workers" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Workers"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Workers"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Total Workers"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Total Workers"
+                          "name": "Percent Change in Total Workers",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Total Workers"
                         }
                       }
                     },
@@ -2839,10 +3408,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Employment - 3 Categories"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Employment - 3 Categories"
+                          "name": "Percent Change in Employment - 3 Categories",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Employment - 3 Categories"
                         }
                       }
                     },
@@ -2890,10 +3496,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Employment - 12 Categories"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Employment - 12 Categories"
+                          "name": "Percent Change in Employment - 12 Categories",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Employment - 12 Categories"
                         }
                       }
                     },
@@ -2937,10 +3580,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Average Income"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Average Income"
+                          "name": "Percent Change in Average Income",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Average Income"
                         }
                       }
                     },
@@ -2988,10 +3668,47 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Students" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Students"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Students"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No K-12 School Enrollment"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in K-12 School Enrollment"
+                          "name": "Percent Change in K-12 School Enrollment",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No K-12 School Enrollment"
                         }
                       }
                     }
@@ -3069,7 +3786,7 @@
                 "templateSettings": {
                   "baseGeoJsonKey": "taz",
                   "baseGeoJsonId": "TAZID",
-                  "jsonFileName": "zones-se",
+                  "jsonFileName": "j-zones-se",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
@@ -3082,6 +3799,7 @@
                     {
                       "agCode": "PLANAREA",
                       "agDisplayName": "Plan Area",
+                      "agCodeNameField": "PLANAREA",
                       "agSelected": ["WFRC"],
                       "agOptions": [{"value":"MAG" , "label":"MAG" },
                                     {"value":"WFRC", "label":"WFRC"}]
@@ -3089,6 +3807,7 @@
                     {
                       "agCode": "CO_FIPS",
                       "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
                       "agSelected": ["3","57","11","35","49"],
                       "agOptions": [{"value": "3", "label":"Box Elder"},
                                     {"value":"57", "label":"Weber"    },
@@ -3099,6 +3818,7 @@
                     {
                       "agCode": "CITY_UGRC",
                       "agDisplayName": "City (UGRC)",
+                      "agCodeNameField": "CITY_NAME",
                       "agSelected": ["BTF"],
                       "subAgDisplayName":"List Cities for",
                       "subAgSelected": "All",
@@ -3198,6 +3918,7 @@
                     {
                       "agCode": "DISTMED",
                       "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
                       "agSelected": ["1"],
                       "subAgDisplayName":"List Medium Districts for",
                       "subAgSelected": "All",
@@ -3288,6 +4009,7 @@
                     {
                       "agCode": "DISTLRG",
                       "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
                       "agSelected": ["1"],
                       "agOptions": [
                         {"value": "1","label": "1: Box Elder Co. - WFRC"                 },
@@ -3346,7 +4068,7 @@
                                 ],
                   "dividers": [
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotHh",
@@ -3354,7 +4076,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aWrk",
@@ -3362,7 +4084,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aTotEmp",
@@ -3370,7 +4092,7 @@
                       "filter": ""
                     },
                     {
-                      "jsonFileName": "zones-se",
+                      "jsonFileName": "j-zones-se",
                       "baseGeoJsonKey": "taz",
                       "baseGeoJsonId": "TAZID",
                       "aCode": "aHhPop",
@@ -3449,17 +4171,64 @@
                 "submenuIconStart": "desktop",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "zones-ato",
+                  "jsonFileName": "j-zones-ato",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
                   "attributeTitle": "Jobs and Households",
-                  "attributeInfoTextHtml": "",
+                  "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a set travel time.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a set travel time.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
                   "attributeSelected": "aJA",
+                  "aggregatorTitle": "Select Zone Geography",
+                  "aggregatorSelected" : "TAZID",
+                  "aggregators": [
+                    {
+                      "agCode": "TAZID",
+                      "agDisplayName": "TAZ",
+                      "agGeoJson": "data/tazWithAggFields.geojson"
+                    },
+                    {
+                      "agCode": "CITY_UGRC",
+                      "agDisplayName": "City",
+                      "agCodeNameField": "CITY_NAME",
+                      "agGeoJson": "data/cityUgrc.geojson"
+                    },
+                    {
+                      "agCode": "DISTSML",
+                      "agDisplayName": "Small Area",
+                      "agGeoJson": "data/districtsSmall.geojson"
+                    },
+                    {
+                      "agCode": "DISTMED",
+                      "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
+                      "agGeoJson": "data/districtsMedium.geojson"
+                    },
+                    {
+                      "agCode": "DISTLRG",
+                      "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
+                      "agGeoJson": "data/districtsLarge.geojson"
+                    },
+                    {
+                      "agCode": "DISTSUPER",
+                      "agDisplayName": "Super District",
+                      "agCodeNameField": "DSUP_NAME",
+                      "agGeoJson": "data/districtsSuper.geojson"
+                    },
+                    {
+                      "agCode": "CO_FIPS",
+                      "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
+                      "agGeoJson": "data/counties.geojson"
+                    }
+                  ],
+
                   "attributes": [
                     {
                       "aCode": "aJA",
                       "aDisplayName": "Access to Jobs",
+                      "agWeightCode": "aH",
+                      "agWeightCodeFilter": "",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Jobs",
@@ -3501,16 +4270,55 @@
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
                             { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
-                            ]
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": [221,221,221,0.75],
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Access to Jobs"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Access to Jobs"
+                          "name": "Percent Change in Access to Jobs",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Jobs"
                         }
                       }
                     },
                     {
                       "aCode": "aHA",
                       "aDisplayName": "Access to Households",
+                      "agWeightCode": "aJ",
+                      "agWeightCodeFilter": "",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Households",
@@ -3551,16 +4359,56 @@
                             { "minValue":       5000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +50,000 Jobs"   },
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
-                            { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }                            ]
+                            { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Households"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Access to Households"
+                          "name": "Percent Change in Access to Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Households"
                         }
                       }
                     },
                     {
                       "aCode": "aCA",
                       "aDisplayName": "Access to Jobs+Households",
+                      "agWeightCode": "aH",
+                      "agWeightCodeFilter": "",
                       "rendererCollection": {
                         "main": {
                           "name": "Access to Jobs+Households",
@@ -3601,7 +4449,8 @@
                             { "minValue":       5000, "maxValue":    49999, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +50,000 Jobs"   },
                             { "minValue":      50000, "maxValue":    99999, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000 Jobs" },
                             { "minValue":     100000, "maxValue":   499999, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000 Jobs"},
-                            { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }                            ],
+                            { "minValue":     500000, "maxValue":999999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000 Jobs"  }
+                          ],
                             "defaultSymbol": {
                               "type": "simple-fill",
                               "color": [221,221,221,0.75],
@@ -3614,7 +4463,34 @@
                             "defaultLabel": "No Access to Jobs+Households"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Access to Jobs+Households"
+                          "name": "Percent Change in Access to Jobs+Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Access to Jobs+Households"
                         }
                       }
                     },
@@ -3675,7 +4551,34 @@
                             "defaultLabel": "No Jobs"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Jobs"
+                          "name": "Percent Change in Jobs",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Jobs"
                         }
                       }
                     },
@@ -3736,7 +4639,34 @@
                           "defaultLabel": "No Households"
                         },
                         "compare_pct": {
-                          "name": "Percent Change in Households"
+                          "name": "Percent Change in Households",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Households"
                         }
                       }
                     }
@@ -3761,17 +4691,20 @@
                     }
                   ]
                 }
+              },
+              {
+                "submenuText": "Access to Opportunities Trends (coming soon)",
+                "submenuIconStart": "graph-line-series",
+                "template": "vizComingSoon"
               }
             ]
           }
         ]
       }
     },
-    {
-      "userType": "applier"
+    { "userType": "applier"
     },
-    {
-      "userType": "developer"
+    { "userType": "developer"
     }
   ]
 }

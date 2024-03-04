@@ -9,6 +9,10 @@
       "layoutHtml": "templates/viztrends.html"
   },
   {
+      "templateType": "vizComingSoon",
+      "layoutDivs": "<div><br/><h1>&nbsp;&nbsp;&nbsp;&nbsp;Coming soon!</h1></div>"
+  },
+  {
       "templateType": "vizMatrix",
       "layoutDivs": "<div id=\"matrixMainDisplay\"><div id=\"matrixSidebar\"><div id=\"matrixSidebarContent\" tabindex=\"0\"><p>Welcome to the model matrices.</p><p>Please select what content you want to view.</p></div></div><div id=\"mainMatrix\"><table id=\"matrixTable\"></table></div></div>"
   },

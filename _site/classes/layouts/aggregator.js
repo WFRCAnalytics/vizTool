@@ -2,8 +2,8 @@ class Aggregator {
     constructor(data) {
         this.agCode = data.agCode;
         this.agDisplayName = data.agDisplayName;
+        this.agCodeNameField = data.agCodeNameField;
         this.agOptions = data.agOptions;
-        this.agWeightCode = data.agWeightCode;
         this.agGeoJson = data.agGeoJson;
         this.selected = data.agSelected
     
