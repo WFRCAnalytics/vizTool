@@ -496,6 +496,7 @@ require([
 
       // get main data
       var _dataMain = this.getDataMain();
+      // get data for weighting
       if (this.sidebar.getWeightCode()) {
         var _dataWeightMain = this.getDataWeightMain();
       }
@@ -509,6 +510,7 @@ require([
       if (this.getComp() !== null) {
         this.mode = 'compare';
         var _dataComp = this.getDataComp();
+        // get data for weighting
         if (this.sidebar.getWeightCode()) {
           var _dataWeightComp = this.getDataWeightComp();
         }

@@ -270,7 +270,7 @@ class VizSidebar {
   
       if (_filterGroupArray) {
         this.filters.forEach(filterObject => {
-          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
+          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText + '-filter'));
           if (containsFilterText) {
             if (filterObject.isVisible()) {
               filterObject.show();

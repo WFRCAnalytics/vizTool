@@ -1,11 +1,10 @@
 class Filter {
   constructor(data, vizLayout) {
-    this.id = vizLayout.id + '-' + data.fCode;
+    this.id = vizLayout.id + '-' + data.fCode + '-filter';
     console.log('filter-construct:' + this.id);
 
     this.vizLayout = vizLayout;
     
-    const _id = this.id + '-filter'
     const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
     var _options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
     const _selected = data.fSelected;
@@ -13,18 +12,18 @@ class Filter {
     this.modifiable = data.fUserModifiable === undefined ? true : data.fUserModifiable; // set to true if undefined
 
     if (data.subAgDisplayName) {
-      this.filterSubAgWij = new WijSelect(_id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, vizLayout, true);
+      this.filterSubAgWij = new WijSelect(this.id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, vizLayout, true);
       _options = data.fOptions.map(item => ({ value: item.value, label: item.label, subag: item.subag}));
     }
   
     if (data.fWidget === 'select') {
-      this.filterWij = new WijSelect(_id, _name, _selected, _options, vizLayout, true);
+      this.filterWij = new WijSelect(this.id, _name, _selected, _options, vizLayout, true);
     } else if (data.fWidget === 'radio') {
-      this.filterWij = new WijRadio(_id, _name, _selected, _options, vizLayout, true);
+      this.filterWij = new WijRadio(this.id, _name, _selected, _options, vizLayout, true);
     } else if (data.fWidget === 'checkboxes') {
-      this.filterWij = new WijCheckboxes(_id, _name, _selected, _options, vizLayout, true);
+      this.filterWij = new WijCheckboxes(this.id, _name, _selected, _options, vizLayout, true);
     } else if (data.fWidget === 'combobox') {
-      this.filterWij = new WijCombobox(_id, _name, _selected, _options, vizLayout, true);
+      this.filterWij = new WijCombobox(this.id, _name, _selected, _options, vizLayout, true);
     }
 
   }
