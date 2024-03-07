@@ -126,7 +126,7 @@ require([
       }
     }
 
-        
+    
     getDataWeightMain() {
       const _scenario = this.getMain()
       if (_scenario) {
@@ -138,6 +138,13 @@ require([
       const _scenario = this.getComp()
       if (_scenario) {
         return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      }
+    }
+    
+    getDataWeightComp() {
+      const _scenario = this.getComp()
+      if (_scenario) {
+        return _scenario.getDataForFilter(this.jsonFileName, this.sidebar.getWeightCodeFilter());
       }
     }
 
