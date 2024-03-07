@@ -51,5 +51,27 @@
             </calcite-navigation>
             <div id="main"></div>
         </calcite-shell>
+        <!-- Modal Structure -->
+        <div id="infoModal" class="modal">
+            <div class="modal-content">
+                <p>The data in this tool is for informational purposes only and is not to be used on any project without field verification. For more details or information on how to properly use this tool, please contact <a href="mailto:sswim@wfrc.org">Suzie Swim</a>.</p>
+                <button id="okButton">I agree to the terms.</button>
+            </div>
+        </div>
+        <script>
+            // Simple script to show the modal
+            document.addEventListener('DOMContentLoaded', function() {
+                var modal = document.getElementById('infoModal');
+                var okButton = document.getElementById('okButton');
+                
+                // Show the modal
+                modal.style.display = 'block';
+                
+                // When the user clicks OK, close the modal
+                okButton.onclick = function() {
+                    modal.style.display = 'none';
+                };
+            });
+        </script>
     </body>
 </html>
