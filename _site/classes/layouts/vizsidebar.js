@@ -171,6 +171,17 @@ class VizSidebar {
     return ""; // Or return a default value or `undefined` as needed
   }
 
+  getWeightCodeFilter() {
+    const aCode = this.getACode();
+    const item = this.attributes.find(item => item.aCode === aCode);
+  
+    if (item && item.agWeightCodeFilter) {
+      return item.agWeightCodeFilter;
+    }
+  
+    return ""; // Or return a default value or `undefined` as needed
+  }
+  
   getSelectedAggregator() {
 
     let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
@@ -259,7 +270,7 @@ class VizSidebar {
   
       if (_filterGroupArray) {
         this.filters.forEach(filterObject => {
-          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText));
+          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText + '-filter'));
           if (containsFilterText) {
             if (filterObject.isVisible()) {
               filterObject.show();

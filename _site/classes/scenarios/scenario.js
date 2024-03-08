@@ -46,6 +46,83 @@ class Scenario {
     console.log('getDataForFilter');
     return this.jsonData[a_jsonDataKey].data[a_filter];
   }
+  
+  getDataForFilterOptionsListByAggregator(data_jsonDataKey   , data_lstFilters   , data_aCode   , data_geojsonsKey = '', baseGeoField='',
+                                           agg_geojsonsKey='',                        aggCode='',                           // agg = Agggregate... combine by geography
+                                            wt_jsonDataKey='',   wt_lstFilters='',   wt_aCode='',   wt_geojsonsKey = '') {  // wt  = Weight    ... calculate weighted average
+    console.log('getDataForFilterOptionsListByAggregator');
+
+    let _dataGeo;
+    let _dataAggGeo;
+    let _dataWt;
+
+    const _data = getDataForFilterOptionsList(data_jsonDataKey, data_lstFilters);
+
+    if (agg_geojsonsKey='') {
+      _dataGeo    = this.geojsons[data_geojsonsKey]
+      _dataAggGeo = this.geojsons[ agg_geojsonsKey];
+    }
+    if (wt_jsonDataKey!='') {
+      _dataWt = getDataForFilterOptionsList(wt_jsonDataKey, wt_lstFilters);
+    }
+
+    const dataResults = {};
+
+    // NO AGGREGATOR
+    if (agg_geojsonsKey!='') {
+      dataResults[data_aCode] = _data[data_aCode] || 0;
+
+    // WITH AGGREGATOR
+    } else {
+      
+      // aggregate json data for give display feature
+      _dataAggGeo.forEach((agFt) => {
+        
+        // get associated json records for given aggregator
+        let _featuresToAg = _dataGeo.filter(feature => 
+          feature.attributes[aggCode] === agFt.attributes[aggCode]
+        );
+
+        _featuresToAg.forEach((baseFt) => {
+
+          const _idFt = baseFt.properties[baseGeoField];
+
+          // main value
+          if (_data !== undefined) {
+            if (_data[_idFt]) {
+              if (_data[_idFt][_aCode]) {
+                if (!wt_aCode) {
+                  _valueMain += _data[_idFt][data_aCode];
+                } else {
+                  try {
+                    var _wtMain = _dataWt[_idFt][wt_aCode];
+                    if (_wtMain) {
+                      _valueMainXWt += _data[_idFt][data_aCode] * _wtMain;
+                      _valueMainSumWt += _wtMain;
+                    }
+                  } catch (error) {
+                    //console.error("An error occurred while processing the weight:", error);
+                    // Handle the error or perform error recovery
+                    _valueMainXWt += 0;
+                    _valueMainSumWt += 0;
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        
+        if (_wtCode) {
+          if (_valueMainSumWt>0) {
+            _valueMain = _valueMainXWt / _valueMainSumWt;
+          }
+        }
+      });
+    }
+  }
+
+
 
   getFilterGroupForAttribute(a_jsonDataKey, a_aCode) {
     console.log('getFilterGroupForAttribute:' + a_aCode);

@@ -126,10 +126,25 @@ require([
       }
     }
 
+    
+    getDataWeightMain() {
+      const _scenario = this.getMain()
+      if (_scenario) {
+        return _scenario.getDataForFilter(this.jsonFileName, this.sidebar.getWeightCodeFilter());
+      }
+    }
+
     getDataComp() {
       const _scenario = this.getComp()
       if (_scenario) {
         return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+      }
+    }
+    
+    getDataWeightComp() {
+      const _scenario = this.getComp()
+      if (_scenario) {
+        return _scenario.getDataForFilter(this.jsonFileName, this.sidebar.getWeightCodeFilter());
       }
     }
 
@@ -243,6 +258,30 @@ require([
       return null;
     }
 
+    getPopupLayerName() {
+      if (this.sidebar.aggregators.length>0) {
+        return this.sidebar.getSelectedAggregator().agDisplayName;
+      } else {
+        return this.baseGeoField;
+      }
+    }
+
+    getPopupFeatureCode() {
+      if (this.sidebar.aggregators.length>0) {
+        return this.sidebar.getSelectedAggregator().agCode;
+      } else {
+        return this.baseGeoField;
+      }
+    }
+
+    getPopupFeatureField() {
+      if (this.sidebar.aggregators.length>0) {
+        return this.sidebar.getSelectedAggregator().agCodeNameField;
+      } else {
+        return this.baseGeoField;
+      }
+    }
+
     initializeLayer() {
       //
       let dValFieldType;
@@ -284,7 +323,8 @@ require([
             { name: "SmallArea"        , type: "string"},
             { name: "DMED_NAME"        , type: "string"},
             { name: "DLRG_NAME"        , type: "string"},
-            { name: "DISTANCE"         , type: "double"}
+            { name: "DISTANCE"         , type: "double"},
+            { name: "CITY_UGRC"        , type: "double"}
 
           ],
           popupTemplate: {
@@ -292,18 +332,18 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeoField + " {expression/baseGeoField}"
+                text: this.getPopupLayerName() + " {expression/featureName}"
               },
               {
                 type: "text",
-                text: this.getACode() + " is: {expression/formatDisplayValue}"
+                text: this.getACode() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
               {
-                name: "baseGeoField",
-                title: this.baseGeoField,
-                expression: "$feature." + this.baseGeoField
+                name: "featureName",
+                title: "Feature Name",
+                expression: '$feature.' + this.getPopupFeatureField()
               },
               {
                 name: "formatDisplayValue",
@@ -369,7 +409,8 @@ require([
             { name: "SmallArea"        , type: "string"},
             { name: "DMED_NAME"        , type: "string"},
             { name: "DLRG_NAME"        , type: "string"},
-            { name: "DISTANCE"         , type: "double"}
+            { name: "DISTANCE"         , type: "double"},
+            { name: "CITY_UGRC"        , type: "double"}
 
           ],
           popupTemplate: {
@@ -377,18 +418,18 @@ require([
             content: [
               {
                 type: "text",
-                text: this.baseGeoField + " {expression/baseGeoField}"
+                text: this.getPopupLayerName() + " {expression/featureName}"
               },
               {
                 type: "text",
-                text: this.getACode() + " is: {expression/formatDisplayValue}"
+                text: this.getACode() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
               {
-                name: "baseGeoField",
-                title: this.baseGeoField,
-                expression: "$feature." + this.baseGeoField
+                name: "featureName",
+                title: "Feature Name",
+                expression: '$feature.' + this.getPopupFeatureField()
               },
               {
                 name: "formatDisplayValue",
@@ -462,7 +503,11 @@ require([
 
       // get main data
       var _dataMain = this.getDataMain();
-
+      // get data for weighting
+      if (this.sidebar.getWeightCode()) {
+        var _dataWeightMain = this.getDataWeightMain();
+      }
+      
       // return if no data!
       if (!_dataMain) {
         return;
@@ -472,6 +517,10 @@ require([
       if (this.getComp() !== null) {
         this.mode = 'compare';
         var _dataComp = this.getDataComp();
+        // get data for weighting
+        if (this.sidebar.getWeightCode()) {
+          var _dataWeightComp = this.getDataWeightComp();
+        }
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
@@ -655,7 +704,7 @@ require([
                 if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
                 } else if (this.modeCompare=='pct') { // percent change
-                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
                 _valueDisp = _valueMain;
@@ -718,21 +767,29 @@ require([
                 const _idFt = baseFt.properties[this.baseGeoField];
 
                 // main value
-                if (_dataMain!==undefined) {
+                if (_dataMain !== undefined) {
                   if (_dataMain[_idFt]) {
                     if (_dataMain[_idFt][_aCode]) {
                       if (!_wtCode) {
                         _valueMain += _dataMain[_idFt][_aCode];
                       } else {
-                        var _wtMain = _dataMain[_idFt][_wtCode];
-                        if (_wtMain) {
-                          _valueMainXWt +=  _dataMain[_idFt][_aCode] * _wtMain;
-                          _valueMainSumWt += _wtMain;
+                        try {
+                          var _wtMain = _dataWeightMain[_idFt][_wtCode];
+                          if (_wtMain) {
+                            _valueMainXWt += _dataMain[_idFt][_aCode] * _wtMain;
+                            _valueMainSumWt += _wtMain;
+                          }
+                        } catch (error) {
+                          //console.error("An error occurred while processing the weight:", error);
+                          // Handle the error or perform error recovery
+                          _valueMainXWt += 0;
+                          _valueMainSumWt += 0;
                         }
                       }
                     }
                   }
                 }
+
                 
                 // comp value
                 if (_dataComp!==undefined) {
@@ -741,12 +798,17 @@ require([
                       if (!_wtCode) {
                         _valueComp += _dataComp[_idFt][_aCode];
                       } else {
-                        var _wtComp = _dataComp[_idFt][_wtCode];
-                        if (_wtComp) {
-                          _valueCompXWt +=  _dataComp[_idFt][_aCode] * _wtComp;
-                          _valueCompSumWt += _wtComp;
+                        try {
+                          var _wtComp = _dataWeightComp[_idFt][_wtCode];
+                          if (_wtComp) {
+                            _valueCompXWt += _dataComp[_idFt][_aCode] * _wtComp;
+                            _valueCompSumWt += _wtComp;
+                          }  
+                        } catch (error) {
+                          _valueCompXWt += 0;
+                          _valueCompSumWt += 0;
                         }
-                      }
+                      } 
                     }
                   }
                 }
@@ -769,7 +831,7 @@ require([
                 if (this.modeCompare=='abs') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
                 } else if (this.modeCompare=='pct') { // percent change
-                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp) * 100;
+                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
                 _valueDisp = _valueMain;

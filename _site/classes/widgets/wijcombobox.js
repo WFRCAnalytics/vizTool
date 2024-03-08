@@ -1,6 +1,6 @@
 class WijCombobox {
-  constructor(id, title, selected, options, vizLayout, spaceafter=false) {
-    this.id = id;
+  constructor(parentid, title, selected, options, vizLayout, spaceafter=false) {
+    this.id = parentid + '-wij';
     this.title = title;
     this.selected = selected;
     this.options = options;
