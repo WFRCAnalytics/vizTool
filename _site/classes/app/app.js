@@ -192,11 +192,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('selectYearComp'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
     document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('comparisonScenario').addEventListener('calciteBlockClose', disableComparison);
+    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', disableComparison);
     // Since the initial comparison is none, disable the selectors until a valid model chosen
     disableComparison();
 
-    function updateActiveVizMap() {
+    async function updateActiveVizMap() {
       console.log(dataMenu);
       dataMenu.forEach(menuItem => {
         menuItem.modelEntities.forEach(modelEntity => {
@@ -208,7 +208,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       });
     }
 
-    async function updateScenarioSelection(scenarioSelect) {
+    function updateScenarioSelection(scenarioSelect) {
       // see which selector changed
       const changedSelectorId = scenarioSelect.target.id;
       const selectedValue = scenarioSelect.target.value;
@@ -264,7 +264,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
    }
 
    // enable/disable selections base on the scenarios
-    async function manageSelectors(whichSelector, whatValues)
+    function manageSelectors(whichSelector, whatValues)
     {
       for (let reverseIndex = whichSelector.childElementCount-1; reverseIndex >=0; reverseIndex--) {
         if(whatValues.has(whichSelector.childNodes[reverseIndex].label)) {
@@ -288,8 +288,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       } updateScenarioSelection(compModelSelect);
     }
 
-    function disableComparison()
-    {
+    function disableComparison() {
       // Disables all the comparison options when the block is closed
       // Also called when the comparison model is set to 'none'
       let compSelector = document.getElementById('selectModComp');
@@ -301,7 +300,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       compSelector.childNodes[0].selected = true;
       compSelector.disabled = true;
       compSelector =document.getElementById('selectCompareType');
-      compSelector.disabled = true; 
+      compSelector.disabled = true;
+      updateActiveVizMap();
     }
 
     //document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
