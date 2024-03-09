@@ -84,7 +84,7 @@ class WijCheckboxes {
 
       checkbox.value = option.value;
 
-      if (this.selected.includes(option.value)) {
+      if (this.selected && this.selected.includes(option.value)) {
         checkbox.checked = true;
       } else {
         checkbox.checked = false;

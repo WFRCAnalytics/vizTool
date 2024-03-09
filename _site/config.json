@@ -940,6 +940,1038 @@
                   ]
                 }
               },
+              { "submenuText": "Zone Metrics",
+                "submenuIconStart": "graph-pie-slice",
+                "template": "vizMap",
+                "templateSettings": {
+                  "jsonFileName": "j-zones-metrics",
+                  "baseGeometryFile": "data/tazWithAggFields.geojson",
+                  "baseGeoField": "TAZID",
+                  "geometryType": "polygon",
+                  "popupTitle": "Zone Metrics",
+                  "aggregatorTitle": "Select Zone Geography",
+                  "aggregatorSelected" : "TAZID",
+                  "aggregators": [
+                    { "agCode": "TAZID",
+                      "agDisplayName": "TAZ",
+                      "agGeoJson": "data/tazWithAggFields.geojson"
+                    },
+                    { "agCode": "CITY_UGRC",
+                      "agCodeNameField": "CITY_NAME",
+                      "agDisplayName": "City",
+                      "agGeoJson": "data/cityUgrc.geojson"
+                    },
+                    { "agCode": "DISTSML",
+                      "agDisplayName": "Small Area",
+                      "agGeoJson": "data/districtsSmall.geojson"
+                    },
+                    { "agCode": "DISTMED",
+                      "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
+                      "agGeoJson": "data/districtsMedium.geojson"
+                    },
+                    { "agCode": "DISTLRG",
+                      "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
+                      "agGeoJson": "data/districtsLarge.geojson"
+                    },
+                    { "agCode": "DISTSUPER",
+                      "agDisplayName": "Super District",
+                      "agCodeNameField": "DSUP_NAME",
+                      "agGeoJson": "data/districtsSuper.geojson"
+                    },
+                    {"agCode": "CO_FIPS",
+                      "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
+                      "agGeoJson": "data/counties.geojson"
+                    }
+                  ],
+                  "attributeTitle": "Zone Metric",
+                  "attributeInfoTextHtml": "",
+                  "attributeSelected": "aPMT",
+                  "attributes": [
+                    { "aCode": "aPMT",
+                      "aDisplayName": "Person Miles Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Person Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Miles Traveled"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Person Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Person Miles Traveled"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Person Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Miles Traveled"
+                        }
+                      }
+                    },
+                    { "aCode": "aPHT",
+                      "aDisplayName": "Person Hours Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Person Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Hours Traveled"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Person Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Person Hours Traveled"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Person Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Hours Traveled"
+                        }
+                      }
+                    },
+                    { "aCode": "aPHD",
+                      "aDisplayName": "Person Hours Delay",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Person Hours Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Hours Delay"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Person Hours Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Person Hours Delay"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in Person Hours Delay",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Person Hours Delay"
+                        }
+                      }
+                    },
+                    { "aCode": "aVMT",
+                      "aDisplayName": "Vehicle Miles Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Miles Traveled"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Vehicle Miles Traveled"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in All Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Miles Traveled"
+                        }
+                      }
+                    },
+                    { "aCode": "aVHT",
+                      "aDisplayName": "Vehicle Hours Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Vehicle Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Hours Traveled"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Vehicle Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Vehicle Hours Traveled"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in All Vehicle Hours Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Hours Traveled"
+                        }
+                      }
+                    },
+                    { "aCode": "aVHD",
+                      "aDisplayName": "Vehicle Hours Delay",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA",
+                      "rendererCollection": {
+                        "main": {
+                          "name": "Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
+                            { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                            { "minValue":  250, "maxValue":    500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                            { "minValue":  500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                            { "minValue": 1000, "maxValue":   2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                            { "minValue": 2500, "maxValue":   5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                            { "minValue": 5000, "maxValue":  10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                            { "minValue":10000, "maxValue":  15000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 15,000"},
+                            { "minValue":15000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 15,000"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Miles Traveled"
+                        },
+                        "compare_abs": {
+                          "name": "Change in Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
+                            { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
+                            { "minValue":    -1000, "maxValue":   -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"   },
+                            { "minValue":     -500, "maxValue":    -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -50"      },
+                            { "minValue":      -50, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"       },
+                            { "minValue":       50, "maxValue":    500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"      },
+                            { "minValue":      500, "maxValue":   1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"   },
+                            { "minValue":     1000, "maxValue":   5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000" },
+                            { "minValue":     5000, "maxValue":9999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000" }
+                            ],
+                            "defaultSymbol": {
+                              "type": "simple-fill",
+                              "color": "#DDDDDD",
+                              "outline": {
+                                "type": "simple-line",
+                                "color": "#FFFFFF",
+                                "width": 1
+                              }
+                            },
+                            "defaultLabel": "No Vehicle Miles Traveled"
+                        },
+                        "compare_pct": {
+                          "name": "Percent Change in All Vehicle Miles Traveled",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "field": "dVal",
+                          "classBreakInfos": [
+                            { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
+                            { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-fill", "color":[255,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50% to -100%"},
+                            { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-fill", "color":[255, 51,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-25% to -50%" },
+                            { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-fill", "color":[255,102, 17,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10% to -25%" },
+                            { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-fill", "color":[255,153, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5% to -10%"  },
+                            { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-fill", "color":[255,204,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to -5%"   },
+                            { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-fill", "color":[207,207,207,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +1%"   },
+                            { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-fill", "color":[102,255,153,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1% to +5%"   },
+                            { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-fill", "color":[ 51,255,102,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5% to +10"   },
+                            { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-fill", "color":[  0,255, 51,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10% to +25%" },
+                            { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-fill", "color":[  0,230, 46,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+25% to +50%" },
+                            { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-fill", "color":[  0,204, 41,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50% to +100%"},
+                            { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-fill", "color":[  0,179, 36,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100% or More"}
+                          ],
+                          "defaultSymbol": {
+                            "type": "simple-fill",
+                            "color": [221,221,221,0.75],
+                            "outline": {
+                              "type": "simple-line",
+                              "color": "#FFFFFF",
+                              "width": 1
+                            }
+                          },
+                          "defaultLabel": "No Vehicle Miles Traveled"
+                        }
+                      }
+                    }
+                  ],
+                  "filters" : [
+                    { "fCode": "fTod",
+                      "fName": "Time of Day",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "Period",
+                      "fSelected": ["AM","MD","PM","EV"],
+                      "fOptions":
+                      [
+                        {"value":"AM", "label":"AM Period"},
+                        {"value":"MD", "label":"Midday Period"},
+                        {"value":"PM", "label":"PM Period"},
+                        {"value":"EV", "label":"Evening Period"}
+                      ]
+                    },
+                    { "fCode": "fPurp",
+                      "fName": "Trip Purpose",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "Purpose",
+                      "fSelected": ["HBW"],
+                      "fOptions":
+                      [
+                        {"value": "HBW"   , "label":"Home-Base Work"               },
+                        {"value": "HBO"   , "label":"Home-Based Other"             },
+                        {"value": "HBC"   , "label":"Home-Based College"           },
+                        {"value": "HBS_Pr", "label":"Home-Based School - Primary"  },
+                        {"value": "HBS_Sc", "label":"Home-Based School - Secondary"},
+                        {"value": "NHB"   , "label":"Non-Home Based"               },
+                        {"value": "LT"    , "label":"Light Trucks"                 },
+                        {"value": "MD"    , "label":"Medium Trucks"                },
+                        {"value": "HV"    , "label":"Heavy Trucks"                 },
+                        {"value": "IX"    , "label":"Internal-to-External"         },
+                        {"value": "XI"    , "label":"External-to-Internal "        },
+                        {"value": "XX"    , "label":"External-to-External"         }
+                      ]
+                    },
+                    { "fCode": "fPA",
+                      "fName": "Production/Attraction",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "PA",
+                      "fSelected": ["P"],
+                      "fOptions": [
+                        {"value":"P", "label":"Production"},
+                        {"value":"A", "label":"Attraction"}
+                      ]
+                    }
+                  ]
+                }
+              },
+              { "submenuText": "Zone Metrics Trends",
+                "submenuIconStart": "graph-line-series",
+                "template": "vizTrends",
+                "templateSettings": {
+                  "baseGeoJsonKey": "taz",
+                  "baseGeoJsonId": "TAZID",
+                  "jsonFileName": "j-zones-metrics",
+                  "aggregatorTitle": "Select Summary Geography",
+                  "aggregatorSelected" : "CO_FIPS",
+                  "comboSelected": "",
+                  "attributeTitle": "Zone Metric Trends",
+                  "attributeInfoTextHtml": "",
+                  "attributeSelected": "aPMT",
+                  "dividerTitle": "Divide By",
+                  "dividerSelected": "",
+                  "aggregators": [
+                    {
+                      "agCode": "PLANAREA",
+                      "agDisplayName": "Plan Area",
+                      "agCodeNameField": "PLANAREA",
+                      "agSelected": ["WFRC"],
+                      "agOptions": [
+                        {"value":"MAG" , "label":"MAG" },
+                        {"value":"WFRC", "label":"WFRC"}
+                      ]
+                    },
+                    {
+                      "agCode": "CO_FIPS",
+                      "agDisplayName": "County",
+                      "agCodeNameField": "CO_NAME",
+                      "agSelected": ["3","57","11","35","49"],
+                      "agOptions": [
+                        {"value": "3", "label":"Box Elder"},
+                        {"value":"57", "label":"Weber"    },
+                        {"value":"11", "label":"Davis"    },
+                        {"value":"35", "label":"Salt Lake"},
+                        {"value":"49", "label":"Utah"     }
+                      ]
+                    },
+                    {
+                      "agCode": "CITY_UGRC",
+                      "agDisplayName": "City (UGRC)",
+                      "agCodeNameField": "CITY_NAME",
+                      "agSelected": ["BTF"],
+                      "subAgDisplayName":"List Cities for",
+                      "subAgSelected": "All",
+                      "subAgOptions": [
+                        {"value":"All","label":"All Counties"},
+                        {"value":"3","label":"Box Elder County"},
+                        {"value":"57","label":"Weber County"},
+                        {"value":"11","label":"Davis County"},
+                        {"value":"35","label":"Salt Lake County"},
+                        {"value":"49","label":"Utah County"}
+                      ],
+                      "agOptions": [
+                          {"value":"na" , "label":"N/A"                 ,"subag":["All"     ]},
+                          {"value":"AFK", "label":"American Fork"       ,"subag":["All","49"]},
+                          {"value":"ALA", "label":"Alta"                ,"subag":["All","35"]},
+                          {"value":"ALP", "label":"Alpine"              ,"subag":["All","49"]},
+                          {"value":"BDL", "label":"Bluffdale"           ,"subag":["All","35","49"]},
+                          {"value":"BGM", "label":"Brigham City"        ,"subag":["All","3"]},
+                          {"value":"BRT", "label":"Brighton"            ,"subag":["All","35"]},
+                          {"value":"BTF", "label":"Bountiful"           ,"subag":["All","11"]},
+                          {"value":"CDF", "label":"Cedar Fort"          ,"subag":["All","49"]},
+                          {"value":"CEN", "label":"Centerville"         ,"subag":["All","11"]},
+                          {"value":"CHL", "label":"Cedar Hills"         ,"subag":["All","49"]},
+                          {"value":"CLI", "label":"Clinton"             ,"subag":["All","11"]},
+                          {"value":"CLR", "label":"Clearfield"          ,"subag":["All","11"]},
+                          {"value":"COT", "label":"Cottonwood Heights"  ,"subag":["All","35"]},
+                          {"value":"DRA", "label":"Draper"              ,"subag":["All","35","49"]},
+                          {"value":"EAG", "label":"Eagle Mountain"      ,"subag":["All","49"]},
+                          {"value":"ELK", "label":"Elk Ridge"           ,"subag":["All","49"]},
+                          {"value":"FFD", "label":"Fairfield"           ,"subag":["All","49"]},
+                          {"value":"FRM", "label":"Farmington"          ,"subag":["All","11"]},
+                          {"value":"FRR", "label":"Farr West"           ,"subag":["All","57"]},
+                          {"value":"FRU", "label":"Fruit Heights"       ,"subag":["All","11"]},
+                          {"value":"GEN", "label":"Genola"              ,"subag":["All","49"]},
+                          {"value":"GOS", "label":"Goshen"              ,"subag":["All","49"]},
+                          {"value":"HAR", "label":"Harrisville"         ,"subag":["All","57"]},
+                          {"value":"HER", "label":"Herriman"            ,"subag":["All","35"]},
+                          {"value":"HGH", "label":"Highland"            ,"subag":["All","49"]},
+                          {"value":"HOL", "label":"Holladay"            ,"subag":["All","35"]},
+                          {"value":"HOO", "label":"Hooper"              ,"subag":["All","57"]},
+                          {"value":"KAY", "label":"Kaysville"           ,"subag":["All","11"]},
+                          {"value":"LAY", "label":"Layton"              ,"subag":["All","11"]},
+                          {"value":"LEH", "label":"Lehi"                ,"subag":["All","49"]},
+                          {"value":"LIN", "label":"Lindon"              ,"subag":["All","49"]},
+                          {"value":"MAP", "label":"Mapleton"            ,"subag":["All","49"]},
+                          {"value":"MAU", "label":"Mantua"              ,"subag":["All","3"]},
+                          {"value":"MID", "label":"Midvale"             ,"subag":["All","35"]},
+                          {"value":"MLC", "label":"Millcreek"           ,"subag":["All","35"]},
+                          {"value":"MSL", "label":"Marriott-Slaterville","subag":["All","57"]},
+                          {"value":"MUR", "label":"Murray"              ,"subag":["All","35"]},
+                          {"value":"NOG", "label":"North Ogden"         ,"subag":["All","57"]},
+                          {"value":"NSL", "label":"North Salt Lake"     ,"subag":["All","11"]},
+                          {"value":"OGD", "label":"Ogden"               ,"subag":["All","57"]},
+                          {"value":"ORE", "label":"Orem"                ,"subag":["All","49"]},
+                          {"value":"PAY", "label":"Payson"              ,"subag":["All","49"]},
+                          {"value":"PER", "label":"Perry"               ,"subag":["All","3"]},
+                          {"value":"PGR", "label":"Pleasant Grove"      ,"subag":["All","49"]},
+                          {"value":"PLN", "label":"Plain City"          ,"subag":["All","57"]},
+                          {"value":"PVO", "label":"Provo"               ,"subag":["All","49"]},
+                          {"value":"PVW", "label":"Pleasant View"       ,"subag":["All","57"]},
+                          {"value":"ROY", "label":"Roy"                 ,"subag":["All","57"]},
+                          {"value":"RVD", "label":"Riverdale"           ,"subag":["All","57"]},
+                          {"value":"RVT", "label":"Riverton"            ,"subag":["All","35"]},
+                          {"value":"SAN", "label":"Sandy"               ,"subag":["All","35"]},
+                          {"value":"SAQ", "label":"Santaquin"           ,"subag":["All","49"]},
+                          {"value":"SAR", "label":"Saratoga Springs"    ,"subag":["All","49"]},
+                          {"value":"SFK", "label":"Spanish Fork"        ,"subag":["All","49"]},
+                          {"value":"SJC", "label":"South Jordan"        ,"subag":["All","35"]},
+                          {"value":"SLC", "label":"Salt Lake City"      ,"subag":["All","35"]},
+                          {"value":"SLM", "label":"Salem"               ,"subag":["All","49"]},
+                          {"value":"SOG", "label":"South Ogden"         ,"subag":["All","57"]},
+                          {"value":"SPV", "label":"Springville"         ,"subag":["All","49"]},
+                          {"value":"SSL", "label":"South Salt Lake"     ,"subag":["All","35"]},
+                          {"value":"SUN", "label":"Sunset"              ,"subag":["All","11"]},
+                          {"value":"SWE", "label":"South Weber"         ,"subag":["All","11"]},
+                          {"value":"SYR", "label":"Syracuse"            ,"subag":["All","11"]},
+                          {"value":"TAY", "label":"Taylorsville"        ,"subag":["All","35"]},
+                          {"value":"UIN", "label":"Uintah"              ,"subag":["All","11"]},
+                          {"value":"VIN", "label":"Vineyard"            ,"subag":["All","49"]},
+                          {"value":"WBO", "label":"West Bountiful"      ,"subag":["All","11"]},
+                          {"value":"WCR", "label":"Woods Cross"         ,"subag":["All","11"]},
+                          {"value":"WDL", "label":"Woodland Hills"      ,"subag":["All","49"]},
+                          {"value":"WHV", "label":"West Haven"          ,"subag":["All","57"]},
+                          {"value":"WIL", "label":"Willard"             ,"subag":["All","3"]},
+                          {"value":"WJC", "label":"West Jordan"         ,"subag":["All","35"]},
+                          {"value":"WPT", "label":"West Point"          ,"subag":["All","11"]},
+                          {"value":"WTR", "label":"Washington Terrace"  ,"subag":["All","57"]},
+                          {"value":"WVC", "label":"West Valley City"    ,"subag":["All","35"]}
+                      ]
+                    },
+                    {
+                      "agCode": "EFA",
+                      "agDisplayName": "Equity Focus Areas",
+                      "agSelected": ["EFA"],
+                      "agOptions": [{"value":"EFA" , "label":"EFA" },
+                                    {"value":"", "label":"Non-EFA"}]
+                    },
+                    {
+                      "agCode": "DISTMED",
+                      "agDisplayName": "Medium District",
+                      "agCodeNameField": "DMED_NAME",
+                      "agSelected": ["1"],
+                      "subAgDisplayName":"List Medium Districts for",
+                      "subAgSelected": "All",
+                      "subAgOptions": [
+                        {"value":"All","label":"All Counties"},
+                        {"value":"3","label":"Box Elder County"},
+                        {"value":"57","label":"Weber County"},
+                        {"value":"11","label":"Davis County"},
+                        {"value":"35","label":"Salt Lake County"},
+                        {"value":"49","label":"Utah County"}
+                      ],
+                      "agOptions": [
+                        {"value": "1","label": "1: North of Brigham City"                            ,"subag":["All","3"]},
+                        {"value": "2","label": "2: Brigham City Area - W of I-15"                    ,"subag":["All","3"]},
+                        {"value": "3","label": "3: Brigham City - North Perry"                       ,"subag":["All","3"]},
+                        {"value": "4","label": "4: South Perry - Willard"                            ,"subag":["All","3"]},
+                        {"value": "5","label": "5: Mantua - East Mountains"                          ,"subag":["All","3"]},
+                        {"value": "6","label": "6: Box Elder County - Southeast Mountains"           ,"subag":["All","3"]},
+                        {"value": "7","label": "7: Weber County - Great Slat Lake"                   ,"subag":["All","3"]},
+                        {"value": "8","label": "8: Ex-West Weber"                                    ,"subag":["All","3"]},
+                        {"value": "9","label": "9: Plain City - Farr West - Marriott - Slaterville"  ,"subag":["All","3"]},
+                        {"value":"10","label":"10: North Ogden"                                      ,"subag":["All","57"]},
+                        {"value":"11","label":"11: Hooper - Roy - West Haven"                        ,"subag":["All","57"]},
+                        {"value":"12","label":"12: Ogden Core"                                       ,"subag":["All","57"]},
+                        {"value":"13","label":"13: S Ogden - Riverdale - Uintah"                     ,"subag":["All","57"]},
+                        {"value":"14","label":"14: Ogden Canyon - Northeast Mountains"               ,"subag":["All","57"]},
+                        {"value":"15","label":"15: Weber County - Southeast Mountains"               ,"subag":["All","57"]},
+                        {"value":"16","label":"16: Antelope Island"                                  ,"subag":["All","11"]},
+                        {"value":"17","label":"17: Davis County - Great Salt Lake"                   ,"subag":["All","11"]},
+                        {"value":"18","label":"18: Clinton - West Point - Clearfield"                ,"subag":["All","11"]},
+                        {"value":"19","label":"19: HAFB Area"                                        ,"subag":["All","11"]},
+                        {"value":"20","label":"20: Kaysville - Syracuse"                             ,"subag":["All","11"]},
+                        {"value":"21","label":"21: Layton - Fruit Heights"                           ,"subag":["All","11"]},
+                        {"value":"22","label":"22: Farmington - Centerville"                         ,"subag":["All","11"]},
+                        {"value":"23","label":"23: Woods Cross - Bountiful - North Salt Lake"        ,"subag":["All","11"]},
+                        {"value":"24","label":"24: Davis County - East Mountains"                    ,"subag":["All","11"]},
+                        {"value":"25","label":"25: Salt Lake County - Great Salt Lake"               ,"subag":["All","35"]},
+                        {"value":"26","label":"26: Northwest Quadrant - International Center"        ,"subag":["All","35"]},
+                        {"value":"27","label":"27: MVC to Tailings"                                  ,"subag":["All","35"]},
+                        {"value":"28","label":"28: MVC - Magna - ATK"                                ,"subag":["All","35"]},
+                        {"value":"29","label":"29: Airport - Rose Park"                              ,"subag":["All","35"]},
+                        {"value":"30","label":"30: I-15 to MVC - I-80 to 20"                         ,"subag":["All","35"]},
+                        {"value":"31","label":"31: West Valley - Taylorsille"                        ,"subag":["All","35"]},
+                        {"value":"32","label":"32: SLC CBD"                                          ,"subag":["All","35"]},
+                        {"value":"33","label":"33: SLC East of I-15"                                 ,"subag":["All","35"]},
+                        {"value":"34","label":"34: South Salt Lake - Murray"                         ,"subag":["All","35"]},
+                        {"value":"35","label":"35: Millcreek - Holladay"                             ,"subag":["All","35"]},
+                        {"value":"36","label":"36: Emigration Canyon - Northeast Mountains"          ,"subag":["All","35"]},
+                        {"value":"37","label":"37: Salt Lake County - West Mountains"                ,"subag":["All","35"]},
+                        {"value":"38","label":"38: Salt Flats - U-111 at 62nd"                       ,"subag":["All","35"]},
+                        {"value":"39","label":"39: West Jordan - West of MVC"                        ,"subag":["All","35"]},
+                        {"value":"40","label":"40: W Daybreak - Herriman"                            ,"subag":["All","35"]},
+                        {"value":"41","label":"41: West Jordan - I-15 to MVC"                        ,"subag":["All","35"]},
+                        {"value":"42","label":"42: South Jordan - I-15 to MVC"                       ,"subag":["All","35"]},
+                        {"value":"43","label":"43: Riverton - I-15 to MVC"                           ,"subag":["All","35"]},
+                        {"value":"44","label":"44: Midvale - Cottonwood Heights - N Sandy"           ,"subag":["All","35"]},
+                        {"value":"45","label":"45: Sandy"                                            ,"subag":["All","35"]},
+                        {"value":"46","label":"46: Draper"                                           ,"subag":["All","35"]},
+                        {"value":"47","label":"47: Millcreek Canyon"                                 ,"subag":["All","35"]},
+                        {"value":"48","label":"48: Big Cottonwood Canyon"                            ,"subag":["All","35"]},
+                        {"value":"49","label":"49: Little Cottonwood Canyon"                         ,"subag":["All","35"]},
+                        {"value":"50","label":"50: Cedar Valley - South"                             ,"subag":["All","49"]},
+                        {"value":"51","label":"51: Cedar Valley - Central"                           ,"subag":["All","49"]},
+                        {"value":"52","label":"52: Cedar Valley - North"                             ,"subag":["All","49"]},
+                        {"value":"53","label":"53: Utah Valley - Jordan River West"                  ,"subag":["All","49"]},
+                        {"value":"54","label":"54: Utah Valley - Thanksgiving Point"                 ,"subag":["All","49"]},
+                        {"value":"55","label":"55: Utah Valley - Northeast"                          ,"subag":["All","49"]},
+                        {"value":"56","label":"56: Utah Valley - The Meadows"                        ,"subag":["All","49"]},
+                        {"value":"57","label":"57: Utah Valley - The Grove"                          ,"subag":["All","49"]},
+                        {"value":"58","label":"58: Utah Valley - North Central"                      ,"subag":["All","49"]},
+                        {"value":"59","label":"59: Utah Valley - Downtown Provo"                     ,"subag":["All","49"]},
+                        {"value":"60","label":"60: Utah Valley - Spanish Fork River East"            ,"subag":["All","49"]},
+                        {"value":"61","label":"61: Utah Valley - Spanish Fork River West"            ,"subag":["All","49"]},
+                        {"value":"62","label":"62: Utah Valley - Deep South"                         ,"subag":["All","49"]},
+                        {"value":"63","label":"63: Goshen Valley - South"                            ,"subag":["All","49"]},
+                        {"value":"64","label":"64: Goshen Valley - Central"                          ,"subag":["All","49"]},
+                        {"value":"65","label":"65: Goshen Valley - Mosida"                           ,"subag":["All","49"]},
+                        {"value":"66","label":"66: Utah County - Central Mountains and Lake"         ,"subag":["All","49"]},
+                        {"value":"67","label":"67: American Fork Canyon"                             ,"subag":["All","49"]},
+                        {"value":"68","label":"68: Provo Canyon"                                     ,"subag":["All","49"]},
+                        {"value":"69","label":"69: Hobble Creek Canyon"                              ,"subag":["All","49"]},
+                        {"value":"70","label":"70: Mapleton Canyon"                                  ,"subag":["All","49"]},
+                        {"value":"71","label":"71: Spanish Fork Canyon"                              ,"subag":["All","49"]},
+                        {"value":"72","label":"72: Payson Canyon - Nebo Loop"                        ,"subag":["All","49"]},
+                        {"value":"73","label":"73: Utah County - West Mountains"                     ,"subag":["All","49"]}
+                      ]
+                    },
+                    {
+                      "agCode": "DISTLRG",
+                      "agDisplayName": "Large District",
+                      "agCodeNameField": "DLRG_NAME",
+                      "agSelected": ["1"],
+                      "agOptions": [
+                        {"value": "1","label": "1: Box Elder Co. - WFRC"                 },
+                        {"value": "2","label": "2: Box Elder Co. - not WFRC"             },
+                        {"value": "3","label": "3: Weber Co. - Great Slat Lake"          },
+                        {"value": "4","label": "4: Weber Co. - North and West"           },
+                        {"value": "5","label": "5: Weber Co. - Ogden Area"               },
+                        {"value": "6","label": "6: Weber Co. - East Mountains"           },
+                        {"value": "7","label": "7: Davis Co. - Great Salt Lake"          },
+                        {"value": "8","label": "8: Davis Co. - North"                    },
+                        {"value": "9","label": "9: Davis Co. - South"                    },
+                        {"value":"10","label":"10: Davis Co. - East Mountains"           },
+                        {"value":"11","label":"11: Salt Lake Co. - Northwest"            },
+                        {"value":"12","label":"12: Salt Lake Co. - North Central"        },
+                        {"value":"13","label":"13: Salt Lake Co. - CBD"                  },
+                        {"value":"14","label":"14: Salt Lake Co. - Northeast"            },
+                        {"value":"15","label":"15: Salt Lake Co. - Southwest"            },
+                        {"value":"16","label":"16: Salt Lake Co. - South Central"        },
+                        {"value":"17","label":"17: Salt Lake Co. - Southeast"            },
+                        {"value":"18","label":"18: Salt Lake Co. - Wasatch Canyons"      },
+                        {"value":"19","label":"19: Utah Co. - Cedar Valley"              },
+                        {"value":"20","label":"20: Utah Co. - Utah Valley North"         },
+                        {"value":"21","label":"21: Utah Co. - Utah Valley Central"       },
+                        {"value":"22","label":"22: Utah Co. - Utah Valley South"         },
+                        {"value":"23","label":"23: Utah Co. - Goshen Valley"             },
+                        {"value":"24","label":"24: Utah Co. - Central Mountains and Lake"},
+                        {"value":"25","label":"25: Utah Co. - East Mountains"            },
+                        {"value":"26","label":"26: Utah Co. - West Mountains"            }
+                      ]
+                    },
+                    {
+                      "agCode": "SmallArea",
+                      "agDisplayName": "Small Area",
+                      "agSelected": ["North Salt Lake County"],
+                      "agOptions": [{"value":"Box Elder County (WFRC)"   ,"label":"Box Elder County (WFRC)"   },
+                                    {"value":"North Weber County"        ,"label":"North Weber County"        },
+                                    {"value":"South Weber County"        ,"label":"South Weber County"        },
+                                    {"value":"North Davis County"        ,"label":"North Davis County"        },
+                                    {"value":"South Davis County"        ,"label":"South Davis County"        },
+                                    {"value":"North Salt Lake County"    ,"label":"North Salt Lake County"    },
+                                    {"value":"Southwest Salt Lake County","label":"Southwest Salt Lake County"},
+                                    {"value":"Southeast Salt Lake County","label":"Southeast Salt Lake County"}]
+                    }
+                  ],
+                  "attributes": [
+                    { "aCode": "aPMT",
+                      "aDisplayName": "Person Miles Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    },
+                    { "aCode": "aPHT",
+                      "aDisplayName": "Person Hours Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    },
+                    { "aCode": "aPHD",
+                      "aDisplayName": "Person Hours Delay",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    },
+                    { "aCode": "aVMT",
+                      "aDisplayName": "Vehicle Miles Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    },
+                    { "aCode": "aVHT",
+                      "aDisplayName": "Vehicle Hours Traveled",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    },
+                    { "aCode": "aVHD",
+                      "aDisplayName": "Vehicle Hours Delay",
+                      "aRound": 2,
+                      "filterGroup": "fTod_fPurp_fPA"
+                    }
+                  ],
+                  "dividers": [
+                    {
+                      "jsonFileName": "j-zones-se",
+                      "baseGeoJsonKey": "taz",
+                      "baseGeoJsonId": "TAZID",
+                      "aCode": "aTotHh",
+                      "aDisplayName": "Total Households",
+                      "filter": ""
+                    },
+                    {
+                      "jsonFileName": "j-zones-se",
+                      "baseGeoJsonKey": "taz",
+                      "baseGeoJsonId": "TAZID",
+                      "aCode": "aWrk",
+                      "aDisplayName": "Total Workers",
+                      "filter": ""
+                    },
+                    {
+                      "jsonFileName": "j-zones-se",
+                      "baseGeoJsonKey": "taz",
+                      "baseGeoJsonId": "TAZID",
+                      "aCode": "aTotEmp",
+                      "aDisplayName": "Total Jobs",
+                      "filter": ""
+                    },
+                    {
+                      "jsonFileName": "j-zones-se",
+                      "baseGeoJsonKey": "taz",
+                      "baseGeoJsonId": "TAZID",
+                      "aCode": "aHhPop",
+                      "aDisplayName": "Total Population",
+                      "filter": ""
+                    }
+                  ],
+                  "filters" : [
+                    { "fCode": "fTod",
+                      "fName": "Time of Day",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "Period",
+                      "fSelected": ["AM","MD","PM","EV"],
+                      "fOptions":
+                      [
+                        {"value":"AM", "label":"AM Period"},
+                        {"value":"MD", "label":"Midday Period"},
+                        {"value":"PM", "label":"PM Period"},
+                        {"value":"EV", "label":"Evening Period"}
+                      ]
+                    },
+                    { "fCode": "fPurp",
+                      "fName": "Trip Purpose",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "Purpose",
+                      "fSelected": ["HBW"],
+                      "fOptions":
+                      [
+                        {"value": "HBW"   , "label":"Home-Base Work"               },
+                        {"value": "HBO"   , "label":"Home-Based Other"             },
+                        {"value": "HBC"   , "label":"Home-Based College"           },
+                        {"value": "HBS_Pr", "label":"Home-Based School - Primary"  },
+                        {"value": "HBS_Sc", "label":"Home-Based School - Secondary"},
+                        {"value": "NHB"   , "label":"Non-Home Based"               },
+                        {"value": "LT"    , "label":"Light Trucks"                 },
+                        {"value": "MD"    , "label":"Medium Trucks"                },
+                        {"value": "HV"    , "label":"Heavy Trucks"                 },
+                        {"value": "IX"    , "label":"Internal-to-External"         },
+                        {"value": "XI"    , "label":"External-to-Internal "        },
+                        {"value": "XX"    , "label":"External-to-External"         }
+                      ]
+                    },
+                    { "fCode": "fPA",
+                      "fName": "Production/Attraction",
+                      "fWidget": "checkboxes",
+                      "fOwnCol": true,
+                      "col": "PA",
+                      "fSelected": ["P"],
+                      "fOptions": [
+                        {"value":"P", "label":"Production"},
+                        {"value":"A", "label":"Attraction"}
+                      ]
+                    }
+                  ]
+                }
+              },
               { "submenuText": "Transit Segments",
                 "submenuIconStart": "line-straight",
                 "template": "vizMap",
@@ -2790,8 +3822,7 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Zone Trips by Mode Trends",
+              { "submenuText": "Zone Trips by Mode Trends",
                 "submenuIconStart": "graph-line-series",
                 "template": "vizTrends",
                 "templateSettings": {
@@ -3171,8 +4202,7 @@
           { "menuText": "Communities",
             "menuIconStart": "urban-model",
             "modelEntities": [
-              {
-                "submenuText": "Socioeconomics",
+              { "submenuText": "Socioeconomics",
                 "submenuIconStart": "layer-polygon",
                 "template": "vizMap",
                 "templateSettings": {
@@ -3995,8 +5025,7 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Socioeconomics Trends",
+              { "submenuText": "Socioeconomics Trends",
                 "submenuIconStart": "graph-line-series",
                 "template": "vizTrends",
                 "templateSettings": {
@@ -4382,8 +5411,7 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Access to Opportunities",
+              { "submenuText": "Access to Opportunities",
                 "submenuIconStart": "desktop",
                 "template": "vizMap",
                 "templateSettings": {
@@ -4908,8 +5936,7 @@
                   ]
                 }
               },
-              {
-                "submenuText": "Access to Opportunities Trends (coming soon)",
+              { "submenuText": "Access to Opportunities Trends (coming soon)",
                 "submenuIconStart": "graph-line-series",
                 "template": "vizComingSoon"
               }
