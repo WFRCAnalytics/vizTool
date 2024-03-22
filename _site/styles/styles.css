@@ -46,7 +46,7 @@ h1 {
 }
 
 .scenario-selector-container {
-    width: 190px;
+    width: 250px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;
 }

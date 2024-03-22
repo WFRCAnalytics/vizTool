@@ -185,15 +185,18 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   async function initVizMapListeners() {
     console.log('app:initVizMapListeners');
             
-    document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectGrpMain'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('selectGrpMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('selectYearMain'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectModComp'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('selectModComp'    ).addEventListener('calciteSelectChange', updateComparisonModel.bind(this));
+    document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('selectYearComp'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
     document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', disableComparison);
+    // Since the initial comparison is none, disable the selectors until a valid model chosen
+    disableComparison();
 
-    function updateActiveVizMap() {
+    async function updateActiveVizMap() {
       console.log(dataMenu);
       dataMenu.forEach(menuItem => {
         menuItem.modelEntities.forEach(modelEntity => {
@@ -203,6 +206,102 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
           }
         });
       });
+    }
+
+    function updateScenarioSelection(scenarioSelect) {
+      // see which selector changed
+      const changedSelectorId = scenarioSelect.target.id;
+      const selectedValue = scenarioSelect.target.value;
+      let isMain = Boolean(true);
+      let isGroup = Boolean(true);
+      let updateSelector;
+      let modelSelected = document.getElementById('selectModMain').value;
+
+      // Not a fan of hard-coding.  Better way?
+      if (changedSelectorId.slice(-4) === 'Comp') {
+        isMain = false;
+      }
+      if (changedSelectorId.slice(6,9)=== 'Mod') {
+        isGroup = false;
+      }
+      // get the selector to have items updated - and which model if it's the year
+      if (isMain) {
+        if (isGroup){
+          updateSelector = document.getElementById('selectYearMain');
+        } else {
+          updateSelector = document.getElementById('selectGrpMain');
+        }
+      } else {
+        if (isGroup){
+          updateSelector = document.getElementById('selectYearComp');
+        } else {
+          updateSelector = document.getElementById('selectGrpComp');
+        }      
+      }
+      // find which scenarios match the selected items
+      let validScenarios = [];
+      if (isGroup){
+        validScenarios = dataScenarios.filter(entry=> entry.modVersion === modelSelected && entry.scnGroup === selectedValue);
+      } else {
+        validScenarios = dataScenarios.filter(entry=> entry.modVersion === selectedValue);
+      }
+
+      const selectionGroupSet = new Set();
+      const selectionYearSet = new Set();
+
+      validScenarios.forEach(validItem => {
+          selectionGroupSet.add(validItem.scnGroup);
+          selectionYearSet.add(validItem.scnYear.toString());
+      });
+      // update the selector - if the selector updated was the group, send an event for the year
+      if (isGroup) {
+        manageSelectors(updateSelector, selectionYearSet);
+      } else {
+        manageSelectors(updateSelector, selectionGroupSet);
+        updateSelector.dispatchEvent(new Event('calciteSelectChange'));
+      }
+      updateActiveVizMap();
+   }
+
+   // enable/disable selections base on the scenarios
+    function manageSelectors(whichSelector, whatValues)
+    {
+      for (let reverseIndex = whichSelector.childElementCount-1; reverseIndex >=0; reverseIndex--) {
+        if(whatValues.has(whichSelector.childNodes[reverseIndex].label)) {
+          whichSelector.childNodes[reverseIndex].disabled = false;
+          whichSelector.childNodes[reverseIndex].selected = true;
+        } else {
+          whichSelector.childNodes[reverseIndex].disabled = true;
+        }
+      }
+    }
+
+    function updateComparisonModel(compModelSelect) {
+      if(document.getElementById('selectModComp').value === 'none') {
+        disableComparison();
+      }
+      else {
+        document.getElementById('selectModComp'    ).disabled = false;
+        document.getElementById('selectGrpComp'    ).disabled = false;
+        document.getElementById('selectYearComp'   ).disabled = false;
+        document.getElementById('selectCompareType').disabled = false;
+      } updateScenarioSelection(compModelSelect);
+    }
+
+    function disableComparison() {
+      // Disables all the comparison options when the block is closed
+      // Also called when the comparison model is set to 'none'
+      let compSelector = document.getElementById('selectModComp');
+      compSelector.childNodes[0].selected = true;
+      compSelector = document.getElementById('selectGrpComp');
+      compSelector.childNodes[0].selected = true;
+      compSelector.disabled = true;
+      compSelector = document.getElementById('selectYearComp');
+      compSelector.childNodes[0].selected = true;
+      compSelector.disabled = true;
+      compSelector =document.getElementById('selectCompareType');
+      compSelector.disabled = true;
+      updateActiveVizMap();
     }
 
     //document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
@@ -321,7 +420,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       contentContainer.appendChild(descriptionText);
 
 
-      lstSelectIds = ['selectModMain','selectGrpMain','selectYearMain','selectModComp','selectGrpComp','selectYearComp']
+      const lstSelectIds = ['selectModMain','selectGrpMain','selectYearMain'];
+      const compSelectIds = ['selectModComp','selectGrpComp','selectYearComp'];
 
       lstSelectIds.forEach(id => {
         // Create a flex container for each select and its buttons
@@ -354,24 +454,41 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
         // Append the flex container to the content container
         contentContainer.appendChild(flexContainer);
+      });
 
-        // Check if we have just appended the last "Main" select
-        // and insert the <h1> element before starting with the "Comp" selects
-        if (id === 'selectYearMain') {
-          const heading = document.createElement('div');
-          heading.innerHTML = '<br/><b>Comparison Scenario</b>'; // Replace with your desired text
-          contentContainer.appendChild(heading);
-        }
+      const block = document.createElement('calcite-block');
+      block.id = 'comparisonScenario';
+      block.setAttribute('heading', 'Comparison Scenario');
+      block.setAttribute('collapsible', true);
+
+      compSelectIds.forEach(id => {
+        // Create a flex container for each select and its buttons
+        const flexContainer = document.createElement('div');
+        flexContainer.style.display = 'flex';
+        flexContainer.style.alignItems = 'center'; // Align items vertically
+        flexContainer.style.width = '100%'; // Set container to full width
+
+        // Create a calcite-select element
+        const calciteSelect = document.createElement('calcite-select');
+        calciteSelect.id = id;
+        calciteSelect.style.flexGrow = '1'; // Allow the select element to grow
+
+        // Append the calcite-select to the flex container
+        flexContainer.appendChild(calciteSelect);
+
+        // Append the flex container to the block
+        block.appendChild(flexContainer);
       });
 
       const headingCompare = document.createElement('div');
       headingCompare.innerHTML = '<br/><b>Compare Type</b>'; // Replace with your desired text
-      contentContainer.appendChild(headingCompare);
+      block.appendChild(headingCompare);
 
       // Create a calcite-select element
       const calciteSelectCompare = document.createElement('calcite-select');
       calciteSelectCompare.id = 'selectCompareType';
       calciteSelectCompare.value = 'abs';
+      calciteSelectCompare.disabled = true; // Disable until a model/group/year comparison selected
 
       const optionAbs = document.createElement('calcite-option');
       optionAbs.value = 'abs';
@@ -383,8 +500,9 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       optionPc.textContent = 'Percent Change';
       calciteSelectCompare.appendChild(optionPc);
 
-      // Append the calcite-select to the content container
-      contentContainer.appendChild(calciteSelectCompare);
+      // Append the calcite-select to the block and the block to the content container
+      block.appendChild(calciteSelectCompare);
+      contentContainer.appendChild(block);
 
       // Create the Expand widget
       const expandScenario = new Expand({
