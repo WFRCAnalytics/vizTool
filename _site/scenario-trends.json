@@ -1,74 +1,66 @@
 [
-    {
-    "scnTrend": "v9.0 RTP",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v900", "scnGroup": "Base", "scnYear": 2019 },
-      { "modVersion": "v900", "scnGroup": "Base", "scnYear": 2023 },
-      { "modVersion": "v900", "scnGroup": "TIP" , "scnYear": 2028 },
-      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2032 },
-      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2042 },
-      { "modVersion": "v900", "scnGroup": "RTP" , "scnYear": 2050 }
-    ]
-  },
   {
-    "scnTrend": "v9.0/v9.0.1 RTP-A1",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v901", "scnGroup": "Base"  , "scnYear": 2019 },
-      { "modVersion": "v901", "scnGroup": "Base"  , "scnYear": 2023 },
-      { "modVersion": "v901", "scnGroup": "TIP"   , "scnYear": 2028 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1", "scnYear": 2032 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1", "scnYear": 2042 },
-      { "modVersion": "v900", "scnGroup": "RTP-A1", "scnYear": 2050 }
-    ]
-  },
-  {
-    "scnTrend": "v9.0.1 RTP",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v901", "scnGroup": "Base", "scnYear": 2019 },
-      { "modVersion": "v901", "scnGroup": "Base", "scnYear": 2023 },
-      { "modVersion": "v901", "scnGroup": "TIP" , "scnYear": 2028 },
-      { "modVersion": "v901", "scnGroup": "RTP" , "scnYear": 2032 },
-      { "modVersion": "v901", "scnGroup": "RTP" , "scnYear": 2042 },
-      { "modVersion": "v901", "scnGroup": "RTP" , "scnYear": 2050 }
-    ]
-  },
-  {
-    "scnTrend": "v9.0 Needs",
+    "scnTrend": "v9.0.1 20240318 RTP",
     "displayByDefault": false,
     "modelruns" : [
-      { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2019 },
-      { "modVersion": "v900", "scnGroup": "Base" , "scnYear": 2023 },
-      { "modVersion": "v900", "scnGroup": "TIP"  , "scnYear": 2028 },
-      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2032 },
-      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2042 },
-      { "modVersion": "v900", "scnGroup": "Needs", "scnYear": 2050 }
+      { "modVersion": "v901_20240318", "scnGroup": "Base", "scnYear": 2019 },
+      { "modVersion": "v901_20240318", "scnGroup": "RTP" , "scnYear": 2050 }
     ]
   },
   {
-    "scnTrend": "v9.0 Needs MAG",
-    "displayByDefault": false,
+    "scnTrend": "v9.0.1 20240326 RTP",
+    "displayByDefault": true,
     "modelruns" : [
-      { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2019 },
-      { "modVersion": "v900", "scnGroup": "Base"     , "scnYear": 2023 },
-      { "modVersion": "v900", "scnGroup": "TIP"      , "scnYear": 2028 },
-      { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2032 },
-      { "modVersion": "v900", "scnGroup": "Needs"    , "scnYear": 2042 },
-      { "modVersion": "v900", "scnGroup": "Needs MAG", "scnYear": 2050 }
+      { "modVersion": "v901_20240318", "scnGroup": "Base", "scnYear": 2019 },
+      { "modVersion": "v901_20240326", "scnGroup": "RTP" , "scnYear": 2050 }
     ]
   },
   {
-    "scnTrend": "v9.0 No Build",
+    "scnTrend": "v9.1.0 A1-Full",
     "displayByDefault": false,
     "modelruns" : [
-        { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2019 },
-        { "modVersion": "v900", "scnGroup": "Base"   , "scnYear": 2023 },
-        { "modVersion": "v900", "scnGroup": "TIP"    , "scnYear": 2028 },
-        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2032 },
-        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2042 },
-        { "modVersion": "v900", "scnGroup": "NoBuild", "scnYear": 2050 }
+      { "modVersion": "v901_20240318", "scnGroup": "Base" , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "A1"   , "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.1.0 A1-FR",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v901_20240318", "scnGroup": "Base" , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "FR"   , "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.1.0 A1-FRPM",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v901_20240318", "scnGroup": "Base"    , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "FRPM"    , "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.1.0 A1-I15",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v901_20240318", "scnGroup": "Base"    , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "I15"     , "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.1.0 A1-I15NoAux",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v901_20240318", "scnGroup": "Base"    , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "I15NoAux", "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "v9.1.0 A1-I15NoCd",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v901_20240318", "scnGroup": "Base"    , "scnYear": 2019 },
+      { "modVersion": "v910", "scnGroup": "I15NoCd" , "scnYear": 2050 }
     ]
   }
 ]

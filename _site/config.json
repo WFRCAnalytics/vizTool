@@ -11,7 +11,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "j-roadway-segments",
-                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v901.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Roadway Segments",
@@ -945,7 +945,7 @@
                 "template": "vizMap",
                 "templateSettings": {
                   "jsonFileName": "j-transit-segments-riders",
-                  "baseGeometryFile": "data/segmentsWithAggFields_v900.geojson",
+                  "baseGeometryFile": "data/segmentsWithAggFields_v901.geojson",
                   "baseGeoField": "SEGID",
                   "geometryType": "polyline",
                   "popupTitle": "Transit Segments",
@@ -4912,7 +4912,7 @@
                 "submenuIconStart": "graph-pie-slice",
                 "template": "vizMap",
                 "templateSettings": {
-                  "jsonFileName": "j-zones-metrics",
+                  "jsonFileName": "j-zones-modetrips",
                   "baseGeometryFile": "data/tazWithAggFields.geojson",
                   "baseGeoField": "TAZID",
                   "geometryType": "polygon",
@@ -5550,7 +5550,7 @@
                 "templateSettings": {
                   "baseGeoJsonKey": "taz",
                   "baseGeoJsonId": "TAZID",
-                  "jsonFileName": "j-zones-metrics",
+                  "jsonFileName": "j-zones-modetrips",
                   "aggregatorTitle": "Select Summary Geography",
                   "aggregatorSelected" : "CO_FIPS",
                   "comboSelected": "",
