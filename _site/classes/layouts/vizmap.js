@@ -713,7 +713,7 @@ require([
               var attributes;
 
               // If there's a display value for the given SEGID in the _dataMain object, set it
-              if (_valueMain>0) {
+              if (_valueMain!=0) {
                 attributes = {
                   ...feature.attributes,
                   dVal: _valueDisp  // Add the dVal to attributes
@@ -815,10 +815,10 @@ require([
               });
 
               if (_wtCode) {
-                if (_valueMainSumWt>0) {
+                if (_valueMainSumWtM!=0) {
                   _valueMain = _valueMainXWt / _valueMainSumWt;
                 }
-                if (_valueCompSumWt>0) {
+                if (_valueCompSumWt!=0) {
                   _valueComp = _valueCompXWt / _valueCompSumWt;
                 }
               }
