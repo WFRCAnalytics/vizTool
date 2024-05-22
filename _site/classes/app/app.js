@@ -419,6 +419,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
         // Append the flex container to the content container
         contentContainer.appendChild(flexContainer);
+      });
 
       const block = document.createElement('calcite-block');
       block.id = 'comparisonScenario';
@@ -464,8 +465,9 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       optionPc.textContent = 'Percent Change';
       calciteSelectCompare.appendChild(optionPc);
 
-      // Append the calcite-select to the content container
-      contentContainer.appendChild(calciteSelectCompare);
+      // Append the calcite-select to the block and the block to the content container
+      block.appendChild(calciteSelectCompare);
+      contentContainer.appendChild(block);
 
       // Create the Expand widget
       const expandScenario = new Expand({
