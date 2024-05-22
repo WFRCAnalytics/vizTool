@@ -13,6 +13,7 @@ let scenarioChecker; // vizTrends global item
 let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};
+let jsonScenario;
 
 require([
   "esri/config",
@@ -51,7 +52,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     console.log('app:loadScenarios');
 
     // load scenario data
-    const jsonScenario = await fetchScenarioData();
+    jsonScenario = await fetchScenarioData();
     dataScenarios = jsonScenario.data.map(item => new Scenario(item));
 
     // set the selected scenario to the initial_select in json, if exists, otherwise pick first scenario
@@ -146,7 +147,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   
     // Add new options
     options.forEach(optionValue => {
-      if (![...selectElement.children].some(option => option.value === String(optionValue))) {
+      if (![...selectElement.children].some(option => String(option.value) === String(optionValue))) {
         const option = document.createElement('calcite-option');
         option.value = String(optionValue);
         option.label = String(optionValue);
@@ -164,152 +165,81 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   async function populateScenarioSelections() {
     console.log('app:populateScenarioSelections');
     
-    const _modMain  = document.getElementById('modVersion_Main');
-    const _grpMain  = document.getElementById('scnGroup_Main');
-    const _yearMain = document.getElementById('scnYear_Main');
+    const elements = [
+      { mod: 'modVersion_Main', grp: 'scnGroup_Main', year: 'scnYear_Main', scenario: 'selectedScenario_Main' },
+      { mod: 'modVersion_Comp', grp: 'scnGroup_Comp', year: 'scnYear_Comp', scenario: 'selectedScenario_Comp' }
+    ];
   
-    var _scenarioModel_Main = new Set();
-    var _scenarioGroup_Main = new Set();
-    var _scenarioYear_Main  = new Set();
-
-    if (!_modMain || !_grpMain || !_yearMain) {
-      console.error('One or more select elements not found');
-      return;
-    }
-  
-    // Set the selected scenario
-    if (!selectedScenario_Main) {
-      if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
-        selectedScenario_Main = jsonScenario.initial_select[0];
-      } else if (dataScenarios && dataScenarios.length > 0) {
-        selectedScenario_Main = dataScenarios[0];
+    for (let elem of elements) {
+      const modElem = document.getElementById(elem.mod);
+      const grpElem = document.getElementById(elem.grp);
+      const yearElem = document.getElementById(elem.year);
+    
+      if (!modElem || !grpElem || !yearElem) {
+        console.error('One or more select elements not found');
+        return;
       }
-    }
-
-    // Check if selectedScenario_Main matches a record in dataScenarios for modVersion, scnGroup, and scnYear
-    let matchedScenario_Main = dataScenarios.find(entry =>
-      entry.modVersion === selectedScenario_Main.modVersion &&
-      entry.scnGroup === selectedScenario_Main.scnGroup &&
-      entry.scnYear === selectedScenario_Main.scnYear
-    );
-
-    if (!matchedScenario_Main) {
-      // Check for modVersion and scnGroup match
-      let matchedGroupScenario_Main = dataScenarios.find(entry =>
-        entry.modVersion === selectedScenario_Main.modVersion &&
-        entry.scnGroup === selectedScenario_Main.scnGroup
+  
+      let selectedScenario = elem.scenario === 'selectedScenario_Main' ? selectedScenario_Main : selectedScenario_Comp;
+  
+      if (!selectedScenario) {
+        selectedScenario = jsonScenario.initial_select?.[0] || dataScenarios?.[0];
+      }
+      
+      let matchedScenario = dataScenarios.find(entry =>
+        entry.modVersion === selectedScenario.modVersion &&
+        entry.scnGroup === selectedScenario.scnGroup &&
+        entry.scnYear === selectedScenario.scnYear
       );
-
-      if (matchedGroupScenario_Main) {
-        selectedScenario_Main.scnYear = matchedGroupScenario_Main.scnYear;
-      } else {
-        // If no match for modVersion and scnGroup, find the first valid scnGroup
-        let firstValidGroup = dataScenarios.find(entry => entry.modVersion === selectedScenario_Main.modVersion);
-        selectedScenario_Main.scnGroup = firstValidGroup.scnGroup;
-        let firstValidYear = dataScenarios.find(entry =>
-          entry.modVersion === selectedScenario_Main.modVersion &&
-          entry.scnGroup === selectedScenario_Main.scnGroup
+  
+      if (!matchedScenario) {
+        let matchedGroupScenario = dataScenarios.find(entry =>
+          entry.modVersion === selectedScenario.modVersion &&
+          entry.scnGroup === selectedScenario.scnGroup
         );
-        selectedScenario_Main.scnYear = firstValidYear.scnYear;
-      }
-    }
   
-    if (selectedScenario_Main) {
-      // Add entries to scenarioModel
-      dataScenarios.forEach(entry => {
-        _scenarioModel_Main.add(entry.modVersion);
-  
-        // Filter _scenarioGroup_Main and scenarioYear
-        if (entry.modVersion === selectedScenario_Main.modVersion) {
-          _scenarioGroup_Main.add(entry.scnGroup);
-          if (entry.scnGroup === selectedScenario_Main.scnGroup) {
-            _scenarioYear_Main.add(entry.scnYear);
-          }
-        }
-      });
-  
-      await updateScenarioSelectOptions(_modMain, _scenarioModel_Main, selectedScenario_Main.modVersion);
-      await updateScenarioSelectOptions(_grpMain, _scenarioGroup_Main, selectedScenario_Main.scnGroup);
-      await updateScenarioSelectOptions(_yearMain, _scenarioYear_Main, selectedScenario_Main.scnYear);
-
-    }
-
-    const _modComp  = document.getElementById('modVersion_Comp');
-    const _grpComp  = document.getElementById('scnGroup_Comp');
-    const _yearComp = document.getElementById('scnYear_Comp');
-  
-    var _scenarioModel_Comp = new Set();
-    var _scenarioGroup_Comp = new Set();
-    var _scenarioYear_Comp  = new Set();
-
-    if (!_modComp || !_grpComp || !_yearComp) {
-      console.error('One or more select elements not found');
-      return;
-    }
-  
-    // Set the selected scenario
-    if (!selectedScenario_Comp) {
-      if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
-        selectedScenario_Comp = jsonScenario.initial_select[0];
-      } else if (dataScenarios && dataScenarios.length > 0) {
-        selectedScenario_Comp = dataScenarios[0];
-      }
-    }
-
-    // Check if selectedScenario_Comp matches a record in dataScenarios for modVersion, scnGroup, and scnYear
-    let matchedScenario_Comp = dataScenarios.find(entry =>
-      entry.modVersion === selectedScenario_Comp.modVersion &&
-      entry.scnGroup === selectedScenario_Comp.scnGroup &&
-      entry.scnYear === selectedScenario_Comp.scnYear
-    );
-
-    if (!matchedScenario_Comp) {
-      // Check for modVersion and scnGroup match
-      let matchedGroupScenario_Comp = dataScenarios.find(entry =>
-        entry.modVersion === selectedScenario_Comp.modVersion &&
-        entry.scnGroup === selectedScenario_Comp.scnGroup
-      );
-
-      if (matchedGroupScenario_Comp) {
-        selectedScenario_Comp.scnYear = matchedGroupScenario_Comp.scnYear;
-      } else {
-        // If no match for modVersion and scnGroup, find the first valid scnGroup
-        let firstValidGroup = dataScenarios.find(entry => entry.modVersion === selectedScenario_Comp.modVersion);
-        if (firstValidGroup) {
-          selectedScenario_Comp.scnGroup = firstValidGroup.scnGroup;
+        if (matchedGroupScenario) {
+          selectedScenario.scnYear = matchedGroupScenario.scnYear;
+        } else {
+          let firstValidGroup = dataScenarios.find(entry => entry.modVersion === selectedScenario.modVersion);
+          selectedScenario.scnGroup = firstValidGroup?.scnGroup;
           let firstValidYear = dataScenarios.find(entry =>
-            entry.modVersion === selectedScenario_Comp.modVersion &&
-            entry.scnGroup === selectedScenario_Comp.scnGroup
+            entry.modVersion === selectedScenario.modVersion &&
+            entry.scnGroup === selectedScenario.scnGroup
           );
-          if (firstValidYear) {
-            selectedScenario_Comp.scnYear = firstValidYear.scnYear;
-          } 
-        } 
-      }
-    }
-  
-    if (selectedScenario_Comp) {
-      // Add entries to scenarioModel
-
-      dataScenarios.forEach(entry => {
-        _scenarioModel_Comp.add(entry.modVersion);
-  
-        // Filter scenarioGroup and scenarioYear
-        if (entry.modVersion === selectedScenario_Comp.modVersion) {
-          _scenarioGroup_Comp.add(entry.scnGroup);
-          if (entry.scnGroup === selectedScenario_Comp.scnGroup) {
-            _scenarioYear_Comp.add(entry.scnYear);
-          }
+          selectedScenario.scnYear = firstValidYear?.scnYear;
         }
-      });
-
-      await updateScenarioSelectOptions(_modComp, _scenarioModel_Comp, selectedScenario_Comp.modVersion);
-      await updateScenarioSelectOptions(_grpComp, _scenarioGroup_Comp, selectedScenario_Comp.scnGroup);
-      await updateScenarioSelectOptions(_yearComp, _scenarioYear_Comp, selectedScenario_Comp.scnYear);
-
+      }
+      
+      if (selectedScenario) {
+        let scenarioModel = new Set();
+        let scenarioGroup = new Set();
+        let scenarioYear = new Set();
+  
+        dataScenarios.forEach(entry => {
+          scenarioModel.add(entry.modVersion);
+    
+          if (entry.modVersion === selectedScenario.modVersion) {
+            scenarioGroup.add(entry.scnGroup);
+            if (entry.scnGroup === selectedScenario.scnGroup) {
+              scenarioYear.add(entry.scnYear);
+            }
+          }
+        });
+  
+        await updateScenarioSelectOptions(modElem, scenarioModel, selectedScenario.modVersion);
+        await updateScenarioSelectOptions(grpElem, scenarioGroup, selectedScenario.scnGroup);
+        await updateScenarioSelectOptions(yearElem, scenarioYear, selectedScenario.scnYear);
+      }
+        
+      if (elem.scenario === 'selectedScenario_Main') {
+        selectedScenario_Main = selectedScenario;
+      } else if (elem.scenario === 'selectedScenario_Comp') {
+        selectedScenario_Comp = selectedScenario;
+      }
     }
   }
-
+    
   async function updateScenarioSelection(scenarioSelect) {
     console.log("app:updateScenarioSelection");
 
@@ -337,7 +267,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       const _year = parseInt(selectedValue, 10);
       selectedScenario_x[_variable] = _year;
     }
-    populateScenarioSelections();
+    await populateScenarioSelections();
     updateActiveVizMap();
   }
     
