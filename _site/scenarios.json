@@ -8,5 +8,3 @@
     { "modVersion": "v910"         , "scnGroup": "I15"      , "scnYear": 2050, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v901.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} },
     { "modVersion": "v910"         , "scnGroup": "I15NoAux" , "scnYear": 2050, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v901.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} },
     { "modVersion": "v910"         , "scnGroup": "I15NoCd"  , "scnYear": 2050, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v901.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} }
-
-]

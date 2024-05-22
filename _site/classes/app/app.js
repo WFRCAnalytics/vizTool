@@ -11,6 +11,8 @@ let dataMenu;
 let activeModelEntity;
 let scenarioChecker; // vizTrends global item
 let modeSelect; // vizTrends global item
+let selectedScenario_Main = {};
+let selectedScenario_Comp = {};
 
 require([
   "esri/config",
@@ -50,13 +52,25 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     // load scenario data
     const jsonScenario = await fetchScenarioData();
-    dataScenarios = jsonScenario.map(item => new Scenario(item));
+    dataScenarios = jsonScenario.data.map(item => new Scenario(item));
+
+    // set the selected scenario to the initial_select in json, if exists, otherwise pick first scenario
+    // Set the selected scenario
+    if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
+      selectedScenario_Main = jsonScenario.initial_select[0];
+      selectedScenario_Comp = jsonScenario.data[0];
+    } else if (jsonScenario.data && jsonScenario.data.length > 0) {
+      selectedScenario_Main = jsonScenario.data[0];
+      selectedScenario_Comp = jsonScenario.data[0];
+    } else {
+      selectedScenario_Main = null; // or handle the case where there is no data appropriately
+      selectedScenario_Comp = null; // or handle the case where there is no data appropriately
+    }
 
     // load scenario trend data
     const jsonScenarioTrend = await fetchScenarioTrendData();
     dataScenarioTrends = jsonScenarioTrend.map(item => new ScenarioTrend(item));
   
-
     dataGeojsons = {};
 
     const _geojsonfilenames = new Set();
@@ -68,7 +82,6 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         _geojsonfilenames.add(_geojson);
       });
     });
-
 
     _geojsonfilenames.forEach(_geojsonfilename => {
       fetchAndStoreGeoJsonData(_geojsonfilename);
@@ -114,67 +127,220 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     });
   }
 
-  async function populateScenarioSelections() {
+  async function toggleCompare(element) {
+    console.log(element);
+  }
 
-    function addCalciteOption(calciteSelect, value) {
-      if (!calciteSelect) return; // Guard clause to prevent errors
-      const option = document.createElement('calcite-option');
-      option.value = value;
-      option.textContent = value;
+  async function updateScenarioSelectOptions(selectElement, options, selectedValue) {
+    console.log('app:updateScenarioSelectOptions');
   
-      calciteSelect.appendChild(option);
-    };
-
-    console.log('app:populateScenarioSelections');
-    const modMain  = document.getElementById('selectModMain');
-    const grpMain  = document.getElementById('selectGrpMain');
-    const yearMain = document.getElementById('selectYearMain');
-    const modComp  = document.getElementById('selectModComp');
-    const grpComp  = document.getElementById('selectGrpComp');
-    const yearComp = document.getElementById('selectYearComp');
-    const scenarioModel = new Set();
-    const scenarioGroup = new Set();
-    const scenarioYear  = new Set();
-
-    if (!modMain || !grpMain || !yearMain || !modComp || !grpComp || !yearComp) {
-      console.error('One or more select elements not found');
+    if (!selectElement) {
+      console.error('Select element not found:', selectElement);
       return;
     }
 
-    // Add 'none' option
-    addCalciteOption(modComp, 'none');
-    addCalciteOption(grpComp, 'none');
-    addCalciteOption(yearComp, 'none');
-
-    dataScenarios.forEach(entry => {
-      scenarioModel.add(entry.modVersion);
-      scenarioGroup.add(entry.scnGroup);
-      scenarioYear.add(entry.scnYear);
+    // Remove options not in the new list
+    Array.from(selectElement.children).forEach(option => {
+        selectElement.removeChild(option);
+    });
+  
+    // Add new options
+    options.forEach(optionValue => {
+      if (![...selectElement.children].some(option => option.value === String(optionValue))) {
+        const option = document.createElement('calcite-option');
+        option.value = String(optionValue);
+        option.label = String(optionValue);
+        if (option.value==String(selectedValue)) {
+          option.selected = true;
+        } else {
+          option.selected = false;
+        }
+        selectElement.appendChild(option);
+      }
     });
 
-    // Add options
-    scenarioModel.forEach(entry => {
-      addCalciteOption(modMain, entry);
-      addCalciteOption(modComp, entry);
-    });
-    scenarioGroup.forEach(entry => {
-      addCalciteOption(grpMain, entry);
-      addCalciteOption(grpComp, entry);
-    });
-    scenarioYear.forEach(entry => {
-      addCalciteOption(yearMain, entry);
-      addCalciteOption(yearComp, entry);
-    });
-
-    // Set the first value as selected or 'none' if the set is empty
-    modMain .value = scenarioModel.size > 0 ? scenarioModel.values().next().value : 'none';
-    grpMain .value = scenarioGroup.size > 0 ? scenarioGroup.values().next().value : 'none';
-    yearMain.value = scenarioYear .size > 0 ? scenarioYear .values().next().value : 'none';
-    modComp .value = 'none';
-    grpComp .value = 'none';
-    yearComp.value = 'none';
   }
 
+  async function populateScenarioSelections() {
+    console.log('app:populateScenarioSelections');
+    
+    const _modMain  = document.getElementById('modVersion_Main');
+    const _grpMain  = document.getElementById('scnGroup_Main');
+    const _yearMain = document.getElementById('scnYear_Main');
+  
+    var _scenarioModel_Main = new Set();
+    var _scenarioGroup_Main = new Set();
+    var _scenarioYear_Main  = new Set();
+
+    if (!_modMain || !_grpMain || !_yearMain) {
+      console.error('One or more select elements not found');
+      return;
+    }
+  
+    // Set the selected scenario
+    if (!selectedScenario_Main) {
+      if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
+        selectedScenario_Main = jsonScenario.initial_select[0];
+      } else if (dataScenarios && dataScenarios.length > 0) {
+        selectedScenario_Main = dataScenarios[0];
+      }
+    }
+
+    // Check if selectedScenario_Main matches a record in dataScenarios for modVersion, scnGroup, and scnYear
+    let matchedScenario_Main = dataScenarios.find(entry =>
+      entry.modVersion === selectedScenario_Main.modVersion &&
+      entry.scnGroup === selectedScenario_Main.scnGroup &&
+      entry.scnYear === selectedScenario_Main.scnYear
+    );
+
+    if (!matchedScenario_Main) {
+      // Check for modVersion and scnGroup match
+      let matchedGroupScenario_Main = dataScenarios.find(entry =>
+        entry.modVersion === selectedScenario_Main.modVersion &&
+        entry.scnGroup === selectedScenario_Main.scnGroup
+      );
+
+      if (matchedGroupScenario_Main) {
+        selectedScenario_Main.scnYear = matchedGroupScenario_Main.scnYear;
+      } else {
+        // If no match for modVersion and scnGroup, find the first valid scnGroup
+        let firstValidGroup = dataScenarios.find(entry => entry.modVersion === selectedScenario_Main.modVersion);
+        selectedScenario_Main.scnGroup = firstValidGroup.scnGroup;
+        let firstValidYear = dataScenarios.find(entry =>
+          entry.modVersion === selectedScenario_Main.modVersion &&
+          entry.scnGroup === selectedScenario_Main.scnGroup
+        );
+        selectedScenario_Main.scnYear = firstValidYear.scnYear;
+      }
+    }
+  
+    if (selectedScenario_Main) {
+      // Add entries to scenarioModel
+      dataScenarios.forEach(entry => {
+        _scenarioModel_Main.add(entry.modVersion);
+  
+        // Filter _scenarioGroup_Main and scenarioYear
+        if (entry.modVersion === selectedScenario_Main.modVersion) {
+          _scenarioGroup_Main.add(entry.scnGroup);
+          if (entry.scnGroup === selectedScenario_Main.scnGroup) {
+            _scenarioYear_Main.add(entry.scnYear);
+          }
+        }
+      });
+  
+      await updateScenarioSelectOptions(_modMain, _scenarioModel_Main, selectedScenario_Main.modVersion);
+      await updateScenarioSelectOptions(_grpMain, _scenarioGroup_Main, selectedScenario_Main.scnGroup);
+      await updateScenarioSelectOptions(_yearMain, _scenarioYear_Main, selectedScenario_Main.scnYear);
+
+    }
+
+    const _modComp  = document.getElementById('modVersion_Comp');
+    const _grpComp  = document.getElementById('scnGroup_Comp');
+    const _yearComp = document.getElementById('scnYear_Comp');
+  
+    var _scenarioModel_Comp = new Set();
+    var _scenarioGroup_Comp = new Set();
+    var _scenarioYear_Comp  = new Set();
+
+    if (!_modComp || !_grpComp || !_yearComp) {
+      console.error('One or more select elements not found');
+      return;
+    }
+  
+    // Set the selected scenario
+    if (!selectedScenario_Comp) {
+      if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
+        selectedScenario_Comp = jsonScenario.initial_select[0];
+      } else if (dataScenarios && dataScenarios.length > 0) {
+        selectedScenario_Comp = dataScenarios[0];
+      }
+    }
+
+    // Check if selectedScenario_Comp matches a record in dataScenarios for modVersion, scnGroup, and scnYear
+    let matchedScenario_Comp = dataScenarios.find(entry =>
+      entry.modVersion === selectedScenario_Comp.modVersion &&
+      entry.scnGroup === selectedScenario_Comp.scnGroup &&
+      entry.scnYear === selectedScenario_Comp.scnYear
+    );
+
+    if (!matchedScenario_Comp) {
+      // Check for modVersion and scnGroup match
+      let matchedGroupScenario_Comp = dataScenarios.find(entry =>
+        entry.modVersion === selectedScenario_Comp.modVersion &&
+        entry.scnGroup === selectedScenario_Comp.scnGroup
+      );
+
+      if (matchedGroupScenario_Comp) {
+        selectedScenario_Comp.scnYear = matchedGroupScenario_Comp.scnYear;
+      } else {
+        // If no match for modVersion and scnGroup, find the first valid scnGroup
+        let firstValidGroup = dataScenarios.find(entry => entry.modVersion === selectedScenario_Comp.modVersion);
+        if (firstValidGroup) {
+          selectedScenario_Comp.scnGroup = firstValidGroup.scnGroup;
+          let firstValidYear = dataScenarios.find(entry =>
+            entry.modVersion === selectedScenario_Comp.modVersion &&
+            entry.scnGroup === selectedScenario_Comp.scnGroup
+          );
+          if (firstValidYear) {
+            selectedScenario_Comp.scnYear = firstValidYear.scnYear;
+          } 
+        } 
+      }
+    }
+  
+    if (selectedScenario_Comp) {
+      // Add entries to scenarioModel
+
+      dataScenarios.forEach(entry => {
+        _scenarioModel_Comp.add(entry.modVersion);
+  
+        // Filter scenarioGroup and scenarioYear
+        if (entry.modVersion === selectedScenario_Comp.modVersion) {
+          _scenarioGroup_Comp.add(entry.scnGroup);
+          if (entry.scnGroup === selectedScenario_Comp.scnGroup) {
+            _scenarioYear_Comp.add(entry.scnYear);
+          }
+        }
+      });
+
+      await updateScenarioSelectOptions(_modComp, _scenarioModel_Comp, selectedScenario_Comp.modVersion);
+      await updateScenarioSelectOptions(_grpComp, _scenarioGroup_Comp, selectedScenario_Comp.scnGroup);
+      await updateScenarioSelectOptions(_yearComp, _scenarioYear_Comp, selectedScenario_Comp.scnYear);
+
+    }
+  }
+
+  async function updateScenarioSelection(scenarioSelect) {
+    console.log("app:updateScenarioSelection");
+
+    // see which selector changed
+    const changedSelectorId = scenarioSelect.target.id;
+    const selectedValue = scenarioSelect.target.value;
+
+    var selectedScenario_x = {};
+
+    // get last four characters: Main or Comp
+    const _orMainComp = changedSelectorId.slice(-4);
+
+    if (_orMainComp === 'Main') {
+      selectedScenario_x = selectedScenario_Main;
+    } else {
+      selectedScenario_x = selectedScenario_Comp;
+    }
+
+    // remove last five characters
+    const _variable = changedSelectorId.slice(0, -5);
+
+    if (_variable!='scnYear') {
+      selectedScenario_x[_variable] = String(selectedValue);
+    } else {
+      const _year = parseInt(selectedValue, 10);
+      selectedScenario_x[_variable] = _year;
+    }
+    populateScenarioSelections();
+    updateActiveVizMap();
+  }
+    
   async function init() {
     console.log('app:init');
     await loadScenarios();
@@ -182,153 +348,31 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     const menuStructure = await loadMenuAndItems();
   }
 
+  async function updateActiveVizMap() {
+    console.log(dataMenu);
+    dataMenu.forEach(menuItem => {
+      menuItem.modelEntities.forEach(modelEntity => {
+        if (modelEntity.id == activeModelEntity.id & modelEntity.template=='vizMap') {
+          console.log('app:initVizMapListeners:updateActiveVizMap:' + modelEntity.id);
+          modelEntity.vizLayout.updateDisplay();
+        }
+      });
+    });
+  }
+
   async function initVizMapListeners() {
     console.log('app:initVizMapListeners');
             
-    document.getElementById('selectModMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
-    document.getElementById('selectGrpMain'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
-    document.getElementById('selectYearMain'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectModComp'    ).addEventListener('calciteSelectChange', updateComparisonModel.bind(this));
-    document.getElementById('selectGrpComp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
-    document.getElementById('selectYearComp'   ).addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateActiveVizMap);
-    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', disableComparison);
-    // Since the initial comparison is none, disable the selectors until a valid model chosen
-    disableComparison();
-
-    async function updateActiveVizMap() {
-      console.log(dataMenu);
-      dataMenu.forEach(menuItem => {
-        menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.id == activeModelEntity.id & modelEntity.template=='vizMap') {
-            console.log('app:initVizMapListeners:updateActiveVizMap:' + modelEntity.id);
-            modelEntity.vizLayout.updateDisplay();
-          }
-        });
-      });
-    }
-
-    function updateScenarioSelection(scenarioSelect) {
-      // see which selector changed
-      const changedSelectorId = scenarioSelect.target.id;
-      const selectedValue = scenarioSelect.target.value;
-      let isMain = Boolean(true);
-      let isGroup = Boolean(true);
-      let updateSelector;
-      let modelSelected = document.getElementById('selectModMain').value;
-
-      // Not a fan of hard-coding.  Better way?
-      if (changedSelectorId.slice(-4) === 'Comp') {
-        isMain = false;
-      }
-      if (changedSelectorId.slice(6,9)=== 'Mod') {
-        isGroup = false;
-      }
-      // get the selector to have items updated - and which model if it's the year
-      if (isMain) {
-        if (isGroup){
-          updateSelector = document.getElementById('selectYearMain');
-        } else {
-          updateSelector = document.getElementById('selectGrpMain');
-        }
-      } else {
-        if (isGroup){
-          updateSelector = document.getElementById('selectYearComp');
-        } else {
-          updateSelector = document.getElementById('selectGrpComp');
-        }      
-      }
-      // find which scenarios match the selected items
-      let validScenarios = [];
-      if (isGroup){
-        validScenarios = dataScenarios.filter(entry=> entry.modVersion === modelSelected && entry.scnGroup === selectedValue);
-      } else {
-        validScenarios = dataScenarios.filter(entry=> entry.modVersion === selectedValue);
-      }
-
-      const selectionGroupSet = new Set();
-      const selectionYearSet = new Set();
-
-      validScenarios.forEach(validItem => {
-          selectionGroupSet.add(validItem.scnGroup);
-          selectionYearSet.add(validItem.scnYear.toString());
-      });
-      // update the selector - if the selector updated was the group, send an event for the year
-      if (isGroup) {
-        manageSelectors(updateSelector, selectionYearSet);
-      } else {
-        manageSelectors(updateSelector, selectionGroupSet);
-        updateSelector.dispatchEvent(new Event('calciteSelectChange'));
-      }
-      updateActiveVizMap();
-   }
-
-   // enable/disable selections base on the scenarios
-    function manageSelectors(whichSelector, whatValues)
-    {
-      for (let reverseIndex = whichSelector.childElementCount-1; reverseIndex >=0; reverseIndex--) {
-        if(whatValues.has(whichSelector.childNodes[reverseIndex].label)) {
-          whichSelector.childNodes[reverseIndex].disabled = false;
-          whichSelector.childNodes[reverseIndex].selected = true;
-        } else {
-          whichSelector.childNodes[reverseIndex].disabled = true;
-        }
-      }
-    }
-
-    function updateComparisonModel(compModelSelect) {
-      if(document.getElementById('selectModComp').value === 'none') {
-        disableComparison();
-      }
-      else {
-        document.getElementById('selectModComp'    ).disabled = false;
-        document.getElementById('selectGrpComp'    ).disabled = false;
-        document.getElementById('selectYearComp'   ).disabled = false;
-        document.getElementById('selectCompareType').disabled = false;
-      } updateScenarioSelection(compModelSelect);
-    }
-
-    function disableComparison() {
-      // Disables all the comparison options when the block is closed
-      // Also called when the comparison model is set to 'none'
-      let compSelector = document.getElementById('selectModComp');
-      compSelector.childNodes[0].selected = true;
-      compSelector = document.getElementById('selectGrpComp');
-      compSelector.childNodes[0].selected = true;
-      compSelector.disabled = true;
-      compSelector = document.getElementById('selectYearComp');
-      compSelector.childNodes[0].selected = true;
-      compSelector.disabled = true;
-      compSelector =document.getElementById('selectCompareType');
-      compSelector.disabled = true;
-      updateActiveVizMap();
-    }
-
-    //document.getElementById('selectYearMain-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearMain')));
-    //document.getElementById('selectYearMain-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearMain')));
-    //
-    //document.getElementById('selectYearComp-prev').addEventListener('click', () => selectPrevOption(document.getElementById('selectYearComp')));
-    //document.getElementById('selectYearComp-next').addEventListener('click', () => selectNextOption(document.getElementById('selectYearComp')));
-    //
-    //function selectPrevOption(selectElement) {
-    //  const options = Array.from(selectElement.querySelectorAll('calcite-option'));
-    //  const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
-    //  if (currentIndex > 0) {
-    //    selectElement.value = options[currentIndex - 1].value;
-    //    updateActiveVizMap();
-    //  }
-    //}
-    //
-    //function selectNextOption(selectElement) {
-    //  console.log('app:value:' + selectElement.value)
-    //  const options = Array.from(selectElement.querySelectorAll('calcite-option'));
-    //  const currentIndex = options.findIndex(option => option.value.toString() === selectElement.value);
-    //  if (currentIndex < options.length - 1) {
-    //    selectElement.value = options[currentIndex + 1].value;
-    //    updateActiveVizMap();
-    //  }
-    //}
+    document.getElementById('modVersion_Main'  ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('scnGroup_Main'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('scnYear_Main'     ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('modVersion_Comp'  ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('scnGroup_Comp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('scnYear_Comp'     ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
+    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', updateActiveVizMap);    
     
+
     document.getElementById('vizMapLabelToggle').addEventListener('calciteCheckboxChange', (event) => {  // Arrow function here
       console.log(dataMenu);
       dataMenu.forEach(menuItem => {
@@ -419,9 +463,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       descriptionText.innerHTML = '<b>Scenario Selector<b>';
       contentContainer.appendChild(descriptionText);
 
-
-      const lstSelectIds = ['selectModMain','selectGrpMain','selectYearMain'];
-      const compSelectIds = ['selectModComp','selectGrpComp','selectYearComp'];
+      const lstSelectIds = ['modVersion_Main','scnGroup_Main','scnYear_Main'];
+      const compSelectIds = ['modVersion_Comp','scnGroup_Comp','scnYear_Comp'];
 
       lstSelectIds.forEach(id => {
         // Create a flex container for each select and its buttons
@@ -435,22 +478,14 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         calciteSelect.id = id;
         calciteSelect.style.flexGrow = '1'; // Allow the select element to grow
 
+        if (id.includes('Main') || id.includes('Mod') ) {
+          calciteSelect.style.display = 'flex';
+        } else {
+          calciteSelect.style.display = 'none';
+        }
+    
         // Append the calcite-select to the flex container
         flexContainer.appendChild(calciteSelect);
-
-        //// Check if the current select is 'selectYearMain' or 'selectYearComp'
-        //if (id === 'selectYearMain' || id === 'selectYearComp') {
-        //    // Create and append buttons within the flex container
-        //    const buttonPrev = document.createElement('calcite-button');
-        //    buttonPrev.id = id + '-prev';
-        //    buttonPrev.textContent = '<';
-        //    flexContainer.appendChild(buttonPrev);
-        //  
-        //    const buttonNext = document.createElement('calcite-button');
-        //    buttonNext.id = id + '-next';
-        //    buttonNext.textContent = '>';
-        //    flexContainer.appendChild(buttonNext);
-        //}
 
         // Append the flex container to the content container
         contentContainer.appendChild(flexContainer);
@@ -458,7 +493,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
       const block = document.createElement('calcite-block');
       block.id = 'comparisonScenario';
-      block.setAttribute('heading', 'Comparison Scenario');
+      block.setAttribute('heading', 'Compare to:');
       block.setAttribute('collapsible', true);
 
       compSelectIds.forEach(id => {
@@ -481,14 +516,14 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       });
 
       const headingCompare = document.createElement('div');
-      headingCompare.innerHTML = '<br/><b>Compare Type</b>'; // Replace with your desired text
+      headingCompare.innerHTML = '<br/>Compare Type'; // Replace with your desired text
+      headingCompare.id = 'compare-type-label'; // Replace with your desired text
       block.appendChild(headingCompare);
 
       // Create a calcite-select element
       const calciteSelectCompare = document.createElement('calcite-select');
       calciteSelectCompare.id = 'selectCompareType';
       calciteSelectCompare.value = 'abs';
-      calciteSelectCompare.disabled = true; // Disable until a model/group/year comparison selected
 
       const optionAbs = document.createElement('calcite-option');
       optionAbs.value = 'abs';

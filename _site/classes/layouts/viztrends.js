@@ -80,9 +80,9 @@ class VizTrends {
   }
 
   getScenarioMain() {
-    return this.getScenario(         document.getElementById('selectModMain' ).value,
-                                     document.getElementById('selectGrpMain' ).value,
-                            parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+    return this.getScenario(         selectedScenario_Main.modVersion,
+                                     selectedScenario_Main.scnGroup,
+                            parseInt(selectedScenario_Main.scnYear, 10)); // Assuming it's a number
   }
 
   getScenario(_modVersion, _scnGroup, _scnYear) {
