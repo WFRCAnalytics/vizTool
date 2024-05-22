@@ -1,3 +1,16 @@
+/* Custom styles for disabled option elements */
+option:disabled {
+    color: #ff0000 !important; /* Override the color with your custom color */
+    background-color: #f0f0f0; /* Optional: Set a background color if needed */
+}
+
+select{
+    color:red;
+    }
+    option{
+    color:black;
+    }
+
 .modal {
     display: none;
     position: fixed;
@@ -46,7 +59,7 @@ h1 {
 }
 
 .scenario-selector-container {
-    width: 250px;
+    width: 210px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;
 }
