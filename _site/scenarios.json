@@ -18,5 +18,3 @@
     { "modVersion": "v901", "scnGroup": "RTP"      , "scnYear": 2050, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v900.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} },
     { "modVersion": "v901", "scnGroup": "NoBuild"  , "scnYear": 2032, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v900.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} },
     { "modVersion": "v901", "scnGroup": "NoBuild"  , "scnYear": 2050, "scnDesc": "", "geojsons": { "segment":"segmentsWithAggFields_v900.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} }
-
-]

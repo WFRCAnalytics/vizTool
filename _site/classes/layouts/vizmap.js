@@ -157,35 +157,35 @@ require([
     }
 
     getMainScenarioDisplayName() {
-      return document.getElementById('selectModMain' ).value + ' ' +
-             document.getElementById('selectGrpMain' ).value + ' ' +
-             document.getElementById('selectYearMain').value;
+      return selectedScenario_Main.modVersion + ' ' +
+             selectedScenario_Main.scnGroup + ' ' +
+             selectedScenario_Main.scnYear;
     }
 
     getCompScenarioDisplayName() {
-      return document.getElementById('selectModComp' ).value + ' ' +
-             document.getElementById('selectGrpComp' ).value + ' ' +
-             document.getElementById('selectYearComp').value;
+      return selectedScenario_Comp.modVersion + ' ' +
+             selectedScenario_Comp.scnGroup + ' ' +
+             selectedScenario_Comp.scnYear;
     }
 
     getMain() {
-      return this.getScenario(         document.getElementById('selectModMain' ).value,
-                                       document.getElementById('selectGrpMain' ).value,
-                              parseInt(document.getElementById('selectYearMain').value, 10)); // Assuming it's a number
+      return this.getScenario(         selectedScenario_Main.modVersion,
+                                       selectedScenario_Main.scnGroup,
+                              parseInt(selectedScenario_Main.scnYear, 10)); // Assuming it's a number
     }
 
     getComp() {
-      return this.getScenario(         document.getElementById('selectModComp' ).value,
-                                       document.getElementById('selectGrpComp' ).value,
-                              parseInt(document.getElementById('selectYearComp').value, 10)); // Assuming it's a number
+      return this.getScenario(         selectedScenario_Comp.modVersion,
+                                       selectedScenario_Comp.scnGroup,
+                              parseInt(selectedScenario_Comp.scnYear, 10)); // Assuming it's a number
     }
 
     // check if comparison scenario is in process of being defined... i.e. some values are not 'none'
     isScenarioCompIncomplete() {
       if (this.getComp() === null) {
-        if ((document.getElementById('selectModComp' ).value !== "none" ||
-             document.getElementById('selectGrpComp' ).value !== "none" ||
-             document.getElementById('selectYearComp').value !== "none" )) {
+        if ((selectedScenario_Comp.modVersion !== "none" ||
+             selectedScenario_Comp.scnGroup !== "none" ||
+             selectedScenario_Comp.scnYear !== "none" )) {
           return true;
         } else {
           return false;
@@ -514,13 +514,15 @@ require([
       }
 
       // get compare data
-      if (this.getComp() !== null) {
+      if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
         this.mode = 'compare';
         var _dataComp = this.getDataComp();
         // get data for weighting
         if (this.sidebar.getWeightCode()) {
           var _dataWeightComp = this.getDataWeightComp();
         }
+      } else {
+        this.mode = 'main';
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
