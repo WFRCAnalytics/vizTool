@@ -248,6 +248,10 @@ require([
     }
     
     getAttributeRendererPath() {
+
+      var compareType = document.getElementById('selectCompareType');
+      this.modeCompare = compareType ? compareType.selectedOption.value : null;
+
       const collection = this.sidebar.getAttributeRendererCollection();
       if (this.mode == 'main') {
         return collection.main;

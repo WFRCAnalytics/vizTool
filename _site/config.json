@@ -68,7 +68,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Lanes",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -135,7 +135,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Functional Type",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -212,7 +212,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Capacity per Hour per Lane",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -288,7 +288,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Free-flow Speed",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -363,7 +363,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Volume",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -438,7 +438,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Speed",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -519,7 +519,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Volume-to-Capacity Ratio",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -1003,7 +1003,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Riders",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -1079,7 +1079,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Headway",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -1155,7 +1155,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Speed",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -1231,7 +1231,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Time",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or Less"},
@@ -2178,7 +2178,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in All Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2266,7 +2266,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2354,7 +2354,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Auto Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2442,7 +2442,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Transit Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2530,7 +2530,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Non-Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2618,7 +2618,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Walk Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -2706,7 +2706,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Bike Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3284,7 +3284,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Population",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3372,7 +3372,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3460,7 +3460,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Total Vehicles",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3548,7 +3548,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Total Workers",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3636,7 +3636,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Employment - 3 Categories",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3724,7 +3724,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Employment - 12 Categories",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3808,7 +3808,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Average Income",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -3896,7 +3896,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in K-12 School Enrollment",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -4496,7 +4496,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Access to Jobs",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -4586,7 +4586,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Access to Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -4676,7 +4676,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Access to Jobs+Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -4764,7 +4764,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Jobs",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -4852,7 +4852,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0.0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5017,7 +5017,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Person Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5106,7 +5106,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Person Hours Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5195,7 +5195,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in Person Hours Delay",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5284,7 +5284,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in All Vehicle Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5373,7 +5373,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in All Vehicle Hours Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},
@@ -5462,7 +5462,7 @@
                         },
                         "compare_pct": {
                           "name": "Percent Change in All Vehicle Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '###0%'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or Less"},

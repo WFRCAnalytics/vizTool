@@ -299,8 +299,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     document.getElementById('modVersion_Comp'  ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('scnGroup_Comp'    ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
     document.getElementById('scnYear_Comp'     ).addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
-    document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateScenarioSelection.bind(this));
-    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', updateActiveVizMap);    
+    document.getElementById('selectCompareType').addEventListener('calciteSelectChange', updateActiveVizMap);
+    document.getElementById('comparisonScenario').addEventListener('calciteBlockToggle', updateActiveVizMap);
     
 
     document.getElementById('vizMapLabelToggle').addEventListener('calciteCheckboxChange', (event) => {  // Arrow function here
