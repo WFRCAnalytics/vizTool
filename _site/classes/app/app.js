@@ -457,12 +457,12 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
       const optionAbs = document.createElement('calcite-option');
       optionAbs.value = 'abs';
-      optionAbs.textContent = 'Absolute Change';
+      optionAbs.textContent = 'Absolute Difference';
       calciteSelectCompare.appendChild(optionAbs);
 
       const optionPc = document.createElement('calcite-option');
       optionPc.value = 'pct';
-      optionPc.textContent = 'Percent Change';
+      optionPc.textContent = 'Percent Difference';
       calciteSelectCompare.appendChild(optionPc);
 
       // Append the calcite-select to the block and the block to the content container

@@ -624,7 +624,7 @@ require([
       } else if(this.mode==='compare' & this.modeCompare==='abs') {
         _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
       } else if(this.mode==='compare' & this.modeCompare==='pct') {
-        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
+        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
       }
 
       const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
