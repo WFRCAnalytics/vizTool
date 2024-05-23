@@ -12,6 +12,18 @@
     ]
   },
   {
+    "scnTrend": "v9.0 RTP - New 2019 Roadway Data",
+    "displayByDefault": true,
+    "modelruns" : [
+      { "modVersion": "v900NewRoadData", "scnGroup": "Base", "scnYear": 2019 },
+      { "modVersion": "v900"           , "scnGroup": "Base", "scnYear": 2023 },
+      { "modVersion": "v900"           , "scnGroup": "TIP" , "scnYear": 2028 },
+      { "modVersion": "v900"           , "scnGroup": "RTP" , "scnYear": 2032 },
+      { "modVersion": "v900"           , "scnGroup": "RTP" , "scnYear": 2042 },
+      { "modVersion": "v900"           , "scnGroup": "RTP" , "scnYear": 2050 }
+    ]
+  },
+  {
     "scnTrend": "v9.0/v9.0.1 RTP-A1",
     "displayByDefault": true,
     "modelruns" : [
