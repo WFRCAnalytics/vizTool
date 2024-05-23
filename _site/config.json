@@ -47,7 +47,7 @@
                         "compare_abs": {
                           "name": "Change in Lanes",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-4 or More Lanes"},
                             { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-3 Lanes"        },
@@ -120,7 +120,7 @@
                         "compare_abs": {
                           "name": "Change in Functional Type",
                           "field": "dVal",
-                          "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
                             { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Decrease" },
@@ -191,7 +191,7 @@
                           "name": "Change in Capacity per Hour per Lane",
                           "type": "ClassBreaksRenderer",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":    2500, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +2500"},
                             { "minValue":    1000, "maxValue":     2499, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+1000 to +2500" },
@@ -244,7 +244,7 @@
                         "main": {
                           "name": "Free-flow Speed",
                           "type": "ClassBreaksRenderer",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
@@ -267,7 +267,7 @@
                         "compare_abs": {
                           "name": "Change in Free-flow Speed",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
                             { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
@@ -320,7 +320,7 @@
                         "main": {
                           "name": "Volume",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":   0.01, "maxValue":     5999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":    "Less than 6,000"},
                             { "minValue":   6000, "maxValue":    17999, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":    "6,000 to 18,000"},
@@ -342,7 +342,7 @@
                         "compare_abs": {
                           "name": "Change in Volume",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":   -25001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -25,000"  },
                             { "minValue":   -25000, "maxValue":   -10001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-25,000 to -10,000" },
@@ -395,7 +395,7 @@
                         "main": {
                           "name": "Speed",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
                             { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15 mph"     },
@@ -417,7 +417,7 @@
                         "compare_abs": {
                           "name": "Change in Speed",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
                             { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
@@ -960,7 +960,7 @@
                         "main": {
                           "name": "Riders",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":  0.01, "maxValue":    499, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":         "1 to 500"},
                             { "minValue":   500, "maxValue":    999, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":     "500 to 1,000"},
@@ -981,7 +981,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Riders",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
@@ -1036,7 +1036,7 @@
                         "main": {
                           "name": "Headway",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5"   },
                             { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10" },
@@ -1057,7 +1057,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Headway",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -60" },
@@ -1112,7 +1112,7 @@
                         "main": {
                           "name": "Speed",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": "1 to 5"   },
                             { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">5 to 10" },
@@ -1133,7 +1133,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Speed",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -60" },
@@ -1188,7 +1188,7 @@
                         "main": {
                           "name": "Time",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": "1 to 5"   },
                             { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">5 to 10" },
@@ -1209,7 +1209,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Time",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -60" },
@@ -2152,7 +2152,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in All Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2240,7 +2240,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2328,7 +2328,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Auto Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2416,7 +2416,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Transit Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2504,7 +2504,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Non-Motorized Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2592,7 +2592,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Walk Trips",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -2681,7 +2681,7 @@
                         "compare_abs": {
                           "name": "Change in Bike Trips",
                           "field": "dVal",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
                             { "minValue":    -5000, "maxValue":  -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000" },
@@ -4560,7 +4560,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Access to Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -500,000 Jobs"  },
@@ -4650,7 +4650,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Access to Jobs+Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -500,000 Jobs"  },
@@ -4738,7 +4738,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Jobs",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs" },
@@ -4826,7 +4826,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Households",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":   -5001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000 Jobs+Households" },
@@ -4991,7 +4991,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Person Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -5080,7 +5080,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Person Hours Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -5169,7 +5169,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Person Hours Delay",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -5258,7 +5258,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Vehicle Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -5347,7 +5347,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Vehicle Hours Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
@@ -5436,7 +5436,7 @@
                         },
                         "compare_abs": {
                           "name": "Change in Vehicle Miles Traveled",
-                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
+                          "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                           "field": "dVal",
                           "classBreakInfos": [
                             { "minValue": -9999999, "maxValue":  -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "Less than -5,000" },
