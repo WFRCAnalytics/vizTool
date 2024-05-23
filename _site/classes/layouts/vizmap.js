@@ -306,6 +306,7 @@ require([
           },
           attributes: {
             id: 0, // Unique ID, using "SEGID" as the objectIdField
+            idLabel: "",
             // ... add other attribute fields if necessary
             dVal: null // Assuming you want a displayValue, you can set any initial value
           }
@@ -314,17 +315,12 @@ require([
         
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeoField,
+          //objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
             { name: this.baseGeoField, type: "oid" },  // Object ID field
-            { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
-            // HARD CODE... NEED TO ADD PROGRAMATICALLY
-            { name: "SmallArea"        , type: "string"},
-            { name: "DMED_NAME"        , type: "string"},
-            { name: "DLRG_NAME"        , type: "string"},
-            { name: "DISTANCE"         , type: "double"},
-            { name: "CITY_UGRC"        , type: "double"}
+            { name: "idLabel", type: "string"},
+            { name: "dVal", type: dValFieldType, alias: this.getACode() },
 
           ],
           popupTemplate: {
@@ -343,7 +339,7 @@ require([
               {
                 name: "featureName",
                 title: "Feature Name",
-                expression: '$feature.' + this.getPopupFeatureField()
+                expression: '$feature.idLabel'
               },
               {
                 name: "formatDisplayValue",
@@ -392,26 +388,19 @@ require([
             spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
           },
           attributes: {
-            id: 0, // Unique ID, using "SEGID" as the objectIdField
-            // ... add other attribute fields if necessary
-            dVal: null // Assuming you want a displayValue, you can set any initial value
+            id: 0,
+            idLabel: "",
+            dVal: null
           }
         };
 
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          objectIdField: this.baseGeoField,
           fields: [
             // ... your other fields
             { name: this.baseGeoField, type: "oid" },  // Object ID field
-            { name: "dVal"             , type: dValFieldType, alias: this.getACode() },
-            // HARD CODE... NEED TO ADD PROGRAMATICALLY
-            { name: "SmallArea"        , type: "string"},
-            { name: "DMED_NAME"        , type: "string"},
-            { name: "DLRG_NAME"        , type: "string"},
-            { name: "DISTANCE"         , type: "double"},
-            { name: "CITY_UGRC"        , type: "double"}
-
+            { name: "idLabel", type: "string"},
+            { name: "dVal", type: dValFieldType, alias: this.getACode() },
           ],
           popupTemplate: {
             title: this.popupTitle,
@@ -429,7 +418,7 @@ require([
               {
                 name: "featureName",
                 title: "Feature Name",
-                expression: '$feature.' + this.getPopupFeatureField()
+                expression: '$feature.idLabel'
               },
               {
                 name: "formatDisplayValue",
@@ -679,7 +668,7 @@ require([
 
               // Get ID from the feature's attributes
               var _id = feature.attributes[this.baseGeoField];
-                                          
+              
               var _valueMain = 0;
               var _valueComp = 0;
               var _valueDisp = 0;
@@ -718,11 +707,13 @@ require([
               if (_valueMain>0) {
                 attributes = {
                   ...feature.attributes,
+                  idLabel: _id,
                   dVal: _valueDisp  // Add the dVal to attributes
                 };
               } else {
                 attributes = {
                   ...feature.attributes,
+                  idLabel: _id,
                   dVal: null  // Add the dVal to attributes
                 };
               }
@@ -842,6 +833,7 @@ require([
               // If there's a display value for the given SEGID in the _dataMain object, set it
               let attributes = {
                 ...feature.attributes,
+                idLabel: _idAg,
                 dVal: _valueDisp  // Add the dVal to attributes
               };
 
