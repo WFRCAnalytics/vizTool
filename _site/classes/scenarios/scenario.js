@@ -62,7 +62,7 @@ class Scenario {
 
     const _data = getDataForFilterOptionsList(data_jsonDataKey, data_lstFilters);
 
-    if (agg_geojsonsKey='') {
+    if (agg_geojsonsKey=='') {
       _dataGeo    = this.geojsons[data_geojsonsKey]
       _dataAggGeo = this.geojsons[ agg_geojsonsKey];
     }
