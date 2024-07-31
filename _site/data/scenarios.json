@@ -1,0 +1,13 @@
+{
+    "initial_select": [
+        {
+            "modVersion": "v902-transit-corridor-testing-81baac",
+            "scnGroup": "Build Phase 1",
+            "scnYear": 2050
+        }
+    ],
+    "data": [
+        { "modVersion": "v902-transit-corridor-testing-81baac", "scnGroup": "Build Phase 1"       , "scnYear": 2050, "geojsons": { "segment":"segmentsWithAggFields_v901.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} },
+        { "modVersion": "v902-transit-corridor-testing-81baac", "scnGroup": "Build Phase 1 - Rail", "scnYear": 2050, "geojsons": { "segment":"segmentsWithAggFields_v901.geojson", "taz":"tazWithAggFields.geojson", "city":"city.geojson", "areaSmall":"areasSmall.geojson", "distMed":"districtsMedium.geojson", "distLrg":"districtsLarge.geojson", "distSup":"districtsSuper.geojson"} }
+    ]
+}

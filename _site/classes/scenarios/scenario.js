@@ -31,9 +31,13 @@ class Scenario {
     
   }
 
+  getGeoJsonFileNameFromKey(key) {
+    return this.geojsons[key];
+  }
+
   // Function to fetch and store data
   fetchAndStoreData(fileName) {
-    fetch(`data/scnData/${this.scnFolder}/${fileName}.json`)
+    fetch(`data/scenario-data/${this.scnFolder}/${fileName}.json`)
       .then(response => response.json())
       .then(jsonData => {
         // Store the processed data in the object with the filename as key
@@ -47,7 +51,7 @@ class Scenario {
     return this.jsonData[a_jsonDataKey].data[a_filter];
   }
   
-  getDataForFilterOptionsListByAggregator(data_jsonDataKey   , data_lstFilters   , data_aCode   , data_geojsonsKey = '', baseGeoField='',
+  getDataForFilterOptionsListByAggregator(data_jsonDataKey   , data_lstFilters   , data_aCode   , data_geojsonsKey = '', baseGeoJsonId='',
                                            agg_geojsonsKey='',                        aggCode='',                           // agg = Agggregate... combine by geography
                                             wt_jsonDataKey='',   wt_lstFilters='',   wt_aCode='',   wt_geojsonsKey = '') {  // wt  = Weight    ... calculate weighted average
     console.log('getDataForFilterOptionsListByAggregator');
@@ -85,7 +89,7 @@ class Scenario {
 
         _featuresToAg.forEach((baseFt) => {
 
-          const _idFt = baseFt.properties[baseGeoField];
+          const _idFt = baseFt.properties[baseGeoJsonId];
 
           // main value
           if (_data !== undefined) {

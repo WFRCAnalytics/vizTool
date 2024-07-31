@@ -21,8 +21,8 @@ require([
       this.modelEntity = modelEntity;
 
       this.jsonFileName = data.jsonFileName;
-      this.baseGeometryFile = data.baseGeometryFile;
-      this.baseGeoField = data.baseGeoField;
+      this.baseGeoJsonKey = data.baseGeoJsonKey;
+      this.baseGeoJsonId = data.baseGeoJsonId;
       this.geometryType = data.geometryType;
       this.popupTitle = data.popupTitle;
       this.layerTitle = layerTitle;
@@ -50,7 +50,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: this.baseGeometryFile,
+        url: 'data/geojsons/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
         title: "dummy layer"
       });
       map.add(this.geojsonLayer);
@@ -59,8 +59,8 @@ require([
       
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
-      if (this.baseGeometryFile!="") {
-        fetch(this.baseGeometryFile)
+      if (this.baseGeoJsonKey!="") {
+        fetch('data/geojsons/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -93,7 +93,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: this.getSelectedAggregator().agGeoJson,
+        url: 'data/geojsons/' + this.getSelectedAggregator().agGeoJson,
         title: "Aggregator Layer"
       });
 
@@ -266,7 +266,7 @@ require([
       if (this.sidebar.aggregators.length>0) {
         return this.sidebar.getSelectedAggregator().agDisplayName;
       } else {
-        return this.baseGeoField;
+        return this.baseGeoJsonId;
       }
     }
 
@@ -274,7 +274,7 @@ require([
       if (this.sidebar.aggregators.length>0) {
         return this.sidebar.getSelectedAggregator().agCode;
       } else {
-        return this.baseGeoField;
+        return this.baseGeoJsonId;
       }
     }
 
@@ -282,12 +282,46 @@ require([
       if (this.sidebar.aggregators.length>0) {
         return this.sidebar.getSelectedAggregator().agCodeNameField;
       } else {
-        return this.baseGeoField;
+        return this.baseGeoJsonId;
       }
     }
 
     initializeLayer() {
-      //
+      
+      // remove layer
+      if (this.geojsonLayer) {
+        map.remove(this.geojsonLayer);
+      }
+      
+      // ADD GEOJSONS
+      // need to check geometry type before adding!!
+      this.geojsonLayer = new GeoJSONLayer({
+        url: 'data/geojsons/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+        title: "dummy layer"
+      });
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+
+      
+      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
+      // Read JSON file
+      if (this.baseGeoJsonKey!="") {
+        fetch('data/geojsons/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+          this.baseGeometryGeoJson = data;
+        })
+        .catch(error => {
+          console.error('Error reading the JSON file:', error);
+          // Handle the error appropriately
+          });
+      }
+
       let dValFieldType;
 
       // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
@@ -319,10 +353,10 @@ require([
         
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
-          //objectIdField: this.baseGeoField,
+          //objectIdField: this.baseGeoJsonId,
           fields: [
             // ... your other fields
-            { name: this.baseGeoField, type: "oid" },  // Object ID field
+            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.getACode() },
 
@@ -402,7 +436,7 @@ require([
           source: [this.dummyFeature],
           fields: [
             // ... your other fields
-            { name: this.baseGeoField, type: "oid" },  // Object ID field
+            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.getACode() },
           ],
@@ -666,12 +700,12 @@ require([
           
           // NO AGGREGATOR
           if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() &&
-                                                        this.getSelectedAggregator().agCode == this.baseGeoField)) {
+                                                        this.getSelectedAggregator().agCode == this.baseGeoJsonId)) {
             
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
-              var _id = feature.attributes[this.baseGeoField];
+              var _id = feature.attributes[this.baseGeoJsonId];
               
               var _valueMain = 0;
               var _valueComp = 0;
@@ -761,7 +795,7 @@ require([
               // aggregate json data for give display feature
               _featuresToAg.forEach((baseFt) => {
                 
-                const _idFt = baseFt.properties[this.baseGeoField];
+                const _idFt = baseFt.properties[this.baseGeoJsonId];
 
                 // main value
                 if (_dataMain !== undefined) {

@@ -29,21 +29,21 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
   async function fetchConfig() {
     console.log('app:fetchConfig');
-    const response = await fetch('config.json');
+    const response = await fetch('config/config.json');
     const dataConfig = await response.json();
     return dataConfig;
   }
 
   async function fetchScenarioData() {
     console.log('app:fetchScenarioData');
-    const response = await fetch('scenarios.json');
+    const response = await fetch('data/scenarios.json');
     const dataScenario = await response.json();
     return dataScenario;
   }
 
   async function fetchScenarioTrendData() {
     console.log('app:fetchScenarioTrendData');
-    const response = await fetch('scenario-trends.json');
+    const response = await fetch('data/scenario-trends.json');
     const dataScenarioTrend = await response.json();
     return dataScenarioTrend;
   }
@@ -94,7 +94,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
   // Function to fetch and store data
   function fetchAndStoreGeoJsonData(fileName) {
-    fetch(`data/${fileName}`)
+    fetch(`data/geojsons/${fileName}`)
       .then(response => response.json())
       .then(jsonData => {
         // Store the processed data in the object with the filename as key
