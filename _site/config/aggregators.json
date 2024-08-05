@@ -1,0 +1,47 @@
+{
+    "TAZID": {
+        "agTitleText"     : "TAZ",
+        "agGeoJsonKey"    : "taz",
+        "agCodeLabelField": "TAZID"
+    },
+    "CITY_NAME": {
+        "agTitleText"     : "City",
+        "agGeoJsonKey"    : "city",
+        "agCodeLabelField": "CITY_NAME"
+    },
+    "DISTSML": {
+        "agTitleText"     : "Small District",
+        "agGeoJsonKey"    : "distSml",
+        "agCodeLabelField": "DSML_NAME"
+    },
+    "DISTMED": {
+        "agTitleText"     : "Medium District",
+        "agGeoJsonKey"    : "distMed",
+        "agCodeLabelField": "DMED_NAME"
+    },
+    "DISTLRG": {
+        "agTitleText"     : "Large District",
+        "agGeoJsonKey"    : "distLrg",
+        "agCodeLabelField": "DLRG_NAME"
+    },
+    "CO_FIPS" : {
+        "agTitleText"     : "County",
+        "agSelected"      : ["35"],
+        "agGeoJsonKey"    : "county",
+        "agCodeLabelField": "CO_NAME"
+    },
+    "PLANAREA": {
+      "agTitleText"     : "Plan Area",
+      "agSelected"      : ["WFRC"],
+      "agCodeLabelField": "PLANAREA",
+      "agOptions": [{"value":"MAG" , "label":"MAG" },
+                    {"value":"WFRC", "label":"WFRC"}]
+    },
+    "EFA": {
+      "agTitleText"     : "Equity Focus Areas",
+      "agSelected"      : ["EFA"],
+      "agCodeLabelField": "EFA",
+      "agOptions": [{"value":"EFA" , "label":"EFA"    },
+                    {"value":""    , "label":"Non-EFA"}]
+    }
+}
