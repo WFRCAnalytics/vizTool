@@ -2,16 +2,16 @@
     "initial_select": [
         {
             "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build Phase 1",
+            "scnGroup": "Build_Phase1",
             "scnYear": 2050
         }
     ],
     "data": [
-        {   "modVersion": "v900",
+        {   "modVersion": "v910_20240807",
             "scnGroup": "Base",
             "scnYear": 2019,
             "geojsons": {
-                "segment":"segments_v901.geojson",
+                "segment":"segments_v901_TransitCorridors.geojson",
                 "taz"    :"taz.geojson",
                 "city"   :"cities.geojson",
                 "distSml":"districtsSmall.geojson",
@@ -21,10 +21,10 @@
             }
         },
         {   "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build Phase 1",
+            "scnGroup": "Build_Phase1",
             "scnYear": 2050,
             "geojsons": {
-                "segment":"segments_v901.geojson",
+                "segment":"segments_v901_TransitCorridors.geojson",
                 "taz"    :"taz.geojson",
                 "city"   :"cities.geojson",
                 "distSml":"districtsSmall.geojson",
@@ -34,10 +34,10 @@
             }
         },
         {   "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build Phase 1 - Rail",
+            "scnGroup": "Build_Phase1_Rail",
             "scnYear": 2050,
             "geojsons": {
-                "segment":"segments_v901.geojson",
+                "segment":"segments_v901_TransitCorridors.geojson",
                 "taz"    :"taz.geojson",
                 "city"   :"cities.geojson",
                 "distSml":"districtsSmall.geojson",

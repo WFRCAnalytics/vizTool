@@ -120,7 +120,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   // Function to fetch and store data
   async function fetchAndStoreGeoJsonData(fileName) {
     try {
-      const response = await fetch(`data/layers/${fileName}`);
+      const response = await fetch(`layers/${fileName}`);
       const jsonData = await response.json();
       // Store the processed data in the object with the filename as key
       dataGeojsons[fileName] = jsonData;

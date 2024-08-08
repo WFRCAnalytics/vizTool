@@ -1269,13 +1269,13 @@
                 "field": "dVal",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "Less than -5,000" },
-                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-5,000 to -1,000" },
-                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-1,000 to -500"   },
-                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-500 to -50"      },
+                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 3.5000 }, "label": "-5,000 to -1,000" },
+                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 2.2500 }, "label": "-1,000 to -500"   },
+                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 1.5000 }, "label": "-500 to -50"      },
                     { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-50 to +50"       },
-                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+50 to +500"      },
-                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1,000"   },
-                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1,000 to +5,000" },
+                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 1.5000 }, "label": "+50 to +500"      },
+                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 2.2500 }, "label": "+500 to +1,000"   },
+                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 3.5000 }, "label": "+1,000 to +5,000" },
                     { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +5,000" }
                 ],
                 "defaultSymbol": {

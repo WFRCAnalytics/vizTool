@@ -30,7 +30,7 @@ class Filter {
 
     for (let scenario of dataScenarios) {
       // open json file
-      let jsonFilename = 'data/scenarios/' + scenario.scnFolder + '/' + data.fOptionsJson;
+      let jsonFilename = 'scenario-data/' + scenario.scnFolder + '/' + data.fOptionsJson;
 
       // get list of options using _value and _label fields
       try {

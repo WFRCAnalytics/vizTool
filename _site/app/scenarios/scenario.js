@@ -36,7 +36,7 @@ class Scenario {
 
   // Function to fetch and store data
   fetchAndStoreData(fileName) {
-    fetch(`data/scenarios/${this.scnFolder}/${fileName}.json`)
+    fetch(`scenario-data/${this.scnFolder}/${fileName}.json`)
       .then(response => response.json())
       .then(jsonData => {
         // Store the processed data in the object with the filename as key

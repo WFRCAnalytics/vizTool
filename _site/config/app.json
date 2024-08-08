@@ -127,7 +127,7 @@
             "attributeTitle": "Transit Segment Attributes",
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
             "attributeSelected": "aR",
-            "attributes": ["aR","aHd","aSp","aTi"],
+            "attributes": ["aR"],
             "filters" : [
               {
                 "fCode"    : "fPurp",
@@ -181,125 +181,6 @@
                 "fOptionsJson": "j-transit-route-names.json",
                 "fOptionValue": "RouteName",
                 "fOptionName" : "RouteLongName"
-              },
-              {
-                "fCode"    : "fMdH",
-                "fName"    : "Filter Hierarchacal Mode",
-                "fWidget"  : "select",
-                "fSelected": "ALL",
-                "fOptions" : [{"value":"ALL", "label":"All Modes"            },
-                              {"value":"LCL", "label":"Local Bus"            },
-                              {"value":"COR", "label":"Core Bus"             },
-                              {"value":"EXP", "label":"Express Bus"          },
-                              {"value":"BRT", "label":"Bus Rapid Transit"    },
-                              {"value":"LRT", "label":"Light Rail Transit"   },
-                              {"value":"CRT", "label":"Commuter Rail Transit"}]
-              }
-            ]
-          }
-        },
-        { "submenuText": "Transit Boardings Trends",
-          "submenuIconStart": "graph-line-series",
-          "template": "vizTrends",
-          "templateSettings": {
-            "baseGeoJsonKey": "segment",
-            "baseGeoJsonId": "SEGID",
-            "jsonFileName": "j-transit-boardings",
-            "aggregatorTitle": "Select Summary Geography",
-            "aggregatorSelected" : "CO_FIPS",
-            "comboSelected": "",
-            "attributeTitle": "Transit Trends",
-            "attributeInfoTextHtml": "<b>PA Boardings</b> refers to the count of passengers boarding (getting on) public transportation in a specific direction, which is from the point of production (e.g. home) to the point of attraction (e.g. work).<br/><b>PA Alightings</b> is refers to the count of passengers alighting (getting off) public transportation in a specific direction, which is from the point of production (e.g. home) to the point of attraction (e.g. work).<br/><br/>This directionality emphasizes the movement of individuals from places where they live (production areas) to places where they seek employment, services, entertainment, shopping, or other activities (attraction areas).",
-            "attributeSelected": "aB",
-            "dividerTitle": "Divide By",
-            "dividerSelected": "",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
-            "attributes": ["aB","aA"],
-            "dividers": [
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotHh",
-                "aDisplayName": "Total Households",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aWrk",
-                "aDisplayName": "Total Workers",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotEmp",
-                "aDisplayName": "Total Jobs",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aHhPop",
-                "aDisplayName": "Total Population",
-                "filter": ""
-              }
-            ],
-            "filters" : [
-              {
-                "fCode"    : "fPurp",
-                "fName"    : "Filter Trip Purpose",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["All"],
-                "fOptions" : [{"value":"All", "label":"All Purposes"}],
-                "fUserModifiable" : false
-              },
-              {
-                "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["pk","ok"],
-                "fOptions" : [{"value":"pk", "label":"Peak"     },
-                              {"value":"ok", "label":"Off-Peak" }]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["drive", "walk"],
-                "fOptions" : [{"value":"drive", "label":"Drive"},
-                              {"value":"walk" , "label":"Walk" }]
-              },
-              {
-                "fCode"    : "fDir",
-                "fName"    : "Filter Direction",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["IB", "OB", "N/A"],
-                "fOptions" : [{"value":"IB" , "label":"In-Bound" },
-                              {"value":"OB" , "label":"Out-Bound"},
-                              {"value":"N/A", "label":"N/A"      }]
-              },
-              {
-                "fCode"    : "fMd",
-                "fName"    : "Filter Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": [4,5,6,7,8,9],
-                "fOptions" : [{"value":4, "label":"Local Bus"            },
-                              {"value":5, "label":"Core Bus"             },
-                              {"value":6, "label":"Express Bus"          },
-                              {"value":9, "label":"Bus Rapid Transit"    },
-                              {"value":7, "label":"Light Rail Transit"   },
-                              {"value":8, "label":"Commuter Rail Transit"}]
-              },
-              {
-                "fCode"    : "fName",
-                "fName"    : "Filter Route Name",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["M805_Santaquin","Santaquin_Exp","M821_5YR2023","O630","OF638","Core_Nebo","M864_ThanksgivingPnt","M871_SLtoUtahCnty","S472X","S473X","Clear","O640","BRTWash_R","O607","OF618","O606","7800FtUn_3","SF570","Core_Maple","M822_Psn","BRT_VinOrm","O604","O601","Core_CedarLehi","BRTRdwd_South","BRTRdwd_T","MidValCon","S31","LakePark","900So","BRT_2700W_T","S1","BRTNRedwd_T","500E_2","OF605","BRTNSDA_R","BRT123RD_A","SF514","StGrid_2","900E_2","BRT62S_T1","Cedar_Exp","M823_5RY2023","O609","SF453","BRT56_R","M831_WPr","CG_BRT_S1","M833_CntPr","M862_Orem","BRT104th_2","SoJoSandyC","SF525","StGrid_2_BRT","5400S","BRTFTHLWA_N","S004","300W","S455","PlsntClear","O614","O626","HinckleyUnion","OF620","MTTrolley","O627","O628","ClearRoyWest","BRT3533S_Core","UVX","S236","S248","S223","S513","FthlDr2100","M834_EstPr","S509","S017","O603","O615","LittleCott","BRT1300E_T","200So_2","SF11","O667","RGRANSUG_U","ShldSego_3","SF202","SF232","Sline_Mill","3900S","1700So","1300So","M806_EglMtn","S451X","S471","S456","O616","S470","O613","SF578","S072","M821_Psn","SF518","S218","S217","S039","S009","D460","S463","D461","FD605","SF547","S526","SF534","SF546","SF94","S313X","S209","S307X","S320X","O645","S454","S551","M850_StateStreet","M809_AM-PG","S201","S213","S525","S200","S045","Red","D462","S519/520","O625","O612","M807_NoCnty","S035","BRT3500S","M841_UVU","SF504","S220","S240","S033","S054","SF556","S041","S047","S006","S011","S003","S354X","S021","O650","SF590","S205","S2X","S002","S227","Green","S062","S232","Blue","SF522","O608","Sline","RCRT_OGPN"]
               },
               {
                 "fCode"    : "fMdH",

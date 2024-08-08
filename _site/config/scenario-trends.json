@@ -3,7 +3,7 @@
     "scnTrend": "Corridors Analysis - BRT",
     "displayByDefault": true,
     "modelruns" : [
-      { "modVersion": "v900",
+      { "modVersion": "v910_20240807",
         "scnGroup": "Base",
         "scnYear": 2019 },
       { "modVersion": "v902-transit-corridor-testing-81baac",
@@ -15,7 +15,7 @@
     "scnTrend": "Corridors Analysis - Rail",
     "displayByDefault": true,
     "modelruns" : [
-      { "modVersion": "v900",
+      { "modVersion": "v910_20240807",
         "scnGroup": "Base",
         "scnYear": 2019 },
       { "modVersion": "v902-transit-corridor-testing-81baac",

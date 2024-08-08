@@ -50,7 +50,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'data/layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
         title: "dummy layer"
       });
       map.add(this.geojsonLayer);
@@ -60,7 +60,7 @@ require([
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
       if (this.baseGeoJsonKey!="") {
-        fetch('data/layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -93,7 +93,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'data/layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJson),
+        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJson),
         title: "Aggregator Layer"
       });
 
@@ -296,7 +296,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'data/layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
         title: "dummy layer"
       });
       map.add(this.geojsonLayer);
@@ -306,7 +306,7 @@ require([
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
       if (this.baseGeoJsonKey!="") {
-        fetch('data/layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
