@@ -45,6 +45,32 @@
                 "distLrg":"districtsLarge.geojson",
                 "county" :"counties.geojson"
             }
+        },
+        {   "modVersion": "WF-TDM-v902-20240626",
+            "scnGroup": "NoBuild_Phase1",
+            "scnYear": 2050,
+            "geojsons": {
+                "segment":"segments_v901_TransitCorridors.geojson",
+                "taz"    :"taz.geojson",
+                "city"   :"cities.geojson",
+                "distSml":"districtsSmall.geojson",
+                "distMed":"districtsMedium.geojson",
+                "distLrg":"districtsLarge.geojson",
+                "county" :"counties.geojson"
+            }
+        },
+        {   "modVersion": "WF-TDM-v902-20240626",
+            "scnGroup": "NoBuild_Phase1_Rail",
+            "scnYear": 2050,
+            "geojsons": {
+                "segment":"segments_v901_TransitCorridors.geojson",
+                "taz"    :"taz.geojson",
+                "city"   :"cities.geojson",
+                "distSml":"districtsSmall.geojson",
+                "distMed":"districtsMedium.geojson",
+                "distLrg":"districtsLarge.geojson",
+                "county" :"counties.geojson"
+            }
         }
     ]
 }
