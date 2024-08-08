@@ -394,7 +394,7 @@
             "attributeSelected": "aHhPop",
             "aggregatorTitle": "Select Zone Geography",
             "aggregatorSelected" : "TAZID",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
+            "aggregators": ["TAZID","PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
             "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
             "filters" : [
               {
