@@ -47,14 +47,14 @@
             "baseGeoJsonId": "SEGID",
             "jsonFileName": "j-roadway-trends",
             "aggregatorTitle": "Select Summary Geography",
-            "aggregatorSelected" : "CO_FIPS",
             "comboSelected": "",
             "attributeTitle": "Road Trends",
             "attributeSelected": "aVmt",
             "attributeInfoTextHtml": "<b>Vehicle-Miles Traveled</b> is the total miles traveled by all vehicles in a specified area over a given period of time.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by all vehicles traveling within a specified area over a given period of time.<br/><b>Lane-Miles</b> is the total length of lanes on roadways calculated by multiplying the length of a road segment by the number of lanes in that segment.",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "dividers": [
               {
@@ -134,8 +134,7 @@
                 "fName"    : "Filter Trip Purpose",
                 "fWidget"  : "checkboxes",
                 "fSelected": ["All"],
-                "fOptions" : [{"value":"All", "label":"All Purposes"}],
-                "fUserModifiable" : false
+                "fOptions" : [{"value":"All", "label":"All Purposes"}]
               },
               {
                 "fCode"    : "fTod",
@@ -213,8 +212,8 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Mode Share",
             "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
             "attributeTitle": "Trip Mode",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
@@ -280,14 +279,14 @@
             "baseGeoJsonId": "TAZID",
             "jsonFileName": "j-zones-modetrips",
             "aggregatorTitle": "Select Summary Geography",
-            "aggregatorSelected" : "CO_FIPS",
             "comboSelected": "",
             "attributeTitle": "Transit Trends",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSUPER",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
             "dividers": [
               {
@@ -393,8 +392,8 @@
             "attributeInfoTextHtml": "<b>Population</b> represents the total number of individuals living within an area.<br/><b>Households</b> is the total number of occupied residential units.<br/><b>Total Vehicles</b> is the cumulative count of vehicles owned or available for use by households.<br/><b>Total Workers</b> is the number of individuals within the population who are employed and part of the workforce.<br/><b>Employment - 3 Categories</b> is the distribution of employment across three broad categories.<br/><b>Employment - 12 Categories</b> is a more detailed division of employment statistics in twelve distinct categories.<br/><b>Average Income</b> is the mean income level of individuals or households within the area.<br/><b>K-12 School Enrollment</b> is the total number of students enrolled in K-12 educational institutions within the specified area.",
             "attributeSelected": "aHhPop",
             "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "aggregators": ["TAZID","PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
             "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
             "filters" : [
               {
@@ -470,14 +469,14 @@
             "baseGeoJsonId": "TAZID",
             "jsonFileName": "j-zones-se",
             "aggregatorTitle": "Select Summary Geography",
-            "aggregatorSelected" : "CO_FIPS",
             "comboSelected": "",
             "attributeTitle": "Socioeconomics",
             "attributeInfoTextHtml": "<b>Population</b> represents the total number of individuals living within an area.<br/><b>Households</b> is the total number of occupied residential units.<br/><b>Total Vehicles</b> is the cumulative count of vehicles owned or available for use by households.<br/><b>Total Workers</b> is the number of individuals within the population who are employed and part of the workforce.<br/><b>Employment - 3 Categories</b> is the distribution of employment across three broad categories.<br/><b>Employment - 12 Categories</b> is a more detailed division of employment statistics in twelve distinct categories.<br/><b>Average Income</b> is the mean income level of individuals or households within the area.<br/><b>K-12 School Enrollment</b> is the total number of students enrolled in K-12 educational institutions within the specified area.",
             "attributeSelected": "aHhPop",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aHhPop" ,"aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
             "dividers": [
               {
@@ -591,8 +590,8 @@
             "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a set travel time.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a set travel time.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
             "attributeSelected": "aJA",
             "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "aggregators": ["TAZID","PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
             "filters" : [
               {
@@ -629,8 +628,8 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Metrics",
             "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "aggregators": ["TAZID","PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
             "attributeTitle": "Zone Metric",
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
@@ -694,14 +693,14 @@
             "baseGeoJsonId": "TAZID",
             "jsonFileName": "j-zones-metrics",
             "aggregatorTitle": "Select Summary Geography",
-            "aggregatorSelected" : "CO_FIPS",
             "comboSelected": "",
             "attributeTitle": "Zone Metric Trends",
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
-            "aggregators": ["PLANAREA","CO_FIPS","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG"],
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
             "dividers": [
               {

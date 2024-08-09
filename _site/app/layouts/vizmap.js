@@ -93,7 +93,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJson),
+        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJsonKey),
         title: "Aggregator Layer"
       });
 
@@ -288,39 +288,39 @@ require([
 
     initializeLayer() {
       
-      // remove layer
-      if (this.geojsonLayer) {
-        map.remove(this.geojsonLayer);
-      }
-      
-      // ADD GEOJSONS
-      // need to check geometry type before adding!!
-      this.geojsonLayer = new GeoJSONLayer({
-        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
-        title: "dummy layer"
-      });
-      map.add(this.geojsonLayer);
-      this.geojsonLayer.visible = false;
-
-      
-      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
-      // Read JSON file
-      if (this.baseGeoJsonKey!="") {
-        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-          this.baseGeometryGeoJson = data;
-        })
-        .catch(error => {
-          console.error('Error reading the JSON file:', error);
-          // Handle the error appropriately
-          });
-      }
+//      // remove layer
+//      if (this.geojsonLayer) {
+//        map.remove(this.geojsonLayer);
+//      }
+//      
+//      // ADD GEOJSONS
+//      // need to check geometry type before adding!!
+//      this.geojsonLayer = new GeoJSONLayer({
+//        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+//        title: "dummy layer"
+//      });
+//      map.add(this.geojsonLayer);
+//      this.geojsonLayer.visible = false;
+//
+//      
+//      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
+//      // Read JSON file
+//      if (this.baseGeoJsonKey!="") {
+//        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+//          .then(response => {
+//            if (!response.ok) {
+//              throw new Error(`HTTP error! status: ${response.status}`);
+//            }
+//            return response.json();
+//        })
+//        .then(data => {
+//          this.baseGeometryGeoJson = data;
+//        })
+//        .catch(error => {
+//          console.error('Error reading the JSON file:', error);
+//          // Handle the error appropriately
+//          });
+//      }
 
       let dValFieldType;
 

@@ -70,16 +70,16 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     // load scenario data
     jsonScenario = await fetchScenarioData();
-    dataScenarios = jsonScenario.data.map(item => new Scenario(item));
+    dataScenarios = jsonScenario.scenarios.map(item => new Scenario(item));
 
     // set the selected scenario to the initial_select in json, if exists, otherwise pick first scenario
     // Set the selected scenario
     if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
       selectedScenario_Main = jsonScenario.initial_select[0];
-      selectedScenario_Comp = jsonScenario.data[0];
-    } else if (jsonScenario.data && jsonScenario.data.length > 0) {
-      selectedScenario_Main = jsonScenario.data[0];
-      selectedScenario_Comp = jsonScenario.data[0];
+      selectedScenario_Comp = jsonScenario.scenarios[0];
+    } else if (jsonScenario.scenarios && jsonScenario.scenarios.length > 0) {
+      selectedScenario_Main = jsonScenario.scenarios[0];
+      selectedScenario_Comp = jsonScenario.scenarios[0];
     } else {
       selectedScenario_Main = null; // or handle the case where there is no data appropriately
       selectedScenario_Comp = null; // or handle the case where there is no data appropriately
@@ -93,8 +93,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     const _geojsonfilenames = new Set();
 
-    for (const dataScenario of dataScenarios) {
-        let _geojsons = Object.values(dataScenario.geojsons);
+    for (const model of jsonScenario.models) {
+        let _geojsons = Object.values(model.geojsons);
         for (const _geojson of _geojsons) {
             _geojsonfilenames.add(_geojson);
         }

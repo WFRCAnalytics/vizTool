@@ -5,7 +5,7 @@ class Scenario {
     this.scnGroup   = data.scnGroup;
     this.scnYear    = data.scnYear; 
     this.scnFolder  = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
-    this.geojsons   = data.geojsons;
+    this.geojsons   = jsonScenario.models.find(entry => entry.modVersion === this.modVersion).geojsons;
     this.jsonData   = {}; // Array to store the data
   }
 

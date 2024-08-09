@@ -16,7 +16,7 @@ class Aggregator {
     this.agOptions           = _configAggregator.agOptions;
     this.agGeoJsonKey        = _configAggregator.agGeoJsonKey;
     this.agCodeLabelField    = _configAggregator.agCodeLabelField,
-    this.selected            = _configAggregator.agSelected ? _configAggregator.agSelected : [];
+    this.selected            = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
 
     let _options= [];
 

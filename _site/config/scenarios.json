@@ -1,76 +1,84 @@
 {
     "initial_select": [
         {
-            "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build_Phase1",
+            "modVersion": "v902",
+            "scnGroup": "Centers_Phase1_BRT",
             "scnYear": 2050
         }
     ],
-    "data": [
-        {   "modVersion": "v910_20240807",
+    "models": [
+        {
+            "modVersion": "v910",
+            "geojsons": {
+                "segment":"segments_v901_TransitCorridors.geojson",
+                "taz"    :"taz_v900.geojson",
+                "city"   :"cities_v900.geojson",
+                "distSml":"districtsSmall_v910.geojson",
+                "distMed":"districtsMedium_v900.geojson",
+                "distLrg":"districtsLarge_v900.geojson",
+                "distSup":"districtsSuper_v900.geojson"
+            }
+        },
+        {
+            "modVersion": "v902",
+            "geojsons": {
+                "segment":"segments_v901_TransitCorridors.geojson",
+                "taz"    :"taz_v900.geojson",
+                "city"   :"cities_v900.geojson",
+                "distSml":"districtsSmall_v910.geojson",
+                "distMed":"districtsMedium_v900.geojson",
+                "distLrg":"districtsLarge_v900.geojson",
+                "distSup":"districtsSuper_v900.geojson"
+            }
+        }
+    ],
+    "trends": [
+        {
+            "scnTrendCode": "BRT",
+            "displayName": "BRT - Intensified Centers",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Rail",
+            "displayName": "Rail - Intensified Centers",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "BRTNoBld",
+            "displayName": "BRT - RTP Land Use",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "RailNoBld",
+            "displayName": "Rail - RTP Land Use",
+            "displayByDefault": true
+        }
+    ],
+    "scenarios": [
+        {   "modVersion": "v910",
             "scnGroup": "Base",
             "scnYear": 2019,
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz.geojson",
-                "city"   :"cities.geojson",
-                "distSml":"districtsSmall.geojson",
-                "distMed":"districtsMedium.geojson",
-                "distLrg":"districtsLarge.geojson",
-                "county" :"counties.geojson"
-            }
+            "scnTrendCodes": ["BRT","Rail","BRTNoBld","RailNoBld"]
         },
-        {   "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build_Phase1",
+        {   "modVersion": "v902",
+            "scnGroup": "Centers_Phase1_BRT",
             "scnYear": 2050,
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz.geojson",
-                "city"   :"cities.geojson",
-                "distSml":"districtsSmall.geojson",
-                "distMed":"districtsMedium.geojson",
-                "distLrg":"districtsLarge.geojson",
-                "county" :"counties.geojson"
-            }
+            "scnTrendCodes": ["BRT"]
         },
-        {   "modVersion": "v902-transit-corridor-testing-81baac",
-            "scnGroup": "Build_Phase1_Rail",
+        {   "modVersion": "v902",
+            "scnGroup": "Centers_Phase1_Rail",
             "scnYear": 2050,
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz.geojson",
-                "city"   :"cities.geojson",
-                "distSml":"districtsSmall.geojson",
-                "distMed":"districtsMedium.geojson",
-                "distLrg":"districtsLarge.geojson",
-                "county" :"counties.geojson"
-            }
+            "scnTrendCodes": ["Rail"]
         },
-        {   "modVersion": "WF-TDM-v902-20240626",
-            "scnGroup": "NoBuild_Phase1",
+        {   "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_BRT",
             "scnYear": 2050,
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz.geojson",
-                "city"   :"cities.geojson",
-                "distSml":"districtsSmall.geojson",
-                "distMed":"districtsMedium.geojson",
-                "distLrg":"districtsLarge.geojson",
-                "county" :"counties.geojson"
-            }
+            "scnTrendCodes": ["BRTNoBld"]
         },
-        {   "modVersion": "WF-TDM-v902-20240626",
-            "scnGroup": "NoBuild_Phase1_Rail",
+        {   "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_Rail",
             "scnYear": 2050,
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz.geojson",
-                "city"   :"cities.geojson",
-                "distSml":"districtsSmall.geojson",
-                "distMed":"districtsMedium.geojson",
-                "distLrg":"districtsLarge.geojson",
-                "county" :"counties.geojson"
-            }
+            "scnTrendCodes": ["RailNoBld"]
         }
     ]
 }
