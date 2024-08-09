@@ -212,7 +212,7 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Mode Share",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributeTitle": "Trip Mode",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
@@ -249,8 +249,16 @@
                               {"value":"a", "label":"Attraction" }]
               },
               {
+                "fCode"    : "fMdA",
+                "fName"    : "Filter Access Mode",
+                "fWidget"  : "checkboxes",
+                "fSelected": ["D","W"],
+                "fOptions" : [{"value": "D", "label": "Drive"},
+                              {"value": "W", "label": "Walk" }]
+              },
+              {
                 "fCode"    : "fMd",
-                "fName"    : "Filter Mode",
+                "fName"    : "Filter Mode (Heirarchal)",
                 "fWidget"  : "checkboxes",
                 "fSelected": ["LCL","EXP","COR","BRT","LRT","CRT"],
                 "fOptions" : [{"value": "LCL", "label": "Local Bus"            },
@@ -259,14 +267,6 @@
                               {"value": "BRT", "label": "Bus Rapid Transit"    },
                               {"value": "LRT", "label": "Light Rail Transit"   },
                               {"value": "CRT", "label": "Commuter Rail Transit"}]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["D","W"],
-                "fOptions" : [{"value": "D", "label": "Drive"},
-                              {"value": "W", "label": "Walk" }]
               }
             ]
           }
