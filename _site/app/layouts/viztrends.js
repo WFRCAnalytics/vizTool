@@ -10,7 +10,6 @@ class VizTrends {
     // link to parent
     this.modelEntity = modelEntity;
 
-    this.jsonFileName = data.jsonFileName;
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
                                   data.attributeTitle,
@@ -208,7 +207,7 @@ class VizTrends {
     const ctx = canvas.getContext('2d');
     let currentChart = null;
   
-    const agIds = Object.keys(chartData);
+    const agIds = this.recastArrayIfNumeric(Object.keys(chartData));
   
     const calculatePercentChange = (currentValue, initialValue) => ((currentValue - initialValue) / initialValue) * 100;
   
@@ -248,19 +247,53 @@ class VizTrends {
             // For each agId, create a dataset for each scenario group
             return scenarioGroups.map(scenarioGroup => {
               const name = scenarioGroup.name;
+            
+              // Error checking: Ensure name exists and is a valid string
+              if (!name || typeof name !== 'string') {
+                console.error('Invalid scenario group name:', name);
+                return null; // Skip this scenario group if name is invalid
+              }
+            
               let values = chartData[agId][name];
               let dataPoints;
-              if (mode === 'pct_change' || mode === 'abs_change') {
-                dataPoints = modifyDataForChange(values, mode);
-              } else { // mode === 'regular'
-                dataPoints = Object.keys(values).map(year => {
-                  return { 
-                    x: parseInt(year, 10), // Ensure the year is a number
-                    y: +values[year].toPrecision(4) // Round y values to 4 significant figures
-                  };
-                });
+            
+              // Error checking: Ensure values exist and are of expected type (object)
+              if (!values || typeof values !== 'object') {
+                console.error(`Invalid or missing values for aggregator ID ${agId} and scenario ${name}`);
+                return null; // Skip this scenario if values are invalid
               }
-  
+            
+              // Process data points based on mode
+              if (mode === 'pct_change' || mode === 'abs_change') {
+                try {
+                  dataPoints = modifyDataForChange(values, mode);
+                } catch (error) {
+                  console.error(`Error modifying data for change: ${error.message}`);
+                  dataPoints = []; // Handle error and set dataPoints to an empty array
+                }
+              } else { // mode === 'regular'
+                try {
+                  dataPoints = Object.keys(values).map(year => {
+                    if (isNaN(year)) {
+                      throw new Error(`Invalid year value: ${year}`);
+                    }
+            
+                    const yValue = +values[year].toPrecision(4);
+                    if (isNaN(yValue)) {
+                      throw new Error(`Invalid numeric value for year ${year}: ${values[year]}`);
+                    }
+            
+                    return { 
+                      x: parseInt(year, 10), // Ensure the year is a number
+                      y: yValue // Round y values to 4 significant figures
+                    };
+                  });
+                } catch (error) {
+                  console.error(`Error processing data points: ${error.message}`);
+                  dataPoints = []; // Handle error and set dataPoints to an empty array
+                }
+              }
+            
               return {
                 label: this.getAgNameFromAgId(agId) + ':' + name,
                 data: dataPoints,
@@ -270,7 +303,8 @@ class VizTrends {
                 pointRadius: 8,
                 showLine: true // Draw lines between points
               };
-            });
+            }).filter(dataset => dataset !== null); // Filter out any null datasets
+            
           })
         },
         options: {
@@ -330,6 +364,19 @@ class VizTrends {
     return colors[index % colors.length];
   }
 
+  recastArrayIfNumeric(arr) {
+    // Check if every item in the array is a numeric string
+    const allNumeric = arr.every(item => !isNaN(item) && typeof item === 'string');
+
+    // If all items are numeric strings, convert them to integers
+    if (allNumeric) {
+      return arr.map(item => parseInt(item, 10));
+    } else {
+      // Return the original array if not all items are numeric strings
+      return arr;
+    }
+  }
+
   updateDisplay() {
     console.log('viztrends:updateDisplay:' + this.id);
 
@@ -343,20 +390,7 @@ class VizTrends {
       _selectedDivider = this.sidebar.dividers.find(divider => divider.aCode === _dCode) || null;
     }
 
-    function recastArrayIfNumeric(arr) {
-      // Check if every item in the array is a numeric string
-      const allNumeric = arr.every(item => !isNaN(item) && typeof item === 'string');
-  
-      // If all items are numeric strings, convert them to integers
-      if (allNumeric) {
-        return arr.map(item => parseInt(item, 10));
-      } else {
-        // Return the original array if not all items are numeric strings
-        return arr;
-      }
-    }
-
-    const _agIds = recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
+    const _agIds = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
   
     const labels = [2019,2023,2028,2032,2042,2050];
     const chartData = {};

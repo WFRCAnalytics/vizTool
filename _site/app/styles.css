@@ -59,13 +59,13 @@ h1 {
 }
 
 .scenario-selector-container {
-    width: 195px;
+    width: 295px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;
 }
 
 .label-toggle-container {
-    width: 195px;
+    width: 295px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;
 }

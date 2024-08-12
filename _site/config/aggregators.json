@@ -24,23 +24,23 @@
         "agGeoJsonKey"    : "distLrg",
         "agCodeLabelField": "DLRG_NAME"
     },
-    "CO_FIPS" : {
-        "agTitleText"     : "County",
-        "agSelected"      : ["35"],
-        "agGeoJsonKey"    : "county",
-        "agCodeLabelField": "CO_NAME"
+    "DISTSUPER" : {
+        "agTitleText"      : "Super District",
+        "agDefaultSelected": ["5"],
+        "agGeoJsonKey"     : "distSup",
+        "agCodeLabelField" : "DSUP_NAME"
     },
     "PLANAREA": {
-      "agTitleText"     : "Plan Area",
-      "agSelected"      : ["WFRC"],
-      "agCodeLabelField": "PLANAREA",
+      "agTitleText"      : "Plan Area",
+      "agDefaultSelected": ["WFRC"],
+      "agCodeLabelField" : "PLANAREA",
       "agOptions": [{"value":"MAG" , "label":"MAG" },
                     {"value":"WFRC", "label":"WFRC"}]
     },
     "EFA": {
-      "agTitleText"     : "Equity Focus Areas",
-      "agSelected"      : ["EFA"],
-      "agCodeLabelField": "EFA",
+      "agTitleText"      : "Equity Focus Areas",
+      "agDefaultSelected": ["EFA"],
+      "agCodeLabelField" : "EFA",
       "agOptions": [{"value":"EFA" , "label":"EFA"    },
                     {"value":""    , "label":"Non-EFA"}]
     }

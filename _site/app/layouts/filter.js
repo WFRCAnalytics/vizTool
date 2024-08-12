@@ -19,7 +19,6 @@ class Filter {
     } else {
       this.initializeFilter(data, _name);
     }
-    
   }
 
   async loadAndProcessOptions(data) {
@@ -127,7 +126,20 @@ class Filter {
     if (this.modifiable) {
       //Debug
       //console.log('debug filter isVisible containerId: ' + this.filterWij.containerId)
-      return document.getElementById(this.filterWij.containerId).style.display === 'none';
+      const element = document.getElementById(this.filterWij.containerId);
+
+      // Error checking: Ensure the element exists and has a valid style property
+      if (!element) {
+        console.error(`Element with ID ${this.filterWij.containerId} not found.`);
+        return false; // Return false or handle the case appropriately
+      }
+      
+      if (!element.style) {
+        console.error(`Element with ID ${this.filterWij.containerId} does not have a style property.`);
+        return false; // Return false or handle the case appropriately
+      }
+      
+      return element.style.display !== 'none';
     }
   }
 
