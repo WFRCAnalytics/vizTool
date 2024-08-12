@@ -374,6 +374,80 @@
               }
             ]
           }
+        },
+        { "submenuText": "Zone Origin-Destination Trips",
+          "submenuIconStart": "graph-pie-slice",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonFileName": "",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "geometryType": "polygon",
+            "popupTitle": "OD",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "TAZID",
+            "attributeTitle": "Trip Mode",
+            "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
+            "attributeSelected": "a0",
+            "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
+            "filters" : [
+              { "fCode"       : "fSmallDist",
+                "fName"       : "Small District",
+                "fWidget"     : "checkboxes",
+                "fOptionsJson": "j-transit-route-names.json",
+                "fOptionValue": "RouteName",
+                "fOptionName" : "RouteLongName"
+              },
+              { "fCode"    : "fPurp",
+                "fName"    : "Filter Trip Purpose",
+                "fWidget"  : "select",
+                "fSelected": "All",
+                "fOptions" : [{"value":"All"  , "label": "All Purposes"      },
+                              {"value":"HBC"  , "label": "Home-Based College"},
+                              {"value":"HBO"  , "label": "Home-Based Other"  },
+                              {"value":"HBSch", "label": "Home-Based School" },
+                              {"value":"HBW"  , "label": "Home-Based Work"   },
+                              {"value":"NHB"  , "label": "Non-Home-Based"    }]
+              },  
+              {  "fCode"    : "fTod",
+                "fName"    : "Filter Time of Day",
+                "fWidget"  : "select",
+                "fSelected": "Dy",
+                "fOptions" : [{"value":"Dy", "label":"Daily"            },
+                              {"value":"Pk", "label":"Peak (AM/PM)"     },
+                              {"value":"Ok", "label":"Off-Peak (Midday)"}]
+              },
+              {
+                "fCode"    : "fPA",
+                "fName"    : "Filter Production/Attraction",
+                "fWidget"  : "select",
+                "fSelected": "p",
+                "fOptions" : [{"value":"p", "label":"Production" },
+                              {"value":"a", "label":"Attraction" }]
+              },
+              {
+                "fCode"    : "fMdA",
+                "fName"    : "Filter Access Mode",
+                "fWidget"  : "checkboxes",
+                "fSelected": ["D","W"],
+                "fOptions" : [{"value": "D", "label": "Drive"},
+                              {"value": "W", "label": "Walk" }]
+              },
+              {
+                "fCode"    : "fMd",
+                "fName"    : "Filter Mode (Heirarchal)",
+                "fWidget"  : "checkboxes",
+                "fSelected": ["LCL","EXP","COR","BRT","LRT","CRT"],
+                "fOptions" : [{"value": "LCL", "label": "Local Bus"            },
+                              {"value": "EXP", "label": "Express Bus"          },
+                              {"value": "COR", "label": "Core Bus"             },
+                              {"value": "BRT", "label": "Bus Rapid Transit"    },
+                              {"value": "LRT", "label": "Light Rail Transit"   },
+                              {"value": "CRT", "label": "Commuter Rail Transit"}]
+              }
+            ]
+          }
         }
       ]
     },
@@ -578,46 +652,6 @@
             ]
           }
         },
-        { "submenuText": "Access to Opportunities",
-          "submenuIconStart": "desktop",
-          "template": "vizMap",
-          "templateSettings": {
-            "jsonFileName": "j-zones-ato",
-            "baseGeoJsonKey": "taz",
-            "baseGeoJsonId": "TAZID",
-            "geometryType": "polygon",
-            "attributeTitle": "Jobs and Households",
-            "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a set travel time.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a set travel time.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
-            "attributeSelected": "aJA",
-            "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "TAZID",
-            "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : [
-              {
-                "fCode"    : "fM",
-                "fName"    : "Filter Mode",
-                "fWidget"  : "select",
-                "fSelected": "A",
-                "fOptions" : [{"value": "A", "label": "Auto"    },
-                              {"value": "T", "label": "Transit" }]
-              },
-              {
-                "fCode"    : "fC",
-                "fName"    : "Filter Condition",
-                "fWidget"  : "select",
-                "fSelected": "C",
-                "fOptions" : [{"value": "C", "label": "Congested (Auto) and Transit"},
-                              {"value": "F", "label": "Freeflow (Auto-Only)"        },
-                              {"value": "S", "label": "Straight-line (Auto-Only)"   }]
-              }
-            ]
-          }
-        },
-        { "submenuText": "Access to Opportunities Trends (coming soon)",
-          "submenuIconStart": "graph-line-series",
-          "template": "vizComingSoon"
-        },
         { "submenuText": "Zone Metrics",
           "submenuIconStart": "graph-pie-slice",
           "template": "vizMap",
@@ -629,7 +663,7 @@
             "popupTitle": "Zone Metrics",
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "TAZID",
+            "aggregatorSelected" : "DISTSML",
             "attributeTitle": "Zone Metric",
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
@@ -786,6 +820,46 @@
               }
             ]
           }
+        },
+        { "submenuText": "Access to Opportunities",
+          "submenuIconStart": "desktop",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonFileName": "j-zones-ato",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "geometryType": "polygon",
+            "attributeTitle": "Jobs and Households",
+            "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a set travel time.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a set travel time.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
+            "attributeSelected": "aJA",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "TAZID",
+            "attributes": ["aJA","aHA","aCA","aJ","aH"],
+            "filters" : [
+              {
+                "fCode"    : "fM",
+                "fName"    : "Filter Mode",
+                "fWidget"  : "select",
+                "fSelected": "A",
+                "fOptions" : [{"value": "A", "label": "Auto"    },
+                              {"value": "T", "label": "Transit" }]
+              },
+              {
+                "fCode"    : "fC",
+                "fName"    : "Filter Condition",
+                "fWidget"  : "select",
+                "fSelected": "C",
+                "fOptions" : [{"value": "C", "label": "Congested (Auto) and Transit"},
+                              {"value": "F", "label": "Freeflow (Auto-Only)"        },
+                              {"value": "S", "label": "Straight-line (Auto-Only)"   }]
+              }
+            ]
+          }
+        },
+        { "submenuText": "Access to Opportunities Trends (coming soon)",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizComingSoon"
         }
       ]
     }

@@ -8,18 +8,6 @@
     ],
     "models": [
         {
-            "modVersion": "v910",
-            "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
-                "taz"    :"taz_v900.geojson",
-                "city"   :"cities_v900.geojson",
-                "distSml":"districtsSmall_v910.geojson",
-                "distMed":"districtsMedium_v900.geojson",
-                "distLrg":"districtsLarge_v900.geojson",
-                "distSup":"districtsSuper_v900.geojson"
-            }
-        },
-        {
             "modVersion": "v902",
             "geojsons": {
                 "segment":"segments_v901_TransitCorridors.geojson",
@@ -52,10 +40,15 @@
             "scnTrendCode": "RailNoBld",
             "displayName": "Rail - RTP Land Use",
             "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "RTP",
+            "displayName": "RTP",
+            "displayByDefault": true
         }
     ],
     "scenarios": [
-        {   "modVersion": "v910",
+        {   "modVersion": "v902",
             "scnGroup": "Base",
             "scnYear": 2019,
             "scnTrendCodes": ["BRT","Rail","BRTNoBld","RailNoBld"]
@@ -79,6 +72,11 @@
             "scnGroup": "RTPLandUse_Phase1_Rail",
             "scnYear": 2050,
             "scnTrendCodes": ["RailNoBld"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "scnTrendCodes": ["RTP"]
         }
     ]
 }
