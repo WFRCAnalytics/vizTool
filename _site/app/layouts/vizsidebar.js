@@ -156,7 +156,7 @@ class VizSidebar {
   }
 
   getSelectedOptionsAsLongText() {
-    return this.filters.filter(filter => !filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
+    return this.filters.filter(filter => filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
   }
   
 
