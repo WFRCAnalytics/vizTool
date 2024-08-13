@@ -631,10 +631,8 @@ require([
         //}
         if (this.mode==='main') {
           _title += this.getMainScenarioDisplayName();
-        } else if(this.mode==='compare' & this.modeCompare==='abs') {
+        } else if(this.mode==='compare' & (this.modeCompare==='abs' | this.modeCompare==='pct')) {
           _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
-        } else if(this.mode==='compare' & this.modeCompare==='pct') {
-          _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
         }
         this.legend = new Legend({
           view: mapView,
