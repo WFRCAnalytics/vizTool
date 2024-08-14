@@ -39,7 +39,7 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "Existing 2019",
-            "scnTrendCodes": ["BRT","Rail","BRTNoBld","RailNoBld"]
+            "scnTrendCodes": ["RTP"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTP",
