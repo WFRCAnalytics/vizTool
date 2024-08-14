@@ -16,27 +16,7 @@
             "attributeInfoTextHtml": "<b>Lanes</b> is total number of cross-section lanes, including high-occupancy, general purpose, collector-distributor, and arterial/collector lanes.<br/><b>Functional Type</b> is the FT value as defined in the travel demand model.<br/><b>Capacity per Hour per Lane</b> is the number of vehicles that can be served by her per lane. This includes reductions due to capacity factors and signals on arterials/collectors.<br/><b>Free-flow Speed</b> is the uncongested maximum speed in miles-per-hour.<br/><b>Volume</b> this is the total number of vehicles that are served during the time interval.<br/><b>Speed</b> is the congested travel speed for a given link.<br/><b>Max V/C Ratio</b> is the worst volume-over-capacity ratio by direction by time interval.",
             "attributeSelected": "aLanes",
             "attributes": ["aLanes","aFt","aCap1HL","aFfSpd","aVol","aMinSpd","aMaxVc"],
-            "filters" : [
-              { "fCode"    : "fVeh",
-                "fName"    : "Filter Vehicle Type",
-                "fWidget"  : "select",
-                "fSelected": "All",
-                "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                              {"value":"LT" , "label":"Light Trucks" },
-                              {"value":"MD" , "label":"Medium Trucks"},
-                              {"value":"HV" , "label":"Heavy Trucks" }]
-              },
-              { "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "select",
-                "fSelected": "DY",
-                "fOptions" :[{"value":"DY", "label":"Daily"         },
-                              {"value":"AM", "label":"AM Period"     },
-                              {"value":"MD", "label":"Midday Period" },
-                              {"value":"PM", "label":"PM Period"     },
-                              {"value":"EV", "label":"Evening Period"}]
-              }
-            ]
+            "filters" : ["fVehType", "fTod4"]
           }
         },
         { "submenuText": "Road Trends",
@@ -56,63 +36,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
-            "dividers": [
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotHh",
-                "aDisplayName": "Total Households",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aWrk",
-                "aDisplayName": "Total Workers",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotEmp",
-                "aDisplayName": "Total Jobs",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aHhPop",
-                "aDisplayName": "Total Population",
-                "filter": ""
-              }
-            ],
-            "filters" : [
-              {
-                "fCode"    : "fVeh",
-                "fName"    : "Filter Vehicle Type",
-                "fWidget"  : "select",
-                "fSelected": "All",
-                "fOptions" : [{"value":"All", "label":"All Vehicles" },
-                              {"value":"LT" , "label":"Light Trucks" },
-                              {"value":"MD" , "label":"Medium Trucks"},
-                              {"value":"HV" , "label":"Heavy Trucks" }]
-              },
-              {
-                "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "select",
-                "fSelected": "DY",
-                "fOptions" : [{"value":"DY", "label":"Daily"         },
-                              {"value":"AM", "label":"AM Period"     },
-                              {"value":"MD", "label":"Midday Period" },
-                              {"value":"PM", "label":"PM Period"     },
-                              {"value":"EV", "label":"Evening Period"}]
-              }
-            ]
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
+            "filters" : ["fVehType", "fTod4"]
           }
         },
         { "submenuText": "Transit Segments",
@@ -126,76 +51,18 @@
             "popupTitle": "Transit Segments",
             "attributeTitle": "Transit Segment Attributes",
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
-            "attributeSelected": "aR",
             "attributes": ["aR"],
-            "filters" : [
-              {
-                "fCode"    : "fPurp",
-                "fName"    : "Filter Trip Purpose",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["All"],
-                "fOptions" : [{"value":"All", "label":"All Purposes"}]
-              },
-              {
-                "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["pk","ok"],
-                "fOptions" : [{"value":"pk", "label":"Peak"     },
-                              {"value":"ok", "label":"Off-Peak" }]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["drive", "walk"],
-                "fOptions" : [{"value":"drive", "label":"Drive"},
-                              {"value":"walk" , "label":"Walk" }]
-              },
-              {
-                "fCode"    : "fDir",
-                "fName"    : "Filter Direction",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["IB", "OB", "N/A"],
-                "fOptions" : [{"value":"IB" , "label":"In-Bound" },
-                              {"value":"OB" , "label":"Out-Bound"},
-                              {"value":"N/A", "label":"N/A"      }]
-              },
-              {
-                "fCode"    : "fMd",
-                "fName"    : "Filter Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": [4,5,6,7,8,9],
-                "fOptions" : [{"value":4, "label":"Local Bus"            },
-                              {"value":5, "label":"Core Bus"             },
-                              {"value":6, "label":"Express Bus"          },
-                              {"value":9, "label":"Bus Rapid Transit"    },
-                              {"value":7, "label":"Light Rail Transit"   },
-                              {"value":8, "label":"Commuter Rail Transit"}]
-              },
-              {
-                "fCode"       : "fName",
-                "fName"       : "Filter Route Name",
-                "fWidget"     : "checkboxes",
-                "fOptionsJson": "j-transit-route-names.json",
-                "fOptionValue": "RouteName",
-                "fOptionName" : "RouteLongName"
-              },
-              {
-                "fCode"    : "fMdH",
-                "fName"    : "Filter Hierarchacal Mode",
-                "fWidget"  : "select",
-                "fSelected": "ALL",
-                "fOptions" : [{"value":"ALL", "label":"All Modes"            },
-                              {"value":"LCL", "label":"Local Bus"            },
-                              {"value":"COR", "label":"Core Bus"             },
-                              {"value":"EXP", "label":"Express Bus"          },
-                              {"value":"BRT", "label":"Bus Rapid Transit"    },
-                              {"value":"LRT", "label":"Light Rail Transit"   },
-                              {"value":"CRT", "label":"Commuter Rail Transit"}]
-              }
-            ]
+            "attributeSelected": "aR",
+            "filters" : ["fPurpOnlyAll", "fTod2", "fModeTransitAcc", "fIbOb", "fModeTransit", "fRouteName","fModeHier"]
           }
+        },
+        { "submenuText": "Transit Stops (coming soon)",
+          "submenuIconStart": "nodes-link",
+          "template": "vizComingSoon"
+        },
+        { "submenuText": "Transit Boardings Trends (coming soon)",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizComingSoon"
         }
       ]
     },
@@ -218,57 +85,7 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : [
-              {
-                "fCode"    : "fPurp",
-                "fName"    : "Filter Trip Purpose",
-                "fWidget"  : "select",
-                "fSelected": "All",
-                "fOptions" : [{"value":"All"  , "label": "All Purposes"      },
-                              {"value":"HBC"  , "label": "Home-Based College"},
-                              {"value":"HBO"  , "label": "Home-Based Other"  },
-                              {"value":"HBSch", "label": "Home-Based School" },
-                              {"value":"HBW"  , "label": "Home-Based Work"   },
-                              {"value":"NHB"  , "label": "Non-Home-Based"    }]
-              },  
-              {
-                "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "select",
-                "fSelected": "Dy",
-                "fOptions" : [{"value":"Dy", "label":"Daily"            },
-                              {"value":"Pk", "label":"Peak (AM/PM)"     },
-                              {"value":"Ok", "label":"Off-Peak (Midday)"}]
-              },
-              {
-                "fCode"    : "fPA",
-                "fName"    : "Filter Production/Attraction",
-                "fWidget"  : "select",
-                "fSelected": "p",
-                "fOptions" : [{"value":"p", "label":"Production" },
-                              {"value":"a", "label":"Attraction" }]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["D","W"],
-                "fOptions" : [{"value": "D", "label": "Drive"},
-                              {"value": "W", "label": "Walk" }]
-              },
-              {
-                "fCode"    : "fMd",
-                "fName"    : "Filter Mode (Heirarchal)",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["LCL","EXP","COR","BRT","LRT","CRT"],
-                "fOptions" : [{"value": "LCL", "label": "Local Bus"            },
-                              {"value": "EXP", "label": "Express Bus"          },
-                              {"value": "COR", "label": "Core Bus"             },
-                              {"value": "BRT", "label": "Bus Rapid Transit"    },
-                              {"value": "LRT", "label": "Light Rail Transit"   },
-                              {"value": "CRT", "label": "Commuter Rail Transit"}]
-              }
-            ]
+            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeTransitAccSingleLetter", "fModeTransitCode3"]
           }
         },
         { "submenuText": "Zone Trips by Mode Trends",
@@ -288,166 +105,13 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "dividers": [
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotHh",
-                "aDisplayName": "Total Households",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aWrk",
-                "aDisplayName": "Total Workers",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotEmp",
-                "aDisplayName": "Total Jobs",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aHhPop",
-                "aDisplayName": "Total Population",
-                "filter": ""
-              }
-            ],
-            "filters" : [
-              {
-                "fCode"    : "fPurp",
-                "fName"    : "Filter Trip Purpose",
-                "fWidget"  : "select",
-                "fSelected": "All",
-                "fOptions" : [{"value":"All"  , "label": "All Purposes"      },
-                              {"value":"HBC"  , "label": "Home-Based College"},
-                              {"value":"HBO"  , "label": "Home-Based Other"  },
-                              {"value":"HBSch", "label": "Home-Based School" },
-                              {"value":"HBW"  , "label": "Home-Based Work"   },
-                              {"value":"NHB"  , "label": "Non-Home-Based"    }]
-              },  
-              {
-                "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "select",
-                "fSelected": "Dy",
-                "fOptions" : [{"value":"Dy", "label":"Daily"            },
-                              {"value":"Pk", "label":"Peak (AM/PM)"     },
-                              {"value":"Ok", "label":"Off-Peak (Midday)"}]
-              },
-              {
-                "fCode"    : "fPA",
-                "fName"    : "Filter Production/Attraction",
-                "fWidget"  : "select",
-                "fSelected": "p",
-                "fOptions" : [{"value":"p", "label":"Production" },
-                              {"value":"a", "label":"Attraction" }]
-              },
-              {
-                "fCode"    : "fMd",
-                "fName"    : "Filter Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["LCL","EXP","COR","BRT","LRT","CRT"],
-                "fOptions" : [{"value": "LCL", "label": "Local Bus"            },
-                              {"value": "EXP", "label": "Express Bus"          },
-                              {"value": "COR", "label": "Core Bus"             },
-                              {"value": "BRT", "label": "Bus Rapid Transit"    },
-                              {"value": "LRT", "label": "Light Rail Transit"   },
-                              {"value": "CRT", "label": "Commuter Rail Transit"}]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["D","W"],
-                "fOptions" : [{"value": "D", "label": "Drive"},
-                              {"value": "W", "label": "Walk" }]
-              }
-            ]
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
+            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeTransitAccSingleLetter", "fModeTransitCode3"]
           }
         },
-        { "submenuText": "Zone Origin-Destination Trips",
-          "submenuIconStart": "graph-pie-slice",
-          "template": "vizMap",
-          "templateSettings": {
-            "jsonFileName": "",
-            "baseGeoJsonKey": "taz",
-            "baseGeoJsonId": "TAZID",
-            "geometryType": "polygon",
-            "popupTitle": "OD",
-            "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "TAZID",
-            "attributeTitle": "Trip Mode",
-            "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
-            "attributeSelected": "a0",
-            "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : [
-              { "fCode"       : "fSmallDist",
-                "fName"       : "Small District",
-                "fWidget"     : "checkboxes",
-                "fOptionsJson": "j-transit-route-names.json",
-                "fOptionValue": "RouteName",
-                "fOptionName" : "RouteLongName"
-              },
-              { "fCode"    : "fPurp",
-                "fName"    : "Filter Trip Purpose",
-                "fWidget"  : "select",
-                "fSelected": "All",
-                "fOptions" : [{"value":"All"  , "label": "All Purposes"      },
-                              {"value":"HBC"  , "label": "Home-Based College"},
-                              {"value":"HBO"  , "label": "Home-Based Other"  },
-                              {"value":"HBSch", "label": "Home-Based School" },
-                              {"value":"HBW"  , "label": "Home-Based Work"   },
-                              {"value":"NHB"  , "label": "Non-Home-Based"    }]
-              },  
-              {  "fCode"    : "fTod",
-                "fName"    : "Filter Time of Day",
-                "fWidget"  : "select",
-                "fSelected": "Dy",
-                "fOptions" : [{"value":"Dy", "label":"Daily"            },
-                              {"value":"Pk", "label":"Peak (AM/PM)"     },
-                              {"value":"Ok", "label":"Off-Peak (Midday)"}]
-              },
-              {
-                "fCode"    : "fPA",
-                "fName"    : "Filter Production/Attraction",
-                "fWidget"  : "select",
-                "fSelected": "p",
-                "fOptions" : [{"value":"p", "label":"Production" },
-                              {"value":"a", "label":"Attraction" }]
-              },
-              {
-                "fCode"    : "fMdA",
-                "fName"    : "Filter Access Mode",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["D","W"],
-                "fOptions" : [{"value": "D", "label": "Drive"},
-                              {"value": "W", "label": "Walk" }]
-              },
-              {
-                "fCode"    : "fMd",
-                "fName"    : "Filter Mode (Heirarchal)",
-                "fWidget"  : "checkboxes",
-                "fSelected": ["LCL","EXP","COR","BRT","LRT","CRT"],
-                "fOptions" : [{"value": "LCL", "label": "Local Bus"            },
-                              {"value": "EXP", "label": "Express Bus"          },
-                              {"value": "COR", "label": "Core Bus"             },
-                              {"value": "BRT", "label": "Bus Rapid Transit"    },
-                              {"value": "LRT", "label": "Light Rail Transit"   },
-                              {"value": "CRT", "label": "Commuter Rail Transit"}]
-              }
-            ]
-          }
+        { "submenuText": "Zone Origin-Destination Trips (coming soon)",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizComingSoon"
         }
       ]
     },
@@ -469,70 +133,7 @@
             "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
-            "filters" : [
-              {
-                "fCode": "fVeh",
-                "fName": "HH by Number of Vehicles",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["0","1","2","3p"],
-                "fOptions": [
-                  {"value":"0" , "label":"No-Vehicles Households"},
-                  {"value":"1" , "label":"1-Vehicle Households"  },
-                  {"value":"2" , "label":"2-Vehicle Households"  },
-                  {"value":"3p", "label":"3+-Vehicle Households" }
-                ]
-              },
-              {
-                "fCode": "f3C" ,
-                "fName": "3-Category Employment",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Ret","Ind","Oth"],
-                "fOptions": [
-                  {"value":"Ret","label":"Retail Employment"},
-                  {"value":"Ind","label":"Industrial Employment"},
-                  {"value":"Oth","label":"Other Employment"}
-                ]
-              },
-              {
-                "fCode": "f12C",
-                "fName": "12-Category Employment",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Retl","Food","Manu","Wsle","Offi","GvEd","Hlth","Othr","Agri","Ming","Cons","Hbj"],
-                "fOptions": [
-                  {"value":"Retl","label":"Retail"              },
-                  {"value":"Food","label":"Food"                },
-                  {"value":"Manu","label":"Manufacturing"       },
-                  {"value":"Wsle","label":"Wholesale"           },
-                  {"value":"Offi","label":"Office"              },
-                  {"value":"GvEd","label":"Government/Education"},
-                  {"value":"Hlth","label":"Health Care"         },
-                  {"value":"Othr","label":"Other"               },
-                  {"value":"Agri","label":"Agricultural"        },
-                  {"value":"Ming","label":"Mining"              },
-                  {"value":"Cons","label":"Construction"        },
-                  {"value":"Hbj" ,"label":"Home-Based Jobs"     }
-                ]
-              },
-              {
-                "fCode": "fSch",
-                "fName": "School Type",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Elem","Midl","High"],
-                "fOptions": [
-                  {"value":"Elem","label":"Elementary School"},
-                  {"value":"Midl","label":"Middle School"    },
-                  {"value":"High","label":"High School"      }
-                ]
-              }
-            ]
+            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }
         },
         { "submenuText": "Socioeconomics Trends",
@@ -551,105 +152,9 @@
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
-            "attributes": ["aHhPop" ,"aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
-            "dividers": [
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotHh",
-                "aDisplayName": "Total Households",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aWrk",
-                "aDisplayName": "Total Workers",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotEmp",
-                "aDisplayName": "Total Jobs",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aHhPop",
-                "aDisplayName": "Total Population",
-                "filter": ""
-              }
-            ],
-            "filters" : [
-              {
-                "fCode": "fVeh",
-                "fName": "Filter by HH by Number of Vehicles",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["0","1","2","3p"],
-                "fOptions": [
-                  {"value":"0" , "label":"No-Vehicles Households"},
-                  {"value":"1" , "label":"1-Vehicle Households"  },
-                  {"value":"2" , "label":"2-Vehicle Households"  },
-                  {"value":"3p", "label":"3+-Vehicle Households" }
-                ]
-              },
-              {
-                "fCode": "f3C" ,
-                "fName": "Filter by Employment 3-Category",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Ret","Ind","Oth"],
-                "fOptions": [
-                  {"value":"Ret","label":"Retail Employment"},
-                  {"value":"Ind","label":"Industrial Employment"},
-                  {"value":"Oth","label":"Other Employment"}
-                ]
-              },
-              {
-                "fCode": "f12C",
-                "fName": "Filter by Employment 12-Category",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Retl","Food","Manu","Wsle","Offi","GvEd","Hlth","Othr","Agri","Ming","Cons","Hbj"],
-                "fOptions": [
-                  {"value":"Retl","label":"Retail"              },
-                  {"value":"Food","label":"Food"                },
-                  {"value":"Manu","label":"Manufacturing"       },
-                  {"value":"Wsle","label":"Wholesale"           },
-                  {"value":"Offi","label":"Office"              },
-                  {"value":"GvEd","label":"Government/Education"},
-                  {"value":"Hlth","label":"Health Care"         },
-                  {"value":"Othr","label":"Other"               },
-                  {"value":"Agri","label":"Agricultural"        },
-                  {"value":"Ming","label":"Mining"              },
-                  {"value":"Cons","label":"Construction"        },
-                  {"value":"Hbj" ,"label":"Home-Based Jobs"     }
-                ]
-              },
-              {
-                "fCode": "fSch",
-                "fName": "Filter by School Type",
-                "fWidget": "checkboxes",
-                "fOwnCol": false,
-                "col": "",
-                "fSelected": ["Elem","Midl","High"],
-                "fOptions": [
-                  {"value":"Elem","label":"Elementary School"},
-                  {"value":"Midl","label":"Middle School"    },
-                  {"value":"High","label":"High School"      }
-                ]
-              }
-            ]
+            "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
+            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }
         },
         { "submenuText": "Zone Metrics",
@@ -663,60 +168,12 @@
             "popupTitle": "Zone Metrics",
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "DISTSML",
+            "aggregatorSelected" : "TAZID",
             "attributeTitle": "Zone Metric",
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : [
-              { "fCode": "fTod",
-                "fName": "Time of Day",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "Period",
-                "fSelected": ["AM","MD","PM","EV"],
-                "fOptions":
-                [
-                  {"value":"AM", "label":"AM Period"},
-                  {"value":"MD", "label":"Midday Period"},
-                  {"value":"PM", "label":"PM Period"},
-                  {"value":"EV", "label":"Evening Period"}
-                ]
-              },
-              { "fCode": "fPurp",
-                "fName": "Trip Purpose",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "Purpose",
-                "fSelected": ["HBW"],
-                "fOptions":
-                [
-                  {"value": "HBW"   , "label":"Home-Base Work"               },
-                  {"value": "HBO"   , "label":"Home-Based Other"             },
-                  {"value": "HBC"   , "label":"Home-Based College"           },
-                  {"value": "HBS_Pr", "label":"Home-Based School - Primary"  },
-                  {"value": "HBS_Sc", "label":"Home-Based School - Secondary"},
-                  {"value": "NHB"   , "label":"Non-Home Based"               },
-                  {"value": "LT"    , "label":"Light Trucks"                 },
-                  {"value": "MD"    , "label":"Medium Trucks"                },
-                  {"value": "HV"    , "label":"Heavy Trucks"                 },
-                  {"value": "IX"    , "label":"Internal-to-External"         },
-                  {"value": "XI"    , "label":"External-to-Internal "        },
-                  {"value": "XX"    , "label":"External-to-External"         }
-                ]
-              },
-              { "fCode": "fPA",
-                "fName": "Production/Attraction",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "PA",
-                "fSelected": ["P"],
-                "fOptions": [
-                  {"value":"P", "label":"Production"},
-                  {"value":"A", "label":"Attraction"}
-                ]
-              }
-            ]
+            "filters" : ["fTod4Check", "fPurp12", "fPA"]
           }
         },
         { "submenuText": "Zone Metrics Trends",
@@ -736,89 +193,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "dividers": [
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotHh",
-                "aDisplayName": "Total Households",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aWrk",
-                "aDisplayName": "Total Workers",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aTotEmp",
-                "aDisplayName": "Total Jobs",
-                "filter": ""
-              },
-              {
-                "jsonFileName": "j-zones-se",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aCode": "aHhPop",
-                "aDisplayName": "Total Population",
-                "filter": ""
-              }
-            ],
-            "filters" : [
-              { "fCode": "fTod",
-                "fName": "Time of Day",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "Period",
-                "fSelected": ["AM","MD","PM","EV"],
-                "fOptions":
-                [
-                  {"value":"AM", "label":"AM Period"},
-                  {"value":"MD", "label":"Midday Period"},
-                  {"value":"PM", "label":"PM Period"},
-                  {"value":"EV", "label":"Evening Period"}
-                ]
-              },
-              { "fCode": "fPurp",
-                "fName": "Trip Purpose",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "Purpose",
-                "fSelected": ["HBW"],
-                "fOptions":
-                [
-                  {"value": "HBW"   , "label":"Home-Base Work"               },
-                  {"value": "HBO"   , "label":"Home-Based Other"             },
-                  {"value": "HBC"   , "label":"Home-Based College"           },
-                  {"value": "HBS_Pr", "label":"Home-Based School - Primary"  },
-                  {"value": "HBS_Sc", "label":"Home-Based School - Secondary"},
-                  {"value": "NHB"   , "label":"Non-Home Based"               },
-                  {"value": "LT"    , "label":"Light Trucks"                 },
-                  {"value": "MD"    , "label":"Medium Trucks"                },
-                  {"value": "HV"    , "label":"Heavy Trucks"                 },
-                  {"value": "IX"    , "label":"Internal-to-External"         },
-                  {"value": "XI"    , "label":"External-to-Internal "        },
-                  {"value": "XX"    , "label":"External-to-External"         }
-                ]
-              },
-              { "fCode": "fPA",
-                "fName": "Production/Attraction",
-                "fWidget": "checkboxes",
-                "fOwnCol": true,
-                "col": "PA",
-                "fSelected": ["P"],
-                "fOptions": [
-                  {"value":"P", "label":"Production"},
-                  {"value":"A", "label":"Attraction"}
-                ]
-              }
-            ]
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
+            "filters" : ["fTod4Check", "fPurp12", "fPA"]
           }
         },
         { "submenuText": "Access to Opportunities",
@@ -836,25 +212,7 @@
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : [
-              {
-                "fCode"    : "fM",
-                "fName"    : "Filter Mode",
-                "fWidget"  : "select",
-                "fSelected": "A",
-                "fOptions" : [{"value": "A", "label": "Auto"    },
-                              {"value": "T", "label": "Transit" }]
-              },
-              {
-                "fCode"    : "fC",
-                "fName"    : "Filter Condition",
-                "fWidget"  : "select",
-                "fSelected": "C",
-                "fOptions" : [{"value": "C", "label": "Congested (Auto) and Transit"},
-                              {"value": "F", "label": "Freeflow (Auto-Only)"        },
-                              {"value": "S", "label": "Straight-line (Auto-Only)"   }]
-              }
-            ]
+            "filters" : ["fAtoCondition","fModeAutoTransit"]
           }
         },
         { "submenuText": "Access to Opportunities Trends (coming soon)",

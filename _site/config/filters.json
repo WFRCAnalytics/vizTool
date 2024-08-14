@@ -1,0 +1,270 @@
+{
+    "fPurp12": {
+        "fName": "Trip Purpose",
+        "fWidget": "checkboxes",
+        "fOwnCol": true,
+        "col": "Purpose",
+        "fSelected": ["HBW","HBO","HBC","HBS_Pr","HBS_Sc","NHB","LT","MD","HV","IX","XI","XX"],
+        "fOptions":
+        [
+            {"value": "HBW"    , "label":"Home-Base Work"               },
+            {"value": "HBO"    , "label":"Home-Based Other"             },
+            {"value": "HBC"    , "label":"Home-Based College"           },
+            {"value": "HBS_Pr" , "label":"Home-Based School - Primary"  },
+            {"value": "HBS_Sc" , "label":"Home-Based School - Secondary"},
+            {"value": "NHB"    , "label":"Non-Home Based"               },
+            {"value": "LT"     , "label":"Light Trucks"                 },
+            {"value": "MD"     , "label":"Medium Trucks"                },
+            {"value": "HV"     , "label":"Heavy Trucks"                 },
+            {"value": "IX"     , "label":"Internal-to-External"         },
+            {"value": "XI"     , "label":"External-to-Internal "        },
+            {"value": "XX"     , "label":"External-to-External"         }
+        ]
+    },
+    "fPA": {
+        "fName": "Production/Attraction",
+        "fWidget": "checkboxes",
+        "fOwnCol": true,
+        "col": "PA",
+        "fSelected": ["P"],
+        "fOptions": [
+            {"value":"P", "label":"Production"},
+            {"value":"A", "label":"Attraction"}
+        ]
+    },
+    "fVehType": {
+        "fName"    : "Filter Vehicle Type",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"All", "label":"All Vehicles" },
+            {"value":"LT" , "label":"Light Trucks" },
+            {"value":"MD" , "label":"Medium Trucks"},
+            {"value":"HV" , "label":"Heavy Trucks" }
+        ]
+    },
+    "fTod4Check": {
+        "fName"    : "Filter Time of Day",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["AM","MD","PM","EV"],
+        "fOptions" :[
+            {"value":"AM", "label":"AM Period"     },
+            {"value":"MD", "label":"Midday Period" },
+            {"value":"PM", "label":"PM Period"     },
+            {"value":"EV", "label":"Evening Period"}
+        ]
+    },
+    "fTod4": {
+        "fName"    : "Filter Time of Day",
+        "fWidget"  : "select",
+        "fSelected": "DY",
+        "fOptions" :[
+            {"value":"DY", "label":"Daily"         },
+            {"value":"AM", "label":"AM Period"     },
+            {"value":"MD", "label":"Midday Period" },
+            {"value":"PM", "label":"PM Period"     },
+            {"value":"EV", "label":"Evening Period"}
+        ]
+    },
+    "fPurpOnlyAll": {
+        "fName"    : "Filter Trip Purpose",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["All"],
+        "fOptions" : [
+            {"value":"All", "label":"All Purposes"}
+        ]
+    },
+    "fTod2": {
+        "fName"    : "Filter Time of Day",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["pk","ok"],
+        "fOptions" : [
+            {"value":"pk", "label":"Peak"     },
+            {"value":"ok", "label":"Off-Peak" }
+        ]
+    },
+    "fTod2Select": {
+        "fName"    : "Filter Time of Day",
+        "fWidget"  : "select",
+        "fSelected": "Dy",
+        "fOptions" : [
+            {"value":"Dy", "label":"Daily"     },
+            {"value":"Pk", "label":"Peak"     },
+            {"value":"Ok", "label":"Off-Peak" }
+        ]
+    },
+    "fModeTransitAcc": {
+        "fName"    : "Filter Access Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["drive", "walk"],
+        "fOptions" : [
+            {"value":"drive", "label":"Drive"},
+            {"value":"walk" , "label":"Walk" }
+        ]
+    },
+    "fModeTransitAccSingleLetter": {
+        "fName"    : "Filter Access Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["D", "W"],
+        "fOptions" : [
+            {"value":"D", "label":"Drive"},
+            {"value":"W" , "label":"Walk" }
+        ]
+    },
+    "fIbOb": {
+        "fName"    : "Filter Peak Direction",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["IB", "OB", "N/A"],
+        "fOptions" : [
+            {"value":"IB" , "label":"In-Bound" },
+            {"value":"OB" , "label":"Out-Bound"},
+            {"value":"N/A", "label":"N/A"      }
+        ]
+    },
+    "fModeTransit": {
+        "fName"    : "Filter Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": [4,5,6,7,8,9],
+        "fOptions" : [
+            {"value":4, "label":"Local Bus"            },
+            {"value":5, "label":"Core Bus"             },
+            {"value":6, "label":"Express Bus"          },
+            {"value":9, "label":"Bus Rapid Transit"    },
+            {"value":7, "label":"Light Rail Transit"   },
+            {"value":8, "label":"Commuter Rail Transit"}
+        ]
+    },
+    "fModeTransitCode3": {
+        "fName"    : "Filter Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],
+        "fOptions" : [
+            {"value":"LCL", "label":"Local Bus"            },
+            {"value":"COR", "label":"Core Bus"             },
+            {"value":"EXP", "label":"Express Bus"          },
+            {"value":"BRT", "label":"Bus Rapid Transit"    },
+            {"value":"LRT", "label":"Light Rail Transit"   },
+            {"value":"CRT", "label":"Commuter Rail Transit"}
+        ]
+    },
+    "fRouteName": {
+        "fName"       : "Filter Route Name",
+        "fWidget"     : "checkboxes",
+        "fOptionsJson": "j-transit-route-names.json",
+        "fOptionValue": "RouteName",
+        "fOptionName" : "RouteLongName"
+    },
+    "fModeHier": {
+        "fName"    : "Filter Hierarchacal Mode",
+        "fWidget"  : "select",
+        "fSelected": "ALL",
+        "fOptions" : [
+            {"value":"ALL", "label":"All Modes"            },
+            {"value":"LCL", "label":"Local Bus"            },
+            {"value":"COR", "label":"Core Bus"             },
+            {"value":"EXP", "label":"Express Bus"          },
+            {"value":"BRT", "label":"Bus Rapid Transit"    },
+            {"value":"LRT", "label":"Light Rail Transit"   },
+            {"value":"CRT", "label":"Commuter Rail Transit"}
+        ]
+    },
+    "fVehNum": {
+        "fName": "HH by Number of Vehicles",
+        "fWidget": "checkboxes",
+        "fOwnCol": false,
+        "col": "",
+        "fSelected": ["0","1","2","3p"],
+        "fOptions": [
+            {"value":"0" , "label":"No-Vehicles Households"},
+            {"value":"1" , "label":"1-Vehicle Households"  },
+            {"value":"2" , "label":"2-Vehicle Households"  },
+            {"value":"3p", "label":"3+-Vehicle Households" }
+        ]
+    },
+    "fEmp3Cat" : {
+        "fName": "3-Category Employment",
+        "fWidget": "checkboxes",
+        "fOwnCol": false,
+        "col": "",
+        "fSelected": ["Ret","Ind","Oth"],
+        "fOptions": [
+            {"value":"Ret","label":"Retail Employment"},
+            {"value":"Ind","label":"Industrial Employment"},
+            {"value":"Oth","label":"Other Employment"}
+        ]
+    },
+    "fEmp12Cat": {
+        "fName": "12-Category Employment",
+        "fWidget": "checkboxes",
+        "fOwnCol": false,
+        "col": "",
+        "fSelected": ["Retl","Food","Manu","Wsle","Offi","GvEd","Hlth","Othr","Agri","Ming","Cons","Hbj"],
+        "fOptions": [
+            {"value":"Retl","label":"Retail"              },
+            {"value":"Food","label":"Food"                },
+            {"value":"Manu","label":"Manufacturing"       },
+            {"value":"Wsle","label":"Wholesale"           },
+            {"value":"Offi","label":"Office"              },
+            {"value":"GvEd","label":"Government/Education"},
+            {"value":"Hlth","label":"Health Care"         },
+            {"value":"Othr","label":"Other"               },
+            {"value":"Agri","label":"Agricultural"        },
+            {"value":"Ming","label":"Mining"              },
+            {"value":"Cons","label":"Construction"        },
+            {"value":"Hbj" ,"label":"Home-Based Jobs"     }
+        ]
+    },
+    "fSchType": {
+        "fName": "School Type",
+        "fWidget": "checkboxes",
+        "fOwnCol": false,
+        "col": "",
+        "fSelected": ["Elem","Midl","High"],
+        "fOptions": [
+            {"value":"Elem","label":"Elementary School"},
+            {"value":"Midl","label":"Middle School"    },
+            {"value":"High","label":"High School"      }
+        ]
+    },
+    "fModeAutoTransit": {
+        "fName"    : "Filter Mode",
+        "fWidget"  : "select",
+        "fSelected": "A",
+        "fOptions" : [
+            {"value": "A", "label": "Auto"    },
+            {"value": "T", "label": "Transit" }
+        ]
+      },
+      "fAtoCondition": {
+        "fName"    : "Filter Condition",
+        "fWidget"  : "select",
+        "fSelected": "C",
+        "fOptions" : [
+            {"value": "C", "label": "Congested (Auto) and Transit"},
+            {"value": "F", "label": "Freeflow (Auto-Only)"        },
+            {"value": "S", "label": "Straight-line (Auto-Only)"   }
+        ]
+    },
+    "fPurp5": {
+        "fName"    : "Filter Trip Purpose",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"All"  , "label": "All Purposes"      },
+            {"value":"HBC"  , "label": "Home-Based College"},
+            {"value":"HBO"  , "label": "Home-Based Other"  },
+            {"value":"HBSch", "label": "Home-Based School" },
+            {"value":"HBW"  , "label": "Home-Based Work"   },
+            {"value":"NHB"  , "label": "Non-Home-Based"    }
+        ]
+    },  
+    "fPaLowerCase": {
+        "fName"    : "Filter Production/Attraction",
+        "fWidget"  : "select",
+        "fSelected": "p",
+        "fOptions" : [
+            {"value":"p", "label":"Production" },
+            {"value":"a", "label":"Attraction" }
+        ]
+    }
+}

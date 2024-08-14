@@ -46,20 +46,20 @@ class VizSidebar {
                                             aggregatorOptions,
                                             this);
       if (vizLayout.modelEntity.template==='vizTrends') {
-        this.aggregatorFilter = new Filter ((this.aggregators.find(item => item.agCode === aggregatorSelected) || []).filterData, this.vizLayout);
+        this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === aggregatorSelected) || []).filterData);
       }
       
     }
 
-    if (dividers) {
+    if (this.dividers.length>0) {
       if (dividerSelected=="") {
         dividerSelected = "Nothing";
       }
-      const _nothing = { value: "Nothing", label: "Nothing" };
+      const _nothing = { value: "Nothing", label: "----------" };
       this.dividerSelect    = new WijSelect(this.id + "_divider-selector",
                                             dividerTitle,
                                             dividerSelected,
-                                            [_nothing, ...dividers.map(item => ({ value: item.aCode, label: item.aDisplayName }))],
+                                            [_nothing, ...this.dividers.map(item => ({ value: item.aCode, label: item.aDisplayName }))],
                                             this);
       //this.dividerFilters = (dividerFilters || []).map(item => new Filter (item, vizLayout));
     }
@@ -277,7 +277,7 @@ class VizSidebar {
 
   afterUpdateAggregator() {
     if (this.vizLayout.modelEntity.template==='vizTrends') {
-      this.aggregatorFilter = new Filter ((this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData, this.vizLayout);
+      this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData);
     }
     this.vizLayout.afterUpdateAggregator();
   }

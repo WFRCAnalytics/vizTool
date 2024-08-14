@@ -1,10 +1,21 @@
 class Divider {
-    constructor(data){
-        this.jsonFileName = data.jsonFileName;
-        this.baseGeoJsonKey = data.baseGeoJsonKey;
-        this.baseGeoJsonId = data.baseGeoJsonId;
-        this.aCode = data.aCode;
-        this.aDisplayName = data.aDisplayName;
-        this.filter = data.filter
+  constructor(dCode){
+      
+    this.dCode = dCode;
+
+    console.log('divider:' + dCode)
+
+    const _configDivider = configDividers[this.dCode];
+
+    if (_configDivider === undefined) {
+      return; // Exit the constructor if _configDivider is undefined
     }
+
+    this.jsonFileName   = _configDivider.jsonFileName  ;
+    this.baseGeoJsonKey = _configDivider.baseGeoJsonKey;
+    this.baseGeoJsonId  = _configDivider.baseGeoJsonId ;
+    this.aCode          = _configDivider.aCode         ;
+    this.aDisplayName   = _configDivider.aDisplayName  ;
+    this.filter         = _configDivider.filter        ;
+  }
 }

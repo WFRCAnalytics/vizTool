@@ -2,7 +2,14 @@
     "initial_select": [
         {
             "modVersion": "v902",
-            "scnGroup": "Centers_Phase1_BRT",
+            "scnGroup": "Centers_Phase1_Rail",
+            "scnYear": 2050
+        }
+    ],
+    "initial_select_compare": [
+        {
+            "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_Rail",
             "scnYear": 2050
         }
     ],

@@ -15,8 +15,8 @@ class Attribute {
         }
 
         this.aCode = aCode;
-        this.aDisplayName = _configAttribute.aDisplayName || null;
-        this.agWeightCode = _configAttribute.agWeightCode || null;
+        this.aDisplayName       = _configAttribute.aDisplayName || null;
+        this.agWeightCode       = _configAttribute.agWeightCode || null;
         this.agWeightCodeFilter = _configAttribute.agWeightCodeFilter || null;
         this.rendererCollection = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection) : null;
     }

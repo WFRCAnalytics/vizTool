@@ -10,11 +10,14 @@ class AttributeFilterData {
 class DataAttribute {
     constructor(data) {
         this.aCode = data.aCode;
-        this.aName = data.aName;
+        this.DisplayName = data.DisplayName;
         if (data.filterGroup) {
             this.filterGroup = data.filterGroup;
-        } else if (data.dimensions) {
-            this.filterGroup = data.dimensions;
+        }// else if (data.dimensions) {
+        //    this.filterGroup = data.dimensions;
+        //}
+        else {
+            this.filterGroup = "";
         }
     }
 }
