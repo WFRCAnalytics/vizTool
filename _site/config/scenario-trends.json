@@ -1,7 +1,7 @@
 [
   {
     "scnTrend": "RTP",
-    "displayByDefault": false,
+    "displayByDefault": true,
     "modelruns" : [
       { "modVersion": "v902",
         "scnGroup": "Base",
