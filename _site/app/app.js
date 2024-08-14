@@ -346,7 +346,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       // Set the title and version in the Esri object
       const logoElement = document.querySelector('calcite-navigation-logo');
       logoElement.setAttribute('heading', appConfig.title || "vizTool");
-      logoElement.setAttribute('description', appConfig.subtitle || "beta");
+      logoElement.setAttribute('description', appConfig.subtitle || "v24.8.14 beta");
   
       // Load and display the disclaimer modal if applicable
       await loadAndDisplayDisclaimer(appConfig.splash_disclaimer);
