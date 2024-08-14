@@ -317,3 +317,9 @@ th, td {
   .info-icon:hover + .popup {
     display: block;
   }
+
+  #mapFooter {
+    background-color: rgb(153, 204, 255); /* Even lighter blue color */
+    color: rgb(33, 33, 33); /* Very dark grey text color */
+  }
+  

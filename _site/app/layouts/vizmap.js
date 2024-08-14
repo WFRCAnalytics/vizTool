@@ -157,15 +157,25 @@ require([
     }
 
     getMainScenarioDisplayName() {
-      return selectedScenario_Main.modVersion + ' ' +
-             selectedScenario_Main.scnGroup + ' ' +
-             selectedScenario_Main.scnYear;
+      const _scenario = this.getMain();
+      if (_scenario.alias) {
+        return _scenario.alias;
+      } else {
+        return _scenario.modVersion + ' ' +
+               _scenario.scnGroup + ' ' +
+               _scenario.scnYear;
+      }       
     }
 
     getCompScenarioDisplayName() {
-      return selectedScenario_Comp.modVersion + ' ' +
-             selectedScenario_Comp.scnGroup + ' ' +
-             selectedScenario_Comp.scnYear;
+      const _scenario = this.getComp();
+      if (_scenario.alias) {
+        return _scenario.alias;
+      } else {
+        return _scenario.modVersion + ' ' +
+               _scenario.scnGroup + ' ' +
+               _scenario.scnYear;
+      }    
     }
 
     getMain() {
@@ -614,12 +624,21 @@ require([
           mapView.ui.remove(this.legend);
           mapView.ui.remove(this.expandLengend);
         }
-
+        var _title = "";
+        //if (this.sidebar.aggregators.length>0) {
+        //  const _aggCode = this.sidebar.getSelectedAggregator();
+        //  _title += ' by ' + _aggCode.agTitleText;
+        //}
+        if (this.mode==='main') {
+          _title += this.getMainScenarioDisplayName();
+        } else if(this.mode==='compare' & (this.modeCompare==='abs' | this.modeCompare==='pct')) {
+          _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
+        }
         this.legend = new Legend({
           view: mapView,
           layerInfos: [{
             layer: this.layerDisplay,
-            title: this.getADisplayName()// + (_filter !== "" ? " - Filtered by " + _filter : "")
+            title: _title// + (_filter !== "" ? " - Filtered by " + _filter : "")
           }]
         });
         //mapView.ui.add(this.legend, "bottom-right");
@@ -646,24 +665,23 @@ require([
       // set map header
       var _title = "";
       
-      _title += this.modelEntity.submenuText + ' - ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '');
-
-      if (this.sidebar.aggregators.length>0) {
-        const _aggCode = this.sidebar.getSelectedAggregator();
-        _title += ' by ' + _aggCode.agTitleText;
-      }
-
-      if (this.mode==='main') {
-        _title += ' - ' + this.getMainScenarioDisplayName();
-      } else if(this.mode==='compare' & this.modeCompare==='abs') {
-        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
-      } else if(this.mode==='compare' & this.modeCompare==='pct') {
-        _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
-      }
+      //_title += this.modelEntity.submenuText + ' - ' 
+      //_title = this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '');
+      //if (this.sidebar.aggregators.length>0) {
+      //  const _aggCode = this.sidebar.getSelectedAggregator();
+      //  _title += ' by ' + _aggCode.agTitleText;
+      //}
+      //if (this.mode==='main') {
+      //  _title += ' - ' + this.getMainScenarioDisplayName();
+      //} else if(this.mode==='compare' & this.modeCompare==='abs') {
+      //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
+      //} else if(this.mode==='compare' & this.modeCompare==='pct') {
+      //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
+      //}
 
       const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
 
-      const containerHeaderElement = document.getElementById('mapHeader');
+      const containerHeaderElement = document.getElementById('mapFooter');
       containerHeaderElement.innerHTML = '';
       
       const _titleDiv = document.createElement('div');

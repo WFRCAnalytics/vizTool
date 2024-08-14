@@ -17,19 +17,34 @@ require([
   function createRenderer(data) {
     if (data.classBreakInfos) {
       const renderer = new ClassBreaksRenderer();
-      renderer.field = data.field;
+      renderer.field = "dVal";
       renderer.classBreakInfos = data.classBreakInfos;
       if (data.defaultSymbol !== undefined) {
         renderer.defaultSymbol = data.defaultSymbol;
       }
       if (data.defaultLabel !== undefined) {
         renderer.defaultLabel = data.defaultLabel;
-      }    
+      }
+          
+      // Add legend options
+      if (data.legendTitle) {
+        renderer.legendOptions = {
+          title: data.legendTitle
+        };
+      }
       return renderer;
     } else if (data.valueExpression && data.uniqueValueInfos) {
       const renderer = new UniqueValueRenderer();
+      renderer.field = "dVal";
       renderer.valueExpression = data.valueExpression;
       renderer.uniqueValueInfos = data.uniqueValueInfos;
+          
+      // Add legend options
+      if (data.legendTitle) {
+        renderer.legendOptions = {
+          title: data.legendTitle
+        };
+      }
       return renderer;
     }
     return null;  // Or however you wish to handle a case where neither condition is true.

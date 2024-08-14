@@ -16,6 +16,8 @@ let selectedScenario_Comp = {};
 let jsonScenario;
 let configAttributes;
 let configAggregators;
+let configDividers;
+let configFilters;
 let menuItems;
 
 require([
@@ -51,6 +53,22 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataConfigAggregators;
   }
 
+  async function fetchConfigFilters() {
+    console.log('app:fetchConfigFilters');
+    const response = await fetch('config/filters.json');
+    const dataConfigFilters = await response.json();
+    return dataConfigFilters;
+  }
+
+
+  async function fetchConfigDividers() {
+    console.log('app:fetchConfigDividers');
+    const response = await fetch('config/dividers.json');
+    const dataConfigDividers = await response.json();
+    return dataConfigDividers;
+  }
+
+
   async function fetchScenarioData() {
     console.log('app:fetchScenarioData');
     const response = await fetch('config/scenarios.json');
@@ -76,14 +94,22 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     // Set the selected scenario
     if (jsonScenario.initial_select && jsonScenario.initial_select.length > 0) {
       selectedScenario_Main = jsonScenario.initial_select[0];
-      selectedScenario_Comp = jsonScenario.scenarios[0];
     } else if (jsonScenario.scenarios && jsonScenario.scenarios.length > 0) {
       selectedScenario_Main = jsonScenario.scenarios[0];
-      selectedScenario_Comp = jsonScenario.scenarios[0];
     } else {
       selectedScenario_Main = null; // or handle the case where there is no data appropriately
+    }
+
+    // set the selected scenario to the initial_select in json, if exists, otherwise pick first scenario
+    // Set the selected scenario
+    if (jsonScenario.initial_select_compare && jsonScenario.initial_select_compare.length > 0) {
+      selectedScenario_Comp = jsonScenario.initial_select_compare[0];
+    } else if (jsonScenario.scenarios && jsonScenario.scenarios.length > 1) {
+      selectedScenario_Comp = jsonScenario.scenarios[1];
+    } else {
       selectedScenario_Comp = null; // or handle the case where there is no data appropriately
     }
+
 
     // load scenario trend data
     const jsonScenarioTrend = await fetchScenarioTrendData();
@@ -134,6 +160,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     configAggregators = await fetchConfigAggregators();
     configAttributes  = await fetchConfigAttributes ();
+    configFilters     = await fetchConfigFilters();
+    configDividers    = await fetchConfigDividers();
 
     const dataApp = await fetchConfigApp();
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');

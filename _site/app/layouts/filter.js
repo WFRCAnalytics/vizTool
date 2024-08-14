@@ -1,35 +1,53 @@
 class Filter {
-  constructor(data, vizLayout) {
-    this.id = vizLayout.id + '-' + data.fCode + '-filter';
+  constructor(fCode, vizLayout, filterData = null) {
+
+    let _configFilter;
+
+    if (filterData) {
+      this.fCode = filterData.fCode;
+      _configFilter = filterData;
+
+    } else {
+      this.fCode = fCode;
+      _configFilter = configFilters[this.fCode];
+    }
+
+    console.log('filter:' + this.fCode);
+
+    if (_configFilter === undefined) {
+      return; // Exit the constructor if _configFilter is undefined
+    }
+
+    this.id = vizLayout.id + '-' + this.fCode + '-filter';
     console.log('filter-construct:' + this.id);
 
     this.vizLayout = vizLayout;
 
-    const _name = (data.fWidget === 'select' || data.fWidget === 'checkboxes') ? data.fName : ''; // select and checkboxes will have blank title
+    this.name = (_configFilter.fWidget === 'select' || _configFilter.fWidget === 'checkboxes') ? _configFilter.fName : ''; // select and checkboxes will have blank title
     
-    this._options = [];
+    this.options = [];
 
-    if (data.fOptions) {
-      this._options = data.fOptions.map(item => ({ value: item.value, label: item.label }));
-      this.initializeFilter(data, _name);
-    } else if (data.fOptionsJson) {
-      this.loadAndProcessOptions(data).then(() => {
-        this.initializeFilter(data, _name);
+    if (_configFilter.fOptions) {
+      this.options = _configFilter.fOptions.map(item => ({ value: item.value, label: item.label }));
+      this.initializeFilter(_configFilter);
+    } else if (_configFilter.fOptionsJson) {
+      this.loadAndProcessOptions(_configFilter).then(() => {
+        this.initializeFilter(_configFilter);
       });
     } else {
-      this.initializeFilter(data, _name);
+      this.initializeFilter(_configFilter);
     }
   }
 
-  async loadAndProcessOptions(data) {
+  async loadAndProcessOptions(_configFilter) {
     // load json data
-    const _value = data.fOptionValue;
-    const _label = data.fOptionName;
+    const _value = _configFilter.fOptionValue;
+    const _label = _configFilter.fOptionName;
     let _options = [];
 
     for (let scenario of dataScenarios) {
       // open json file
-      let jsonFilename = 'scenario-data/' + scenario.scnFolder + '/' + data.fOptionsJson;
+      let jsonFilename = 'scenario-data/' + scenario.scnFolder + '/' + _configFilter.fOptionsJson;
 
       // get list of options using _value and _label fields
       try {
@@ -58,7 +76,7 @@ class Filter {
 
     // Sort by label
     uniqueOptions.sort((a, b) => a.label.localeCompare(b.label));
-    this._options = uniqueOptions;
+    this.options = uniqueOptions;
   }
 
   async loadJsonFile(filename) {
@@ -69,26 +87,26 @@ class Filter {
     return await response.json();
   }
 
-  initializeFilter(data, _name) {
+  initializeFilter(_configFilter) {
 
     // Check if 'selected' is undefined, then create a list of 'value' from 'options'
-    const _selected = data.fSelected !== undefined ? data.fSelected : this._options.map(option => option.value);
+    const _selected = _configFilter.fSelected !== undefined ? _configFilter.fSelected : this.options.map(option => option.value);
 
-    this.modifiable = data.fUserModifiable === undefined ? true : data.fUserModifiable; // set to true if undefined
+    this.modifiable = _configFilter.fUserModifiable === undefined ? true : _configFilter.fUserModifiable; // set to true if undefined
 
-    if (data.subAgDisplayName) {
-      this.filterSubAgWij = new WijSelect(this.id + '-subag', data.subAgDisplayName, data.subAgSelected, data.subAgOptions, this.vizLayout, true);
-      this._options = data.fOptions.map(item => ({ value: item.value, label: item.label, subag: item.subag}));
+    if (_configFilter.subAgDisplayName) {
+      this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, true);
+      this.options = _configFilter.fOptions.map(item => ({ value: item.value, label: item.label, subag: item.subag}));
     }
   
-    if (data.fWidget === 'select') {
-      this.filterWij = new WijSelect(this.id, _name, _selected, this._options, this.vizLayout, true);
-    } else if (data.fWidget === 'radio') {
-      this.filterWij = new WijRadio(this.id, _name, _selected, this._options, this.vizLayout, true);
-    } else if (data.fWidget === 'checkboxes') {
-      this.filterWij = new WijCheckboxes(this.id, _name, _selected, this._options, this.vizLayout, true);
-    } else if (data.fWidget === 'combobox') {
-      this.filterWij = new WijCombobox(this.id, _name, _selected, this._options, this.vizLayout, true);
+    if (_configFilter.fWidget === 'select') {
+      this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, true);
+    } else if (_configFilter.fWidget === 'radio') {
+      this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, true);
+    } else if (_configFilter.fWidget === 'checkboxes') {
+      this.filterWij = new WijCheckboxes(this.id, this.name, _selected, this.options, this.vizLayout, true);
+    } else if (_configFilter.fWidget === 'combobox') {
+      this.filterWij = new WijCombobox(this.id, this.name, _selected, this.options, this.vizLayout, true);
     }
   }
 

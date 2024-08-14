@@ -2,7 +2,14 @@
     "initial_select": [
         {
             "modVersion": "v902",
-            "scnGroup": "Centers_Phase1_BRT",
+            "scnGroup": "Centers_Phase1_Rail",
+            "scnYear": 2050
+        }
+    ],
+    "initial_select_compare": [
+        {
+            "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_Rail",
             "scnYear": 2050
         }
     ],
@@ -51,31 +58,37 @@
         {   "modVersion": "v902",
             "scnGroup": "Base",
             "scnYear": 2019,
+            "alias": "Existing 2019",
             "scnTrendCodes": ["BRT","Rail","BRTNoBld","RailNoBld"]
         },
         {   "modVersion": "v902",
             "scnGroup": "Centers_Phase1_BRT",
             "scnYear": 2050,
+            "alias": "Intensified Centers - BRT 2050",
             "scnTrendCodes": ["BRT"]
         },
         {   "modVersion": "v902",
             "scnGroup": "Centers_Phase1_Rail",
             "scnYear": 2050,
+            "alias": "Intensified Centers - BRT 2050",
             "scnTrendCodes": ["Rail"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTPLandUse_Phase1_BRT",
             "scnYear": 2050,
+            "alias": "RTP Land Use - BRT 2050",
             "scnTrendCodes": ["BRTNoBld"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTPLandUse_Phase1_Rail",
             "scnYear": 2050,
+            "alias": "RTP Land Use - Rail 2050",
             "scnTrendCodes": ["RailNoBld"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTP",
             "scnYear": 2050,
+            "alias": "RTP 2050",
             "scnTrendCodes": ["RTP"]
         }
     ]
