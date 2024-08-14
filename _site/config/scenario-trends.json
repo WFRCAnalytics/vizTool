@@ -10,5 +10,17 @@
         "scnGroup": "RTP",
         "scnYear": 2050 }
     ]
+  },
+  {
+    "scnTrend": "RTP_new_vizTool",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v902",
+        "scnGroup": "Base",
+        "scnYear": 2019 },
+      { "modVersion": "v902",
+        "scnGroup": "RTP_new_vizTool",
+        "scnYear": 2050 }
+    ]
   }
 ]
