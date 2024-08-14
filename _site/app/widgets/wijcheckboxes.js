@@ -9,9 +9,9 @@ class WijCheckboxes {
     
     this.containerId = this.id + "-container";
 
-    this.numOptionsForCheckAll = 5;
-    this.textCheckAll = "Check All";
-    this.textUncheckAll = "Uncheck All";
+    this.numOptionsForCheckAll = configApp.checkboxesSelector.numOptionsForCheckAll;
+    this.textCheckAll = configApp.checkboxesSelector.textCheckAll;
+    this.textUncheckAll = configApp.checkboxesSelector.textUncheckAll;
   }
 
   render() {
