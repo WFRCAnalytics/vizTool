@@ -72,7 +72,8 @@
         "fSelected": ["All"],
         "fOptions" : [
             {"value":"All", "label":"All Purposes"}
-        ]
+        ],
+        "userModifiable": false
     },
     "fTod2": {
         "fName"    : "Filter Time of Day",
@@ -114,11 +115,10 @@
     "fIbOb": {
         "fName"    : "Filter Peak Direction",
         "fWidget"  : "checkboxes",
-        "fSelected": ["IB", "OB", "N/A"],
+        "fSelected": ["IB", "OB"],
         "fOptions" : [
-            {"value":"IB" , "label":"In-Bound" },
-            {"value":"OB" , "label":"Out-Bound"},
-            {"value":"N/A", "label":"N/A"      }
+            {"value":"IB" , "label":"Inbound" },
+            {"value":"OB" , "label":"Outbound"}
         ]
     },
     "fModeTransit": {

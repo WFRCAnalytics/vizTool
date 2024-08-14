@@ -92,7 +92,7 @@ class Filter {
     // Check if 'selected' is undefined, then create a list of 'value' from 'options'
     const _selected = _configFilter.fSelected !== undefined ? _configFilter.fSelected : this.options.map(option => option.value);
 
-    this.modifiable = _configFilter.fUserModifiable === undefined ? true : _configFilter.fUserModifiable; // set to true if undefined
+    this.userModifiable = _configFilter.userModifiable === undefined ? true : _configFilter.userModifiable; // set to true if undefined
 
     if (_configFilter.subAgDisplayName) {
       this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, true);
@@ -117,7 +117,7 @@ class Filter {
     filterContainer.id = this.containerId;
 
     // only render if the user can modify widget... otherwise needed settings are all preserved in object
-    if (this.modifiable) {
+    if (this.userModifiable) {
       // append sub aggregation widget if exists
       if (typeof this.filterSubAgWij!='undefined') {
         filterContainer.appendChild(this.filterSubAgWij.render());
@@ -141,7 +141,7 @@ class Filter {
   }
 
   isVisible() {
-    if (this.modifiable) {
+    if (this.userModifiable) {
       //Debug
       //console.log('debug filter isVisible containerId: ' + this.filterWij.containerId)
       const element = document.getElementById(this.filterWij.containerId);
@@ -158,11 +158,13 @@ class Filter {
       }
       
       return element.style.display !== 'none';
+    } else {  // if not userModifiable, we need to act like it is being displayed anyway
+      return true;
     }
   }
 
   hide() {
-    if (this.modifiable) {
+    if (this.userModifiable) {
       console.log('hide: ' + this.filterWij.id);
       document.getElementById(this.filterWij.containerId).style.display = 'none';
   
@@ -174,7 +176,7 @@ class Filter {
   }
 
   show() {
-    if (this.modifiable) {
+    if (this.userModifiable) {
       console.log('show: ' + this.filterWij.id);
       document.getElementById(this.filterWij.containerId).style.display = 'block';
       
