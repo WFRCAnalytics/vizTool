@@ -40,25 +40,18 @@
     <body>
         <calcite-shell class="calcite-mode-auto">
             <calcite-navigation slot="header">
-                <calcite-navigation-logo slot="logo" heading="vizTool" description="v24.8.14 beta"></calcite-navigation-logo>
+                <calcite-navigation-logo slot="logo"></calcite-navigation-logo>
                 <calcite-menu slot="content-start"></calcite-menu>
                 <calcite-navigation slot="navigation-secondary">
                     <calcite-menu slot="content-start"></calcite-menu>
                 </calcite-navigation>
-                <calcite-navigation-user slot="user" full-name="Planner" username="planner" hidden></calcite-navigation-user>                    
             </calcite-navigation>
             <div id="main"></div>
         </calcite-shell>
         <!-- Modal Structure -->
         <div id="infoModal" class="modal">
             <div class="modal-content">
-                <!--<p>The data displayed in this online visualization tool is not official and should be considered unverified with respect to additional uses in planning and design studies, reports, etc. Users are requested to perform their own data quality review, appropriate adjustments, and verification against supporting data resources and field work prior to use. For questions or additional information about proper use of this data and tool please contact <a href="mailto:sswim@wfrc.org">Suzie Swim</a>.</p>
-                <button id="okButton">I acknowledge and agree</button>--><h1>IMPORTANT: BETA VERSION</h1>
-                <p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p>
-                <p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href="https://github.com/WFRCAnalytics/vizTool/wiki" target="_blank">vizTool Wiki</a>.</p>
-                <p>If you have any general feedback, bug reports, or suggestions, please submit them via the <a href="https://github.com/WFRCAnalytics/vizTool/issues" target="_blank">GitHub issues page</a>.</p>
-                <p>For urgent assistance or troubleshooting, please reach out to <a href="mailto:bhereth@wfrc.org">Bill Hereth</a> at WFRC.</p>
-                <button id="okButton">Continue</button>
+                <!-- This is where the dynamic content will be injected -->
             </div>
         </div>
         <script>
