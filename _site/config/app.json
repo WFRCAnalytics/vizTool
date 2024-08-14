@@ -110,7 +110,7 @@
           }
         },
         { "submenuText": "Zone Origin-Destination Trips (coming soon)",
-          "submenuIconStart": "graph-line-series",
+          "submenuIconStart": "2d-explore",
           "template": "vizComingSoon"
         }
       ]
