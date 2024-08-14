@@ -9,9 +9,9 @@ class WijCheckboxes {
     
     this.containerId = this.id + "-container";
 
-    this.numOptionsForCheckAll = configApp.checkboxesSelector.numOptionsForCheckAll;
-    this.textCheckAll = configApp.checkboxesSelector.textCheckAll;
-    this.textUncheckAll = configApp.checkboxesSelector.textUncheckAll;
+    this.numOptionsForCheckAllButton = configApp.checkboxesSelector.numOptionsForCheckAllButton;
+    this.textCheckAll                = configApp.checkboxesSelector.textCheckAll               ;
+    this.textUncheckAll              = configApp.checkboxesSelector.textUncheckAll             ;
   }
 
   render() {
@@ -42,7 +42,7 @@ class WijCheckboxes {
     _filterTitle.appendChild(_filterName); // Add the name to the title container
 
     // set button if 5+ options
-    if (this.options.length>=this.numOptionsForCheckAll) {
+    if (this.options.length>=this.numOptionsForCheckAllButton) {
       let buttonCheckToggle = document.createElement("calcite-button");
       buttonCheckToggle.setAttribute('id', this.id + '-check-all-toggle');
       buttonCheckToggle.classList.add('check-all-toggle-button');
@@ -102,7 +102,7 @@ class WijCheckboxes {
         }
         
         // manage uncheck/check all button
-        if (_thisInstance.options.length>=_thisInstance.numOptionsForCheckAll) {
+        if (_thisInstance.options.length>=_thisInstance.numOptionsForCheckAllButton) {
           var numCheckedVisible = 0;
           var numVisible = 0;
           _thisInstance.options.forEach((option, index) => {
@@ -182,7 +182,7 @@ class WijCheckboxes {
   }
 
   getSelectedOptionsAsListOfLabels() {
-    if (this.options.length>=this.numOptionsForCheckAll & this.checkIfAllOptionsSelected()) {
+    if (this.options.length>=this.numOptionsForCheckAllButton & this.checkIfAllOptionsSelected()) {
       return 'All'
     } else {
       return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
@@ -190,7 +190,7 @@ class WijCheckboxes {
   }
 
   checkIfAllOptionsSelected() {
-    if (this.options.length>=this.numOptionsForCheckAll) {
+    if (this.options.length>=this.numOptionsForCheckAllButton) {
       var numChecked = 0;
       this.options.forEach((option, index) => {
         var checkbox = document.getElementById(this.id + '-chk-' + option.value);

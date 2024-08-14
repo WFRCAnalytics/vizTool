@@ -7,7 +7,7 @@
     "on": true
   },
   "checkboxesSelector": {
-    "numOptionsForCheckAll": 5,
+    "numOptionsForCheckAllButton": 5,
     "textCheckAll": "Check All",
     "textUncheckAll": "Uncheck All"
   },
