@@ -1,61 +1,25 @@
 [
   {
-    "scnTrend": "BRT - Intensified Centers",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v902",
-        "scnGroup": "Base",
-        "scnYear": 2019 },
-      { "modVersion": "v902",
-        "scnGroup": "Centers_Phase1_BRT",
-        "scnYear": 2050 }
-    ]
-  },
-  {
-    "scnTrend": "Rail - Intensified Centers",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v902",
-        "scnGroup": "Base",
-        "scnYear": 2019 },
-      { "modVersion": "v902",
-        "scnGroup": "Centers_Phase1_Rail",
-        "scnYear": 2050 }
-    ]
-  },
-  {
-    "scnTrend": "BRT - RTP Land Use",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v902",
-        "scnGroup": "Base",
-        "scnYear": 2019 },
-      { "modVersion": "v902",
-        "scnGroup": "RTPLandUse_Phase1_BRT",
-        "scnYear": 2050 }
-    ]
-  },
-  {
-    "scnTrend": "Rail - RTP Land Use",
-    "displayByDefault": true,
-    "modelruns" : [
-      { "modVersion": "v902",
-        "scnGroup": "Base",
-        "scnYear": 2019 },
-      { "modVersion": "v902",
-        "scnGroup": "RTPLandUse_Phase1_Rail",
-        "scnYear": 2050 }
-    ]
-  },
-  {
     "scnTrend": "RTP",
-    "displayByDefault": false,
+    "displayByDefault": true,
     "modelruns" : [
       { "modVersion": "v902",
         "scnGroup": "Base",
         "scnYear": 2019 },
       { "modVersion": "v902",
         "scnGroup": "RTP",
+        "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "RTP_new_vizTool",
+    "displayByDefault": false,
+    "modelruns" : [
+      { "modVersion": "v902",
+        "scnGroup": "Base",
+        "scnYear": 2019 },
+      { "modVersion": "v902",
+        "scnGroup": "RTP_new_vizTool",
         "scnYear": 2050 }
     ]
   }

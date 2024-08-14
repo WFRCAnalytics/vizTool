@@ -330,13 +330,52 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   // Adjust the init function to ensure it waits for loadScenarios to fully complete
   async function init() {
     console.log('app:init');
+    // Load and display the disclaimer modal
+    await loadAppConfig();
     await loadScenarios();
     // Only after loadScenarios completes, load the menu and items
     const menuStructure = await loadMenuAndItems();
     await initVizMapListeners();
   }
 
-
+  async function loadAppConfig() {
+    try {
+      const response = await fetch('config/app.json');
+      const appConfig = await response.json();
+  
+      // Set the title and version in the Esri object
+      const logoElement = document.querySelector('calcite-navigation-logo');
+      logoElement.setAttribute('heading', appConfig.title || "vizTool");
+      logoElement.setAttribute('description', appConfig.subtitle || "beta");
+  
+      // Load and display the disclaimer modal if applicable
+      await loadAndDisplayDisclaimer(appConfig.splash_disclaimer);
+    } catch (error) {
+      console.error('Error loading app.json:', error);
+    }
+  }
+  
+  async function loadAndDisplayDisclaimer(disclaimer) {
+    // Check if the disclaimer should be shown
+    if (disclaimer.on) {
+      const modalContent = document.querySelector('#infoModal .modal-content');
+      modalContent.innerHTML = "<h1>" + disclaimer.title + "</h1>";
+      modalContent.innerHTML += disclaimer.text_html;
+  
+      const modal = document.getElementById('infoModal');
+      modal.style.display = 'block';
+  
+      const okButton = document.getElementById('okButton');
+      okButton.onclick = function() {
+        modal.style.display = 'none';
+      };
+    } else {
+      // If the disclaimer is off, ensure the modal is not displayed
+      const modal = document.getElementById('infoModal');
+      modal.style.display = 'none';
+    }
+  }
+  
   async function updateActiveVizMap() {
     console.log(dataMenu);
     dataMenu.forEach(menuItem => {

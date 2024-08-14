@@ -1,4 +1,11 @@
 {
+  "title": "vizTool Strategies",
+  "subtitle": "v24.8.14 beta",
+  "splash_disclaimer": {
+    "title": "IMPORTANT: BETA VERSION",
+    "text_html": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
+    "on": true
+  },
   "menuItems": [
     { "menuText": "Roads and Transit",
       "menuIconStart": "driving-distance",
@@ -110,7 +117,7 @@
           }
         },
         { "submenuText": "Zone Origin-Destination Trips (coming soon)",
-          "submenuIconStart": "graph-line-series",
+          "submenuIconStart": "2d-explore",
           "template": "vizComingSoon"
         }
       ]
