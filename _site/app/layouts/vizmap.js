@@ -50,7 +50,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
         title: "dummy layer"
       });
       map.add(this.geojsonLayer);
@@ -60,7 +60,7 @@ require([
       // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
       // Read JSON file
       if (this.baseGeoJsonKey!="") {
-        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+        fetch('geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -93,7 +93,7 @@ require([
       // ADD GEOJSONS
       // need to check geometry type before adding!!
       this.geojsonLayer = new GeoJSONLayer({
-        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJsonKey),
+        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJsonKey),
         title: "Aggregator Layer"
       });
 
@@ -306,7 +306,7 @@ require([
 //      // ADD GEOJSONS
 //      // need to check geometry type before adding!!
 //      this.geojsonLayer = new GeoJSONLayer({
-//        url: 'layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
+//        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
 //        title: "dummy layer"
 //      });
 //      map.add(this.geojsonLayer);
@@ -316,7 +316,7 @@ require([
 //      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
 //      // Read JSON file
 //      if (this.baseGeoJsonKey!="") {
-//        fetch('layers/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
+//        fetch('geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
 //          .then(response => {
 //            if (!response.ok) {
 //              throw new Error(`HTTP error! status: ${response.status}`);
@@ -544,11 +544,7 @@ require([
       if (this.sidebar.getWeightCode()) {
         var _dataWeightMain = this.getDataWeightMain();
       }
-      
-      // return if no data!
-      if (!_dataMain) {
-        return;
-      }
+
 
       // get compare data
       if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
@@ -564,6 +560,11 @@ require([
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
       if (this.isScenarioCompIncomplete()) {
+        return;
+      }
+      
+      // return if no data!
+      if (!_dataMain & !_dataComp) {
         return;
       }
 
@@ -760,7 +761,7 @@ require([
               var attributes;
 
               // If there's a display value for the given SEGID in the _dataMain object, set it
-              if (_valueMain>0) {
+              if (_valueMain !== 0 || _valueComp !== 0) {
                 attributes = {
                   ...feature.attributes,
                   idLabel: _id,

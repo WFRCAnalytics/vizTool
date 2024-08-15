@@ -14,6 +14,7 @@ let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};
 let jsonScenario;
+let configApp;
 let configAttributes;
 let configAggregators;
 let configDividers;
@@ -146,7 +147,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   // Function to fetch and store data
   async function fetchAndStoreGeoJsonData(fileName) {
     try {
-      const response = await fetch(`layers/${fileName}`);
+      const response = await fetch(`geo-data/${fileName}`);
       const jsonData = await response.json();
       // Store the processed data in the object with the filename as key
       dataGeojsons[fileName] = jsonData;
@@ -163,13 +164,13 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     configFilters     = await fetchConfigFilters();
     configDividers    = await fetchConfigDividers();
 
-    const dataApp = await fetchConfigApp();
+    configApp = await fetchConfigApp();
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
     calciteMenu.innerHTML = '';
 
-    menuItems = dataApp.menuItems.map(menuItem => new MenuItem(menuItem, hideAllLayoutLayers));
+    menuItems = configApp.menuItems.map(menuItem => new MenuItem(menuItem, hideAllLayoutLayers));
 
     dataMenu = menuItems;
 
@@ -346,10 +347,10 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       // Set the title and version in the Esri object
       const logoElement = document.querySelector('calcite-navigation-logo');
       logoElement.setAttribute('heading', appConfig.title || "vizTool");
-      logoElement.setAttribute('description', appConfig.subtitle || "beta");
+      logoElement.setAttribute('description', appConfig.subtitle || "v24.8.14 beta");
   
       // Load and display the disclaimer modal if applicable
-      await loadAndDisplayDisclaimer(appConfig.splash_disclaimer);
+      await loadAndDisplayDisclaimer(appConfig.splashDisclaimer);
     } catch (error) {
       console.error('Error loading app.json:', error);
     }
@@ -360,7 +361,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     if (disclaimer.on) {
       const modalContent = document.querySelector('#infoModal .modal-content');
       modalContent.innerHTML = "<h1>" + disclaimer.title + "</h1>";
-      modalContent.innerHTML += disclaimer.text_html;
+      modalContent.innerHTML += disclaimer.textHtml;
   
       const modal = document.getElementById('infoModal');
       modal.style.display = 'block';

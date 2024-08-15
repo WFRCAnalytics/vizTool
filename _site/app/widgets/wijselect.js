@@ -32,18 +32,26 @@ class WijSelect {
       }
       select.appendChild(optionEl);
     });
+
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-      if (this.id.includes('subag')) {
-        this.vizLayout.sidebar.aggregatorFilter.afterUpdateSubAg();
+    
+      if (this.id.includes('filter-subag-wij')) {
+        const modifiedId = this.id.replace(/-subag-wij$/, '');
+        let filter = this.vizLayout.sidebar.filters.find(o => o.id === modifiedId) 
+                     || this.vizLayout.sidebar.aggregatorFilter;
+    
+        filter.afterUpdateSubAg();
+    
+      } else if (this.id.includes('_aggregator-selector')) {
+        // Run only if aggregator
+        this.vizLayout.afterUpdateAggregator();
+    
       } else {
-        if (this.id.includes('_aggregator-selector')) { // run only if aggregator
-          this.vizLayout.afterUpdateAggregator();
-        } else {
-          this.vizLayout.afterUpdateSidebar();
-        }  
+        this.vizLayout.afterUpdateSidebar();
       }
     });
+    
     container.appendChild(select);
     
         
