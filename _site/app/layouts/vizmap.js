@@ -544,11 +544,7 @@ require([
       if (this.sidebar.getWeightCode()) {
         var _dataWeightMain = this.getDataWeightMain();
       }
-      
-      // return if no data!
-      if (!_dataMain) {
-        return;
-      }
+
 
       // get compare data
       if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
@@ -564,6 +560,11 @@ require([
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
       if (this.isScenarioCompIncomplete()) {
+        return;
+      }
+      
+      // return if no data!
+      if (!_dataMain & !_dataComp) {
         return;
       }
 
@@ -760,7 +761,7 @@ require([
               var attributes;
 
               // If there's a display value for the given SEGID in the _dataMain object, set it
-              if (_valueMain>0) {
+              if (_valueMain !== 0 || _valueComp !== 0) {
                 attributes = {
                   ...feature.attributes,
                   idLabel: _id,
