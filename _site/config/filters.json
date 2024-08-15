@@ -154,7 +154,7 @@
         "fOptionValue": "RouteName",
         "fOptionName" : "RouteLongName",
         "fOptionSubAg": "Mode",
-        "subAgDisplayName":"List Routes for",
+        "subAgDisplayName":"List Route Names for",
         "subAgSelected": "All",
         "subAgOptions":  [
             {"value":"All", "label":"All Modes"            },
