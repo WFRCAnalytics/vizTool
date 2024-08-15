@@ -32,11 +32,6 @@
             "scnTrendCode": "RTP",
             "displayName": "RTP",
             "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "RTP_new_vizTool",
-            "displayName": "RTP_new_vizTool",
-            "displayByDefault": true
         }
     ],
     "scenarios": [
@@ -44,19 +39,13 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "Existing 2019",
-            "scnTrendCodes": ["RTP","RTP_new_vizTool"]
+            "scnTrendCodes": ["RTP"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTP",
             "scnYear": 2050,
             "alias": "RTP 2050",
             "scnTrendCodes": ["RTP"]
-        },
-        {   "modVersion": "v902",
-            "scnGroup": "RTP_new_vizTool",
-            "scnYear": 2050,
-            "alias": "RTP 2050",
-            "scnTrendCodes": ["RTP_new_vizTool"]
         }
     ]
 }
