@@ -28,7 +28,7 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariocheckerdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrend), dataScenarioTrends.map(item => ({ value: item.scnTrend, label: item.scnTrend })), this);
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.displayName })), this);
       _scenariocheckerdiv.appendChild(scenarioChecker.render());
     }
 
@@ -236,8 +236,8 @@ class VizTrends {
         currentChart.destroy();
       }
   
-      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend)).map(item => {
-        return { name: item.scnTrend };
+      const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode)).map(item => {
+        return { name: item.scnTrendCode };
       });
   
       currentChart = new Chart(ctx, {
@@ -398,11 +398,11 @@ class VizTrends {
     var _data_divide;
     var _geojsondata_divide;  
 
-    const dataScenarioTrends_selected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrend));
+    const dataScenarioTrends_selected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
 
     dataScenarioTrends_selected.forEach(trend => {
 
-      const _trendName = trend.scnTrend;
+      const _scnTrendCode = trend.scnTrendCode;
 
       trend.modelruns.forEach(modelrun => {
         
@@ -472,11 +472,11 @@ class VizTrends {
             if (!chartData[agId]) {
               chartData[agId] = {};
             }
-            if (!chartData[agId][_trendName]) {
-              chartData[agId][_trendName] = {};
+            if (!chartData[agId][_scnTrendCode]) {
+              chartData[agId][_scnTrendCode] = {};
             }
 
-            chartData[agId][_trendName][_scnYear] = 0;
+            chartData[agId][_scnTrendCode][_scnYear] = 0;
 
             const _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
 
@@ -491,17 +491,17 @@ class VizTrends {
                 const selectedValue = filterSelectionData[_aCode];
 
                 if (selectedValue == null | selectedValue == undefined) {
-                  console.log("null data found in here: " + agId + '_' + _trendName + '_' + _scnYear)
+                  console.log("null data found in here: " + agId + '_' + _scnTrendCode + '_' + _scnYear)
                 }
 
                 if (selectedValue !== null & selectedValue !== undefined) {
-                  chartData[agId][_trendName][_scnYear] += selectedValue;
+                  chartData[agId][_scnTrendCode][_scnYear] += selectedValue;
                 }
               }
             })
 
             if (_dCode!="Nothing") {
-              chartData[agId][_trendName][_scnYear] /= _sumDivide;
+              chartData[agId][_scnTrendCode][_scnYear] /= _sumDivide;
             }
           });
         }

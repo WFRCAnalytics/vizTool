@@ -14,6 +14,7 @@ let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};
 let jsonScenario;
+let configApp;
 let configAttributes;
 let configAggregators;
 let configDividers;
@@ -60,7 +61,6 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataConfigFilters;
   }
 
-
   async function fetchConfigDividers() {
     console.log('app:fetchConfigDividers');
     const response = await fetch('config/dividers.json');
@@ -68,19 +68,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataConfigDividers;
   }
 
-
   async function fetchScenarioData() {
     console.log('app:fetchScenarioData');
     const response = await fetch('config/scenarios.json');
     const dataScenario = await response.json();
     return dataScenario;
-  }
-
-  async function fetchScenarioTrendData() {
-    console.log('app:fetchScenarioTrendData');
-    const response = await fetch('config/scenario-trends.json');
-    const dataScenarioTrend = await response.json();
-    return dataScenarioTrend;
   }
 
   async function loadScenarios() {
@@ -110,10 +102,25 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       selectedScenario_Comp = null; // or handle the case where there is no data appropriately
     }
 
-
     // load scenario trend data
-    const jsonScenarioTrend = await fetchScenarioTrendData();
-    dataScenarioTrends = jsonScenarioTrend.map(item => new ScenarioTrend(item));
+    const scenarioTrends = jsonScenario.trends.map(trend => {
+      const modelruns = jsonScenario.scenarios
+        .filter(scenario => scenario.scnTrendCodes.includes(trend.scnTrendCode))
+        .map(scenario => ({
+          modVersion: scenario.modVersion,
+          scnGroup: scenario.scnGroup,
+          scnYear: scenario.scnYear
+        }));
+      
+      return {
+        scnTrendCode: trend.scnTrendCode,
+        displayName: trend.displayName,
+        displayByDefault: trend.displayByDefault,
+        modelruns: modelruns
+      };
+    });
+    
+    dataScenarioTrends = scenarioTrends.map(item => new ScenarioTrend(item));
   
     dataGeojsons = {};
 
@@ -146,7 +153,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   // Function to fetch and store data
   async function fetchAndStoreGeoJsonData(fileName) {
     try {
-      const response = await fetch(`layers/${fileName}`);
+      const response = await fetch(`geo-data/${fileName}`);
       const jsonData = await response.json();
       // Store the processed data in the object with the filename as key
       dataGeojsons[fileName] = jsonData;
@@ -163,13 +170,13 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     configFilters     = await fetchConfigFilters();
     configDividers    = await fetchConfigDividers();
 
-    const dataApp = await fetchConfigApp();
+    configApp = await fetchConfigApp();
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
     calciteMenu.innerHTML = '';
 
-    menuItems = dataApp.menuItems.map(menuItem => new MenuItem(menuItem, hideAllLayoutLayers));
+    menuItems = configApp.menuItems.map(menuItem => new MenuItem(menuItem, hideAllLayoutLayers));
 
     dataMenu = menuItems;
 
@@ -330,13 +337,52 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   // Adjust the init function to ensure it waits for loadScenarios to fully complete
   async function init() {
     console.log('app:init');
+    // Load and display the disclaimer modal
+    await loadAppConfig();
     await loadScenarios();
     // Only after loadScenarios completes, load the menu and items
     const menuStructure = await loadMenuAndItems();
     await initVizMapListeners();
   }
 
-
+  async function loadAppConfig() {
+    try {
+      const response = await fetch('config/app.json');
+      const appConfig = await response.json();
+  
+      // Set the title and version in the Esri object
+      const logoElement = document.querySelector('calcite-navigation-logo');
+      logoElement.setAttribute('heading', appConfig.title || "vizTool");
+      logoElement.setAttribute('description', appConfig.subtitle || "v24.8.14 beta");
+  
+      // Load and display the disclaimer modal if applicable
+      await loadAndDisplayDisclaimer(appConfig.splashDisclaimer);
+    } catch (error) {
+      console.error('Error loading app.json:', error);
+    }
+  }
+  
+  async function loadAndDisplayDisclaimer(disclaimer) {
+    // Check if the disclaimer should be shown
+    if (disclaimer.on) {
+      const modalContent = document.querySelector('#infoModal .modal-content');
+      modalContent.innerHTML = "<h1>" + disclaimer.title + "</h1>";
+      modalContent.innerHTML += disclaimer.textHtml;
+  
+      const modal = document.getElementById('infoModal');
+      modal.style.display = 'block';
+  
+      const okButton = document.getElementById('okButton');
+      okButton.onclick = function() {
+        modal.style.display = 'none';
+      };
+    } else {
+      // If the disclaimer is off, ensure the modal is not displayed
+      const modal = document.getElementById('infoModal');
+      modal.style.display = 'none';
+    }
+  }
+  
   async function updateActiveVizMap() {
     console.log(dataMenu);
     dataMenu.forEach(menuItem => {
