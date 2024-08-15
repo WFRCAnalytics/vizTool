@@ -34,8 +34,23 @@
             "displayByDefault": true
         },
         {
-            "scnTrendCode": "Needs",
-            "displayName": "Needs Based Scenario",
+            "scnTrendCode": "Centers_Phase1_BRT",
+            "displayName": "Intensified Centers - BRT",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "RTPLandUse_Phase1_BRT",
+            "displayName": "Intensified Centers - BRT",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Centers_Phase1_Rail",
+            "displayName": "Intensified Centers - Rail",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "RTPLandUse_Phase1_Rail",
+            "displayName": "Intensified Centers - Rail",
             "displayByDefault": true
         }
     ],
@@ -44,7 +59,7 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "Existing 2019",
-            "scnTrendCodes": ["RTP","Needs"]
+            "scnTrendCodes": ["RTP","Centers_Phase1_BRT","Centers_Phase1_Rail","RTPLandUse_Phase1_BRT","RTPLandUse_Phase1_Rail"]
         },
         {   "modVersion": "v902",
             "scnGroup": "RTP",
@@ -53,10 +68,28 @@
             "scnTrendCodes": ["RTP"]
         },
         {   "modVersion": "v902",
-            "scnGroup": "Needs",
+            "scnGroup": "Centers_Phase1_BRT",
             "scnYear": 2050,
-            "alias": "Needs 2050",
-            "scnTrendCodes": ["Needs"]
+            "alias": "Intensified Centers - BRT 2050",
+            "scnTrendCodes": ["Centers_Phase1_BRT"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "Centers_Phase1_Rail",
+            "scnYear": 2050,
+            "alias": "Intensified Centers - BRT 2050",
+            "scnTrendCodes": ["Centers_Phase1_Rail"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_BRT",
+            "scnYear": 2050,
+            "alias": "Intensified Centers - BRT 2050",
+            "scnTrendCodes": ["RTPLandUse_Phase1_BRT"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "RTPLandUse_Phase1_Rail",
+            "scnYear": 2050,
+            "alias": "Intensified Centers - BRT 2050",
+            "scnTrendCodes": ["RTPLandUse_Phase1_Rail"]
         }
     ]
 }
