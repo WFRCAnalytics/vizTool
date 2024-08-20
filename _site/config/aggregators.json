@@ -5,43 +5,64 @@
         "agCodeLabelField": "TAZID"
     },
     "CITY_NAME": {
-        "agTitleText"     : "City",
-        "agGeoJsonKey"    : "city",
-        "agCodeLabelField": "CITY_NAME"
+        "agTitleText"      : "City",
+        "agGeoJsonKey"     : "city",
+        "agCodeLabelField" : "CITY_NAME",
+        "baseAgCode"       : "TAZID",
+        "subAgCode"        : "DISTSUPER",
+        "subAgSelected"    : "All",
+        "subAgDisplayName" : "List Cities for"
     },
     "DISTSML": {
-        "agTitleText"     : "Small District",
-        "agGeoJsonKey"    : "distSml",
-        "agCodeLabelField": "DSML_NAME"
+        "agTitleText"      : "Small District",
+        "agGeoJsonKey"     : "distSml",
+        "agCodeLabelField" : "DSML_NAME",
+        "baseAgCode"       : "TAZID",
+        "subAgCode"        : "DISTSUPER",
+        "subAgSelected"    : "All",
+        "subAgDisplayName" : "List Small Districts for"
     },
     "DISTMED": {
-        "agTitleText"     : "Medium District",
-        "agGeoJsonKey"    : "distMed",
-        "agCodeLabelField": "DMED_NAME"
+        "agTitleText"      : "Medium District",
+        "agGeoJsonKey"     : "distMed",
+        "agCodeLabelField" : "DMED_NAME",
+        "baseAgCode"       : "TAZID",
+        "subAgCode"        : "DISTSUPER",
+        "subAgSelected"    : "All",
+        "subAgDisplayName" : "List Medium Districts for"
     },
     "DISTLRG": {
-        "agTitleText"     : "Large District",
-        "agGeoJsonKey"    : "distLrg",
-        "agCodeLabelField": "DLRG_NAME"
+        "agTitleText"      : "Large District",
+        "agGeoJsonKey"     : "distLrg",
+        "agCodeLabelField" : "DLRG_NAME",
+        "baseAgCode"       : "TAZID",
+        "subAgCode"        : "DISTSUPER",
+        "subAgSelected"    : "All",
+        "subAgDisplayName" : "List Large Districts for"
     },
     "DISTSUPER" : {
-        "agTitleText"      : "Super District",
-        "agDefaultSelected": ["5"],
-        "agGeoJsonKey"     : "distSup",
-        "agCodeLabelField" : "DSUP_NAME"
+        "agTitleText"       : "Super District",
+        "agDefaultSelected" : ["5"],
+        "agGeoJsonKey"      : "distSup",
+        "agCodeLabelField"  : "DSUP_NAME",
+        "baseAgCode"        : "TAZID"
     },
     "PLANAREA": {
-      "agTitleText"      : "Plan Area",
-      "agDefaultSelected": ["WFRC"],
-      "agCodeLabelField" : "PLANAREA",
-      "agOptions": [{"value":"MAG" , "label":"MAG" },
-                    {"value":"WFRC", "label":"WFRC"}]
+        "agTitleText"         : "Plan Area",
+        "agDefaultSelected"   : ["WFRC"],
+        "agCodeLabelField"    : "PLANAREA",
+        "agOptions": [
+            {"value":"MAG" , "label":"MAG" },
+            {"value":"WFRC", "label":"WFRC"}
+        ]
     },
     "EFA": {
-      "agTitleText"      : "Equity Focus Areas",
-      "agDefaultSelected": ["EFA"],
-      "agCodeLabelField" : "EFA",
-      "agOptions": [{"value":"EFA" , "label":"EFA"    },
-                    {"value":""    , "label":"Non-EFA"}]
+        "agTitleText"          : "Equity Focus Areas",
+        "agDefaultSelected"    : ["EFA"],
+        "agCodeLabelField"     : "EFA",
+        "agOptions": [
+            {"value":"EFA" , "label":"EFA"    },
+            {"value":""    , "label":"Non-EFA"}
+        ]
     }
 }

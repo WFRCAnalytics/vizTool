@@ -72,7 +72,8 @@
         "fSelected": ["All"],
         "fOptions" : [
             {"value":"All", "label":"All Purposes"}
-        ]
+        ],
+        "userModifiable": false
     },
     "fTod2": {
         "fName"    : "Filter Time of Day",
@@ -114,11 +115,10 @@
     "fIbOb": {
         "fName"    : "Filter Peak Direction",
         "fWidget"  : "checkboxes",
-        "fSelected": ["IB", "OB", "N/A"],
+        "fSelected": ["IB", "OB"],
         "fOptions" : [
-            {"value":"IB" , "label":"In-Bound" },
-            {"value":"OB" , "label":"Out-Bound"},
-            {"value":"N/A", "label":"N/A"      }
+            {"value":"IB" , "label":"Inbound" },
+            {"value":"OB" , "label":"Outbound"}
         ]
     },
     "fModeTransit": {
@@ -152,7 +152,19 @@
         "fWidget"     : "checkboxes",
         "fOptionsJson": "j-transit-route-names.json",
         "fOptionValue": "RouteName",
-        "fOptionName" : "RouteLongName"
+        "fOptionName" : "RouteLongName",
+        "fOptionSubAg": "Mode",
+        "subAgDisplayName":"List Route Names for",
+        "subAgSelected": "All",
+        "subAgOptions":  [
+            {"value":"All", "label":"All Modes"            },
+            {"value":"4"  , "label":"Local Bus"            },
+            {"value":"5"  , "label":"Core Bus"             },
+            {"value":"6"  , "label":"Express Bus"          },
+            {"value":"9"  , "label":"Bus Rapid Transit"    },
+            {"value":"7"  , "label":"Light Rail Transit"   },
+            {"value":"8"  , "label":"Commuter Rail Transit"}
+        ]
     },
     "fModeHier": {
         "fName"    : "Filter Hierarchacal Mode",
