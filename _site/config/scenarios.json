@@ -53,10 +53,28 @@
             "scnTrendCodes": ["RTP"]
         },
         {   "modVersion": "v902",
-            "scnGroup": "RTP_new_vizTool",
+            "scnGroup": "R_Connectivity",
             "scnYear": 2050,
-            "alias": "RTP 2050",
-            "scnTrendCodes": ["RTP_new_vizTool"]
+            "alias": "Connectivity Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "R_Optimization",
+            "scnYear": 2050,
+            "alias": "Optimization Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "T_BusNetwork",
+            "scnYear": 2050,
+            "alias": "Bus Network Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "T_FixedGuideway",
+            "scnYear": 2050,
+            "alias": "Fixed Guideway Strategy",
+            "scnTrendCodes": ["RTP"]
         }
     ]
 }

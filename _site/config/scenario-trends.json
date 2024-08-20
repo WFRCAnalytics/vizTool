@@ -12,14 +12,50 @@
     ]
   },
   {
-    "scnTrend": "RTP_new_vizTool",
-    "displayByDefault": false,
+    "scnTrend": "R_Connectivity",
+    "displayByDefault": true,
     "modelruns" : [
       { "modVersion": "v902",
         "scnGroup": "Base",
         "scnYear": 2019 },
       { "modVersion": "v902",
-        "scnGroup": "RTP_new_vizTool",
+        "scnGroup": "R_Connectivity",
+        "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "R_Optimization",
+    "displayByDefault": true,
+    "modelruns" : [
+      { "modVersion": "v902",
+        "scnGroup": "Base",
+        "scnYear": 2019 },
+      { "modVersion": "v902",
+        "scnGroup": "R_Optimization",
+        "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "T_BusNetwork",
+    "displayByDefault": true,
+    "modelruns" : [
+      { "modVersion": "v902",
+        "scnGroup": "Base",
+        "scnYear": 2019 },
+      { "modVersion": "v902",
+        "scnGroup": "T_BusNetwork",
+        "scnYear": 2050 }
+    ]
+  },
+  {
+    "scnTrend": "T_FixedGuideway",
+    "displayByDefault": true,
+    "modelruns" : [
+      { "modVersion": "v902",
+        "scnGroup": "Base",
+        "scnYear": 2019 },
+      { "modVersion": "v902",
+        "scnGroup": "T_FixedGuideway",
         "scnYear": 2050 }
     ]
   }
