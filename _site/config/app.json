@@ -1,6 +1,6 @@
 {
-  "title": "vizTool Strategies",
-  "subtitle": "v24.8.14 beta",
+  "title": "vizTool Transit Corridor Testing",
+  "subtitle": "v24.8.15 beta",
   "splashDisclaimer": {
     "title": "IMPORTANT: BETA VERSION",
     "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
@@ -26,9 +26,9 @@
             "popupTitle": "Roadway Segments",
             "attributeTitle": "Roadway Segment Attributes",
             "attributeInfoTextHtml": "<b>Lanes</b> is total number of cross-section lanes, including high-occupancy, general purpose, collector-distributor, and arterial/collector lanes.<br/><b>Functional Type</b> is the FT value as defined in the travel demand model.<br/><b>Capacity per Hour per Lane</b> is the number of vehicles that can be served by her per lane. This includes reductions due to capacity factors and signals on arterials/collectors.<br/><b>Free-flow Speed</b> is the uncongested maximum speed in miles-per-hour.<br/><b>Volume</b> this is the total number of vehicles that are served during the time interval.<br/><b>Speed</b> is the congested travel speed for a given link.<br/><b>Max V/C Ratio</b> is the worst volume-over-capacity ratio by direction by time interval.",
-            "attributeSelected": "aLanes",
-            "attributes": ["aLanes","aFt","aCap1HL","aFfSpd","aVol","aMinSpd","aMaxVc"],
-            "filters" : ["fVehType", "fTod4"]
+            "attributeSelected": "aLn",
+            "attributes": ["aLn","aFt","aCp","aFS","aVl","aNSp","aXVc"],
+            "filters" : ["fDirName", "fFuncGrp", "fAreaType", "fVehType", "fTod4"]
           }
         },
         { "submenuText": "Road Trends",
@@ -49,7 +49,7 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fVehType", "fTod4"]
+            "filters" : ["fFuncGrp","fAreaType","fVehType","fTod4"]
           }
         },
         { "submenuText": "Transit Segments",
