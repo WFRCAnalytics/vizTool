@@ -278,5 +278,40 @@
             {"value":"p", "label":"Production" },
             {"value":"a", "label":"Attraction" }
         ]
+    },
+    "fFuncGrp": {
+        "fName"    : "Functional Group",
+        "fWidget"  : "select",
+        "fSelected": "Total",
+        "fOptions" : [
+            {"value":"Total"   , "label": "All"     },
+            {"value":"Arterial", "label": "Arterial"},
+            {"value":"CD Road" , "label": "CD Road" },
+            {"value":"Freeway" , "label": "Freeway" },
+            {"value":"Managed" , "label": "Managed" }
+        ]
+    },
+    "fAreaType": {
+        "fName"    : "Area Type",
+        "fWidget"  : "checkboxes",
+        "fOptions" : [
+            {"value":"1", "label": "1-Rural"     },
+            {"value":"2", "label": "2-Transition"},
+            {"value":"3", "label": "3-Suburban"  },
+            {"value":"4", "label": "4-Urban"     },
+            {"value":"5", "label": "5-CBD-Like"  }
+        ]
+    },
+    "fDirName": {
+        "fName"    : "Travel Direction on Segment",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  },
+            {"value":"All", "label":"All"        }
+        ]
     }
 }

@@ -20,14 +20,14 @@
     "aAl": {
         "aDisplayName": "PA Alightings"
     },
-    "aLanes": {
+    "aLn": {
         "aDisplayName": "Lanes",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Number of Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
-                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 Lanes or More" },
+                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 Lanes or Less" },
                     { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5 Lanes"    },
                     { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7 Lanes"    },
                     { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9 Lanes"    },
@@ -97,7 +97,7 @@
         "rendererCollection": {
             "main": {
                 "legendTitle": "Functional Type",
-                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
+                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '0')",
                 "classBreakInfos": [
                     { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 0.50 }, "label": "Minor Collector"    },
                     { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 1.00 }, "label": "Major Collector"    },
@@ -156,7 +156,7 @@
             }
         }
     },
-    "aCap1HL": {
+    "aCp": {
         "aDisplayName": "Capacity per Hour per Lane",
         "rendererCollection": {
             "main": {
@@ -230,7 +230,7 @@
             }
         }
     },
-    "aFfSpd": {
+    "aFS": {
         "aDisplayName": "Free-flow Speed",
         "rendererCollection": {
             "main": {
@@ -303,7 +303,7 @@
             }
         }
     },
-    "aVol": {
+    "aVl": {
         "aDisplayName": "Volume",
         "rendererCollection": {
             "main": {
@@ -375,7 +375,7 @@
             }
         }
     },
-    "aMinSpd": {
+    "aNSp": {
         "aDisplayName": "Minimum Speed",
         "rendererCollection": {
         "main": {
@@ -450,7 +450,7 @@
         }
         }
     },
-    "aMaxVc": {
+    "aXVc": {
         "aDisplayName": "Maximum V/C Ratio",
         "rendererCollection": {
             "main": {
