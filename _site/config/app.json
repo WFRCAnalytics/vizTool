@@ -49,7 +49,7 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fFuncGrp","fAreaType","fVehType","fTod4"]
+            "filters" : ["fDirName", "fFuncGrp","fAreaType","fVehType","fTod4"]
           }
         },
         { "submenuText": "Transit Segments",
@@ -65,7 +65,7 @@
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
             "attributes": ["aR"],
             "attributeSelected": "aR",
-            "filters" : ["fPurpOnlyAll", "fTod2", "fModeTransitAcc", "fDirNameCheckboxes", "fModeTransit", "fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameCheckboxes", "fModeRoute", "fRouteName","fModeHier"]
           }
         },
         { "submenuText": "Transit Stops (coming soon)",
@@ -97,7 +97,7 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeTransitAccSingleLetter", "fModeTransitCode3"]
+            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeAccessSingleLetter", "fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Trips by Mode Trends",
@@ -118,7 +118,7 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeTransitAccSingleLetter", "fModeTransitCode3"]
+            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeAccessSingleLetter", "fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Origin-Destination Trips (coming soon)",
@@ -140,11 +140,11 @@
             "geometryType": "polygon",
             "attributeTitle": "Socioeconomics",
             "attributeInfoTextHtml": "<b>Population</b> represents the total number of individuals living within an area.<br/><b>Households</b> is the total number of occupied residential units.<br/><b>Total Vehicles</b> is the cumulative count of vehicles owned or available for use by households.<br/><b>Total Workers</b> is the number of individuals within the population who are employed and part of the workforce.<br/><b>Employment - 3 Categories</b> is the distribution of employment across three broad categories.<br/><b>Employment - 12 Categories</b> is a more detailed division of employment statistics in twelve distinct categories.<br/><b>Average Income</b> is the mean income level of individuals or households within the area.<br/><b>K-12 School Enrollment</b> is the total number of students enrolled in K-12 educational institutions within the specified area.",
-            "attributeSelected": "aHhPop",
+            "attributeSelected": "aHP",
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
+            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aAI","aSc"],
             "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }
         },
@@ -159,12 +159,12 @@
             "comboSelected": "",
             "attributeTitle": "Socioeconomics",
             "attributeInfoTextHtml": "<b>Population</b> represents the total number of individuals living within an area.<br/><b>Households</b> is the total number of occupied residential units.<br/><b>Total Vehicles</b> is the cumulative count of vehicles owned or available for use by households.<br/><b>Total Workers</b> is the number of individuals within the population who are employed and part of the workforce.<br/><b>Employment - 3 Categories</b> is the distribution of employment across three broad categories.<br/><b>Employment - 12 Categories</b> is a more detailed division of employment statistics in twelve distinct categories.<br/><b>Average Income</b> is the mean income level of individuals or households within the area.<br/><b>K-12 School Enrollment</b> is the total number of students enrolled in K-12 educational institutions within the specified area.",
-            "attributeSelected": "aHhPop",
+            "attributeSelected": "aHP",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
-            "attributes": ["aHhPop","aHHV","aV","aWrk","aE3","aE12","aAvgInc","aEnrol"],
+            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aAI","aSc"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
             "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }

@@ -94,7 +94,7 @@
             {"value":"Ok", "label":"Off-Peak" }
         ]
     },
-    "fModeTransitAcc": {
+    "fModeAccess": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
@@ -103,7 +103,7 @@
             {"value":"walk" , "label":"Walk" }
         ]
     },
-    "fModeTransitAccSingleLetter": {
+    "fModeAccessSingleLetter": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
@@ -121,7 +121,7 @@
             {"value":"OB" , "label":"Outbound"}
         ]
     },
-    "fModeTransit": {
+    "fModeRoute": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": [4,5,6,7,8,9],
@@ -134,7 +134,7 @@
             {"value":8, "label":"Commuter Rail Transit"}
         ]
     },
-    "fModeTransitCode3": {
+    "fModeRouteCode3": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],

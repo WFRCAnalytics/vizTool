@@ -530,7 +530,7 @@
             }
         }
     },
-    "aHhPop" : {
+    "aHP" : {
         "aDisplayName": "Population",
         "rendererCollection": {
             "main": {
@@ -614,7 +614,7 @@
             }
         }
     },
-    "aHHV" : {
+    "aHV" : {
         "aDisplayName": "Households",
         "rendererCollection": {
             "main": {
@@ -782,7 +782,7 @@
             }
         }
     },
-    "aWrk" : {
+    "aWk" : {
         "aDisplayName": "Total Workers",
         "rendererCollection": {
             "main": {
@@ -1034,7 +1034,7 @@
             }
         }
     },
-    "aAvgInc" : {
+    "aAI" : {
         "aDisplayName": "Average Income",
         "rendererCollection": {
             "main": {
@@ -1114,7 +1114,7 @@
             }
         }
     },
-    "aEnrol" : {
+    "aSc" : {
         "aDisplayName": "K-12 School Enrollment",
         "rendererCollection": {
             "main": {

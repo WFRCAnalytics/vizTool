@@ -29,7 +29,7 @@
     ],
     "trends": [
         {
-            "scnTrendCode": "v9.1",
+            "scnTrendCode": "v910",
             "displayName": "v9.1",
             "displayByDefault": true
         }
@@ -39,7 +39,7 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "v9.1 Base 2019",
-            "scnTrendCodes": ["v9.1.0"]
+            "scnTrendCodes": ["v910"]
         }
     ]
 }

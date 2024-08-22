@@ -27,7 +27,7 @@
         "jsonName": "j-zones-se",
         "baseGeoJsonKey": "taz",
         "baseGeoJsonId": "TAZID",
-        "aCode": "aHhPop",
+        "aCode": "aHP",
         "aDisplayName": "Total Population",
         "filter": ""
     }
