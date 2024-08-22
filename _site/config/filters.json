@@ -68,12 +68,11 @@
     },
     "fPurpOnlyAll": {
         "fName"    : "Filter Trip Purpose",
-        "fWidget"  : "checkboxes",
-        "fSelected": ["All"],
+        "fWidget"  : "select",
+        "fSelected": "All",
         "fOptions" : [
             {"value":"All", "label":"All Purposes"}
-        ],
-        "userModifiable": false
+        ]
     },
     "fTod2": {
         "fName"    : "Filter Time of Day",

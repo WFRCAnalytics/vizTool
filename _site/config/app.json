@@ -63,7 +63,7 @@
             "popupTitle": "Transit Segments",
             "attributeTitle": "Transit Segment Attributes",
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
-            "attributes": ["aR"],
+            "attributes": ["aR","aHd","aSp"],
             "attributeSelected": "aR",
             "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameCheckboxes", "fModeRoute", "fRouteName","fModeHier"]
           }

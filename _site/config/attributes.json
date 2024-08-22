@@ -1200,6 +1200,7 @@
     },
     "aR" : {
         "aDisplayName": "Riders",
+        "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Riders",
@@ -1272,20 +1273,21 @@
     },
     "aHd" : {
         "aDisplayName": "Headway",
+        "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5"   },
-                    { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10" },
-                    { "minValue": 10.001, "maxValue":     15, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label": ">10 to 15"},
-                    { "minValue": 15.001, "maxValue":     20, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label": ">15 to 20"},
-                    { "minValue": 20.001, "maxValue":     30, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label": ">20 to 30"},
-                    { "minValue": 30.001, "maxValue":     40, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label": ">30 to 40"},
-                    { "minValue": 40.001, "maxValue":     60, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label": ">40 to 60"},
-                    { "minValue": 60.001, "maxValue":     90, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">60 to 90"},
-                    { "minValue": 90.001, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": ">90"      }
+                    { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5 minutes"   },
+                    { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10 minutes" },
+                    { "minValue": 10.001, "maxValue":     15, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label": ">10 to 15 minutes"},
+                    { "minValue": 15.001, "maxValue":     20, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label": ">15 to 20 minutes"},
+                    { "minValue": 20.001, "maxValue":     30, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label": ">20 to 30 minutes"},
+                    { "minValue": 30.001, "maxValue":     40, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label": ">30 to 40 minutes"},
+                    { "minValue": 40.001, "maxValue":     60, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label": ">40 to 60 minutes"},
+                    { "minValue": 60.001, "maxValue":     90, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">60 to 90 minutes"},
+                    { "minValue": 90.001, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": ">90 minutes"      }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -1344,6 +1346,7 @@
     },
     "aSp" : {
         "aDisplayName": "Speed",
+        "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Speed",

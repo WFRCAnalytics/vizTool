@@ -122,7 +122,7 @@ require([
     getDataMain() {
       const _scenario = this.getMain()
       if (_scenario) {
-        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions());
+        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions(), this.sidebar.getAgFilterOptionsMethod());
       }
     }
 
@@ -137,7 +137,7 @@ require([
     getDataComp() {
       const _scenario = this.getComp()
       if (_scenario) {
-        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions());
+        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions(), this.sidebar.getAgFilterOptionsMethod());
       }
     }
     
