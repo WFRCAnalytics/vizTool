@@ -18,8 +18,8 @@ class Scenario {
     dataMenu.forEach(menuItem => {
       if (menuItem.modelEntities) {
         menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonFileName) {
-            jsonFileNames.add(modelEntity.vizLayout.jsonFileName);
+          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
+            jsonFileNames.add(modelEntity.vizLayout.jsonName);
           }
         });
       }

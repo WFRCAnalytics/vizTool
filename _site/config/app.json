@@ -19,7 +19,7 @@
           "submenuIconStart": "line-straight",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-roadway-segments",
+            "jsonName": "j-roadway-segments",
             "baseGeoJsonKey": "segment",
             "baseGeoJsonId": "SEGID",
             "geometryType": "polyline",
@@ -35,9 +35,9 @@
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
+            "jsonName": "j-roadway-trends",
             "baseGeoJsonKey": "segment",
             "baseGeoJsonId": "SEGID",
-            "jsonFileName": "j-roadway-trends",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
             "attributeTitle": "Road Trends",
@@ -56,7 +56,7 @@
           "submenuIconStart": "line-straight",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-transit-segments-riders",
+            "jsonName": "j-transit-segments",
             "baseGeoJsonKey": "segment",
             "baseGeoJsonId": "SEGID",
             "geometryType": "polyline",
@@ -65,7 +65,7 @@
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
             "attributes": ["aR"],
             "attributeSelected": "aR",
-            "filters" : ["fPurpOnlyAll", "fTod2", "fModeTransitAcc", "fIbOb", "fModeTransit", "fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll", "fTod2", "fModeTransitAcc", "fDirNameCheckboxes", "fModeTransit", "fRouteName","fModeHier"]
           }
         },
         { "submenuText": "Transit Stops (coming soon)",
@@ -85,7 +85,7 @@
           "submenuIconStart": "graph-pie-slice",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-zones-modetrips",
+            "jsonName": "j-zones-modetrips",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -104,9 +104,9 @@
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
+            "jsonName": "j-zones-modetrips",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
-            "jsonFileName": "j-zones-modetrips",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
             "attributeTitle": "Transit Trends",
@@ -134,7 +134,7 @@
           "submenuIconStart": "layer-polygon",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-zones-se",
+            "jsonName": "j-zones-se",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -152,9 +152,9 @@
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
+            "jsonName": "j-zones-se",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
-            "jsonFileName": "j-zones-se",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
             "attributeTitle": "Socioeconomics",
@@ -173,7 +173,7 @@
           "submenuIconStart": "graph-pie-slice",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-zones-metrics",
+            "jsonName": "j-zones-metrics",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -192,9 +192,9 @@
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
+            "jsonName": "j-zones-metrics",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
-            "jsonFileName": "j-zones-metrics",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
             "attributeTitle": "Zone Metric Trends",
@@ -213,7 +213,7 @@
           "submenuIconStart": "desktop",
           "template": "vizMap",
           "templateSettings": {
-            "jsonFileName": "j-zones-ato",
+            "jsonName": "j-zones-ato",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",

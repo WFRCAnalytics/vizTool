@@ -5,7 +5,7 @@ class VizTrends {
 
     this.baseGeoJsonKey = data.baseGeoJsonKey;
     this.baseGeoJsonId = data.baseGeoJsonId;
-    this.jsonFileName = data.jsonFileName;
+    this.jsonName = data.jsonName;
      
     // link to parent
     this.modelEntity = modelEntity;
@@ -113,7 +113,7 @@ class VizTrends {
   }
 
   getFilterGroup() {
-    return this.getScenarioMain().getFilterGroupForAttribute(this.jsonFileName, this.getACode());
+    return this.getScenarioMain().getFilterGroupForAttribute(this.jsonName, this.getACode());
   }
 
   getFilterGroupArray() {
@@ -424,7 +424,7 @@ class VizTrends {
           _geojsondata_divide = {};
 
           if (_dCode!="Nothing") {
-            _data_divide = _scenario.jsonData[_selectedDivider.jsonFileName].data[_selectedDivider.filter];
+            _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
             _geojsondata_divide = dataGeojsons[_scenario.geojsons[_selectedDivider.baseGeoJsonKey]];
           }
 
@@ -478,7 +478,7 @@ class VizTrends {
 
             chartData[agId][_scnTrendCode][_scnYear] = 0;
 
-            const _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+            const _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions());
 
             _filteredFeatures.forEach(feature => {
 

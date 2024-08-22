@@ -11,7 +11,7 @@ class Divider {
       return; // Exit the constructor if _configDivider is undefined
     }
 
-    this.jsonFileName   = _configDivider.jsonFileName  ;
+    this.jsonName       = _configDivider.jsonName      ;
     this.baseGeoJsonKey = _configDivider.baseGeoJsonKey;
     this.baseGeoJsonId  = _configDivider.baseGeoJsonId ;
     this.aCode          = _configDivider.aCode         ;
