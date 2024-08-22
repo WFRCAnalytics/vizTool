@@ -1272,8 +1272,8 @@
         }
     },
     "aHd" : {
-        "aDisplayName": "Headway",
-        "agFilterOptionsMethod": "average",
+        "aDisplayName": "Minimum Headway",
+        "agFilterOptionsMethod": "minimum",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Headway",
@@ -1297,7 +1297,7 @@
                 "defaultLabel": "No Headway"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Headway",
+                "legendTitle": "Difference in Minimum Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -1318,7 +1318,7 @@
                 "defaultLabel": "No Headway"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Headway",
+                "legendTitle": "Percent Difference in Minimum Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
@@ -1345,7 +1345,7 @@
         }
     },
     "aSp" : {
-        "aDisplayName": "Speed",
+        "aDisplayName": "Average Travel Speed",
         "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
@@ -1370,7 +1370,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Speed",
+                "legendTitle": "Difference in Average Travel Speed",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -1391,7 +1391,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Speed",
+                "legendTitle": "Percent Difference in Average Travel Speed",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
