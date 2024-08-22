@@ -303,7 +303,7 @@
         ]
     },
     "fDirName": {
-        "fName"    : "Travel Direction on Segment",
+        "fName"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -312,6 +312,17 @@
             {"value":"EB" , "label":"Eastbound"  },
             {"value":"WB" , "label":"Westbound"  },
             {"value":"All", "label":"All"        }
+        ]
+    },
+    "fDirNameCheckboxes": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["NB","SB","EB","WB"],
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  }
         ]
     }
 }
