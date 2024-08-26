@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Scenario Configuration",
+  "description": "Schema for the scenario configuration and scenario settings.",
+  "type": "object",
+  "properties": {
+    "initial_select": {
+      "type": "array",
+      "description": "Initial selection of model version, scenario group, and year.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modVersion": {
+            "type": "string",
+            "description": "The version of the model used for the selection."
+          },
+          "scnGroup": {
+            "type": "string",
+            "description": "The scenario group, such as 'Base' or 'RTP'."
+          },
+          "scnYear": {
+            "type": "integer",
+            "description": "The year associated with the scenario."
+          }
+        },
+        "required": ["modVersion", "scnGroup", "scnYear"]
+      }
+    },
+    "initial_select_compare": {
+      "type": "array",
+      "description": "Comparison selection of model version, scenario group, and year.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modVersion": {
+            "type": "string",
+            "description": "The version of the model used for comparison."
+          },
+          "scnGroup": {
+            "type": "string",
+            "description": "The scenario group for comparison."
+          },
+          "scnYear": {
+            "type": "integer",
+            "description": "The year for the comparison scenario."
+          }
+        },
+        "required": ["modVersion", "scnGroup", "scnYear"]
+      }
+    },
+    "models": {
+      "type": "array",
+      "description": "List of models and their associated geojson files.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modVersion": {
+            "type": "string",
+            "description": "The version of the model."
+          },
+          "geojsons": {
+            "type": "object",
+            "description": "Geojson files related to different geographical divisions.",
+            "properties": {
+              "taz": {
+                "type": "string",
+                "description": "The geojson file for Traffic Analysis Zones (TAZ)."
+              },
+              "segment": {
+                "type": "string",
+                "description": "The geojson file for segments."
+              },
+              "distSml": {
+                "type": "string",
+                "description": "The geojson file for small districts."
+              },
+              "distMed": {
+                "type": "string",
+                "description": "The geojson file for medium districts."
+              },
+              "distLrg": {
+                "type": "string",
+                "description": "The geojson file for large districts."
+              },
+              "distSup": {
+                "type": "string",
+                "description": "The geojson file for super districts."
+              },
+              "city": {
+                "type": "string",
+                "description": "The geojson file for cities."
+              },
+              "subarea": {
+                "type": "string",
+                "description": "The geojson file for subareas."
+              }
+            },
+            "required": ["taz", "segment"]
+          }
+        },
+        "required": ["modVersion", "geojsons"]
+      }
+    },
+    "trends": {
+      "type": "array",
+      "description": "List of trends with their codes and display settings.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scnTrendCode": {
+            "type": "string",
+            "description": "Code representing the trend (e.g., RTP, Needs, NoBuild, etc.)."
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name for the trend."
+          },
+          "displayByDefault": {
+            "type": "boolean",
+            "description": "Indicates if the trend should be displayed by default."
+          }
+        },
+        "required": ["scnTrendCode", "displayName", "displayByDefault"]
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "List of scenarios with their details and associated trends.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modVersion": {
+            "type": "string",
+            "description": "The version of the model associated with the scenario."
+          },
+          "scnGroup": {
+            "type": "string",
+            "description": "The scenario group (e.g., Base, TIP, RTP, Needs, NoBuild, etc.)."
+          },
+          "scnYear": {
+            "type": "integer",
+            "description": "The year associated with the scenario."
+          },
+          "scnFullName": {
+            "type": "string",
+            "description": "The full name of the scenario, usually combining version, group, and year."
+          },
+          "alias": {
+            "type": "string",
+            "description": "An alias or short name for the scenario."
+          },
+          "scnTrendCodes": {
+            "type": "array",
+            "description": "List of trend codes associated with the scenario.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["modVersion", "scnGroup", "scnYear", "scnFullName", "alias", "scnTrendCodes"]
+      }
+    }
+  },
+  "required": ["initial_select", "initial_select_compare", "models", "trends", "scenarios"]
+}
