@@ -1,6 +1,6 @@
 {
     "TAZ_HH": {
-        "jsonFileName": "j-zones-se",
+        "jsonName": "j-zones-se",
         "baseGeoJsonKey": "taz",
         "baseGeoJsonId": "TAZID",
         "aCode": "aTotHh",
@@ -8,7 +8,7 @@
         "filter": ""
     },
     "TAZ_WRK": {
-        "jsonFileName": "j-zones-se",
+        "jsonName": "j-zones-se",
         "baseGeoJsonKey": "taz",
         "baseGeoJsonId": "TAZID",
         "aCode": "aWrk",
@@ -16,7 +16,7 @@
         "filter": ""
     },
     "TAZ_JOB": {
-        "jsonFileName": "j-zones-se",
+        "jsonName": "j-zones-se",
         "baseGeoJsonKey": "taz",
         "baseGeoJsonId": "TAZID",
         "aCode": "aTotEmp",
@@ -24,10 +24,10 @@
         "filter": ""
     },
     "TAZ_POP": {
-        "jsonFileName": "j-zones-se",
+        "jsonName": "j-zones-se",
         "baseGeoJsonKey": "taz",
         "baseGeoJsonId": "TAZID",
-        "aCode": "aHhPop",
+        "aCode": "aHP",
         "aDisplayName": "Total Population",
         "filter": ""
     }

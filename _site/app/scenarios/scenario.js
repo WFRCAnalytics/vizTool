@@ -18,8 +18,8 @@ class Scenario {
     dataMenu.forEach(menuItem => {
       if (menuItem.modelEntities) {
         menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonFileName) {
-            jsonFileNames.add(modelEntity.vizLayout.jsonFileName);
+          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
+            jsonFileNames.add(modelEntity.vizLayout.jsonName);
           }
         });
       }
@@ -66,8 +66,7 @@ class Scenario {
       _dataGeo    = this.geojsons[data_geojsonsKey]
       _dataAggGeo = this.geojsons[ agg_geojsonsKey];
     }
-    if (wt_jsonDataKey!='') {
-      _dataWt = getDataForFilterOptionsList(wt_jsonDataKey, wt_lstFilters);
+    if (wt_jsonDataKey!='') {_dataWt = getDataForFilterOptionsList(wt_jsonDataKey, wt_lstFilters);
     }
 
     const dataResults = {};
@@ -156,47 +155,71 @@ class Scenario {
     return attribute.filterGroup ?? "";
   }
   
-  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters) {
-    //console.log('getDataForFilterOptionsList:' + a_lstFilters);
-
-    // Initialize an object to hold the aggregated sums
-    let aggregatedSums = {};
-
+  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum") {
+    // Initialize objects to hold the aggregated sums, counts, and minimums
+    let aggregatedData = {};
+    let countData = {}; // To keep track of counts for averaging
+    let minData = {}; // To track minimum values
+  
     const _parent = this;
-
-    // Modified sumFields function to handle the summing of specific attributes for each key
-    function sumFields(data) {
+  
+    // Modified function to handle the summing, averaging, and minimum of specific attributes for each key
+    function aggregateFields(data, method) {
       Object.keys(data).forEach(key => {
-        if (!aggregatedSums[key]) {
-          aggregatedSums[key] = {};
+        if (!aggregatedData[key]) {
+          aggregatedData[key] = {};
+          countData[key] = {};
+          minData[key] = {};
         }
-
+  
         _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
           if (data[key].hasOwnProperty(attr.aCode)) {
-            if (!aggregatedSums[key][attr.aCode]) {
-              aggregatedSums[key][attr.aCode] = 0;
+            if (!aggregatedData[key][attr.aCode]) {
+              aggregatedData[key][attr.aCode] = 0;
+              countData[key][attr.aCode] = 0;
+              minData[key][attr.aCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
             }
-            aggregatedSums[key][attr.aCode] += data[key][attr.aCode];
+            aggregatedData[key][attr.aCode] += data[key][attr.aCode];
+            countData[key][attr.aCode] += 1;
+            if (data[key][attr.aCode] < minData[key][attr.aCode]) {
+              minData[key][attr.aCode] = data[key][attr.aCode];
+            }
           }
         });
       });
     }
-
-    // Loop through each combination of filters
-    a_lstFilters.forEach(function(filter) {
-      let _data = [];
-      if (_parent.jsonData[a_jsonDataKey]) {
-        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+  
+    if (a_agFilterOptionsMethod === "sum" || a_agFilterOptionsMethod === "average" || a_agFilterOptionsMethod === "minimum") {
+      // Loop through each combination of filters
+      a_lstFilters.forEach(function(filter) {
+        let _data = [];
+        if (_parent.jsonData[a_jsonDataKey]) {
+          _data = _parent.jsonData[a_jsonDataKey].data[filter];
+        }
+  
+        // Aggregate the fields in the data object
+        if (_data) {
+          aggregateFields(_data, a_agFilterOptionsMethod);
+        }
+      });
+  
+      // If the method is "average", divide the aggregated sums by the counts
+      if (a_agFilterOptionsMethod === "average") {
+        Object.keys(aggregatedData).forEach(key => {
+          Object.keys(aggregatedData[key]).forEach(attrCode => {
+            aggregatedData[key][attrCode] /= countData[key][attrCode];
+          });
+        });
       }
-      
-
-      // Sum the fields in the data object
-      if (_data) {
-        sumFields(_data);
+  
+      // If the method is "minimum", replace the aggregated data with the minimum data
+      if (a_agFilterOptionsMethod === "minimum") {
+        aggregatedData = minData;
       }
-    });
-
-    return aggregatedSums;
+    }
+  
+    return aggregatedData;
   }
-
+  
+  
 }

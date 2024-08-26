@@ -20,7 +20,7 @@ require([
       // link to parent
       this.modelEntity = modelEntity;
 
-      this.jsonFileName = data.jsonFileName;
+      this.jsonName = data.jsonName;
       this.baseGeoJsonKey = data.baseGeoJsonKey;
       this.baseGeoJsonId = data.baseGeoJsonId;
       this.geometryType = data.geometryType;
@@ -122,7 +122,7 @@ require([
     getDataMain() {
       const _scenario = this.getMain()
       if (_scenario) {
-        return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions(), this.sidebar.getAgFilterOptionsMethod());
       }
     }
 
@@ -130,21 +130,21 @@ require([
     getDataWeightMain() {
       const _scenario = this.getMain()
       if (_scenario) {
-        return _scenario.getDataForFilter(this.jsonFileName, this.sidebar.getWeightCodeFilter());
+        return _scenario.getDataForFilter(this.jsonName, this.sidebar.getWeightCodeFilter());
       }
     }
 
     getDataComp() {
       const _scenario = this.getComp()
       if (_scenario) {
-        return _scenario.getDataForFilterOptionsList(this.jsonFileName, this.sidebar.getListOfSelectedFilterOptions());
+        return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions(), this.sidebar.getAgFilterOptionsMethod());
       }
     }
     
     getDataWeightComp() {
       const _scenario = this.getComp()
       if (_scenario) {
-        return _scenario.getDataForFilter(this.jsonFileName, this.sidebar.getWeightCodeFilter());
+        return _scenario.getDataForFilter(this.jsonName, this.sidebar.getWeightCodeFilter());
       }
     }
 
@@ -225,7 +225,7 @@ require([
     getFilterGroup() {
       const _scenario = this.getScenarioMain();
       if (_scenario) {
-        return _scenario.getFilterGroupForAttribute(this.jsonFileName, this.getACode())
+        return _scenario.getFilterGroupForAttribute(this.jsonName, this.getACode())
       }
     }
 
@@ -544,11 +544,7 @@ require([
       if (this.sidebar.getWeightCode()) {
         var _dataWeightMain = this.getDataWeightMain();
       }
-      
-      // return if no data!
-      if (!_dataMain) {
-        return;
-      }
+
 
       // get compare data
       if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
@@ -564,6 +560,11 @@ require([
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
       if (this.isScenarioCompIncomplete()) {
+        return;
+      }
+      
+      // return if no data!
+      if (!_dataMain & !_dataComp) {
         return;
       }
 
@@ -760,7 +761,7 @@ require([
               var attributes;
 
               // If there's a display value for the given SEGID in the _dataMain object, set it
-              if (_valueMain>0) {
+              if (_valueMain !== 0 || _valueComp !== 0) {
                 attributes = {
                   ...feature.attributes,
                   idLabel: _id,

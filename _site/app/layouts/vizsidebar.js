@@ -202,6 +202,17 @@ class VizSidebar {
   
     return ""; // Or return a default value or `undefined` as needed
   }
+
+  getAgFilterOptionsMethod() {
+    const aCode = this.getACode();
+    const item = this.attributes.find(item => item.aCode === aCode);
+  
+    if (item && item.agFilterOptionsMethod) {
+      return item.agFilterOptionsMethod;
+    }
+  
+    return ""; // Or return a default value or `undefined` as needed
+  }
   
   getSelectedAggregator() {
 

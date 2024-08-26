@@ -61,7 +61,6 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataConfigFilters;
   }
 
-
   async function fetchConfigDividers() {
     console.log('app:fetchConfigDividers');
     const response = await fetch('config/dividers.json');
@@ -69,19 +68,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     return dataConfigDividers;
   }
 
-
   async function fetchScenarioData() {
     console.log('app:fetchScenarioData');
     const response = await fetch('config/scenarios.json');
     const dataScenario = await response.json();
     return dataScenario;
-  }
-
-  async function fetchScenarioTrendData() {
-    console.log('app:fetchScenarioTrendData');
-    const response = await fetch('config/scenario-trends.json');
-    const dataScenarioTrend = await response.json();
-    return dataScenarioTrend;
   }
 
   async function loadScenarios() {
@@ -111,10 +102,25 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       selectedScenario_Comp = null; // or handle the case where there is no data appropriately
     }
 
-
     // load scenario trend data
-    const jsonScenarioTrend = await fetchScenarioTrendData();
-    dataScenarioTrends = jsonScenarioTrend.map(item => new ScenarioTrend(item));
+    const scenarioTrends = jsonScenario.trends.map(trend => {
+      const modelruns = jsonScenario.scenarios
+        .filter(scenario => scenario.scnTrendCodes.includes(trend.scnTrendCode))
+        .map(scenario => ({
+          modVersion: scenario.modVersion,
+          scnGroup: scenario.scnGroup,
+          scnYear: scenario.scnYear
+        }));
+      
+      return {
+        scnTrendCode: trend.scnTrendCode,
+        displayName: trend.displayName,
+        displayByDefault: trend.displayByDefault,
+        modelruns: modelruns
+      };
+    });
+    
+    dataScenarioTrends = scenarioTrends.map(item => new ScenarioTrend(item));
   
     dataGeojsons = {};
 

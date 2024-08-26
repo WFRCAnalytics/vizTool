@@ -68,12 +68,11 @@
     },
     "fPurpOnlyAll": {
         "fName"    : "Filter Trip Purpose",
-        "fWidget"  : "checkboxes",
-        "fSelected": ["All"],
+        "fWidget"  : "select",
+        "fSelected": "All",
         "fOptions" : [
             {"value":"All", "label":"All Purposes"}
-        ],
-        "userModifiable": false
+        ]
     },
     "fTod2": {
         "fName"    : "Filter Time of Day",
@@ -94,7 +93,7 @@
             {"value":"Ok", "label":"Off-Peak" }
         ]
     },
-    "fModeTransitAcc": {
+    "fModeAccess": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
@@ -103,7 +102,7 @@
             {"value":"walk" , "label":"Walk" }
         ]
     },
-    "fModeTransitAccSingleLetter": {
+    "fModeAccessSingleLetter": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
@@ -121,7 +120,7 @@
             {"value":"OB" , "label":"Outbound"}
         ]
     },
-    "fModeTransit": {
+    "fModeRoute": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": [4,5,6,7,8,9],
@@ -134,7 +133,7 @@
             {"value":8, "label":"Commuter Rail Transit"}
         ]
     },
-    "fModeTransitCode3": {
+    "fModeRouteCode3": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],
@@ -152,7 +151,19 @@
         "fWidget"     : "checkboxes",
         "fOptionsJson": "j-transit-route-names.json",
         "fOptionValue": "RouteName",
-        "fOptionName" : "RouteLongName"
+        "fOptionName" : "RouteLongName",
+        "fOptionSubAg": "Mode",
+        "subAgDisplayName":"List Route Names for",
+        "subAgSelected": "All",
+        "subAgOptions":  [
+            {"value":"All", "label":"All Modes"            },
+            {"value":"4"  , "label":"Local Bus"            },
+            {"value":"5"  , "label":"Core Bus"             },
+            {"value":"6"  , "label":"Express Bus"          },
+            {"value":"9"  , "label":"Bus Rapid Transit"    },
+            {"value":"7"  , "label":"Light Rail Transit"   },
+            {"value":"8"  , "label":"Commuter Rail Transit"}
+        ]
     },
     "fModeHier": {
         "fName"    : "Filter Hierarchacal Mode",
@@ -265,6 +276,52 @@
         "fOptions" : [
             {"value":"p", "label":"Production" },
             {"value":"a", "label":"Attraction" }
+        ]
+    },
+    "fFuncGrp": {
+        "fName"    : "Functional Group",
+        "fWidget"  : "select",
+        "fSelected": "Total",
+        "fOptions" : [
+            {"value":"Total"   , "label": "All"     },
+            {"value":"Arterial", "label": "Arterial"},
+            {"value":"CD Road" , "label": "CD Road" },
+            {"value":"Freeway" , "label": "Freeway" },
+            {"value":"Managed" , "label": "Managed" }
+        ]
+    },
+    "fAreaType": {
+        "fName"    : "Area Type",
+        "fWidget"  : "checkboxes",
+        "fOptions" : [
+            {"value":"1", "label": "1-Rural"     },
+            {"value":"2", "label": "2-Transition"},
+            {"value":"3", "label": "3-Suburban"  },
+            {"value":"4", "label": "4-Urban"     },
+            {"value":"5", "label": "5-CBD-Like"  }
+        ]
+    },
+    "fDirName": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  },
+            {"value":"All", "label":"All"        }
+        ]
+    },
+    "fDirNameCheckboxes": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["NB","SB","EB","WB"],
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  }
         ]
     }
 }
