@@ -1,4 +1,5 @@
 {
+    "$schema": "./scenario-config-schema.json",
     "initial_select": [
         {
             "modVersion": "v910_20240807",
