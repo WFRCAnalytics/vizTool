@@ -157,7 +157,7 @@
             }
           }
         },
-        "required": ["modVersion", "scnGroup", "scnYear", "scnFullName", "alias", "scnTrendCodes"]
+        "required": ["modVersion", "scnGroup", "scnYear", "alias", "scnTrendCodes"]
       }
     }
   },
