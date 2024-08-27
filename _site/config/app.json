@@ -12,8 +12,8 @@
     "textUncheckAll": "Uncheck All"
   },
   "menuItems": [
-    { "menuText": "Roads and Transit",
-      "menuIconStart": "driving-distance",
+    { "menuText": "Roads",
+      "menuIconStart": "car",
       "modelEntities": [
         { "submenuText": "Road Segments",
           "submenuIconStart": "line-straight",
@@ -27,8 +27,8 @@
             "attributeTitle": "Roadway Segment Attributes",
             "attributeInfoTextHtml": "<b>Lanes</b> is total number of cross-section lanes, including high-occupancy, general purpose, collector-distributor, and arterial/collector lanes.<br/><b>Functional Type</b> is the FT value as defined in the travel demand model.<br/><b>Capacity per Hour per Lane</b> is the number of vehicles that can be served by her per lane. This includes reductions due to capacity factors and signals on arterials/collectors.<br/><b>Free-flow Speed</b> is the uncongested maximum speed in miles-per-hour.<br/><b>Volume</b> this is the total number of vehicles that are served during the time interval.<br/><b>Speed</b> is the congested travel speed for a given link.<br/><b>Max V/C Ratio</b> is the worst volume-over-capacity ratio by direction by time interval.",
             "attributeSelected": "aLn",
-            "attributes": ["aLn","aFt","aCp","aFS","aVl","aNSp","aXVc"],
-            "filters" : ["fDirName", "fFuncGrp", "fAreaType", "fVehType", "fTod4"]
+            "attributes": ["aLn","aFt","aCp","aFS","aVl","aRS","aXVc"],
+            "filters" : ["fDirName4pAll","fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
         },
         { "submenuText": "Road Trends",
@@ -49,9 +49,14 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fDirName", "fFuncGrp","fAreaType","fVehType","fTod4"]
+            "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
-        },
+        }
+      ]
+    },
+    { "menuText": "Transit",
+    "menuIconStart": "conditional-rules-path",
+    "modelEntities": [
         { "submenuText": "Transit Segments",
           "submenuIconStart": "line-straight",
           "template": "vizMap",
@@ -63,9 +68,9 @@
             "popupTitle": "Transit Segments",
             "attributeTitle": "Transit Segment Attributes",
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
-            "attributes": ["aR","aHd","aSp"],
+            "attributes": ["aR","aHd","aTS"],
             "attributeSelected": "aR",
-            "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameCheckboxes", "fModeRoute", "fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameNoAll", "fModeRoute", "fRouteName","fModeHier"]
           }
         },
         { "submenuText": "Transit Stops (coming soon)",
@@ -85,7 +90,7 @@
           "submenuIconStart": "graph-pie-slice",
           "template": "vizMap",
           "templateSettings": {
-            "jsonName": "j-zones-modetrips",
+            "jsonName": "j-zone-mode-trips",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -97,14 +102,14 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Trips by Mode Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
-            "jsonName": "j-zones-modetrips",
+            "jsonName": "j-zone-mode-trips",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "aggregatorTitle": "Select Summary Geography",
@@ -118,7 +123,7 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fPurp5", "fTod2Select", "fPaLowerCase", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Origin-Destination Trips (coming soon)",
@@ -134,7 +139,7 @@
           "submenuIconStart": "layer-polygon",
           "template": "vizMap",
           "templateSettings": {
-            "jsonName": "j-zones-se",
+            "jsonName": "j-zone-se",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -144,7 +149,7 @@
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
-            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aAI","aSc"],
+            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
             "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }
         },
@@ -152,7 +157,7 @@
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
-            "jsonName": "j-zones-se",
+            "jsonName": "j-zone-se",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "aggregatorTitle": "Select Summary Geography",
@@ -164,16 +169,16 @@
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
-            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aAI","aSc"],
+            "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
             "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
           }
         },
-        { "submenuText": "Zone Metrics",
+        { "submenuText": "Zone Metrics - Non-Transit",
           "submenuIconStart": "graph-pie-slice",
           "template": "vizMap",
           "templateSettings": {
-            "jsonName": "j-zones-metrics",
+            "jsonName": "j-zone-metrics",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
@@ -185,14 +190,14 @@
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA"]
+            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
           }
         },
-        { "submenuText": "Zone Metrics Trends",
+        { "submenuText": "Zone Metrics - Non-Transit Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
-            "jsonName": "j-zones-metrics",
+            "jsonName": "j-zone-metrics",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "aggregatorTitle": "Select Summary Geography",
@@ -206,14 +211,14 @@
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
             "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA"]
+            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
           }
         },
         { "submenuText": "Access to Opportunities",
           "submenuIconStart": "desktop",
           "template": "vizMap",
           "templateSettings": {
-            "jsonName": "j-zones-ato",
+            "jsonName": "j-zone-ato",
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",

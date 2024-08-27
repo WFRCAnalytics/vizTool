@@ -9,7 +9,7 @@ class AttributeFilterData {
 
 class DataAttribute {
     constructor(data) {
-        this.aCode = data.aCode;
+        this.attributeCode = data.attributeCode;
         this.DisplayName = data.DisplayName;
         if (data.filterGroup) {
             this.filterGroup = data.filterGroup;

@@ -125,12 +125,12 @@ class VizTrends {
     }
   }
 
-//  getChartData(aCode, filterSelectionData) {
-//    if (aCode === 'aVmt') {
+//  getChartData(attributeCode, filterSelectionData) {
+//    if (attributeCode === 'aVmt') {
 //        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
-//    } else if (aCode === 'aVht') {
+//    } else if (attributeCode === 'aVht') {
 //        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
-//    } else if (aCode === 'aLMl') {
+//    } else if (attributeCode === 'aLMl') {
 //        return filterSelectionData.aLMl;
 //    } else {
 //        return 0; // return 0 if nothing is found
@@ -154,9 +154,9 @@ class VizTrends {
     return segidOptions;
   }
     
-  createLineChart(aCode, labels, chartData, agIdsString) {
+  createLineChart(attributeCode, labels, chartData, agIdsString) {
     console.log('viztrends:Creating the chart:' + this.id);
-    console.log("Selected radio button option under 'Display':", aCode);
+    console.log("Selected radio button option under 'Display':", attributeCode);
 
     var mode = "";
     if (modeSelect) {
@@ -175,7 +175,7 @@ class VizTrends {
 
     if (this.sidebar.dividers) {
       if (this.getDCode()!="Nothing") {
-        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.aCode === this.getDCode()).aDisplayName;
+        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.attributeCode === this.getDCode()).aDisplayName;
       }
     }
 
@@ -387,7 +387,7 @@ class VizTrends {
     var _selectedDivider;
 
     if (this.sidebar.dividers) {
-      _selectedDivider = this.sidebar.dividers.find(divider => divider.aCode === _dCode) || null;
+      _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === _dCode) || null;
     }
 
     const _agIds = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());

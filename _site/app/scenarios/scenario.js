@@ -146,9 +146,9 @@ class Scenario {
       return "";
     }
   
-    const attribute = jsonDataForKey.attributes.find(item => item.aCode === a_aCode);
+    const attribute = jsonDataForKey.attributes.find(item => item.attributeCode === a_aCode);
     if (!attribute) {
-      console.error(`Error: No attribute found with aCode "${a_aCode}" in jsonData key "${a_jsonDataKey}"`);
+      console.error(`Error: No attribute found with attributeCode "${a_aCode}" in jsonData key "${a_jsonDataKey}"`);
       return "";
     }
   
@@ -173,50 +173,49 @@ class Scenario {
         }
   
         _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
-          if (data[key].hasOwnProperty(attr.aCode)) {
-            if (!aggregatedData[key][attr.aCode]) {
-              aggregatedData[key][attr.aCode] = 0;
-              countData[key][attr.aCode] = 0;
-              minData[key][attr.aCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
+          if (data[key].hasOwnProperty(attr.attributeCode)) {
+            if (!aggregatedData[key][attr.attributeCode]) {
+              aggregatedData[key][attr.attributeCode] = 0;
+              countData[key][attr.attributeCode] = 0;
+              minData[key][attr.attributeCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
             }
-            aggregatedData[key][attr.aCode] += data[key][attr.aCode];
-            countData[key][attr.aCode] += 1;
-            if (data[key][attr.aCode] < minData[key][attr.aCode]) {
-              minData[key][attr.aCode] = data[key][attr.aCode];
+            aggregatedData[key][attr.attributeCode] += data[key][attr.attributeCode];
+            countData[key][attr.attributeCode] += 1;
+            if (data[key][attr.attributeCode] < minData[key][attr.attributeCode]) {
+              minData[key][attr.attributeCode] = data[key][attr.attributeCode];
             }
           }
         });
       });
     }
   
-    if (a_agFilterOptionsMethod === "sum" || a_agFilterOptionsMethod === "average" || a_agFilterOptionsMethod === "minimum") {
-      // Loop through each combination of filters
-      a_lstFilters.forEach(function(filter) {
-        let _data = [];
-        if (_parent.jsonData[a_jsonDataKey]) {
-          _data = _parent.jsonData[a_jsonDataKey].data[filter];
-        }
-  
-        // Aggregate the fields in the data object
-        if (_data) {
-          aggregateFields(_data, a_agFilterOptionsMethod);
-        }
-      });
-  
-      // If the method is "average", divide the aggregated sums by the counts
-      if (a_agFilterOptionsMethod === "average") {
-        Object.keys(aggregatedData).forEach(key => {
-          Object.keys(aggregatedData[key]).forEach(attrCode => {
-            aggregatedData[key][attrCode] /= countData[key][attrCode];
-          });
+    // Loop through each combination of filters
+    a_lstFilters.forEach(function(filter) {
+      let _data = [];
+      if (_parent.jsonData[a_jsonDataKey]) {
+        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+      }
+
+      // Aggregate the fields in the data object
+      if (_data) {
+        aggregateFields(_data, a_agFilterOptionsMethod);
+      }
+    });
+
+    // If the method is "average", divide the aggregated sums by the counts
+    if (a_agFilterOptionsMethod === "average") {
+      Object.keys(aggregatedData).forEach(key => {
+        Object.keys(aggregatedData[key]).forEach(attributeCode => {
+          aggregatedData[key][attributeCode] /= countData[key][attributeCode];
         });
-      }
-  
-      // If the method is "minimum", replace the aggregated data with the minimum data
-      if (a_agFilterOptionsMethod === "minimum") {
-        aggregatedData = minData;
-      }
+      });
     }
+
+    // If the method is "minimum", replace the aggregated data with the minimum data
+    if (a_agFilterOptionsMethod === "minimum") {
+      aggregatedData = minData;
+    }
+
   
     return aggregatedData;
   }
