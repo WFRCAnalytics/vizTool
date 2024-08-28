@@ -229,7 +229,7 @@
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : ["fAtoCondition","fModeAutoTransit"]
+            "filters" : ["fModeAutoTransit", "fAtoCondition"]
           }
         },
         { "submenuText": "Access to Opportunities Trends (coming soon)",
