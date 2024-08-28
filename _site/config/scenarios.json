@@ -39,8 +39,38 @@
         {   "modVersion": "v910_20240807",
             "scnGroup": "Base",
             "scnYear": 2019,
-            "alias": "v9.1 Base 2019",
-            "scnTrendCodes": ["v910"]
+            "alias": "Existing 2019",
+            "scnTrendCodes": ["RTP","Needs"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "alias": "RTP 2050",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "R_Connectivity",
+            "scnYear": 2050,
+            "alias": "Connectivity Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "R_Optimization",
+            "scnYear": 2050,
+            "alias": "Optimization Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "T_BusNetwork",
+            "scnYear": 2050,
+            "alias": "Bus Network Strategy",
+            "scnTrendCodes": ["RTP"]
+        },
+        {   "modVersion": "v902",
+            "scnGroup": "T_FixedGuideway",
+            "scnYear": 2050,
+            "alias": "Fixed Guideway Strategy",
+            "scnTrendCodes": ["RTP"]
         }
     ]
 }
