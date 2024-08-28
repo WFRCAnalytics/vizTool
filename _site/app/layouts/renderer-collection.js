@@ -35,10 +35,16 @@ require([
       return renderer;
     } else if (data.valueExpression && data.uniqueValueInfos) {
       const renderer = new UniqueValueRenderer();
-      renderer.field = "dVal";
       renderer.valueExpression = data.valueExpression;
       renderer.uniqueValueInfos = data.uniqueValueInfos;
-          
+
+      if (data.defaultSymbol !== undefined) {
+        renderer.defaultSymbol = data.defaultSymbol;
+      }
+      if (data.defaultLabel !== undefined) {
+        renderer.defaultLabel = data.defaultLabel;
+      }
+
       // Add legend options
       if (data.legendTitle) {
         renderer.legendOptions = {

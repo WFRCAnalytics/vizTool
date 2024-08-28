@@ -20,14 +20,14 @@
     "aAl": {
         "aDisplayName": "PA Alightings"
     },
-    "aLanes": {
+    "aLn": {
         "aDisplayName": "Lanes",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Number of Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
-                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 Lanes or More" },
+                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 Lanes or Less" },
                     { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5 Lanes"    },
                     { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7 Lanes"    },
                     { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9 Lanes"    },
@@ -97,7 +97,7 @@
         "rendererCollection": {
             "main": {
                 "legendTitle": "Functional Type",
-                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), 0, $feature.dVal), '0')",
+                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '0')",
                 "classBreakInfos": [
                     { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 0.50 }, "label": "Minor Collector"    },
                     { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 1.00 }, "label": "Major Collector"    },
@@ -156,7 +156,7 @@
             }
         }
     },
-    "aCap1HL": {
+    "aCp": {
         "aDisplayName": "Capacity per Hour per Lane",
         "rendererCollection": {
             "main": {
@@ -230,7 +230,7 @@
             }
         }
     },
-    "aFfSpd": {
+    "aFS": {
         "aDisplayName": "Free-flow Speed",
         "rendererCollection": {
             "main": {
@@ -303,7 +303,7 @@
             }
         }
     },
-    "aVol": {
+    "aVl": {
         "aDisplayName": "Volume",
         "rendererCollection": {
             "main": {
@@ -375,7 +375,7 @@
             }
         }
     },
-    "aMinSpd": {
+    "aRS": {
         "aDisplayName": "Minimum Speed",
         "rendererCollection": {
         "main": {
@@ -450,13 +450,13 @@
         }
         }
     },
-    "aMaxVc": {
+    "aXVc": {
         "aDisplayName": "Maximum V/C Ratio",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Maximum Volume-to-Capacity Ratio",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
-                "valueExpression": "var v  = $feature.dVal; if (v==0  ) { return 'nodata'  ; } else if (v< 0.7) { return 'class_00'; } else if (v< 0.8) { return 'class_01'; } else if (v< 0.9) { return 'class_02'; } else if (v< 1.0) { return 'class_03'; } else if (v< 1.1) { return 'class_r0'; } else if (v< 1.2) { return 'class_r1'; } else if (v< 1.3) { return 'class_r2'; } else if (v< 1.4) { return 'class_r3'; } else if (v< 1.5) { return 'class_r4'; } else if (v< 1.6) { return 'class_r5'; } else if (v< 1.7) { return 'class_r6'; } else if (v< 1.8) { return 'class_r7'; } else if (v< 1.9) { return 'class_r8'; } else if (v< 2.0) { return 'class_r9'; } else if (v>=2.0) { return 'class_b0'; } ",
+                "valueExpression": "var v  = $feature.dVal; if (v == null || v==0  ) { return 'nodata'  ; } else if (v< 0.7) { return 'class_00'; } else if (v< 0.8) { return 'class_01'; } else if (v< 0.9) { return 'class_02'; } else if (v< 1.0) { return 'class_03'; } else if (v< 1.1) { return 'class_r0'; } else if (v< 1.2) { return 'class_r1'; } else if (v< 1.3) { return 'class_r2'; } else if (v< 1.4) { return 'class_r3'; } else if (v< 1.5) { return 'class_r4'; } else if (v< 1.6) { return 'class_r5'; } else if (v< 1.7) { return 'class_r6'; } else if (v< 1.8) { return 'class_r7'; } else if (v< 1.9) { return 'class_r8'; } else if (v< 2.0) { return 'class_r9'; } else if (v>=2.0) { return 'class_b0'; } ",
                 "uniqueValueInfos" : [
                     { "value": "class_00", "symbol": { "type": "simple-line", "color": "#00FF00", "width": 0.25}, "label": "Less than 0.7 V/C" },
                     { "value": "class_01", "symbol": { "type": "simple-line", "color": "#39FF14", "width": 1.00}, "label": "0.7 to 0.8 V/C"    },
@@ -530,7 +530,7 @@
             }
         }
     },
-    "aHhPop" : {
+    "aHP" : {
         "aDisplayName": "Population",
         "rendererCollection": {
             "main": {
@@ -560,7 +560,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Population",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":  -50001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -50,000 People"  },
                     { "minValue":    -50000, "maxValue":  -10001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000 People" },
@@ -614,7 +614,7 @@
             }
         }
     },
-    "aHHV" : {
+    "aHV" : {
         "aDisplayName": "Households",
         "rendererCollection": {
             "main": {
@@ -644,7 +644,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Households",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":  -50000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label":  "More than -50,000 Households"},
                     { "minValue":    -50000, "maxValue":  -10000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000 Households"},
@@ -728,7 +728,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Total Vehicles",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Vehicles"  },
                     { "minValue":    -500000, "maxValue":  -100001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000 Vehicles"},
@@ -782,7 +782,7 @@
             }
         }
     },
-    "aWrk" : {
+    "aWk" : {
         "aDisplayName": "Total Workers",
         "rendererCollection": {
             "main": {
@@ -812,7 +812,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Total Workers",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":  -50001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -50,000 Workers" },
                     { "minValue":    -50000, "maxValue":  -10001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000 Workers"},
@@ -896,7 +896,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Employment - 3 Categories",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":  -50001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -50,000 Jobs" },
                     { "minValue":    -50000, "maxValue":  -10001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000 Jobs"},
@@ -980,7 +980,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Employment - 12 Categories",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Jobs"  },
                     { "minValue":    -500000, "maxValue":  -100001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000 Jobs"},
@@ -1034,8 +1034,10 @@
             }
         }
     },
-    "aAvgInc" : {
+    "aI" : {
         "aDisplayName": "Average Income",
+        "agWeightCode": "aHP",
+        "agWeightCodeFilter": "",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Average Income",
@@ -1060,7 +1062,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Average Income",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Jobs"  },
                     { "minValue":    -500000, "maxValue":  -100001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000 Jobs"},
@@ -1114,7 +1116,7 @@
             }
         }
     },
-    "aEnrol" : {
+    "aSc" : {
         "aDisplayName": "K-12 School Enrollment",
         "rendererCollection": {
             "main": {
@@ -1144,7 +1146,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in K-12 School Enrollment",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Students"  },
                     { "minValue":    -500000, "maxValue":  -100001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000 Students"},
@@ -1200,6 +1202,7 @@
     },
     "aR" : {
         "aDisplayName": "Riders",
+        "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Riders",
@@ -1271,21 +1274,22 @@
         }
     },
     "aHd" : {
-        "aDisplayName": "Headway",
+        "aDisplayName": "Minimum Headway",
+        "agFilterOptionsMethod": "minimum",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5"   },
-                    { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10" },
-                    { "minValue": 10.001, "maxValue":     15, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label": ">10 to 15"},
-                    { "minValue": 15.001, "maxValue":     20, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label": ">15 to 20"},
-                    { "minValue": 20.001, "maxValue":     30, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label": ">20 to 30"},
-                    { "minValue": 30.001, "maxValue":     40, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label": ">30 to 40"},
-                    { "minValue": 40.001, "maxValue":     60, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label": ">40 to 60"},
-                    { "minValue": 60.001, "maxValue":     90, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">60 to 90"},
-                    { "minValue": 90.001, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": ">90"      }
+                    { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5 minutes"   },
+                    { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10 minutes" },
+                    { "minValue": 10.001, "maxValue":     15, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label": ">10 to 15 minutes"},
+                    { "minValue": 15.001, "maxValue":     20, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label": ">15 to 20 minutes"},
+                    { "minValue": 20.001, "maxValue":     30, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label": ">20 to 30 minutes"},
+                    { "minValue": 30.001, "maxValue":     40, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label": ">30 to 40 minutes"},
+                    { "minValue": 40.001, "maxValue":     60, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label": ">40 to 60 minutes"},
+                    { "minValue": 60.001, "maxValue":     90, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">60 to 90 minutes"},
+                    { "minValue": 90.001, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": ">90 minutes"      }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -1295,7 +1299,7 @@
                 "defaultLabel": "No Headway"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Headway",
+                "legendTitle": "Difference in Minimum Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -1316,7 +1320,7 @@
                 "defaultLabel": "No Headway"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Headway",
+                "legendTitle": "Percent Difference in Minimum Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
@@ -1342,8 +1346,9 @@
             }
         }
     },
-    "aSp" : {
-        "aDisplayName": "Speed",
+    "aTS" : {
+        "aDisplayName": "Average Travel Speed",
+        "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Speed",
@@ -1367,7 +1372,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Speed",
+                "legendTitle": "Difference in Average Travel Speed",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -1388,7 +1393,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Speed",
+                "legendTitle": "Percent Difference in Average Travel Speed",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
@@ -1995,7 +2000,7 @@
         "rendererCollection": {
             "main": {
                 "legendTitle": "Bike Trips",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.5, "maxValue":     50, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 50"},
                     { "minValue":   50, "maxValue":    250, "symbol": { "type": "simple-fill", "color":[ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
@@ -2106,7 +2111,7 @@
             },
             "compare_abs": {
                 "legendTitle": "Difference in Access to Jobs",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Jobs"  },
                     { "minValue":    -500000, "maxValue":  -100001, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000 Jobs"},
@@ -2503,7 +2508,6 @@
     "aPMT": {
         "aDisplayName": "Person Miles Traveled",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Miles Traveled",
@@ -2589,7 +2593,6 @@
     "aPHT": {
         "aDisplayName": "Person Hours Traveled",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Hours Traveled",
@@ -2675,7 +2678,6 @@
     "aPHD": {
         "aDisplayName": "Person Hours of Delay",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Hours of Delay",
@@ -2761,7 +2763,6 @@
     "aVMT": {
         "aDisplayName": "Vehicle Miles Traveled",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Vehicle Miles Traveled",
@@ -2847,7 +2848,6 @@
     "aVHT": {
         "aDisplayName": "Vehicle Hours Traveled",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Vehicle Hours Traveled",
@@ -2933,7 +2933,6 @@
     "aVHD": {
         "aDisplayName": "Vehicle Hours of Delay",
         "aRound": 2,
-        "filterGroup": "fTod_fPurp_fPA",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Vehicle Hours of Delay",

@@ -32,7 +32,7 @@
             {"value":"A", "label":"Attraction"}
         ]
     },
-    "fVehType": {
+    "fVehTypeLiMdHvAll": {
         "fName"    : "Filter Vehicle Type",
         "fWidget"  : "select",
         "fSelected": "All",
@@ -54,7 +54,7 @@
             {"value":"EV", "label":"Evening Period"}
         ]
     },
-    "fTod4": {
+    "fTod4pDy": {
         "fName"    : "Filter Time of Day",
         "fWidget"  : "select",
         "fSelected": "DY",
@@ -68,12 +68,11 @@
     },
     "fPurpOnlyAll": {
         "fName"    : "Filter Trip Purpose",
-        "fWidget"  : "checkboxes",
-        "fSelected": ["All"],
+        "fWidget"  : "select",
+        "fSelected": "All",
         "fOptions" : [
             {"value":"All", "label":"All Purposes"}
-        ],
-        "userModifiable": false
+        ]
     },
     "fTod2": {
         "fName"    : "Filter Time of Day",
@@ -84,7 +83,7 @@
             {"value":"ok", "label":"Off-Peak" }
         ]
     },
-    "fTod2Select": {
+    "fTod2pDy": {
         "fName"    : "Filter Time of Day",
         "fWidget"  : "select",
         "fSelected": "Dy",
@@ -94,7 +93,7 @@
             {"value":"Ok", "label":"Off-Peak" }
         ]
     },
-    "fModeTransitAcc": {
+    "fModeAccess": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
@@ -103,7 +102,7 @@
             {"value":"walk" , "label":"Walk" }
         ]
     },
-    "fModeTransitAccSingleLetter": {
+    "fModeAccessSingleLetter": {
         "fName"    : "Filter Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
@@ -121,7 +120,7 @@
             {"value":"OB" , "label":"Outbound"}
         ]
     },
-    "fModeTransit": {
+    "fModeRoute": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": [4,5,6,7,8,9],
@@ -134,7 +133,7 @@
             {"value":8, "label":"Commuter Rail Transit"}
         ]
     },
-    "fModeTransitCode3": {
+    "fModeRouteCode3": {
         "fName"    : "Filter Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],
@@ -246,8 +245,8 @@
             {"value": "A", "label": "Auto"    },
             {"value": "T", "label": "Transit" }
         ]
-      },
-      "fAtoCondition": {
+    },
+    "fAtoCondition": {
         "fName"    : "Filter Condition",
         "fWidget"  : "select",
         "fSelected": "C",
@@ -257,7 +256,7 @@
             {"value": "S", "label": "Straight-line (Auto-Only)"   }
         ]
     },
-    "fPurp5": {
+    "fPurp5pAll": {
         "fName"    : "Filter Trip Purpose",
         "fWidget"  : "select",
         "fSelected": "All",
@@ -269,14 +268,69 @@
             {"value":"HBW"  , "label": "Home-Based Work"   },
             {"value":"NHB"  , "label": "Non-Home-Based"    }
         ]
-    },  
-    "fPaLowerCase": {
-        "fName"    : "Filter Production/Attraction",
+    },
+    "fRoadSegFuncGroup": {
+        "fName"    : "Functional Group",
         "fWidget"  : "select",
-        "fSelected": "p",
+        "fSelected": "Total",
         "fOptions" : [
-            {"value":"p", "label":"Production" },
-            {"value":"a", "label":"Attraction" }
+            {"value":"Total"   , "label": "All"     },
+            {"value":"Arterial", "label": "Arterial"},
+            {"value":"CD Road" , "label": "CD Road" },
+            {"value":"Freeway" , "label": "Freeway" },
+            {"value":"Managed" , "label": "Managed" }
+        ]
+    },
+    "fAreaType": {
+        "fName"    : "Area Type",
+        "fWidget"  : "checkboxes",
+        "fOptions" : [
+            {"value":"1", "label": "1-Rural"     },
+            {"value":"2", "label": "2-Transition"},
+            {"value":"3", "label": "3-Suburban"  },
+            {"value":"4", "label": "4-Urban"     },
+            {"value":"5", "label": "5-CBD-Like"  }
+        ]
+    },
+    "fDirName4pAll": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  },
+            {"value":"All", "label":"All"        }
+        ]
+    },
+    "fDirNameNoAll": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["NB","SB","EB","WB"],
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  }
+        ]
+    },
+    "fModeRoad": {
+        "fName"    : "Non-Transit Modes",
+        "fWidget"  : "select",
+        "fSelected": "Tot",
+        "fOptions" : [
+            { "value":"Tot", "label":  "Total"      },
+            { "value":"DA" , "label":  "DriveAlone" },
+            { "value":"Sh" , "label":  "SharedRide" },
+            { "value":"DAn", "label":  "DA_NON"     },
+            { "value":"DAt", "label":  "DA_TOL"     },
+            { "value":"SRn", "label":  "SR_NON"     },
+            { "value":"SRt", "label":  "SR_TOL"     },
+            { "value":"SRh", "label":  "SR_HOV"     },
+            { "value":"Ss" , "label":  "DriveSelf"  },
+            { "value":"Sd" , "label":  "DropOff"    },
+            { "value":"Sb" , "label":  "SchoolBus"  }
         ]
     }
 }

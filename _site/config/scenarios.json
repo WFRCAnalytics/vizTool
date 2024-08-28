@@ -1,21 +1,22 @@
 {
+    "$schema": "./scenario-config-schema.json",
     "initial_select": [
         {
-            "modVersion": "v902",
-            "scnGroup": "RTP",
-            "scnYear": 2050
+            "modVersion": "v910_20240807",
+            "scnGroup": "Base",
+            "scnYear": 2019
         }
     ],
     "initial_select_compare": [
         {
-            "modVersion": "v902",
+            "modVersion": "v910_20240807",
             "scnGroup": "Base",
             "scnYear": 2019
         }
     ],
     "models": [
         {
-            "modVersion": "v902",
+            "modVersion": "v910_20240807",
             "geojsons": {
                 "segment":"segments_v901_TransitCorridors.geojson",
                 "taz"    :"taz_v900.geojson",
@@ -29,34 +30,17 @@
     ],
     "trends": [
         {
-            "scnTrendCode": "RTP",
-            "displayName": "RTP Scenario",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "Needs",
-            "displayName": "Needs Based Scenario",
+            "scnTrendCode": "v910",
+            "displayName": "v9.1",
             "displayByDefault": true
         }
     ],
     "scenarios": [
-        {   "modVersion": "v902",
+        {   "modVersion": "v910_20240807",
             "scnGroup": "Base",
             "scnYear": 2019,
-            "alias": "Existing 2019",
-            "scnTrendCodes": ["RTP","Needs"]
-        },
-        {   "modVersion": "v902",
-            "scnGroup": "RTP",
-            "scnYear": 2050,
-            "alias": "RTP 2050",
-            "scnTrendCodes": ["RTP"]
-        },
-        {   "modVersion": "v902",
-            "scnGroup": "Needs",
-            "scnYear": 2050,
-            "alias": "Needs 2050",
-            "scnTrendCodes": ["Needs"]
+            "alias": "v9.1 Base 2019",
+            "scnTrendCodes": ["v910"]
         }
     ]
 }

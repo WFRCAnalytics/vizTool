@@ -159,7 +159,7 @@ class Filter {
   render() {
 
     const filterContainer = document.createElement('div');
-    filterContainer.id = this.containerId;
+    filterContainer.id = this.id;
 
     // only render if the user can modify widget... otherwise needed settings are all preserved in object
     if (this.userModifiable) {

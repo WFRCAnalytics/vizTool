@@ -11,13 +11,13 @@ class VizSidebar {
 
     if (attributes) {
       
-      const attributeOptions = attributes.map(aCode => {
-        const configAt = configAttributes[aCode];
+      const attributeOptions = attributes.map(attributeCode => {
+        const configAt = configAttributes[attributeCode];
         if (!configAt || !configAt.aDisplayName) {
           console.error(`Error: Missing configuration or title text for attribute code: ${agCode}`);
-          return { value: aCode, label: 'Unknown' }; // Provide a default value in case of error
+          return { value: attributeCode, label: 'Unknown' }; // Provide a default value in case of error
         }
-        return { value: aCode, label: configAt.aDisplayName };
+        return { value: attributeCode, label: configAt.aDisplayName };
       });
 
       this.attributeSelect   = new WijRadio(this.id + "-attribute-selector",
@@ -59,7 +59,7 @@ class VizSidebar {
       this.dividerSelect    = new WijSelect(this.id + "_divider-selector",
                                             dividerTitle,
                                             dividerSelected,
-                                            [_nothing, ...this.dividers.map(item => ({ value: item.aCode, label: item.aDisplayName }))],
+                                            [_nothing, ...this.dividers.map(item => ({ value: item.attributeCode, label: item.aDisplayName }))],
                                             this);
       //this.dividerFilters = (dividerFilters || []).map(item => new Filter (item, vizLayout));
     }
@@ -171,8 +171,8 @@ class VizSidebar {
   }
 
   getADisplayName() {
-    const aCode = this.getACode();
-    const item = this.attributes.find(item => item.aCode === aCode);
+    const attributeCode = this.getACode();
+    const item = this.attributes.find(item => item.attributeCode === attributeCode);
   
     if (item && item.aDisplayName) {
       return item.aDisplayName;
@@ -182,8 +182,8 @@ class VizSidebar {
   }
 
   getWeightCode() {
-    const aCode = this.getACode();
-    const item = this.attributes.find(item => item.aCode === aCode);
+    const attributeCode = this.getACode();
+    const item = this.attributes.find(item => item.attributeCode === attributeCode);
   
     if (item && item.agWeightCode) {
       return item.agWeightCode;
@@ -193,11 +193,22 @@ class VizSidebar {
   }
 
   getWeightCodeFilter() {
-    const aCode = this.getACode();
-    const item = this.attributes.find(item => item.aCode === aCode);
+    const attributeCode = this.getACode();
+    const item = this.attributes.find(item => item.attributeCode === attributeCode);
   
     if (item && item.agWeightCodeFilter) {
       return item.agWeightCodeFilter;
+    }
+  
+    return ""; // Or return a default value or `undefined` as needed
+  }
+
+  getAgFilterOptionsMethod() {
+    const attributeCode = this.getACode();
+    const item = this.attributes.find(item => item.attributeCode === attributeCode);
+  
+    if (item && item.agFilterOptionsMethod) {
+      return item.agFilterOptionsMethod;
     }
   
     return ""; // Or return a default value or `undefined` as needed
@@ -213,7 +224,7 @@ class VizSidebar {
   }
 
   getAttributeRendererCollection() {
-    return this.attributes.find(item => item.aCode === this.getACode()).rendererCollection;
+    return this.attributes.find(item => item.attributeCode === this.getACode()).rendererCollection;
   }
 
   //// get the current filter
