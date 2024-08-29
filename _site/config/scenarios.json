@@ -41,6 +41,11 @@
             "displayByDefault": true
         },
         {
+            "scnTrendCode": "HotConn",
+            "alias": "HOT Connectivity",
+            "displayByDefault": true
+        },
+        {
             "scnTrendCode": "Opt",
             "alias": "Optimization",
             "displayByDefault": true
@@ -67,7 +72,7 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "Existing 2019",
-            "scnTrendCodes": ["Needs","Conn","Opt","Bus","Fixed","RTP"]
+            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","RTP"]
         },
         {
             "modVersion": "v902",
@@ -82,6 +87,13 @@
             "scnYear": 2050,
             "alias": "RTP 2050",
             "scnTrendCodes": ["RTP"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "R_HotConnectivity",
+            "scnYear": 2050,
+            "alias": "Connectivity Strategy",
+            "scnTrendCodes": ["HotConn"]
         },
         {
             "modVersion": "v902",
