@@ -114,7 +114,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       
       return {
         scnTrendCode: trend.scnTrendCode,
-        displayName: trend.displayName,
+        alias: trend.alias,
         displayByDefault: trend.displayByDefault,
         modelruns: modelruns
       };
