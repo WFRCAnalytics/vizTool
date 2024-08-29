@@ -356,13 +356,13 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       logoElement.setAttribute('description', appConfig.subtitle || "v24.8.14 beta");
   
       // Load and display the disclaimer modal if applicable
-      await loadAndDisplayDisclaimer(appConfig.splashDisclaimer);
+      await loadAndDisplaySplash(appConfig.splash);
     } catch (error) {
       console.error('Error loading app.json:', error);
     }
   }
   
-  async function loadAndDisplayDisclaimer(disclaimer) {
+  async function loadAndDisplaySplash(disclaimer) {
     // Check if the disclaimer should be shown
     if (disclaimer.on) {
       const modalContent = document.querySelector('#infoModal .modal-content');
