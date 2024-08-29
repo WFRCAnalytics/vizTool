@@ -92,7 +92,7 @@
             "modVersion": "v902",
             "scnGroup": "R_HotConnectivity",
             "scnYear": 2050,
-            "alias": "Connectivity Strategy",
+            "alias": "HOT Lanes + Connectivity Strategy",
             "scnTrendCodes": ["HotConn"]
         },
         {
