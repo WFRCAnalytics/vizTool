@@ -12,8 +12,8 @@
     "textUncheckAll": "Uncheck All"
   },
   "menuItems": [
-    { "menuText": "Roads",
-      "menuIconStart": "car",
+    { "menuText": "Roads and Transit",
+      "menuIconStart": "driving-distance",
       "modelEntities": [
         { "submenuText": "Road Segments",
           "submenuIconStart": "line-straight",
@@ -46,17 +46,12 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "DISTSUPER",
+            "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK", "TAZ_JOB"],
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
             "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
-        }
-      ]
-    },
-    { "menuText": "Transit",
-    "menuIconStart": "conditional-rules-path",
-    "modelEntities": [
+        },
         { "submenuText": "Transit Segments",
           "submenuIconStart": "line-straight",
           "template": "vizMap",
