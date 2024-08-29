@@ -27,15 +27,15 @@
                 "legendTitle": "Number of Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
-                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 Lanes or Less" },
-                    { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5 Lanes"    },
-                    { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7 Lanes"    },
-                    { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9 Lanes"    },
-                    { "minValue": 10, "maxValue": 11, "symbol": { "type": "simple-line", "color": "#66023C", "width": 3.50 }, "label": "10 to 11 Lanes"  },
-                    { "minValue": 12, "maxValue": 13, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 4.25 }, "label": "12 to 13 Lanes"  },
-                    { "minValue": 14, "maxValue": 15, "symbol": { "type": "simple-line", "color": "#800000", "width": 5.00 }, "label": "14 to 15 Lanes"  },
-                    { "minValue": 16, "maxValue": 17, "symbol": { "type": "simple-line", "color": "#222222", "width": 5.75 }, "label": "16 to 17 Lanes"  },
-                    { "minValue": 18, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#000000", "width": 6.50 }, "label": "18 or More Lanes"}
+                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 or Less" },
+                    { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5"    },
+                    { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7"    },
+                    { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9"    },
+                    { "minValue": 10, "maxValue": 11, "symbol": { "type": "simple-line", "color": "#66023C", "width": 3.50 }, "label": "10 to 11"  },
+                    { "minValue": 12, "maxValue": 13, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 4.25 }, "label": "12 to 13"  },
+                    { "minValue": 14, "maxValue": 15, "symbol": { "type": "simple-line", "color": "#800000", "width": 5.00 }, "label": "14 to 15"  },
+                    { "minValue": 16, "maxValue": 17, "symbol": { "type": "simple-line", "color": "#222222", "width": 5.75 }, "label": "16 to 17"  },
+                    { "minValue": 18, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#000000", "width": 6.50 }, "label": "18 or More"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -48,15 +48,15 @@
                 "legendTitle": "Difference in Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "-4 or More Lanes"},
-                    { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 3.7500 }, "label": "-3 Lanes"        },
-                    { "minValue":  -2, "maxValue": -2, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 2.5000 }, "label": "-2 Lanes"        },
-                    { "minValue":  -1, "maxValue": -1, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 1.2500 }, "label": "-1 Lane"         },
-                    { "minValue":   0, "maxValue":  0, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.2500 }, "label": "No Change"       },
-                    { "minValue":   1, "maxValue":  1, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 1.2500 }, "label": "+1 Lane"         },
-                    { "minValue":   2, "maxValue":  2, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 2.5000 }, "label": "+2 Lanes"        },
-                    { "minValue":   3, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#E60000", "width": 3.7500 }, "label": "+3 Lanes"        },
-                    { "minValue":   4, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "+4 or More Lanes"}
+                    { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "-4 or More"},
+                    { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 3.7500 }, "label": "-3"        },
+                    { "minValue":  -2, "maxValue": -2, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 2.5000 }, "label": "-2"        },
+                    { "minValue":  -1, "maxValue": -1, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 1.2500 }, "label": "-1"        },
+                    { "minValue":   0, "maxValue":  0, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.2500 }, "label": "No Change" },
+                    { "minValue":   1, "maxValue":  1, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 1.2500 }, "label": "+1"        },
+                    { "minValue":   2, "maxValue":  2, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 2.5000 }, "label": "+2"        },
+                    { "minValue":   3, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#E60000", "width": 3.7500 }, "label": "+3"        },
+                    { "minValue":   4, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "+4 or More"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -234,19 +234,19 @@
         "alias": "Free-flow Speed",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Free-flow Speed",
+                "legendTitle": "Free-flow Speed (mph)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
-                    { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15 mph"     },
-                    { "minValue": 15.1, "maxValue":       25, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "15 to 25 mph"    },
-                    { "minValue": 25.1, "maxValue":       35, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "25 to 35 mph"    },
-                    { "minValue": 35.1, "maxValue":       45, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "35 to 45 mph"    },
-                    { "minValue": 45.1, "maxValue":       55, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.00 }, "label": "45 to 55 mph"    },
-                    { "minValue": 55.1, "maxValue":       65, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.00 }, "label": "55 to 65 mph"    },
-                    { "minValue": 65.1, "maxValue":       75, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 5.00 }, "label": "65 to 75 mph"    },
-                    { "minValue": 75.1, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.00 }, "label": "More than 75 mph"}
+                    { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5"      },
+                    { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15"     },
+                    { "minValue": 15.1, "maxValue":       25, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "15 to 25"    },
+                    { "minValue": 25.1, "maxValue":       35, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "25 to 35"    },
+                    { "minValue": 35.1, "maxValue":       45, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "35 to 45"    },
+                    { "minValue": 45.1, "maxValue":       55, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.00 }, "label": "45 to 55"    },
+                    { "minValue": 55.1, "maxValue":       65, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.00 }, "label": "55 to 65"    },
+                    { "minValue": 65.1, "maxValue":       75, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 5.00 }, "label": "65 to 75"    },
+                    { "minValue": 75.1, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.00 }, "label": "More than 75"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -256,18 +256,18 @@
                 "defaultLabel": "No Speed"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Free-flow Speed",
+                "legendTitle": "Difference in Free-flow Speed (mph)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
-                    { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
-                    { "minValue":   5.01, "maxValue":    10.00, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+5 to +10 mph"    },
-                    { "minValue":   2.01, "maxValue":     5.00, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+2 to +5 mph"     },
-                    { "minValue":  -2.00, "maxValue":     2.00, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-2 to +2 mph"     },
-                    { "minValue":  -5.00, "maxValue":    -2.01, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-2 to -5 mph"     },
-                    { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10 mph"    },
-                    { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25 mph"   },
-                    { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -25 mph"}
+                    { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25"},
+                    { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25"   },
+                    { "minValue":   5.01, "maxValue":    10.00, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+5 to +10"    },
+                    { "minValue":   2.01, "maxValue":     5.00, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+2 to +5"     },
+                    { "minValue":  -2.00, "maxValue":     2.00, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-2 to +2"     },
+                    { "minValue":  -5.00, "maxValue":    -2.01, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-2 to -5"     },
+                    { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10"    },
+                    { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25"   },
+                    { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -25"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -277,7 +277,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Free-flow Speed",
+                "legendTitle": "Percent Difference in Free-flow Speed (mph)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
@@ -379,51 +379,51 @@
         "alias": "Minimum Speed",
         "rendererCollection": {
         "main": {
-            "legendTitle": "Minimum Speed",
+            "legendTitle": "Minimum Speed (mph)",
             "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
-            { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5 mph"      },
-            { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15 mph"     },
-            { "minValue": 15.1, "maxValue":       25, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "15 to 25 mph"    },
-            { "minValue": 25.1, "maxValue":       35, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "25 to 35 mph"    },
-            { "minValue": 35.1, "maxValue":       45, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "35 to 45 mph"    },
-            { "minValue": 45.1, "maxValue":       55, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.00 }, "label": "45 to 55 mph"    },
-            { "minValue": 55.1, "maxValue":       65, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.00 }, "label": "55 to 65 mph"    },
-            { "minValue": 65.1, "maxValue":       75, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 5.00 }, "label": "65 to 75 mph"    },
-            { "minValue": 75.1, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.00 }, "label": "More than 75 mph"}
+            { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5"      },
+            { "minValue":  5.1, "maxValue":       15, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "5 to 15"     },
+            { "minValue": 15.1, "maxValue":       25, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "15 to 25"    },
+            { "minValue": 25.1, "maxValue":       35, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "25 to 35"    },
+            { "minValue": 35.1, "maxValue":       45, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "35 to 45"    },
+            { "minValue": 45.1, "maxValue":       55, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.00 }, "label": "45 to 55"    },
+            { "minValue": 55.1, "maxValue":       65, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.00 }, "label": "55 to 65"    },
+            { "minValue": 65.1, "maxValue":       75, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 5.00 }, "label": "65 to 75"    },
+            { "minValue": 75.1, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.00 }, "label": "More than 75"}
             ],
             "defaultSymbol": {
             "type": "simple-line",
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed"
+            "defaultLabel": "No Minimum Speed (mph)"
         },
         "compare_abs": {
-            "legendTitle": "Difference in Minimum Speed",
+            "legendTitle": "Difference in Minimum Speed (mph)",
             "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
-            { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25 mph"},
-            { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25 mph"   },
-            { "minValue":   5.01, "maxValue":    10.00, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+5 to +10 mph"    },
-            { "minValue":   2.01, "maxValue":     5.00, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+2 to +5 mph"     },
-            { "minValue":  -2.00, "maxValue":     2.00, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-2 to +2 mph"     },
-            { "minValue":  -5.00, "maxValue":    -2.01, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-2 to -5 mph"     },
-            { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10 mph"    },
-            { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25 mph"   },
-            { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -25 mph"}
+            { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25"},
+            { "minValue":  10.01, "maxValue":    25.00, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+10 to +25"   },
+            { "minValue":   5.01, "maxValue":    10.00, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+5 to +10"    },
+            { "minValue":   2.01, "maxValue":     5.00, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+2 to +5"     },
+            { "minValue":  -2.00, "maxValue":     2.00, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-2 to +2"     },
+            { "minValue":  -5.00, "maxValue":    -2.01, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-2 to -5"     },
+            { "minValue": -10.00, "maxValue":    -5.01, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-5 to -10"    },
+            { "minValue": -25.00, "maxValue":   -10.01, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-10 to -25"   },
+            { "minValue":  -9999, "maxValue":   -25.01, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -25"}
             ],
             "defaultSymbol": {
             "type": "simple-line",
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed"
+            "defaultLabel": "No Minimum Speed (mph)"
         },
         "compare_pct": {
-            "legendTitle": "Percent Difference in Minimum Speed",
+            "legendTitle": "Percent Difference in Minimum Speed (mph)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
             "field": "dVal",
             "classBreakInfos": [
@@ -446,7 +446,7 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed"
+            "defaultLabel": "No Minimum Speed (mph)"
         }
         }
     },
@@ -1347,7 +1347,7 @@
         }
     },
     "aTS" : {
-        "alias": "Average Travel Speed",
+        "alias": "Average Travel Speed (mph)",
         "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
@@ -1372,7 +1372,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Average Travel Speed",
+                "legendTitle": "Difference in Average Travel Speed (mph)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -1393,7 +1393,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Average Travel Speed",
+                "legendTitle": "Percent Difference in Average Travel Speed (mph)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#E60000", "width": 6.0000 }, "label": "-100% or More"},
