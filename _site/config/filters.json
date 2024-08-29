@@ -33,7 +33,7 @@
         ]
     },
     "fVehTypeLiMdHvAll": {
-        "fName"    : "Filter Vehicle Type",
+        "fName"    : "Vehicle Type",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -44,7 +44,7 @@
         ]
     },
     "fTod4Check": {
-        "fName"    : "Filter Time of Day",
+        "fName"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["AM","MD","PM","EV"],
         "fOptions" :[
@@ -55,7 +55,7 @@
         ]
     },
     "fTod4pDy": {
-        "fName"    : "Filter Time of Day",
+        "fName"    : "Time of Day",
         "fWidget"  : "select",
         "fSelected": "DY",
         "fOptions" :[
@@ -67,7 +67,7 @@
         ]
     },
     "fPurpOnlyAll": {
-        "fName"    : "Filter Trip Purpose",
+        "fName"    : "Trip Purpose",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -75,7 +75,7 @@
         ]
     },
     "fTod2": {
-        "fName"    : "Filter Time of Day",
+        "fName"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["pk","ok"],
         "fOptions" : [
@@ -84,7 +84,7 @@
         ]
     },
     "fTod2pDy": {
-        "fName"    : "Filter Time of Day",
+        "fName"    : "Time of Day",
         "fWidget"  : "select",
         "fSelected": "Dy",
         "fOptions" : [
@@ -94,7 +94,7 @@
         ]
     },
     "fModeAccess": {
-        "fName"    : "Filter Access Mode",
+        "fName"    : "Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
         "fOptions" : [
@@ -103,7 +103,7 @@
         ]
     },
     "fModeAccessSingleLetter": {
-        "fName"    : "Filter Access Mode",
+        "fName"    : "Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
         "fOptions" : [
@@ -112,7 +112,7 @@
         ]
     },
     "fIbOb": {
-        "fName"    : "Filter Peak Direction",
+        "fName"    : "Peak Direction",
         "fWidget"  : "checkboxes",
         "fSelected": ["IB", "OB"],
         "fOptions" : [
@@ -121,7 +121,7 @@
         ]
     },
     "fModeRoute": {
-        "fName"    : "Filter Mode",
+        "fName"    : "Mode",
         "fWidget"  : "checkboxes",
         "fSelected": [4,5,6,7,8,9],
         "fOptions" : [
@@ -134,7 +134,7 @@
         ]
     },
     "fModeRouteCode3": {
-        "fName"    : "Filter Mode",
+        "fName"    : "Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],
         "fOptions" : [
@@ -147,7 +147,7 @@
         ]
     },
     "fRouteName": {
-        "fName"       : "Filter Route Name",
+        "fName"       : "Route Name",
         "fWidget"     : "checkboxes",
         "fOptionsJson": "j-transit-route-names.json",
         "fOptionValue": "RouteName",
@@ -166,7 +166,7 @@
         ]
     },
     "fModeHier": {
-        "fName"    : "Filter Hierarchacal Mode",
+        "fName"    : "Hierarchacal Mode",
         "fWidget"  : "select",
         "fSelected": "ALL",
         "fOptions" : [
@@ -238,7 +238,7 @@
         ]
     },
     "fModeAutoTransit": {
-        "fName"    : "Filter Mode",
+        "fName"    : "Mode",
         "fWidget"  : "select",
         "fSelected": "A",
         "fOptions" : [
@@ -247,7 +247,7 @@
         ]
     },
     "fAtoCondition": {
-        "fName"    : "Filter Condition",
+        "fName"    : "Condition",
         "fWidget"  : "select",
         "fSelected": "C",
         "fOptions" : [
@@ -257,7 +257,7 @@
         ]
     },
     "fPurp5pAll": {
-        "fName"    : "Filter Trip Purpose",
+        "fName"    : "Trip Purpose",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -274,11 +274,11 @@
         "fWidget"  : "select",
         "fSelected": "Total",
         "fOptions" : [
-            {"value":"Total"   , "label": "All"     },
-            {"value":"Arterial", "label": "Arterial"},
-            {"value":"CD Road" , "label": "CD Road" },
-            {"value":"Freeway" , "label": "Freeway" },
-            {"value":"Managed" , "label": "Managed" }
+            {"value":"Total"   , "label": "All"               },
+            {"value":"Arterial", "label": "Arterial/Collector"},
+            {"value":"CD Road" , "label": "Freeway-CD Road"   },
+            {"value":"Freeway" , "label": "Freeway-GP Only"   },
+            {"value":"Managed" , "label": "Freeway-Managed"   }
         ]
     },
     "fAreaType": {

@@ -2,23 +2,24 @@
     "$schema": "./scenario-config-schema.json",
     "initial_select": [
         {
-            "modVersion": "v910_20240807",
+            "modVersion": "v902",
             "scnGroup": "Base",
             "scnYear": 2019
         }
     ],
     "initial_select_compare": [
         {
-            "modVersion": "v910_20240807",
+            "modVersion": "v902",
             "scnGroup": "Base",
             "scnYear": 2019
         }
     ],
     "models": [
         {
-            "modVersion": "v910_20240807",
+            "modVersion": "v902",
+            "alias": "v902",
             "geojsons": {
-                "segment":"segments_v901_TransitCorridors.geojson",
+                "segment":"segments_v901_TransitCorridors_with_New.geojson",
                 "taz"    :"taz_v900.geojson",
                 "city"   :"cities_v900.geojson",
                 "distSml":"districtsSmall_v910.geojson",
@@ -30,17 +31,97 @@
     ],
     "trends": [
         {
-            "scnTrendCode": "v910",
-            "displayName": "v9.1",
+            "scnTrendCode": "Needs",
+            "alias": "Needs",
             "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Conn",
+            "alias": "Connectivity",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "HotConn",
+            "alias": "HOT Connectivity",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Opt",
+            "alias": "Optimization",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Bus",
+            "alias": "Bus Network",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Fixed",
+            "alias": "Fixed Guideway",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "RTP",
+            "alias": "RTP",
+            "displayByDefault": false
         }
     ],
     "scenarios": [
-        {   "modVersion": "v910_20240807",
+        {
+            "modVersion": "v902",
             "scnGroup": "Base",
             "scnYear": 2019,
-            "alias": "v9.1 Base 2019",
-            "scnTrendCodes": ["v910"]
+            "alias": "Existing 2019",
+            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","RTP"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "Needs",
+            "scnYear": 2050,
+            "alias": "Needs 2050",
+            "scnTrendCodes": ["Needs"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "alias": "RTP 2050",
+            "scnTrendCodes": ["RTP"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "R_HotConnectivity",
+            "scnYear": 2050,
+            "alias": "HOT Lanes + Connectivity Strategy",
+            "scnTrendCodes": ["HotConn"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "R_Connectivity",
+            "scnYear": 2050,
+            "alias": "Connectivity Strategy",
+            "scnTrendCodes": ["Conn"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "R_Optimization",
+            "scnYear": 2050,
+            "alias": "Optimization Strategy",
+            "scnTrendCodes": ["Opt"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "T_BusNetwork",
+            "scnYear": 2050,
+            "alias": "Bus Network Strategy",
+            "scnTrendCodes": ["Bus"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "T_FixedGuideway",
+            "scnYear": 2050,
+            "alias": "Fixed Guideway Strategy",
+            "scnTrendCodes": ["Fixed"]
         }
     ]
 }

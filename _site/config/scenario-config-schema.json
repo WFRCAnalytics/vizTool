@@ -111,7 +111,7 @@
             "type": "string",
             "description": "Code representing the trend (e.g., RTP, Needs, NoBuild, etc.)."
           },
-          "displayName": {
+          "alias": {
             "type": "string",
             "description": "Display name for the trend."
           },
@@ -120,7 +120,7 @@
             "description": "Indicates if the trend should be displayed by default."
           }
         },
-        "required": ["scnTrendCode", "displayName", "displayByDefault"]
+        "required": ["scnTrendCode", "displayByDefault"]
       }
     },
     "scenarios": {
