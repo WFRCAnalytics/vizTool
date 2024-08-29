@@ -1,27 +1,27 @@
 {
     "aVmt": {
-        "aDisplayName": "Vehicle-Miles Traveled"
+        "alias": "Vehicle-Miles Traveled"
     },
     "aVht": {
-        "aDisplayName": "Vehicle-Hours Traveled"
+        "alias": "Vehicle-Hours Traveled"
     },
     "aVhd": {
-        "aDisplayName": "Vehicle-Hours of Delay"
+        "alias": "Vehicle-Hours of Delay"
     },
     "aDis": {
-        "aDisplayName": "Centerline-Miles"
+        "alias": "Centerline-Miles"
     },
     "aLMl": {
-        "aDisplayName": "Lane-Miles"
+        "alias": "Lane-Miles"
     },
     "aBd": {
-        "aDisplayName": "PA Boardings"
+        "alias": "PA Boardings"
     },
     "aAl": {
-        "aDisplayName": "PA Alightings"
+        "alias": "PA Alightings"
     },
     "aLn": {
-        "aDisplayName": "Lanes",
+        "alias": "Lanes",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Number of Lanes",
@@ -48,15 +48,15 @@
                 "legendTitle": "Difference in Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#FF3300", "width": 5.0000 }, "label": "-4 or More Lanes"},
-                    { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#FF6611", "width": 3.7500 }, "label": "-3 Lanes"        },
-                    { "minValue":  -2, "maxValue": -2, "symbol": { "type": "simple-line", "color": "#FF9933", "width": 2.5000 }, "label": "-2 Lanes"        },
-                    { "minValue":  -1, "maxValue": -1, "symbol": { "type": "simple-line", "color": "#FFCC66", "width": 1.2500 }, "label": "-1 Lane"         },
-                    { "minValue":   0, "maxValue":  0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"       },
-                    { "minValue":   1, "maxValue":  1, "symbol": { "type": "simple-line", "color": "#66FF99", "width": 1.2500 }, "label": "+1 Lane"         },
-                    { "minValue":   2, "maxValue":  2, "symbol": { "type": "simple-line", "color": "#33FF66", "width": 2.5000 }, "label": "+2 Lanes"        },
-                    { "minValue":   3, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#00FF33", "width": 3.7500 }, "label": "+3 Lanes"        },
-                    { "minValue":   4, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#00CC33", "width": 5.0000 }, "label": "+4 or More Lanes"}
+                    { "minValue": -99, "maxValue": -4, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "-4 or More Lanes"},
+                    { "minValue":  -3, "maxValue": -3, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 3.7500 }, "label": "-3 Lanes"        },
+                    { "minValue":  -2, "maxValue": -2, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 2.5000 }, "label": "-2 Lanes"        },
+                    { "minValue":  -1, "maxValue": -1, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 1.2500 }, "label": "-1 Lane"         },
+                    { "minValue":   0, "maxValue":  0, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.2500 }, "label": "No Change"       },
+                    { "minValue":   1, "maxValue":  1, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 1.2500 }, "label": "+1 Lane"         },
+                    { "minValue":   2, "maxValue":  2, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 2.5000 }, "label": "+2 Lanes"        },
+                    { "minValue":   3, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#E60000", "width": 3.7500 }, "label": "+3 Lanes"        },
+                    { "minValue":   4, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "+4 or More Lanes"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -93,7 +93,7 @@
         }
     },
     "aFt": {
-        "aDisplayName": "Functional Type",
+        "alias": "Functional Type",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Functional Type",
@@ -157,7 +157,7 @@
         }
     },
     "aCp": {
-        "aDisplayName": "Capacity per Hour per Lane",
+        "alias": "Capacity per Hour per Lane",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Capacity per Hour per Lane",
@@ -186,15 +186,15 @@
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue":     2500, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +2500"},
-                    { "minValue":     1000, "maxValue":     2499, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+1000 to +2500" },
-                    { "minValue":      500, "maxValue":      999, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+500 to +1000"  },
-                    { "minValue":      100, "maxValue":      499, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+100 to +500"   },
+                    { "minValue":     2500, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +2500"},
+                    { "minValue":     1000, "maxValue":     2499, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "+1000 to +2500" },
+                    { "minValue":      500, "maxValue":      999, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "+500 to +1000"  },
+                    { "minValue":      100, "maxValue":      499, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "+100 to +500"   },
                     { "minValue":     -100, "maxValue":       99, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-100 to +100"   },
-                    { "minValue":     -500, "maxValue":     -101, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-100 to -500"   },
-                    { "minValue":    -1000, "maxValue":     -501, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-500 to -1000"  },
-                    { "minValue":    -2500, "maxValue":    -1001, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-1000 to -2500" },
-                    { "minValue": -9999999, "maxValue":    -2501, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -2500"}
+                    { "minValue":     -500, "maxValue":     -101, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-100 to -500"   },
+                    { "minValue":    -1000, "maxValue":     -501, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-500 to -1000"  },
+                    { "minValue":    -2500, "maxValue":    -1001, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-1000 to -2500" },
+                    { "minValue": -9999999, "maxValue":    -2501, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -2500"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -231,7 +231,7 @@
         }
     },
     "aFS": {
-        "aDisplayName": "Free-flow Speed",
+        "alias": "Free-flow Speed",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Free-flow Speed",
@@ -304,7 +304,7 @@
         }
     },
     "aVl": {
-        "aDisplayName": "Volume",
+        "alias": "Volume",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Volume",
@@ -376,7 +376,7 @@
         }
     },
     "aRS": {
-        "aDisplayName": "Minimum Speed",
+        "alias": "Minimum Speed",
         "rendererCollection": {
         "main": {
             "legendTitle": "Minimum Speed",
@@ -451,7 +451,7 @@
         }
     },
     "aXVc": {
-        "aDisplayName": "Maximum V/C Ratio",
+        "alias": "Maximum V/C Ratio",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Maximum Volume-to-Capacity Ratio",
@@ -531,7 +531,7 @@
         }
     },
     "aHP" : {
-        "aDisplayName": "Population",
+        "alias": "Population",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Population",
@@ -615,7 +615,7 @@
         }
     },
     "aHV" : {
-        "aDisplayName": "Households",
+        "alias": "Households",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Households",
@@ -699,7 +699,7 @@
         }
     },
     "aV" : {
-        "aDisplayName": "Total Vehicles",
+        "alias": "Total Vehicles",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Total Vehicles",
@@ -783,7 +783,7 @@
         }
     },
     "aWk" : {
-        "aDisplayName": "Total Workers",
+        "alias": "Total Workers",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Total Workers",
@@ -867,7 +867,7 @@
         }
     },
     "aE3" : {
-        "aDisplayName": "Employment - 3 Categories",
+        "alias": "Employment - 3 Categories",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Employment - 3 Categories",
@@ -951,7 +951,7 @@
         }
     },
     "aE12" : {
-        "aDisplayName": "Employment - 12 Categories",
+        "alias": "Employment - 12 Categories",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Employment - 12 Categories",
@@ -1035,7 +1035,7 @@
         }
     },
     "aI" : {
-        "aDisplayName": "Average Income",
+        "alias": "Average Income",
         "agWeightCode": "aHP",
         "agWeightCodeFilter": "",
         "rendererCollection": {
@@ -1117,7 +1117,7 @@
         }
     },
     "aSc" : {
-        "aDisplayName": "K-12 School Enrollment",
+        "alias": "K-12 School Enrollment",
         "rendererCollection": {
             "main": {
                 "legendTitle": "K-12 School Enrollment",
@@ -1201,7 +1201,7 @@
         }
     },
     "aR" : {
-        "aDisplayName": "Riders",
+        "alias": "Riders",
         "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
@@ -1274,7 +1274,7 @@
         }
     },
     "aHd" : {
-        "aDisplayName": "Minimum Headway",
+        "alias": "Minimum Headway",
         "agFilterOptionsMethod": "minimum",
         "rendererCollection": {
             "main": {
@@ -1302,15 +1302,15 @@
                 "legendTitle": "Difference in Minimum Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
-                    { "minValue":      -60, "maxValue": -30.001, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "-60 to <-30"   },
-                    { "minValue":      -30, "maxValue": -20.001, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "-30 to <-20"   },
-                    { "minValue":      -20, "maxValue": -10.001, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "-20 to <-10"   },
-                    { "minValue":      -10, "maxValue":      10, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label":  "-10 to +10"   },
-                    { "minValue":   10.001, "maxValue":      20, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": ">+10 to +20"   },
-                    { "minValue":   20.001, "maxValue":      30, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": ">+20 to +30"   },
-                    { "minValue":   30.001, "maxValue":      60, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": ">+30 to +60"   },
-                    { "minValue":   60.001, "maxValue":  999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +60" }
+                    { "minValue": -9999999, "maxValue":     -30, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -60" },
+                    { "minValue":    -29.9, "maxValue":     -15, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 3.0000 }, "label": "-60 to <-30"   },
+                    { "minValue":    -14.9, "maxValue":     -10, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 2.0000 }, "label": "-30 to <-20"   },
+                    { "minValue":     -9.9, "maxValue":      -5, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 1.0000 }, "label": "-20 to <-10"   },
+                    { "minValue":     -4.9, "maxValue":     4.9, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label":  "-10 to +10"   },
+                    { "minValue":        5, "maxValue":     9.9, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 1.0000 }, "label": ">+10 to +20"   },
+                    { "minValue":       10, "maxValue":    14.9, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 2.0000 }, "label": ">+20 to +30"   },
+                    { "minValue":       15, "maxValue":    29.9, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 3.0000 }, "label": ">+30 to +60"   },
+                    { "minValue":       30, "maxValue":  999999, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +60" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -1347,7 +1347,7 @@
         }
     },
     "aTS" : {
-        "aDisplayName": "Average Travel Speed",
+        "alias": "Average Travel Speed",
         "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
@@ -1420,7 +1420,7 @@
         }
     },
     "aTi" : {
-        "aDisplayName": "Time",
+        "alias": "Time",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Time",
@@ -1492,7 +1492,7 @@
         }
     },
     "a0": {
-        "aDisplayName": "All Trips",
+        "alias": "All Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "All Trips",
@@ -1576,7 +1576,7 @@
         }
     },
     "aM": {
-        "aDisplayName": "  Motorized Trips",
+        "alias": "  Motorized Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Motorized Trips",
@@ -1660,7 +1660,7 @@
         }
     },
     "aA": {
-        "aDisplayName": "    Auto Trips",
+        "alias": "    Auto Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Auto Trips",
@@ -1744,7 +1744,7 @@
         }
     },
     "aT": {
-        "aDisplayName": "    Transit Trips",
+        "alias": "    Transit Trips",
         "rendererCollection": {
         "main": {
                 "legendTitle": "Transit Trips",
@@ -1828,7 +1828,7 @@
         }
     },
     "aN": {
-        "aDisplayName": "  Non-Motorized Trips",
+        "alias": "  Non-Motorized Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Non-Motorized Trips",
@@ -1912,7 +1912,7 @@
         }
     },
     "aW": {
-        "aDisplayName": "    Walk Trips",
+        "alias": "    Walk Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Walk Trips",
@@ -1996,7 +1996,7 @@
         }
     },
     "aB": {
-        "aDisplayName": "    Bike Trips",
+        "alias": "    Bike Trips",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Bike Trips",
@@ -2080,7 +2080,7 @@
         }
     },
     "aJA": {
-        "aDisplayName": "Access to Jobs",
+        "alias": "Access to Jobs",
         "agWeightCode": "aH",
         "agWeightCodeFilter": "",
         "rendererCollection": {
@@ -2166,7 +2166,7 @@
         }
     },
     "aHA": {
-        "aDisplayName": "Access to Households",
+        "alias": "Access to Households",
         "agWeightCode": "aJ",
         "agWeightCodeFilter": "",
         "rendererCollection": {
@@ -2252,7 +2252,7 @@
         }
     },
     "aCA": {
-        "aDisplayName": "Access to Jobs+Households",
+        "alias": "Access to Jobs+Households",
         "agWeightCode": "aH",
         "agWeightCodeFilter": "",
         "rendererCollection": {
@@ -2338,7 +2338,7 @@
         }
     },
     "aJ": {
-        "aDisplayName": "Job Locations",
+        "alias": "Job Locations",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Jobs",
@@ -2422,7 +2422,7 @@
         }
     },
     "aH": {
-        "aDisplayName": "Household Locations",
+        "alias": "Household Locations",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Households",
@@ -2506,7 +2506,7 @@
         }
     },
     "aPMT": {
-        "aDisplayName": "Person Miles Traveled",
+        "alias": "Person Miles Traveled",
         "aRound": 2,
         "rendererCollection": {
             "main": {
@@ -2591,7 +2591,7 @@
         }
     },
     "aPHT": {
-        "aDisplayName": "Person Hours Traveled",
+        "alias": "Person Hours Traveled",
         "aRound": 2,
         "rendererCollection": {
             "main": {
@@ -2676,7 +2676,7 @@
         }
     },
     "aPHD": {
-        "aDisplayName": "Person Hours of Delay",
+        "alias": "Person Hours of Delay",
         "aRound": 2,
         "rendererCollection": {
             "main": {
@@ -2761,7 +2761,7 @@
         }
     },
     "aVMT": {
-        "aDisplayName": "Vehicle Miles Traveled",
+        "alias": "Vehicle Miles Traveled",
         "aRound": 2,
         "rendererCollection": {
             "main": {
@@ -2846,7 +2846,7 @@
         }
     },
     "aVHT": {
-        "aDisplayName": "Vehicle Hours Traveled",
+        "alias": "Vehicle Hours Traveled",
         "aRound": 2,
         "rendererCollection": {
             "main": {
@@ -2931,7 +2931,7 @@
         }
     },
     "aVHD": {
-        "aDisplayName": "Vehicle Hours of Delay",
+        "alias": "Vehicle Hours of Delay",
         "aRound": 2,
         "rendererCollection": {
             "main": {

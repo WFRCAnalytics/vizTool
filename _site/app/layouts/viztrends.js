@@ -28,7 +28,7 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariocheckerdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.displayName })), this);
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
       _scenariocheckerdiv.appendChild(scenarioChecker.render());
     }
 
@@ -175,7 +175,7 @@ class VizTrends {
 
     if (this.sidebar.dividers) {
       if (this.getDCode()!="Nothing") {
-        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.attributeCode === this.getDCode()).aDisplayName;
+        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.attributeCode === this.getDCode()).alias;
       }
     }
 
@@ -237,7 +237,7 @@ class VizTrends {
       }
   
       const scenarioGroups = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode)).map(item => {
-        return { name: item.scnTrendCode };
+        return { code: item.scnTrendCode, alias: item.alias };
       });
   
       currentChart = new Chart(ctx, {
@@ -246,20 +246,20 @@ class VizTrends {
           datasets: agIds.flatMap(agId => {
             // For each agId, create a dataset for each scenario group
             return scenarioGroups.map(scenarioGroup => {
-              const name = scenarioGroup.name;
+              const code = scenarioGroup.code;
             
-              // Error checking: Ensure name exists and is a valid string
-              if (!name || typeof name !== 'string') {
-                console.error('Invalid scenario group name:', name);
-                return null; // Skip this scenario group if name is invalid
+              // Error checking: Ensure code exists and is a valid string
+              if (!code || typeof code !== 'string') {
+                console.error('Invalid scenario group code:', code);
+                return null; // Skip this scenario group if code is invalid
               }
             
-              let values = chartData[agId][name];
+              let values = chartData[agId][code];
               let dataPoints;
             
               // Error checking: Ensure values exist and are of expected type (object)
               if (!values || typeof values !== 'object') {
-                console.error(`Invalid or missing values for aggregator ID ${agId} and scenario ${name}`);
+                console.error(`Invalid or missing values for aggregator ID ${agId} and scenario ${code}`);
                 return null; // Skip this scenario if values are invalid
               }
             
@@ -295,7 +295,7 @@ class VizTrends {
               }
             
               return {
-                label: this.getAgNameFromAgId(agId) + ':' + name,
+                label: this.getAgNameFromAgId(agId) + ':' + scenarioGroup.alias,
                 data: dataPoints,
                 fill: false,
                 borderColor: this.getRandomColor(),

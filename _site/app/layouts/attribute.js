@@ -15,7 +15,7 @@ class Attribute {
         }
 
         this.attributeCode = attributeCode;
-        this.aDisplayName             = _configAttribute.aDisplayName || null;
+        this.alias             = _configAttribute.alias || null;
         this.agWeightCode             = _configAttribute.agWeightCode || null;
         this.agWeightCodeFilter       = _configAttribute.agWeightCodeFilter || null;
         this.rendererCollection       = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection) : null;
