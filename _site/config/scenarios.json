@@ -61,6 +61,11 @@
             "displayByDefault": true
         },
         {
+            "scnTrendCode": "FixedLB",
+            "alias": "Fixed Guideway with Local Bus",
+            "displayByDefault": true
+        },
+        {
             "scnTrendCode": "RTP",
             "alias": "RTP",
             "displayByDefault": false
@@ -72,7 +77,7 @@
             "scnGroup": "Base",
             "scnYear": 2019,
             "alias": "Existing 2019",
-            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","RTP"]
+            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","FixedLB","RTP"]
         },
         {
             "modVersion": "v902",
@@ -122,6 +127,13 @@
             "scnYear": 2050,
             "alias": "Fixed Guideway Strategy",
             "scnTrendCodes": ["Fixed"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "T_FixedGuideway_LB",
+            "scnYear": 2050,
+            "alias": "Fixed Guideway with Local Bus Strategy",
+            "scnTrendCodes": ["FixedLB"]
         }
     ]
 }
