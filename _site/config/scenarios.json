@@ -1,9 +1,9 @@
 {
-    "$schema": "./scenario-config-schema.json",
+    "$schema": "./schema/scenario-config-schema.json",
     "initial_select": [
         {
             "modVersion": "v902",
-            "scnGroup": "RTP",
+            "scnGroup": "Needs",
             "scnYear": 2050
         }
     ],
