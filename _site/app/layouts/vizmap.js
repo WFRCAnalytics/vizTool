@@ -503,6 +503,84 @@ require([
           }
         });
         map.add(this.layerDisplay);
+      } else if (this.geometryType=='point') {
+        // Dummy point feature
+        this.dummyFeature = {
+          geometry: {
+            type: "point",
+            longitude: -111.8910,  // Use longitude instead of coordinates
+            latitude: 40.7608,     // Use latitude instead of coordinates
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0,
+            idLabel: "",
+            dVal: null
+          }
+        };
+
+        this.layerDisplay = new FeatureLayer({
+          source: [this.dummyFeature],
+          fields: [
+            // ... your other fields
+            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
+            { name: "idLabel", type: "string"},
+            { name: "dVal", type: dValFieldType, alias: this.getACode() },
+          ],
+          popupTemplate: {
+            title: this.popupTitle,
+            content: [
+              {
+                type: "text",
+                text: this.getPopupLayerName() + " {expression/featureName}"
+              },
+              {
+                type: "text",
+                text: this.getACode() + ": {expression/formatDisplayValue}"
+              }
+            ],
+            expressionInfos: [
+              {
+                name: "featureName",
+                title: "Feature Name",
+                expression: '$feature.idLabel'
+              },
+              {
+                name: "formatDisplayValue",
+                title: "Formatted Display Value",
+                expression: this.getLabelInfo()
+              }
+            ]
+          },
+          labelingInfo: [{
+            symbol: {
+              type: "text",  // Use a text symbol for labeling
+              color: [50, 50, 50],  // Dark grey color
+              haloColor: "white",
+              haloSize: "2px",  // Halo size of 2px
+              font: {  // Define the font used for labeling
+                family: "sans-serif",
+                size: 10,
+                weight: "normal"  // Make the font weight normal (not bold)
+              }
+            },
+            labelPlacement: "always-horizontal",  // Define where to place the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
+          }],
+          renderer: {
+            type: "simple",  // Use a simple renderer
+            symbol: {
+              type: "simple-marker",  // Type of symbol (point marker)
+              color: [0, 0, 0, 0],  // No fill color (transparent)
+              size: 6,  // Marker size (adjust as needed)
+              outline: {  // Define the outline of the marker
+                color: [255, 255, 255],  // White outline color
+                width: 0.5  // Outline width
+              }
+            }
+          }
+        });
+        map.add(this.layerDisplay);
       }
     }
 

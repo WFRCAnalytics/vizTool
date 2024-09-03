@@ -104,8 +104,15 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 
     // load scenario trend data
     const scenarioTrends = jsonScenario.trends.map(trend => {
+      // Check if scnTrendCode is defined for the trend
+      if (!trend.scnTrendCode) {
+        return null; // Skip this trend by returning null
+      }
+    
       const modelruns = jsonScenario.scenarios
-        .filter(scenario => scenario.scnTrendCodes.includes(trend.scnTrendCode))
+        .filter(scenario => 
+          scenario.scnTrendCodes && scenario.scnTrendCodes.includes(trend.scnTrendCode)
+        )
         .map(scenario => ({
           modVersion: scenario.modVersion,
           scnGroup: scenario.scnGroup,
@@ -118,7 +125,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         displayByDefault: trend.displayByDefault,
         modelruns: modelruns
       };
-    });
+    }).filter(trend => trend !== null); // Remove any null values from the array
+    
     
     dataScenarioTrends = scenarioTrends.map(item => new ScenarioTrend(item));
   

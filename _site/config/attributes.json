@@ -15,10 +15,174 @@
         "alias": "Lane-Miles"
     },
     "aBd": {
-        "alias": "PA Boardings"
+        "alias": "PA Boardings",
+        "agFilterOptionsMethod": "sum",
+        "rendererCollection": {
+            "main": {
+                "legendTitle": "PA Boardings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue": 0.01, "maxValue":     49, "symbol": { "type": "simple-marker", "color": "#31398a", "size":  4, "outline": { "color": "#31398a", "width": 0.5 } }, "label": "1 to 50"         },
+                    { "minValue":   50, "maxValue":     99, "symbol": { "type": "simple-marker", "color": "#1ba9e6", "size":  6, "outline": { "color": "#1ba9e6", "width": 0.5 } }, "label": "50 to 100"       },
+                    { "minValue":  100, "maxValue":    249, "symbol": { "type": "simple-marker", "color": "#00a74e", "size":  8, "outline": { "color": "#00a74e", "width": 0.5 } }, "label": "100 to 250"      },
+                    { "minValue":  250, "maxValue":    499, "symbol": { "type": "simple-marker", "color": "#6cb74a", "size": 10, "outline": { "color": "#6cb74a", "width": 0.5 } }, "label": "250 to 500"      },
+                    { "minValue":  500, "maxValue":    999, "symbol": { "type": "simple-marker", "color": "#8dc348", "size": 12, "outline": { "color": "#8dc348", "width": 0.5 } }, "label": "500 to 1,000"    },
+                    { "minValue": 1000, "maxValue":   1499, "symbol": { "type": "simple-marker", "color": "#E09d2e", "size": 14, "outline": { "color": "#E09d2e", "width": 0.5 } }, "label": "1,000 to 1,500"  },
+                    { "minValue": 1500, "maxValue":   1999, "symbol": { "type": "simple-marker", "color": "#Eb672d", "size": 16, "outline": { "color": "#Eb672d", "width": 0.5 } }, "label": "1,500 to 2,000"  },
+                    { "minValue": 2000, "maxValue":   2999, "symbol": { "type": "simple-marker", "color": "#E5272d", "size": 18, "outline": { "color": "#E5272d", "width": 0.5 } }, "label": "2,000 to 3,000"  },
+                    { "minValue": 3000, "maxValue": 999999, "symbol": { "type": "simple-marker", "color": "#Af2944", "size": 20, "outline": { "color": "#Af2944", "width": 0.5 } }, "label": "More than 3,000" }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "PA Boardings"
+            },
+            "compare_abs": {
+                "legendTitle": "Difference in PA Boardings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 6, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
+                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 4, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
+                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 3, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
+                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size": 2, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
+                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
+                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size": 2, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
+                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 3, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
+                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 4, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
+                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 6, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "No PA Boardings"
+            },
+            "compare_pct": {
+                "legendTitle": "Percent Difference in PA Boardings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
+                "classBreakInfos": [
+                    { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-marker", "color": "#E60000", "size": 6.0000, "outline": { "color": "#E60000", "width":0.5 } }, "label": "-100% or More"},
+                    { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-marker", "color": "#FF0000", "size": 5.5000, "outline": { "color": "#FF0000", "width":0.5 } }, "label": "-50% to -100%"},
+                    { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-marker", "color": "#FF3300", "size": 5.0000, "outline": { "color": "#FF3300", "width":0.5 } }, "label": "-25% to -50%" },
+                    { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-marker", "color": "#FF6611", "size": 3.7500, "outline": { "color": "#FF6611", "width":0.5 } }, "label": "-10% to -25%" },
+                    { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-marker", "color": "#FF9933", "size": 2.5000, "outline": { "color": "#FF9933", "width":0.5 } }, "label": "-5% to -10%"  },
+                    { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-marker", "color": "#FFCC66", "size": 1.2500, "outline": { "color": "#FFCC66", "width":0.5 } }, "label": "-1% to -5%"   },
+                    { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-marker", "color": "#CFCFCF", "size": 0.6250, "outline": { "color": "#CFCFCF", "width":0.5 } }, "label": "-1% to +1%"   },
+                    { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-marker", "color": "#66FF99", "size": 1.2500, "outline": { "color": "#66FF99", "width":0.5 } }, "label": "-1% to +5%"   },
+                    { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-marker", "color": "#33FF66", "size": 2.5000, "outline": { "color": "#33FF66", "width":0.5 } }, "label": "+5% to +10"   },
+                    { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-marker", "color": "#00FF33", "size": 3.7500, "outline": { "color": "#00FF33", "width":0.5 } }, "label": "+10% to +25%" },
+                    { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-marker", "color": "#00E62E", "size": 5.0000, "outline": { "color": "#00E62E", "width":0.5 } }, "label": "+25% to +50%" },
+                    { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-marker", "color": "#00CC29", "size": 5.5000, "outline": { "color": "#00CC29", "width":0.5 } }, "label": "+50% to +100%"},
+                    { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-marker", "color": "#00B324", "size": 6.0000, "outline": { "color": "#00B324", "width":0.5 } }, "label": "+100% or More"}
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "No PA Boardings"
+            }
+        }
     },
     "aAl": {
-        "alias": "PA Alightings"
+        "alias": "PA Alightings",
+        "agFilterOptionsMethod": "sum",
+        "rendererCollection": {
+            "main": {
+                "legendTitle": "PA Alightings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue": 0.01, "maxValue":     49, "symbol": { "type": "simple-marker", "color": "#31398a", "size":  4, "outline": { "color": "#31398a", "width": 0.5 } }, "label": "1 to 50"         },
+                    { "minValue":   50, "maxValue":     99, "symbol": { "type": "simple-marker", "color": "#1ba9e6", "size":  6, "outline": { "color": "#1ba9e6", "width": 0.5 } }, "label": "50 to 100"       },
+                    { "minValue":  100, "maxValue":    249, "symbol": { "type": "simple-marker", "color": "#00a74e", "size":  8, "outline": { "color": "#00a74e", "width": 0.5 } }, "label": "100 to 250"      },
+                    { "minValue":  250, "maxValue":    499, "symbol": { "type": "simple-marker", "color": "#6cb74a", "size": 10, "outline": { "color": "#6cb74a", "width": 0.5 } }, "label": "250 to 500"      },
+                    { "minValue":  500, "maxValue":    999, "symbol": { "type": "simple-marker", "color": "#8dc348", "size": 12, "outline": { "color": "#8dc348", "width": 0.5 } }, "label": "500 to 1,000"    },
+                    { "minValue": 1000, "maxValue":   1499, "symbol": { "type": "simple-marker", "color": "#E09d2e", "size": 14, "outline": { "color": "#E09d2e", "width": 0.5 } }, "label": "1,000 to 1,500"  },
+                    { "minValue": 1500, "maxValue":   1999, "symbol": { "type": "simple-marker", "color": "#Eb672d", "size": 16, "outline": { "color": "#Eb672d", "width": 0.5 } }, "label": "1,500 to 2,000"  },
+                    { "minValue": 2000, "maxValue":   2999, "symbol": { "type": "simple-marker", "color": "#E5272d", "size": 18, "outline": { "color": "#E5272d", "width": 0.5 } }, "label": "2,000 to 3,000"  },
+                    { "minValue": 3000, "maxValue": 999999, "symbol": { "type": "simple-marker", "color": "#Af2944", "size": 20, "outline": { "color": "#Af2944", "width": 0.5 } }, "label": "More than 3,000" }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "PA Alightings"
+            },
+            "compare_abs": {
+                "legendTitle": "Difference in PA Alightings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 6, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
+                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 4, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
+                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 3, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
+                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size": 2, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
+                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
+                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size": 2, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
+                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 3, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
+                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 4, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
+                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 6, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "No PA Alightings"
+            },
+            "compare_pct": {
+                "legendTitle": "Percent Difference in PA Alightings",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
+                "classBreakInfos": [
+                    { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-marker", "color": "#E60000", "size": 6.0000, "outline": { "color": "#E60000", "width":0.5 } }, "label": "-100% or More"},
+                    { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-marker", "color": "#FF0000", "size": 5.5000, "outline": { "color": "#FF0000", "width":0.5 } }, "label": "-50% to -100%"},
+                    { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-marker", "color": "#FF3300", "size": 5.0000, "outline": { "color": "#FF3300", "width":0.5 } }, "label": "-25% to -50%" },
+                    { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-marker", "color": "#FF6611", "size": 3.7500, "outline": { "color": "#FF6611", "width":0.5 } }, "label": "-10% to -25%" },
+                    { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-marker", "color": "#FF9933", "size": 2.5000, "outline": { "color": "#FF9933", "width":0.5 } }, "label": "-5% to -10%"  },
+                    { "minValue":   -0.05, "maxValue":  -0.01, "symbol": { "type": "simple-marker", "color": "#FFCC66", "size": 1.2500, "outline": { "color": "#FFCC66", "width":0.5 } }, "label": "-1% to -5%"   },
+                    { "minValue":   -0.01, "maxValue":   0.01, "symbol": { "type": "simple-marker", "color": "#CFCFCF", "size": 0.6250, "outline": { "color": "#CFCFCF", "width":0.5 } }, "label": "-1% to +1%"   },
+                    { "minValue":    0.01, "maxValue":   0.05, "symbol": { "type": "simple-marker", "color": "#66FF99", "size": 1.2500, "outline": { "color": "#66FF99", "width":0.5 } }, "label": "-1% to +5%"   },
+                    { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-marker", "color": "#33FF66", "size": 2.5000, "outline": { "color": "#33FF66", "width":0.5 } }, "label": "+5% to +10"   },
+                    { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-marker", "color": "#00FF33", "size": 3.7500, "outline": { "color": "#00FF33", "width":0.5 } }, "label": "+10% to +25%" },
+                    { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-marker", "color": "#00E62E", "size": 5.0000, "outline": { "color": "#00E62E", "width":0.5 } }, "label": "+25% to +50%" },
+                    { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-marker", "color": "#00CC29", "size": 5.5000, "outline": { "color": "#00CC29", "width":0.5 } }, "label": "+50% to +100%"},
+                    { "minValue":    1.00, "maxValue": 999999, "symbol": { "type": "simple-marker", "color": "#00B324", "size": 6.0000, "outline": { "color": "#00B324", "width":0.5 } }, "label": "+100% or More"}
+                ],
+                "defaultSymbol": {
+                    "type": "simple-marker",
+                    "color": "#EEEEEE",
+                    "size":  4,
+                    "outline": {
+                        "color": "#31398a",
+                        "width": 0.2
+                    }
+                },
+                "defaultLabel": "No PA Alightings"
+            }
+        }
     },
     "aLn": {
         "alias": "Lanes",
