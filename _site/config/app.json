@@ -68,6 +68,10 @@
             "filters" : ["fPurpOnlyAll","fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
+        { "submenuText": "Transit Segment Trends",
+          "submenuIconStart": "2d-explore",
+          "template": "vizComingSoon"
+        },
         { "submenuText": "Transit Stops",
           "submenuIconStart": "nodes-unlink",
           "template": "vizMap",
@@ -110,7 +114,7 @@
     { "menuText": "Trips",
       "menuIconStart": "tour",
       "modelEntities": [
-        { "submenuText": "Trip Trends (coming soon)",
+        { "submenuText": "Trip Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizComingSoon"
         },
@@ -154,7 +158,7 @@
             "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Origin-Destination Trips (coming soon)",
+        { "submenuText": "Zone Origin-Destination Trips",
           "submenuIconStart": "2d-explore",
           "template": "vizComingSoon"
         }
@@ -260,7 +264,7 @@
             "filters" : ["fModeAutoTransit", "fAtoCondition"]
           }
         },
-        { "submenuText": "Access to Opportunities Trends (coming soon)",
+        { "submenuText": "Access to Opportunities Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizComingSoon"
         }
