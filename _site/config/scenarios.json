@@ -144,7 +144,7 @@
         },
         {
             "modVersion": "v902",
-            "scnGroup": "T_FixedGuideway_LB",
+            "scnGroup": "T_FixedGuideway_withLocalBus",
             "scnYear": 2050,
             "alias": "Fixed Guideway with Local Bus Strategy",
             "scnTrendCodes": ["FixedLB"]
