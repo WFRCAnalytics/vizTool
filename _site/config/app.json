@@ -65,16 +65,45 @@
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
             "attributes": ["aR","aHd","aTS"],
             "attributeSelected": "aR",
-            "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameNoAll", "fModeRoute", "fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll","fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
-        { "submenuText": "Transit Stops (coming soon)",
+        { "submenuText": "Transit Stops",
           "submenuIconStart": "nodes-link",
-          "template": "vizComingSoon"
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-transit-stops",
+            "baseGeoJsonKey": "stops",
+            "baseGeoJsonId": "STOPID",
+            "geometryType": "point",
+            "popupTitle": "Transit Stops",
+            "attributeTitle": "Transit Stop Attributes",
+            "attributeInfoTextHtml": "",
+            "attributes": ["aBd","aAl"],
+            "attributeSelected": "aBd",
+            "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
+          }
         },
-        { "submenuText": "Transit Boardings Trends (coming soon)",
+        { "submenuText": "Transit Trends",
           "submenuIconStart": "graph-line-series",
-          "template": "vizComingSoon"
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-transit-stops",
+            "baseGeoJsonKey": "stops",
+            "baseGeoJsonId": "STOPID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Transit Trends",
+            "attributeSelected": "aBd",
+            "attributeInfoTextHtml": "",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aBd","aAl"],
+            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
+            "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
+          }
         }
       ]
     },

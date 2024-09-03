@@ -2,7 +2,7 @@
     "$schema": "./scenario-config-schema.json",
     "initial_select": [
         {
-            "modVersion": "v902",
+            "modVersion": "v910",
             "scnGroup": "Base",
             "scnYear": 2019
         }
@@ -26,6 +26,19 @@
                 "distMed":"districtsMedium_v900.geojson",
                 "distLrg":"districtsLarge_v900.geojson",
                 "distSup":"districtsSuper_v900.geojson"
+            }
+        },
+        {
+            "modVersion": "v910",
+            "geojsons": {
+                "taz": "WFv900_TAZ.geojson",
+                "segment": "WFv901_Segments.geojson",
+                "distSml": "WFv900_TAZ_DSML.geojson",
+                "distMed": "WFv900_TAZ_DMED.geojson",
+                "distLrg": "WFv900_TAZ_DLRG.geojson",
+                "distSup": "WFv900_TAZ_DSUP.geojson",
+                "city": "WFv900_TAZ_CITY.geojson",
+                "stops": "WFv901_Segments_STOP.geojson"
             }
         }
     ],
@@ -68,6 +81,11 @@
         {
             "scnTrendCode": "RTP",
             "alias": "RTP",
+            "displayByDefault": false
+        },
+        {
+            "scnTrendCode": "v901",
+            "alias": "v901",
             "displayByDefault": false
         }
     ],
