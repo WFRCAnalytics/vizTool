@@ -47,15 +47,15 @@
                 "legendTitle": "Difference in PA Boardings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 6, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
-                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 4, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
-                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 3, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
-                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size": 2, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
-                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
-                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size": 2, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
-                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 3, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
-                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 4, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
-                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 6, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
+                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 20, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
+                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 15, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
+                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 10, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
+                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size":  5, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
+                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size":  1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
+                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size":  5, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
+                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 10, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
+                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 15, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
+                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 20, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-marker",
@@ -132,15 +132,15 @@
                 "legendTitle": "Difference in PA Alightings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 6, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
-                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 4, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
-                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 3, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
-                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size": 2, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
-                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
-                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size": 2, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
-                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 3, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
-                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 4, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
-                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 6, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
+                    { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 20, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
+                    { "minValue":    -5000, "maxValue":  -1001, "symbol":{ "type": "simple-marker", "color": "#0070FF", "size": 15, "outline": { "color": "#0070FF", "width": 0.5} }, "label": "-5,000 to -1,000" },
+                    { "minValue":    -1000, "maxValue":   -501, "symbol":{ "type": "simple-marker", "color": "#73B2FF", "size": 10, "outline": { "color": "#73B2FF", "width": 0.5} }, "label": "-1,000 to -500"   },
+                    { "minValue":     -500, "maxValue":    -51, "symbol":{ "type": "simple-marker", "color": "#BED2FF", "size":  5, "outline": { "color": "#BED2FF", "width": 0.5} }, "label": "-500 to -50"      },
+                    { "minValue":      -50, "maxValue":     50, "symbol":{ "type": "simple-marker", "color": "#AAAAAA", "size":  1, "outline": { "color": "#AAAAAA", "width": 0.5} }, "label": "-50 to +50"       },
+                    { "minValue":       50, "maxValue":    499, "symbol":{ "type": "simple-marker", "color": "#FFBEBE", "size":  5, "outline": { "color": "#FFBEBE", "width": 0.5} }, "label": "+50 to +500"      },
+                    { "minValue":      500, "maxValue":    999, "symbol":{ "type": "simple-marker", "color": "#FF7F7F", "size": 10, "outline": { "color": "#FF7F7F", "width": 0.5} }, "label": "+500 to +1,000"   },
+                    { "minValue":     1000, "maxValue":   4999, "symbol":{ "type": "simple-marker", "color": "#E60000", "size": 15, "outline": { "color": "#E60000", "width": 0.5} }, "label": "+1,000 to +5,000" },
+                    { "minValue":     5000, "maxValue": 999999, "symbol":{ "type": "simple-marker", "color": "#510000", "size": 20, "outline": { "color": "#510000", "width": 0.5} }, "label": "More than +5,000" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-marker",

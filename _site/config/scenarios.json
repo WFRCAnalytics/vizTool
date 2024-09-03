@@ -2,9 +2,9 @@
     "$schema": "./scenario-config-schema.json",
     "initial_select": [
         {
-            "modVersion": "v910",
-            "scnGroup": "Base",
-            "scnYear": 2019
+            "modVersion": "v902",
+            "scnGroup": "RTP",
+            "scnYear": 2050
         }
     ],
     "initial_select_compare": [
@@ -25,7 +25,8 @@
                 "distSml":"districtsSmall_v910.geojson",
                 "distMed":"districtsMedium_v900.geojson",
                 "distLrg":"districtsLarge_v900.geojson",
-                "distSup":"districtsSuper_v900.geojson"
+                "distSup":"districtsSuper_v900.geojson",
+                "stops": "WFv901_Segments_STOP.geojson"
             }
         },
         {
@@ -81,11 +82,6 @@
         {
             "scnTrendCode": "RTP",
             "alias": "RTP",
-            "displayByDefault": false
-        },
-        {
-            "scnTrendCode": "v901",
-            "alias": "v901",
             "displayByDefault": false
         }
     ],
