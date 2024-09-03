@@ -95,6 +95,20 @@
         },
         {
             "modVersion": "v902",
+            "scnGroup": "OpeningYear",
+            "scnYear": 2023,
+            "alias": "Opening Year 2023",
+            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","FixedLB","RTP"]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "TIP",
+            "scnYear": 2028,
+            "alias": "TIP 2028",
+            "scnTrendCodes": ["Needs","Conn","HotConn","Opt","Bus","Fixed","FixedLB","RTP"]
+        },
+        {
+            "modVersion": "v902",
             "scnGroup": "Needs",
             "scnYear": 2050,
             "alias": "Needs 2050",
