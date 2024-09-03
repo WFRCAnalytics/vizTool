@@ -28,7 +28,7 @@ require([
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
-      this.modeCompare = 'abs' //default is abs  other option is pct
+      this.modeCompare = 'diff' //default is abs  other option is pct
 
       // Global variable to store original label info
       this.originalLabelInfo = null;
@@ -266,8 +266,8 @@ require([
       if (this.mode == 'main') {
         return collection.main;
       } else if (this.mode == 'compare') {
-        return this.modeCompare == 'abs' ? collection.compare_abs :
-               this.modeCompare == 'pct' ? collection.compare_pct : null;
+        return this.modeCompare == 'diff' ? collection.compare_abs :
+               this.modeCompare == 'pctdiff' ? collection.compare_pct : null;
       }
       return null;
     }
@@ -710,7 +710,7 @@ require([
         //}
         if (this.mode==='main') {
           _title += this.getMainScenarioDisplayName();
-        } else if(this.mode==='compare' & (this.modeCompare==='abs' | this.modeCompare==='pct')) {
+        } else if(this.mode==='compare' & (this.modeCompare==='diff' | this.modeCompare==='pctdiff')) {
           _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
         }
         this.legend = new Legend({
@@ -752,9 +752,9 @@ require([
       //}
       //if (this.mode==='main') {
       //  _title += ' - ' + this.getMainScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='abs') {
+      //} else if(this.mode==='compare' & this.modeCompare==='diff') {
       //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='pct') {
+      //} else if(this.mode==='compare' & this.modeCompare==='pctdiff') {
       //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
       //}
 
@@ -827,9 +827,9 @@ require([
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (this.modeCompare=='abs') { // absolute change
+                if (this.modeCompare=='diff') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pct') { // percent change
+                } else if (this.modeCompare=='pctdiff') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
@@ -956,9 +956,9 @@ require([
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (this.modeCompare=='abs') { // absolute change
+                if (this.modeCompare=='diff') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pct') { // percent change
+                } else if (this.modeCompare=='pctdiff') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {

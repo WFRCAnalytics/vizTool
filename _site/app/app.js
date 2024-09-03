@@ -566,15 +566,15 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       // Create a calcite-select element
       const calciteSelectCompare = document.createElement('calcite-select');
       calciteSelectCompare.id = 'selectCompareType';
-      calciteSelectCompare.value = 'abs';
+      calciteSelectCompare.value = 'diff';
 
       const optionAbs = document.createElement('calcite-option');
-      optionAbs.value = 'abs';
-      optionAbs.textContent = 'Absolute Difference';
+      optionAbs.value = 'diff';
+      optionAbs.textContent = 'Difference';
       calciteSelectCompare.appendChild(optionAbs);
 
       const optionPc = document.createElement('calcite-option');
-      optionPc.value = 'pct';
+      optionPc.value = 'pctdiff';
       optionPc.textContent = 'Percent Difference';
       calciteSelectCompare.appendChild(optionPc);
 
