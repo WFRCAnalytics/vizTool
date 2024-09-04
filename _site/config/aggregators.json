@@ -64,5 +64,13 @@
             {"value":"EFA" , "label":"EFA"    },
             {"value":""    , "label":"Non-EFA"}
         ]
+    },
+    "SUBAREAID": {
+        "agTitleText"          : "Subarea",
+        "agDefaultSelected"    : ["1"],
+        "agCodeLabelField"     : "SUBAREAID",
+        "agOptions": [
+            {"value":"1" , "label":"Model Area"}
+        ]
     }
 }

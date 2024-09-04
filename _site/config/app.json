@@ -48,7 +48,7 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
             "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
         },
@@ -69,7 +69,7 @@
           }
         },
         { "submenuText": "Transit Segment Trends",
-          "submenuIconStart": "2d-explore",
+          "submenuIconStart": "graph-line-series",
           "template": "vizComingSoon"
         },
         { "submenuText": "Transit Stops",
@@ -105,7 +105,7 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aBd","aAl"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
             "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         }
@@ -116,7 +116,20 @@
       "modelEntities": [
         { "submenuText": "Trip Trends",
           "submenuIconStart": "graph-line-series",
-          "template": "vizComingSoon"
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-trip-shares",
+            "baseGeoJsonKey": "subarea",
+            "baseGeoJsonId": "SUBAREAID",
+            "comboSelected": "",
+            "attributeTitle": "Trips",
+            "attributeSelected": "aSTrip",
+            "attributes": ["aSTrip"],
+            "filters" : ["fTod2","fShareMode","fPurp5"],
+            "aggregatorTitle": "",
+            "aggregators": ["SUBAREAID"],
+            "aggregatorSelected" : "SUBAREAID"
+          }
         },
         { "submenuText": "Zone Trips Ends by Mode",
           "submenuIconStart": "arrow-double-diagonal-1",
@@ -134,7 +147,7 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Trips Ends by Mode Trends",
@@ -152,10 +165,10 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "DISTSUPER",
+            "aggregatorSelected" : "PLANAREA",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
         { "submenuText": "Zone Origin-Destination Trips",
@@ -182,7 +195,7 @@
             "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
-            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
+            "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
           }
         },
         { "submenuText": "Socioeconomics Trends",
@@ -202,8 +215,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
           }
         },
         { "submenuText": "Zone Metrics - Non-Transit",
@@ -222,7 +235,7 @@
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
+            "filters" : ["fTod4Check","fPurp12","fPA","fModeRoad"]
           }
         },
         { "submenuText": "Zone Metrics - Non-Transit Stop Trends",
@@ -242,8 +255,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fTod4Check","fPurp12","fPA","fModeRoad"]
           }
         },
         { "submenuText": "Access to Opportunities",
@@ -261,7 +274,7 @@
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : ["fModeAutoTransit", "fAtoCondition"]
+            "filters" : ["fModeAutoTransit","fAtoCondition"]
           }
         },
         { "submenuText": "Access to Opportunities Trends",

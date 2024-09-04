@@ -649,5 +649,11 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       menuItem.hideAllMenuItemLayers();
     });
   };
-  
+
 });
+
+// find the first scenario that has trend data for a given jsonName
+function getFirstScenarioWithTrendData(jsonName) {
+  console.log('getFirstScenarioWithTrendData');
+  return dataScenarios.find(scenario => scenario.jsonData.hasOwnProperty(jsonName));
+}

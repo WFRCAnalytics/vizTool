@@ -14,6 +14,9 @@
     "aLMl": {
         "alias": "Lane-Miles"
     },
+    "aSTrip": {
+        "alias": "Trips"
+    },
     "aBd": {
         "alias": "PA Boardings",
         "agFilterOptionsMethod": "sum",

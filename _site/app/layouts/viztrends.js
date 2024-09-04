@@ -78,12 +78,6 @@ class VizTrends {
 
   }
 
-  getScenarioMain() {
-    return this.getScenario(         selectedScenario_Main.modVersion,
-                                     selectedScenario_Main.scnGroup,
-                            parseInt(selectedScenario_Main.scnYear, 10)); // Assuming it's a number
-  }
-
   getScenario(_modVersion, _scnGroup, _scnYear) {
     return dataScenarios.find(scenario =>
                               scenario.modVersion === _modVersion &&
@@ -113,7 +107,15 @@ class VizTrends {
   }
 
   getFilterGroup() {
-    return this.getScenarioMain().getFilterGroupForAttribute(this.jsonName, this.getACode());
+
+    const scenarioWithData = getFirstScenarioWithTrendData(this.jsonName);
+
+    if (scenarioWithData) {
+      return scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
+    } else {
+      return "";
+    }
+    
   }
 
   getFilterGroupArray() {
@@ -141,18 +143,18 @@ class VizTrends {
 //    // Handle other display names if needed
 //    return null;
 //  }
-
-  getSegidOptions() {
-    const segidOptions = [];
-    const filter = this.getFilterGroup();
-
-    const scenarioData = this.getScenarioMain().jsonData['roadway-trends'].data[filter];
-    Object.keys(scenarioData).forEach(segId => {
-        segidOptions.push(segId);
-    });
-
-    return segidOptions;
-  }
+//
+//  getSegidOptions() {
+//    const segidOptions = [];
+//    const filter = this.getFilterGroup();
+//
+//    const scenarioData = this.getScenarioMain().jsonData['roadway-trends'].data[filter];
+//    Object.keys(scenarioData).forEach(segId => {
+//        segidOptions.push(segId);
+//    });
+//
+//    return segidOptions;
+//  }
     
   createLineChart(attributeCode, labels, chartData, agIdsString) {
     console.log('viztrends:Creating the chart:' + this.id);
@@ -382,7 +384,7 @@ class VizTrends {
 
     const _aCode = this.getACode();
     const _dCode = this.getDCode();
-    const _agCode =  this.getSelectedAggregator().agCode;
+    const _agCode = this.getSelectedAggregator()?.agCode ?? null;
 
     var _selectedDivider;
 

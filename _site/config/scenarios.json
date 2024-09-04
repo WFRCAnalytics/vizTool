@@ -26,7 +26,8 @@
                 "distMed":"districtsMedium_v900.geojson",
                 "distLrg":"districtsLarge_v900.geojson",
                 "distSup":"districtsSuper_v900.geojson",
-                "stops": "WFv901_Segments_STOP.geojson"
+                "stops": "WFv901_Segments_STOP.geojson",
+                "subarea": "WFv900_TAZ_SAID.geojson"
             }
         },
         {
@@ -39,7 +40,8 @@
                 "distLrg": "WFv900_TAZ_DLRG.geojson",
                 "distSup": "WFv900_TAZ_DSUP.geojson",
                 "city": "WFv900_TAZ_CITY.geojson",
-                "stops": "WFv901_Segments_STOP.geojson"
+                "stops": "WFv901_Segments_STOP.geojson",
+                "subarea": "WFv900_TAZ_SAID.geojson"
             }
         }
     ],
@@ -47,45 +49,57 @@
         {
             "scnTrendCode": "Needs",
             "alias": "Needs",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "Conn",
             "alias": "Connectivity",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "HotConn",
             "alias": "Connectivity + HOT Addition",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "Opt",
             "alias": "Optimization",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "Bus",
             "alias": "Bus Network",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "Fixed",
             "alias": "Fixed Guideway",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "FixedLBHot",
             "alias": "Fixed Guideway with Local Bus + HOT Addition",
-            "displayByDefault": true
+            "displayByDefault": false
         },
         {
             "scnTrendCode": "RTP",
             "alias": "RTP",
             "displayByDefault": false
+        },
+        {
+            "scnTrendCode": "v901Base",
+            "alias": "v901 Base",
+            "displayByDefault": true
         }
     ],
     "scenarios": [
+        {
+            "modVersion": "v910",
+            "scnGroup": "Base",
+            "scnYear": 2019,
+            "alias": "v9.1 Existing 2019",
+            "scnTrendCodes": ["v901Base"]
+        },
         {
             "modVersion": "v902",
             "scnGroup": "Base",
