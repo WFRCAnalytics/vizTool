@@ -15,8 +15,8 @@
     "menuItem": "Roads and Transit",
     "modelEntity": "Road Segments",
     "centerMap": {
-      "lat": 41.7706,
-      "lon": -112.8910
+      "lat": 40.7707,
+      "lon": -111.8926
     },
     "zoomMap": 10
   },
