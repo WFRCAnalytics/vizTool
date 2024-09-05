@@ -65,5 +65,38 @@ class MenuItem {
       modelEntity.hideLayoutLayers();
     });
   }
+
+  loadMenuItemAndModelEntity(modelEntityText) {
+    let mainSidebarItems2 = document.querySelectorAll('calcite-menu-item');
+    mainSidebarItems2.forEach(item2 => {
+      if(item2.text === this.menuText) {  // Use the saved instance context here
+        item2.active = true;
+      } else {
+        item2.active = false;
+      }
+    });
+
+    // hide all templates
+    globalTemplates.forEach(template => {
+      const existingDiv = document.getElementById(template.templateType + 'Template');
+      if (existingDiv) {
+        existingDiv.hidden = true;
+      }
+    });
+    
+    this.hideAllLayoutLayers();
+    this.populateModelEntities();  // Use the saved instance context here as well
+
+    // Find the model entity item where submenuText matches onOpenMenuItem
+    const selectedModelEntity = this.modelEntities.find(entity => entity.submenuText === modelEntityText);
+
+    if (selectedModelEntity && selectedModelEntity.loadModelEntity) {
+        // Call the function to load the menu item and model entity
+        selectedModelEntity.loadModelEntity(modelEntityText);
+    } else {
+        console.error('Model Entity item with matching subMenuText or load function not found');
+    }
+
+  }
   
 }

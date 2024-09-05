@@ -1,6 +1,6 @@
 {
   "title": "Strategy Testing",
-  "subtitle": "vizTool v24.8.29 beta",
+  "subtitle": "vizTool v24.9.5 beta",
   "splash": {
     "title": "IMPORTANT: BETA VERSION",
     "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
@@ -10,6 +10,15 @@
     "numOptionsForCheckAllButton": 5,
     "textCheckAll": "Check All",
     "textUncheckAll": "Uncheck All"
+  },
+  "onOpen": {
+    "menuItem": "Roads and Transit",
+    "modelEntity": "Road Segments",
+    "centerMap": {
+      "lat": 40.7707,
+      "lon": -111.8926
+    },
+    "zoomMap": 10
   },
   "menuItems": [
     { "menuText": "Roads and Transit",
@@ -31,7 +40,7 @@
             "filters" : ["fDirName4pAll","fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
         },
-        { "submenuText": "Road Trends",
+        { "submenuText": "Road Segment Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -48,7 +57,7 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
             "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypeLiMdHvAll"]
           }
         },
@@ -65,24 +74,74 @@
             "attributeInfoTextHtml": "<b>Riders</b> is the total number of people on traveling on transit for a given segment across all routes that use that segment.",
             "attributes": ["aR","aHd","aTS"],
             "attributeSelected": "aR",
-            "filters" : ["fPurpOnlyAll", "fTod2", "fModeAccess", "fDirNameNoAll", "fModeRoute", "fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll","fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
-        { "submenuText": "Transit Stops (coming soon)",
-          "submenuIconStart": "nodes-link",
-          "template": "vizComingSoon"
-        },
-        { "submenuText": "Transit Boardings Trends (coming soon)",
+        { "submenuText": "Transit Segment Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizComingSoon"
+        },
+        { "submenuText": "Transit Stops",
+          "submenuIconStart": "nodes-unlink",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-transit-stops",
+            "baseGeoJsonKey": "stops",
+            "baseGeoJsonId": "STOPID",
+            "geometryType": "point",
+            "popupTitle": "Transit Stops",
+            "attributeTitle": "Transit Stop Attributes",
+            "attributeInfoTextHtml": "",
+            "attributes": ["aBd","aAl"],
+            "attributeSelected": "aBd",
+            "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
+          }
+        },
+        { "submenuText": "Transit Stop Trends",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-transit-stops",
+            "baseGeoJsonKey": "stops",
+            "baseGeoJsonId": "STOPID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Transit Stop Trends",
+            "attributeSelected": "aBd",
+            "attributeInfoTextHtml": "",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aBd","aAl"],
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
+          }
         }
       ]
     },
     { "menuText": "Trips",
       "menuIconStart": "tour",
       "modelEntities": [
-        { "submenuText": "Zone Trips by Mode",
-          "submenuIconStart": "graph-pie-slice",
+        { "submenuText": "Trip Trends",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-trip-shares",
+            "baseGeoJsonKey": "subarea",
+            "baseGeoJsonId": "SUBAREAID",
+            "comboSelected": "",
+            "attributeTitle": "Trips",
+            "attributeSelected": "aSTrip",
+            "attributes": ["aSTrip"],
+            "filters" : ["fTod2","fShareMode","fPurp5"],
+            "aggregatorTitle": "",
+            "aggregators": ["SUBAREAID"],
+            "aggregatorSelected" : "SUBAREAID"
+          }
+        },
+        { "submenuText": "Zone Trips Ends by Mode",
+          "submenuIconStart": "arrow-double-diagonal-1",
           "template": "vizMap",
           "templateSettings": {
             "jsonName": "j-zone-mode-trips",
@@ -97,10 +156,10 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Trips by Mode Trends",
+        { "submenuText": "Zone Trips Ends by Mode Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -109,19 +168,19 @@
             "baseGeoJsonId": "TAZID",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
-            "attributeTitle": "Transit Trends",
+            "attributeTitle": "Zone Trips Ends by Mode Trends",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips taken from (Production) or to (Attriction) using all modes of transportation.<br/><b>Motorized Trips</b> includes all trips made using motorized means of transportation, such as cars, motorcycles, and public transit vehicles.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles, highlighting private vehicle use.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, including buses and trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, primarily focusing on walking and bicycling.<br/><b>Walk Trips</b> specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using bicycles.",
             "attributeSelected": "a0",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-            "aggregatorSelected" : "DISTSUPER",
+            "aggregatorSelected" : "PLANAREA",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fPurp5pAll", "fTod2pDy", "fPA", "fModeAccessSingleLetter", "fModeRouteCode3"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Origin-Destination Trips (coming soon)",
+        { "submenuText": "Zone Origin-Destination Trips",
           "submenuIconStart": "2d-explore",
           "template": "vizComingSoon"
         }
@@ -145,7 +204,7 @@
             "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
-            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
+            "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
           }
         },
         { "submenuText": "Socioeconomics Trends",
@@ -165,8 +224,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fVehNum", "fEmp3Cat", "fEmp12Cat", "fSchType"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
           }
         },
         { "submenuText": "Zone Metrics - Non-Transit",
@@ -185,10 +244,10 @@
             "attributeInfoTextHtml": "",
             "attributeSelected": "aPMT",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
+            "filters" : ["fTod4Check","fPurp12","fPA","fModeRoad"]
           }
         },
-        { "submenuText": "Zone Metrics - Non-Transit Trends",
+        { "submenuText": "Zone Metrics - Non-Transit Stop Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -205,8 +264,8 @@
             "aggregators": ["PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "dividers": ["TAZ_HH", "TAZ_POP", "TAZ_WRK"],
-            "filters" : ["fTod4Check", "fPurp12", "fPA", "fModeRoad"]
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
+            "filters" : ["fTod4Check","fPurp12","fPA","fModeRoad"]
           }
         },
         { "submenuText": "Access to Opportunities",
@@ -224,10 +283,10 @@
             "aggregators": ["TAZID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : ["fModeAutoTransit", "fAtoCondition"]
+            "filters" : ["fModeAutoTransit","fAtoCondition"]
           }
         },
-        { "submenuText": "Access to Opportunities Trends (coming soon)",
+        { "submenuText": "Access to Opportunities Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizComingSoon"
         }

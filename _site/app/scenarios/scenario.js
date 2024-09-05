@@ -11,10 +11,10 @@ class Scenario {
   }
 
   // loadData has to be called after menuItems is loaded
-  loadData(dataMenu) {
-
+  async loadData(dataMenu, updateProgress) {
     let jsonFileNames = new Set();
     
+    // Collect unique JSON file names
     dataMenu.forEach(menuItem => {
       if (menuItem.modelEntities) {
         menuItem.modelEntities.forEach(modelEntity => {
@@ -24,26 +24,45 @@ class Scenario {
         });
       }
     });
-
-    jsonFileNames.forEach(uniqueFileName => {
-      this.fetchAndStoreData(uniqueFileName);
-    });
     
+    totalFilesToLoad += jsonFileNames.size;
+
+    // Fetch and store data, and update progress after each file is fetched
+    jsonFileNames.forEach(uniqueFileName => {
+      this.fetchAndStoreData(uniqueFileName).then(() => {
+        totalLoadedFiles++;
+        updateProgress();  // Call the progress update function after each file is fetched
+      }).catch(error => {
+        console.error(`Error loading ${uniqueFileName}:`, error);  // Handle errors if necessary
+        totalLoadedFiles++;  // Still increment the loaded files counter
+        updateProgress();  // Call the progress update function even if file doesn't exist
+      });
+    });
   }
+
 
   getGeoJsonFileNameFromKey(key) {
     return this.geojsons[key];
   }
 
   // Function to fetch and store data
-  fetchAndStoreData(fileName) {
-    fetch(`scenario-data/${this.scnFolder}/${fileName}.json`)
-      .then(response => response.json())
-      .then(jsonData => {
+  async fetchAndStoreData(fileName) {
+    try {
+        const response = await fetch(`scenario-data/${this.scnFolder}/${fileName}.json`);
+
+        if (!response.ok) {
+            // If the response is not OK (e.g., 404), log an error and return
+            console.error(`File not found: ${fileName}`);
+            return;  // Do not proceed with storing data
+        }
+
+        const jsonData = await response.json();
         // Store the processed data in the object with the filename as key
         this.jsonData[fileName] = new AttributeFilterData(jsonData);
-      })
-      .catch(error => console.error(`Error fetching data from ${fileName}:`, error));
+    } catch (error) {
+        // Log any other errors (e.g., network issues)
+        console.error(`Error fetching data from ${fileName}:`, error);
+    }
   }
 
   getDataForFilter(a_jsonDataKey, a_filter) {

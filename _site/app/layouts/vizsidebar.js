@@ -167,7 +167,7 @@ class VizSidebar {
 
   // get the divider code that is selected
   getDCode() {
-    return this.dividerSelect.selected;
+    return this.dividerSelect?.selected ?? "Nothing";
   }
 
   getADisplayName() {

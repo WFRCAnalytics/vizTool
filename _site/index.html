@@ -39,20 +39,45 @@
     </head>
     <body>
         <calcite-shell class="calcite-mode-auto">
-            <calcite-navigation slot="header">
+            <calcite-navigation slot="header" id="menu" style="display:none;">
                 <calcite-navigation-logo slot="logo"></calcite-navigation-logo>
                 <calcite-menu slot="content-start"></calcite-menu>
                 <calcite-navigation slot="navigation-secondary">
                     <calcite-menu slot="content-start"></calcite-menu>
                 </calcite-navigation>
             </calcite-navigation>
+            <!-- Progress container centered -->
+            <div id="load-screen" style="display:none;">
+                <div id="progress-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+                    <div><h1>Welcome to the vizTool!</h1></div>
+                    <table>
+                        <tr>
+                            <td align="right">
+                                <label for="progress-geo">Loading Geo Data:</label>
+                            </td>
+                            <td>
+                                <progress id="progress-geo" value="0" max="100"></progress>
+                                <span id="progress-text-geo">0%</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <label for="progress">Loading Scenario Data:</label>
+                            </td>
+                            <td>
+                                <progress id="progress" value="0" max="100"></progress>
+                                <span id="progress-text">0%</span>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>    
+            </div>
             <div id="main"></div>
         </calcite-shell>
-        <!-- Modal Structure -->
+        <!-- Modal Structure-->
         <div id="infoModal" class="modal">
-            <div class="modal-content">
-                <!-- This is where the dynamic content will be injected -->
-            </div>
+            <div id="info-modal-content" class="modal-content" style="display:none;"></div>
         </div>
         <script>
             // Simple script to show the modal

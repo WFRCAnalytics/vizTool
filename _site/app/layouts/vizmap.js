@@ -28,7 +28,7 @@ require([
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
-      this.modeCompare = 'abs' //default is abs  other option is pct
+      this.modeCompare = 'diff' //default is abs  other option is pct
 
       // Global variable to store original label info
       this.originalLabelInfo = null;
@@ -266,8 +266,8 @@ require([
       if (this.mode == 'main') {
         return collection.main;
       } else if (this.mode == 'compare') {
-        return this.modeCompare == 'abs' ? collection.compare_abs :
-               this.modeCompare == 'pct' ? collection.compare_pct : null;
+        return this.modeCompare == 'diff' ? collection.compare_abs :
+               this.modeCompare == 'pctdiff' ? collection.compare_pct : null;
       }
       return null;
     }
@@ -503,6 +503,84 @@ require([
           }
         });
         map.add(this.layerDisplay);
+      } else if (this.geometryType=='point') {
+        // Dummy point feature
+        this.dummyFeature = {
+          geometry: {
+            type: "point",
+            longitude: -111.8910,  // Use longitude instead of coordinates
+            latitude: 40.7608,     // Use latitude instead of coordinates
+            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
+          },
+          attributes: {
+            id: 0,
+            idLabel: "",
+            dVal: null
+          }
+        };
+
+        this.layerDisplay = new FeatureLayer({
+          source: [this.dummyFeature],
+          fields: [
+            // ... your other fields
+            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
+            { name: "idLabel", type: "string"},
+            { name: "dVal", type: dValFieldType, alias: this.getACode() },
+          ],
+          popupTemplate: {
+            title: this.popupTitle,
+            content: [
+              {
+                type: "text",
+                text: this.getPopupLayerName() + " {expression/featureName}"
+              },
+              {
+                type: "text",
+                text: this.getACode() + ": {expression/formatDisplayValue}"
+              }
+            ],
+            expressionInfos: [
+              {
+                name: "featureName",
+                title: "Feature Name",
+                expression: '$feature.idLabel'
+              },
+              {
+                name: "formatDisplayValue",
+                title: "Formatted Display Value",
+                expression: this.getLabelInfo()
+              }
+            ]
+          },
+          labelingInfo: [{
+            symbol: {
+              type: "text",  // Use a text symbol for labeling
+              color: [50, 50, 50],  // Dark grey color
+              haloColor: "white",
+              haloSize: "2px",  // Halo size of 2px
+              font: {  // Define the font used for labeling
+                family: "sans-serif",
+                size: 10,
+                weight: "normal"  // Make the font weight normal (not bold)
+              }
+            },
+            labelPlacement: "always-horizontal",  // Define where to place the label
+            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
+          }],
+          renderer: {
+            type: "simple",  // Use a simple renderer
+            symbol: {
+              type: "simple-marker",  // Type of symbol (point marker)
+              color: [0, 0, 0, 0],  // No fill color (transparent)
+              size: 6,  // Marker size (adjust as needed)
+              outline: {  // Define the outline of the marker
+                color: [255, 255, 255],  // White outline color
+                width: 0.5  // Outline width
+              }
+            }
+          }
+        });
+        map.add(this.layerDisplay);
       }
     }
 
@@ -632,7 +710,7 @@ require([
         //}
         if (this.mode==='main') {
           _title += this.getMainScenarioDisplayName();
-        } else if(this.mode==='compare' & (this.modeCompare==='abs' | this.modeCompare==='pct')) {
+        } else if(this.mode==='compare' & (this.modeCompare==='diff' | this.modeCompare==='pctdiff')) {
           _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
         }
         this.legend = new Legend({
@@ -674,9 +752,9 @@ require([
       //}
       //if (this.mode==='main') {
       //  _title += ' - ' + this.getMainScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='abs') {
+      //} else if(this.mode==='compare' & this.modeCompare==='diff') {
       //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='pct') {
+      //} else if(this.mode==='compare' & this.modeCompare==='pctdiff') {
       //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
       //}
 
@@ -749,9 +827,9 @@ require([
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (this.modeCompare=='abs') { // absolute change
+                if (this.modeCompare=='diff') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pct') { // percent change
+                } else if (this.modeCompare=='pctdiff') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
@@ -878,9 +956,9 @@ require([
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (this.modeCompare=='abs') { // absolute change
+                if (this.modeCompare=='diff') { // absolute change
                 _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pct') { // percent change
+                } else if (this.modeCompare=='pctdiff') { // percent change
                   if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
                 }
               } catch(err) {
