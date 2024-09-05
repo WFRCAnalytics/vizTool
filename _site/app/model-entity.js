@@ -133,4 +133,36 @@ class ModelEntity {
       this.vizLayout.hideLayers();
     }
   }
+
+  loadModelEntity() {
+    let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
+    mainSidebarItems.forEach(item => {
+      if(item.text === this.submenuText || item.text === this.menuItem.menuText) {  // Use the saved instance context here
+        item.active = true;
+      } else {
+        item.active = false;
+      }
+    });
+    // Show corresponding template
+    const allTemplates = document.querySelectorAll('.template');
+    allTemplates.forEach(template => template.hidden = true);
+
+    // Show the selected template
+    const selectedTemplate = document.getElementById(this.template + 'Template');
+    if (selectedTemplate) {
+      selectedTemplate.hidden = false;
+      // ... (Any additional specific logic for the template type)
+    }
+
+    // set app global model entity to keep track of what is actively being used
+    activeModelEntity= this;
+    
+    this.menuItem.hideAllLayoutLayers()
+
+    this.vizLayout.renderSidebar();  // Use the saved instance context here as well
+    this.vizLayout.updateDisplay();
+    //this.displayJSONData();
+
+  }
+
 }

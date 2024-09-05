@@ -20,6 +20,18 @@ let configAggregators;
 let configDividers;
 let configFilters;
 let menuItems;
+let onOpenMenuItem;
+let onOpenModelEntity;
+let centerMap = [-111.8910, 40.7608]; // default value replaced programatically from json value
+let zoom = 10; // default value replaced programatically from json value
+
+// Global variables to track total files and loaded files across all scenarios
+let totalFilesToLoad = 0;
+let totalLoadedFiles = 0;
+
+// Global variables to track total files and loaded files across all scenarios
+let totalFilesToLoadGeo = 0;
+let totalLoadedFilesGeo = 0;
 
 require([
   "esri/config",
@@ -28,7 +40,7 @@ require([
   "esri/widgets/Expand",
   "esri/widgets/BasemapToggle"
 ],
-function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
+function(esriConfig, Map, MapView, Expand, BasemapToggle) {
 
   // TODO: LOOK FOR WAYS TO HIDE KEY OR USE OTHER SOURCE
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
@@ -141,12 +153,33 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
         }
     }
 
+    totalFilesToLoadGeo = _geojsonfilenames.size;
+
+    // Progress bar elements
+    const progressBarGeo = document.getElementById('progress-geo');
+    const progressTextGeo = document.getElementById('progress-text-geo');
+
+    // Function to update progress for GeoJSON files
+    const updateProgressGeo = () => {
+      // Calculate the progress percentage
+      const progressValueGeo = (totalLoadedFilesGeo / totalFilesToLoadGeo) * 100;
+  
+      // Update the progress bar and text
+      const progressBarGeo = document.getElementById('progress-geo');
+      const progressTextGeo = document.getElementById('progress-text-geo');
+  
+      progressBarGeo.value = progressValueGeo;
+      progressTextGeo.textContent = `${Math.floor(progressValueGeo)}%`;
+      
+      checkAndHideProgressContainer();
+    };
+
     // Create an array to hold all fetch promises
     let fetchPromises = [];
 
     // Fetch and store GeoJSON data for each filename
     for (const _geojsonfilename of _geojsonfilenames) {
-        let fetchPromise = fetchAndStoreGeoJsonData(_geojsonfilename);
+        let fetchPromise = fetchAndStoreGeoJsonData(_geojsonfilename, updateProgressGeo);
         fetchPromises.push(fetchPromise);
     }
 
@@ -159,14 +192,18 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   }
 
   // Function to fetch and store data
-  async function fetchAndStoreGeoJsonData(fileName) {
+  async function fetchAndStoreGeoJsonData(fileName, updateProgressGeo) {
     try {
       const response = await fetch(`geo-data/${fileName}`);
       const jsonData = await response.json();
       // Store the processed data in the object with the filename as key
       dataGeojsons[fileName] = jsonData;
+      totalLoadedFilesGeo++;  // Still increment the loaded files counter
+      updateProgressGeo();  // Call the progress update function even if file doesn't exist
     } catch (error) {
       console.error(`Error fetching data from ${fileName}:`, error);
+      totalLoadedFilesGeo++;  // Still increment the loaded files counter
+      updateProgressGeo();  // Call the progress update function even if file doesn't exist
     }
   }
 
@@ -193,10 +230,51 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       calciteMenu.appendChild(menuItem.createMenuItemElement());
     });
 
-    // populate jsons for scenarios
+    // Progress bar elements
+    const progressBar = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+
+    const updateProgress = () => {
+      // Calculate the progress percentage
+      const progressValue = (totalLoadedFiles / totalFilesToLoad) * 100;
+  
+      // Update the progress bar and text
+      const progressBar = document.getElementById('progress');
+      const progressText = document.getElementById('progress-text');
+  
+      progressBar.value = progressValue;
+      progressText.textContent = `${Math.floor(progressValue)}%`;
+
+      checkAndHideProgressContainer();
+    };
+
+    // Calculate total number of files to load across all scenarios
     dataScenarios.forEach(scenario => {
-      scenario.loadData(dataMenu);
+        let jsonFileNames = new Set();
+        
+        // Collect unique JSON file names
+        dataMenu.forEach(menuItem => {
+          if (menuItem.modelEntities) {
+            menuItem.modelEntities.forEach(modelEntity => {
+              if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
+                jsonFileNames.add(modelEntity.vizLayout.jsonName);
+              }
+            });
+          }
+        });
     });
+
+    // Load data for each scenario, passing the updateProgress function to be called when each file is loaded
+    for (let scenario of dataScenarios) {
+        scenario.loadData(dataMenu, updateProgress);
+    }
+
+    // Ensure progress reaches 100% when all data is loaded
+    if (totalLoadedFiles === totalFilesToLoad) {
+        progressBar.value = 100;
+        progressText.textContent = '100%';
+    }
+
   }
 
   async function toggleCompare(element) {
@@ -348,8 +426,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
     // Load and display the disclaimer modal
     await loadAppConfig();
     await loadScenarios();
-    // Only after loadScenarios completes, load the menu and items
-    const menuStructure = await loadMenuAndItems();
+    await loadMenuAndItems();
     await initVizMapListeners();
   }
 
@@ -365,6 +442,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
   
       // Load and display the disclaimer modal if applicable
       await loadAndDisplaySplash(appConfig.splash);
+
     } catch (error) {
       console.error('Error loading app.json:', error);
     }
@@ -376,18 +454,24 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       const modalContent = document.querySelector('#infoModal .modal-content');
       modalContent.innerHTML = "<h1>" + disclaimer.title + "</h1>";
       modalContent.innerHTML += disclaimer.textHtml;
-  
+
       const modal = document.getElementById('infoModal');
+      const loadScreen = document.getElementById('load-screen')
+
       modal.style.display = 'block';
-  
+
+      document.getElementById('info-modal-content').style.display = 'block';
+      
       const okButton = document.getElementById('okButton');
       okButton.onclick = function() {
         modal.style.display = 'none';
+        loadScreen.style.display = 'block';
       };
     } else {
       // If the disclaimer is off, ensure the modal is not displayed
       const modal = document.getElementById('infoModal');
       modal.style.display = 'none';
+      loadScreen.style.display = 'block';
     }
   }
   
@@ -482,7 +566,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
       
       mapView = new MapView({
         map: map,
-        center: [-111.8910, 40.7608],
+        center: centerMap,
         zoom: 10,
         container: template.mapView
       });
@@ -656,4 +740,51 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle,) {
 function getFirstScenarioWithTrendData(jsonName) {
   console.log('getFirstScenarioWithTrendData');
   return dataScenarios.find(scenario => scenario.jsonData.hasOwnProperty(jsonName));
+}
+
+// Function to hide the progress container when both progress bars reach 100%
+function checkAndHideProgressContainer() {
+  const progressBar = document.getElementById('progress').value;
+  const progressBarGeo = document.getElementById('progress-geo').value;
+  
+  // Check if both progress bars are at 100%
+  if (progressBar === 100 && progressBarGeo === 100) {
+    const progressContainer = document.getElementById('progress-container');
+    if (progressContainer) {
+      // Delay hiding by 1 seconds (1000 milliseconds)
+      setTimeout(() => {
+
+        onOpenMenuItem = configApp.onOpen.menuItem;
+        onOpenModelEntity = configApp.onOpen.modelEntity;
+
+        progressContainer.style.display = 'none';
+        document.getElementById('menu').style.display = 'block';
+
+        // Find the menu item where menuText matches onOpenMenuItem
+        const selectedMenuItem = menuItems.find(item => item.menuText === onOpenMenuItem);
+
+        if (selectedMenuItem && selectedMenuItem.loadMenuItemAndModelEntity) {
+            // Call the function to load the menu item and model entity
+            selectedMenuItem.loadMenuItemAndModelEntity(onOpenModelEntity);
+        } else {
+            console.error('Menu item with matching menuText or load function not found');
+        }
+        
+        centerMap = [configApp.onOpen.centerMap.lon, configApp.onOpen.centerMap.lat];
+        zoomMap = configApp.onOpen.zoomMap;
+
+        mapView.when(() => {
+          mapView.goTo({
+            center: centerMap,  // ArcGIS expects [longitude, latitude]
+            zoom: zoomMap // Optionally set a default zoom level
+          }).catch(function(error) {
+            console.error("Error in recentering the map: ", error);
+          });
+        });
+        
+        console.log('App: Map recentered')
+
+      }, 1000); // Adjust the time (in milliseconds) as needed
+    }
+  }
 }

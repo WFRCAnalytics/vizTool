@@ -1,6 +1,6 @@
 {
   "title": "Strategy Testing",
-  "subtitle": "vizTool v24.9.3 beta",
+  "subtitle": "vizTool v24.9.5 beta",
   "splash": {
     "title": "IMPORTANT: BETA VERSION",
     "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
@@ -10,6 +10,15 @@
     "numOptionsForCheckAllButton": 5,
     "textCheckAll": "Check All",
     "textUncheckAll": "Uncheck All"
+  },
+  "onOpen": {
+    "menuItem": "Roads and Transit",
+    "modelEntity": "Road Segments",
+    "centerMap": {
+      "lat": 41.7706,
+      "lon": -112.8910
+    },
+    "zoomMap": 10
   },
   "menuItems": [
     { "menuText": "Roads and Transit",

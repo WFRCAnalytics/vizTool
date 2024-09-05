@@ -49,47 +49,47 @@
         {
             "scnTrendCode": "Needs",
             "alias": "Needs",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "Conn",
             "alias": "Connectivity",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "HotConn",
             "alias": "Connectivity + HOT Addition",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "Opt",
             "alias": "Optimization",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "Bus",
             "alias": "Bus Network",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "Fixed",
             "alias": "Fixed Guideway",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "FixedLBHot",
             "alias": "Fixed Guideway with Local Bus + HOT Addition",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
             "scnTrendCode": "RTP",
             "alias": "RTP",
-            "displayByDefault": false
+            "displayByDefault": true
         },
         {
-            "scnTrendCode": "v901Base",
-            "alias": "v901 Base",
-            "displayByDefault": true
+            "scnTrendCode": "v910Base",
+            "alias": "v9.1",
+            "displayByDefault": false
         }
     ],
     "scenarios": [
