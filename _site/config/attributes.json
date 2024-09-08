@@ -543,10 +543,10 @@
         }
     },
     "aRS": {
-        "alias": "Minimum Speed",
+        "alias": "Congested Speed",
         "rendererCollection": {
         "main": {
-            "legendTitle": "Minimum Speed (mph)",
+            "legendTitle": "Congested Speed (mph)",
             "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
@@ -565,10 +565,10 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed (mph)"
+            "defaultLabel": "No Congested Speed (mph)"
         },
         "compare_abs": {
-            "legendTitle": "Difference in Minimum Speed (mph)",
+            "legendTitle": "Difference in Congested Speed (mph)",
             "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
@@ -587,10 +587,10 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed (mph)"
+            "defaultLabel": "No Congested Speed (mph)"
         },
         "compare_pct": {
-            "legendTitle": "Percent Difference in Minimum Speed (mph)",
+            "legendTitle": "Percent Difference in Congested Speed (mph)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
             "field": "dVal",
             "classBreakInfos": [
@@ -613,7 +613,7 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Minimum Speed (mph)"
+            "defaultLabel": "No Congested Speed (mph)"
         }
         }
     },
@@ -866,10 +866,10 @@
         }
     },
     "aV" : {
-        "alias": "Total Vehicles",
+        "alias": "Owned Vehicles",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Total Vehicles",
+                "legendTitle": "Owned Vehicles",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue": 0.010, "maxValue":     499, "symbol": { "type": "simple-fill", "color":[ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "Less than 500 Vehicles"},
@@ -894,7 +894,7 @@
                 "defaultLabel": "No Vehicles"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Total Vehicles",
+                "legendTitle": "Difference in Owned Vehicles",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500001, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000 Vehicles"  },
@@ -919,7 +919,7 @@
                 "defaultLabel": "No Vehicles"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Total Vehicles",
+                "legendTitle": "Percent Difference in Owned Vehicles",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -1.00, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100% or More"},
