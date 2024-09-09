@@ -380,7 +380,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
@@ -459,7 +459,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
@@ -516,6 +516,15 @@ require([
             id: 0,
             idLabel: "",
             dVal: null
+          },
+          reunderer: {
+            "type": "simple-marker",
+            "color": "#EEEEEE",
+            "size":  1,
+            "outline": {
+              "color": "#CCCCCC",
+              "width": 0.2
+            }
           }
         };
 
@@ -536,7 +545,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [

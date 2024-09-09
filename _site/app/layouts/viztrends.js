@@ -28,7 +28,7 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariocheckerdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenario Groups', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
       _scenariocheckerdiv.appendChild(scenarioChecker.render());
     }
 

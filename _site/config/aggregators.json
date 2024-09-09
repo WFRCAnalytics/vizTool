@@ -48,13 +48,11 @@
         "baseAgCode"        : "TAZID"
     },
     "PLANAREA": {
-        "agTitleText"         : "Plan Area",
-        "agDefaultSelected"   : ["WFRC"],
-        "agCodeLabelField"    : "PLANAREA",
-        "agOptions": [
-            {"value":"MAG" , "label":"MAG" },
-            {"value":"WFRC", "label":"WFRC"}
-        ]
+        "agTitleText"      : "Plan Area",
+        "agDefaultSelected" : ["WFRC"],
+        "agGeoJsonKey"     : "planarea",
+        "agCodeLabelField" : "PLANAREA",
+        "baseAgCode"       : "TAZID"
     },
     "EFA": {
         "agTitleText"          : "Equity Focus Areas",
