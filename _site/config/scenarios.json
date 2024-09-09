@@ -1,0 +1,124 @@
+{
+    "$schema": "./schema/scenario-config-schema.json",
+    "initial_select": [
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "RTP",
+            "scnYear": 2050
+        }
+    ],
+    "initial_select_compare": [
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "OY",
+            "scnYear": 2023
+        }
+    ],
+    "models": [
+        {
+            "modVersion": "WFv9.1",
+            "geojsons": {
+                "taz": "WFv900_TAZ.geojson",
+                "distSml": "WFv900_TAZ_DSML.geojson",
+                "distMed": "WFv900_TAZ_DMED.geojson",
+                "distLrg": "WFv900_TAZ_DLRG.geojson",
+                "distSup": "WFv900_TAZ_DSUP.geojson",
+                "city": "WFv900_TAZ_CITY.geojson",
+                "subarea": "WFv900_TAZ_SAID.geojson",
+                "planarea": "WFv900_TAZ_PLAN.geojson",
+                "segment": "WFv901_Segments.geojson",
+                "stops": "WFv901_Segments_STOP.geojson"
+            }
+        }
+    ],
+    "trends": [
+        {
+            "scnTrendCode": "RTP",
+            "displayName": "RTP",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "NB",
+            "displayName": "NB",
+            "displayByDefault": true
+        }
+    ],
+    "scenarios": [
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "BY",
+            "scnYear": 2019,
+            "scnCode": "WFv9.1__BY__2019",
+            "alias": "BY 2019",
+            "scnTrendCodes": [
+                "RTP",
+                "NB",
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "scnCode": "WFv9.1__RTP__2050",
+            "alias": "RTP 2050",
+            "scnTrendCodes": [
+                "RTP"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "OY",
+            "scnYear": 2023,
+            "scnCode": "WFv9.1__OY__2023",
+            "alias": "OY 2023",
+            "scnTrendCodes": [
+                "RTP",
+                "NB",
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "TIP",
+            "scnYear": 2028,
+            "scnCode": "WFv9.1__TIP__2028",
+            "alias": "TIP 2028",
+            "scnTrendCodes": [
+                "RTP",
+                "NB",
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "RTP",
+            "scnYear": 2042,
+            "scnCode": "WFv9.1__RTP__2042",
+            "alias": "RTP 2042",
+            "scnTrendCodes": [
+                "RTP"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "NB",
+            "scnYear": 2050,
+            "scnCode": "WFv9.1__NB__2050",
+            "alias": "NB 2050",
+            "scnTrendCodes": [
+                "NB"
+            ]
+        },
+        {
+            "modVersion": "WFv9.1",
+            "scnGroup": "NB",
+            "scnYear": 2042,
+            "scnCode": "WFv9.1__NB__2042",
+            "alias": "NB 2042",
+            "scnTrendCodes": [
+                "NB"
+            ]
+        }
+    ]
+}
