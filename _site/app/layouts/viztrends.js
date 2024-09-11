@@ -126,35 +126,6 @@ class VizTrends {
       return _filterGroup.split("_");
     }
   }
-
-//  getChartData(attributeCode, filterSelectionData) {
-//    if (attributeCode === 'aVmt') {
-//        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
-//    } else if (attributeCode === 'aVht') {
-//        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
-//    } else if (attributeCode === 'aLMl') {
-//        return filterSelectionData.aLMl;
-//    } else {
-//        return 0; // return 0 if nothing is found
-//    }
-//
-//    //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in vizmap L#272)
-//
-//    // Handle other display names if needed
-//    return null;
-//  }
-//
-//  getSegidOptions() {
-//    const segidOptions = [];
-//    const filter = this.getFilterGroup();
-//
-//    const scenarioData = this.getScenarioMain().jsonData['roadway-trends'].data[filter];
-//    Object.keys(scenarioData).forEach(segId => {
-//        segidOptions.push(segId);
-//    });
-//
-//    return segidOptions;
-//  }
     
   createLineChart(attributeCode, labels, chartData, agIdsString) {
     console.log('viztrends:Creating the chart:' + this.id);

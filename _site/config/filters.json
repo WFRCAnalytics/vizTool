@@ -83,6 +83,15 @@
             {"value":"ok", "label":"Off-Peak" }
         ]
     },
+    "fTod2Select": {
+        "fName"    : "Time of Day",
+        "fWidget"  : "select",
+        "fSelected": "pk",
+        "fOptions" : [
+            {"value":"pk", "label":"Peak"     },
+            {"value":"ok", "label":"Off-Peak" }
+        ]
+    },
     "fTod2pDy": {
         "fName"    : "Time of Day",
         "fWidget"  : "select",
