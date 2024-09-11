@@ -68,7 +68,7 @@
         "agDefaultSelected"    : ["1"],
         "agCodeLabelField"     : "SUBAREAID",
         "agOptions": [
-            {"value":"1" , "label":"Model Area"}
+            {"value":"1" , "label":"Wasatch Front Model Area"}
         ]
     }
 }

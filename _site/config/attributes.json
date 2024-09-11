@@ -24,11 +24,11 @@
         "alias": "Trips"
     },
     "aBd": {
-        "alias": "PA Boardings",
+        "alias": "P->A Direction Boardings",
         "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
-                "legendTitle": "PA Boardings",
+                "legendTitle": "P->A Direction Boardings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": 0.01, "maxValue":     49, "symbol": { "type": "simple-marker", "color": "#31398a", "size":  4, "outline": { "color": "#31398a", "width": 0.5 } }, "label": "1 to 50"         },
@@ -50,10 +50,10 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Boardings"
+                "defaultLabel": "No P->A Direction Boardings"
             },
             "compare_abs": {
-                "legendTitle": "Difference in PA Boardings",
+                "legendTitle": "Difference in P->A Direction Boardings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 20, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
@@ -75,10 +75,10 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Boardings"
+                "defaultLabel": "No P->A Direction Boardings"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in PA Boardings",
+                "legendTitle": "Percent Difference in P->A Direction Boardings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-marker", "color": "#0000ff", "size": 16, "outline": { "color": "#EEEEEE", "width":0.5 } }, "label": "-500% or More" },
@@ -104,16 +104,16 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Boardings"
+                "defaultLabel": "No P->A Direction Boardings"
             }
         }
     },
     "aAl": {
-        "alias": "PA Alightings",
+        "alias": "P->A Direction Alightings",
         "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
-                "legendTitle": "PA Alightings",
+                "legendTitle": "P->A Direction Alightings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": 0.01, "maxValue":     49, "symbol": { "type": "simple-marker", "color": "#31398a", "size":  4, "outline": { "color": "#31398a", "width": 0.5 } }, "label": "1 to 50"         },
@@ -135,10 +135,10 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Alightings"
+                "defaultLabel": "No P->A Direction Alightings"
             },
             "compare_abs": {
-                "legendTitle": "Difference in PA Alightings",
+                "legendTitle": "Difference in P->A Direction Alightings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue":  -5001, "symbol":{ "type": "simple-marker", "color": "#005CC4", "size": 20, "outline": { "color": "#005CC4", "width": 0.5} }, "label": "More than -5,000" },
@@ -160,10 +160,10 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Alightings"
+                "defaultLabel": "No P->A Direction Alightings"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in PA Alightings",
+                "legendTitle": "Percent Difference in P->A Direction Alightings",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-marker", "color": "#0000ff", "size": 16, "outline": { "color": "#EEEEEE", "width":0.5 } }, "label": "-500% or More" },
@@ -189,7 +189,7 @@
                         "width": 0.2
                     }
                 },
-                "defaultLabel": "No PA Alightings"
+                "defaultLabel": "No P->A Direction Alightings"
             }
         }
     },
@@ -1599,11 +1599,11 @@
         }
     },
     "aTS" : {
-        "alias": "Average Travel Speed (mph)",
+        "alias": "Average Travel Speed",
         "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Speed",
+                "legendTitle": "Average Travel Speed (mph)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": "1 to 5"   },
@@ -1621,7 +1621,7 @@
                     "color": "#EEEEEE",
                     "width": 0.5
                 },
-                "defaultLabel": "No Speed"
+                "defaultLabel": "No Trains/Buses"
             },
             "compare_abs": {
                 "legendTitle": "Difference in Average Travel Speed (mph)",
@@ -1642,7 +1642,7 @@
                     "color": "#EEEEEE",
                     "width": 0.5
                 },
-                "defaultLabel": "No Speed"
+                "defaultLabel": "No Trains/Buses"
             },
             "compare_pct": {
                 "legendTitle": "Percent Difference in Average Travel Speed (mph)",
@@ -1667,7 +1667,7 @@
                     "color": "#EEEEEE",
                     "width": 0.5
                 },
-                "defaultLabel": "No Speed"
+                "defaultLabel": "No Trains/Buses"
             }
         }
     },
@@ -3262,10 +3262,10 @@
         }
     },
     "aTPMT": {
-        "alias": "Passenger Miles Traveled",
+        "alias": "Passenger-Miles Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Passenger Miles Traveled",
+                "legendTitle": "Passenger-Miles Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -3287,10 +3287,10 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Miles Traveled"
+                "defaultLabel": "No Passenger-Miles Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Passenger Miles Traveled",
+                "legendTitle": "Difference in Passenger-Miles Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
@@ -3312,10 +3312,10 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Miles Traveled"
+                "defaultLabel": "No Passenger-Miles Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Passenger Miles Traveled",
+                "legendTitle": "Percent Difference in Passenger-Miles Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -3341,15 +3341,15 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Miles Traveled"
+                "defaultLabel": "No Passenger-Miles Traveled"
             }
         }
     },
     "aTPHT": {
-        "alias": "Passenger Hours Traveled",
+        "alias": "Passenger-Hours Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Passenger Hours Traveled",
+                "legendTitle": "Passenger-Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -3371,10 +3371,10 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Hours Traveled"
+                "defaultLabel": "No Passenger-Hours Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Passenger Hours Traveled",
+                "legendTitle": "Difference in Passenger-Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999999,"maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
@@ -3396,10 +3396,10 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Hours Traveled"
+                "defaultLabel": "No Passenger-Hours Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Passenger Hours Traveled",
+                "legendTitle": "Percent Difference in Passenger-Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -3425,7 +3425,7 @@
                         "width": 1
                     }
                 },
-                "defaultLabel": "No Passenger Hours Traveled"
+                "defaultLabel": "No Passenger-Hours Traveled"
             }
         }
     }

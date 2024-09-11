@@ -103,7 +103,7 @@
         ]
     },
     "fModeAccess": {
-        "fName"    : "Access Mode",
+        "fName"    : "Production End Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
         "fOptions" : [
@@ -112,7 +112,7 @@
         ]
     },
     "fModeAccessSingleLetter": {
-        "fName"    : "Access Mode",
+        "fName"    : "Production End Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
         "fOptions" : [
@@ -247,7 +247,7 @@
         ]
     },
     "fModeAutoTransit": {
-        "fName"    : "Mode",
+        "fName"    : "Commute Mode",
         "fWidget"  : "select",
         "fSelected": "A",
         "fOptions" : [
