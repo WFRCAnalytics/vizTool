@@ -7,7 +7,7 @@
     "on": true
   },
   "checkboxesSelector": {
-    "numOptionsForCheckAllButton": 5,
+    "numOptionsForCheckAllButton": 4,
     "textCheckAll": "Check All",
     "textUncheckAll": "Uncheck All"
   },
@@ -71,9 +71,9 @@
             "geometryType": "polyline",
             "popupTitle": "Transit Segments",
             "attributeTitle": "Transit Segment Attributes",
-            "attributeInfoTextHtml": "<b>Riders</b> is the total number of passengers traveling on the transit segment across all routes using that segment.<br/><b>Frequency</b> is the number of buses or trains passing through the segment per hour.<br/><b>Minimum Headway</b> is the shortest time between vehicles of all routes on a segment.<br/><b>Average Travel Speed</b> is the average speed in mph of transit vehicles traveling on a segment.",
-            "attributes": ["aR","aFq","aHd","aTS"],
-            "attributeSelected": "aR",
+            "attributeInfoTextHtml": "<b>Maximum Mode</b> is the maximum heirarchacal mode with commuter rail being the highest and local bus being the lowest.<br/><b>Riders</b> is the total number of passengers traveling on the transit segment across all routes using that segment.<br/><b>Frequency</b> is the number of buses or trains passing through the segment per hour.<br/><b>Minimum Headway</b> is the shortest time between vehicles of all routes on a segment.<br/><b>Average Travel Speed</b> is the average speed in mph of transit vehicles traveling on a segment.",
+            "attributes": ["aMxM","aR","aFq","aHd","aTS"],
+            "attributeSelected": "aMxM",
             "filters" : ["fPurpOnlyAll","fTod2","fTod2Select","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
@@ -95,7 +95,7 @@
             "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK"],
-            "filters" : ["fPurpOnlyAll","fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
+            "filters" : ["fPurpOnlyAll","fTod2","fTod2Select","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
         { "submenuText": "Transit Stops",

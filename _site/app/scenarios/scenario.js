@@ -179,6 +179,7 @@ class Scenario {
     let aggregatedData = {};
     let countData = {}; // To keep track of counts for averaging
     let minData = {}; // To track minimum values
+    let maxData = {}; // To track minimum values
   
     const _parent = this;
   
@@ -189,6 +190,7 @@ class Scenario {
           aggregatedData[key] = {};
           countData[key] = {};
           minData[key] = {};
+          maxData[key] = {};
         }
   
         _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
@@ -197,11 +199,15 @@ class Scenario {
               aggregatedData[key][attr.attributeCode] = 0;
               countData[key][attr.attributeCode] = 0;
               minData[key][attr.attributeCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
+              maxData[key][attr.attributeCode] = 0;
             }
             aggregatedData[key][attr.attributeCode] += data[key][attr.attributeCode];
             countData[key][attr.attributeCode] += 1;
             if (data[key][attr.attributeCode] < minData[key][attr.attributeCode]) {
               minData[key][attr.attributeCode] = data[key][attr.attributeCode];
+            }
+            if (data[key][attr.attributeCode] > maxData[key][attr.attributeCode]) {
+              maxData[key][attr.attributeCode] = data[key][attr.attributeCode];
             }
           }
         });
@@ -235,6 +241,10 @@ class Scenario {
       aggregatedData = minData;
     }
 
+    // If the method is "minimum", replace the aggregated data with the minimum data
+    if (a_agFilterOptionsMethod === "maximum") {
+      aggregatedData = maxData;
+    }
   
     return aggregatedData;
   }

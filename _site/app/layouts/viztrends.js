@@ -107,15 +107,24 @@ class VizTrends {
   }
 
   getFilterGroup() {
-
     const scenarioWithData = getFirstScenarioWithTrendData(this.jsonName);
-
     if (scenarioWithData) {
-      return scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
-    } else {
-      return "";
+      let _baseFilterGroup = scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
+      let _selectedAttribute = this.sidebar.attributes.find(attribute =>
+        attribute.attributeCode == this.getACode()
+      ) || null;
+      if (_selectedAttribute) {
+        if (_selectedAttribute.filterOverride) {
+          console.log('There is a filter override');
+          // Loop through the filterOverride and replace filterIn with filterOut in the string
+          _selectedAttribute.filterOverride.forEach(item => {
+            // Use a global replace for each filterOut to filterIn
+            _baseFilterGroup = _baseFilterGroup.replace(item.filterOut, item.filterIn);
+          });
+        }
+      }
+      return _baseFilterGroup;
     }
-    
   }
 
   getFilterGroupArray() {

@@ -15,13 +15,72 @@
         "alias": "Lane-Miles"
     },
     "aTBM": {
-        "alias": "Route-Miles"
+        "alias": "Train/Bus-Miles"
     },
     "aRM": {
-        "alias": "Train/Bus-Miles"
+        "alias": "Route-Direction-Miles",
+        "filterOverride":[
+            {
+            "filterOut": "fTod2",
+            "filterIn": "fTod2Select"
+            }
+        ]
     },
     "aSTrip": {
         "alias": "Trips"
+    },
+    "aMxM": {
+        "alias": "Maximum Mode",
+        "agFilterOptionsMethod": "maximum",
+        "rendererCollection": {
+            "main": {
+                "legendTitle": "Maximum Mode",
+                "labelExpressionInfo": "$feature.dVal",
+                "valueExpression": "return $feature.dVal;",
+                "uniqueValueInfos" : [
+                    { "value": 6, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6   }, "label": "6-Commuter Rail"    },
+                    { "value": 5, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 5   }, "label": "5-Light Rail"       },
+                    { "value": 4, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 4   }, "label": "4-Express Bus"      },
+                    { "value": 3, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 3   }, "label": "3-Bus Rapid Transit"},
+                    { "value": 2, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 2   }, "label": "2-Core Bus"         },
+                    { "value": 1, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.75}, "label": "1-Local Bus"        }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-line",
+                    "color": "#EEEEEE",
+                    "width": 0.5
+                },
+                "defaultLabel": "No Route"
+            },
+            "compare_abs": {
+                "legendTitle": "Maximum Mode Change",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
+                    { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "Decrease" },
+                    { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "Increase" }
+                ]
+            },
+            "compare_pct": {
+                "legendTitle": "Percent Difference in Maximum Mode",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
+                "classBreakInfos": [
+                    { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
+                    { "minValue":   -5.00, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#0033ff", "width":  8.0, "cap": "butt"}, "label": "-100% to -500%"},
+                    { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#0066ff", "width":  6.0, "cap": "butt"}, "label": "-50% to -100%" },
+                    { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#0099ff", "width":  4.0, "cap": "butt"}, "label": "-25% to -50%"  },
+                    { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#00ccff", "width":  2.0, "cap": "butt"}, "label": "-10% to -25%"  },
+                    { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#66e6ff", "width":  1.0, "cap": "butt"}, "label": "-5% to -10%"   },
+                    { "minValue":   -0.05, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#cfcfcf", "width":  0.5, "cap": "butt"}, "label": "-5% to +5%"    },
+                    { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#ffb266", "width":  1.0, "cap": "butt"}, "label": "+5% to +10%"   },
+                    { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#ff6633", "width":  2.0, "cap": "butt"}, "label": "+10% to +25%"  },
+                    { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#ff3300", "width":  4.0, "cap": "butt"}, "label": "+25% to +50%"  },
+                    { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#e60000", "width":  6.0, "cap": "butt"}, "label": "+50% to +100%" },
+                    { "minValue":    1.00, "maxValue":   5.00, "symbol": { "type": "simple-line", "color": "#b30000", "width":  8.0, "cap": "butt"}, "label": "+100% to +500%"},
+                    { "minValue":    5.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#7f0000", "width": 10.0, "cap": "butt"}, "label": "+500% or More" }
+                ]
+            }
+        }
     },
     "aBd": {
         "alias": "P->A Direction Boardings",
@@ -292,8 +351,8 @@
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue":    0, "maxValue":     0, "symbol": { "type": "simple-line", "color": "#CFCFCF", "width": 0.6250 }, "label": "No Change"},
-                    { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#FF1111", "width": 2.5000 }, "label": "Decrease" },
-                    { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#1111FF", "width": 2.5000 }, "label": "Increase" }
+                    { "minValue":  -99, "maxValue": -0.01, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "Decrease" },
+                    { "minValue": 0.01, "maxValue":    99, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "Increase" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -553,7 +612,6 @@
         "rendererCollection": {
         "main": {
             "legendTitle": "Congested Speed (mph)",
-            "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
                 { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5"      },
@@ -575,7 +633,6 @@
         },
         "compare_abs": {
             "legendTitle": "Difference in Congested Speed (mph)",
-            "field": "dVal",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
                 { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25"},
@@ -598,7 +655,6 @@
         "compare_pct": {
             "legendTitle": "Percent Difference in Congested Speed (mph)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
-            "field": "dVal",
             "classBreakInfos": [
                 { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
                 { "minValue":   -5.00, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#0033ff", "width":  8.0, "cap": "butt"}, "label": "-100% to -500%"},
@@ -1554,15 +1610,15 @@
                 "legendTitle": "Difference in Frequency (trains/buses per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#0.0')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999, "maxValue":     -15, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -15"},
-                    { "minValue":   -14.99, "maxValue":     -10, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 3.0000 }, "label": "-10 to <-15"  },
-                    { "minValue":    -4.99, "maxValue":      -5, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 2.0000 }, "label": "-5 to <-10"   },
-                    { "minValue":    -1.99, "maxValue":      -1, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 1.0000 }, "label": "-1 to <-5"    },
+                    { "minValue": -9999999, "maxValue":     -15, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -15"},
+                    { "minValue":   -14.99, "maxValue":     -10, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 3.0000 }, "label": "-10 to <-15"  },
+                    { "minValue":    -4.99, "maxValue":      -5, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 2.0000 }, "label": "-5 to <-10"   },
+                    { "minValue":    -1.99, "maxValue":      -1, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 1.0000 }, "label": "-1 to <-5"    },
                     { "minValue":    -0.99, "maxValue":    0.99, "symbol":{ "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "<-1 to <+1"   },
-                    { "minValue":        1, "maxValue":    4.99, "symbol":{ "type": "simple-line", "color": "#BED2FF", "width": 1.0000 }, "label": "+1 to <+5"    },
-                    { "minValue":        5, "maxValue":    9.99, "symbol":{ "type": "simple-line", "color": "#73B2FF", "width": 2.0000 }, "label": "+5 to <+10"   },
-                    { "minValue":       10, "maxValue":   14.99, "symbol":{ "type": "simple-line", "color": "#0070FF", "width": 3.0000 }, "label": "+10 to <+15"  },
-                    { "minValue":       15, "maxValue": 9999999, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +15"}
+                    { "minValue":        1, "maxValue":    4.99, "symbol":{ "type": "simple-line", "color": "#FFBEBE", "width": 1.0000 }, "label": "+1 to <+5"    },
+                    { "minValue":        5, "maxValue":    9.99, "symbol":{ "type": "simple-line", "color": "#FF7F7F", "width": 2.0000 }, "label": "+5 to <+10"   },
+                    { "minValue":       10, "maxValue":   14.99, "symbol":{ "type": "simple-line", "color": "#E60000", "width": 3.0000 }, "label": "+10 to <+15"  },
+                    { "minValue":       15, "maxValue": 9999999, "symbol":{ "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than +15"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
