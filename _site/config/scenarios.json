@@ -26,6 +26,7 @@
                 "city": "WFv900_TAZ_CITY.geojson",
                 "subarea": "WFv900_TAZ_SAID.geojson",
                 "planarea": "WFv900_TAZ_PLAN.geojson",
+                "subplanarea": "WFv900_TAZ_SUBP.geojson",
                 "segment": "WFv901_Segments.geojson",
                 "stops": "WFv901_Segments_STOP.geojson"
             }
