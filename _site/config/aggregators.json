@@ -48,13 +48,18 @@
         "baseAgCode"        : "TAZID"
     },
     "PLANAREA": {
-        "agTitleText"         : "Plan Area",
-        "agDefaultSelected"   : ["WFRC"],
-        "agCodeLabelField"    : "PLANAREA",
-        "agOptions": [
-            {"value":"MAG" , "label":"MAG" },
-            {"value":"WFRC", "label":"WFRC"}
-        ]
+        "agTitleText"      : "Plan Area",
+        "agDefaultSelected" : ["WFRC"],
+        "agGeoJsonKey"     : "planarea",
+        "agCodeLabelField" : "PLANAREA",
+        "baseAgCode"       : "TAZID"
+    },
+    "SUBPLNAREA": {
+        "agTitleText"      : "Sub Plan Area",
+        "agDefaultSelected" : ["WFRC"],
+        "agGeoJsonKey"     : "subplanarea",
+        "agCodeLabelField" : "SUBPLNAREA",
+        "baseAgCode"       : "TAZID"
     },
     "EFA": {
         "agTitleText"          : "Equity Focus Areas",
@@ -70,7 +75,7 @@
         "agDefaultSelected"    : ["1"],
         "agCodeLabelField"     : "SUBAREAID",
         "agOptions": [
-            {"value":"1" , "label":"Model Area"}
+            {"value":"1" , "label":"Wasatch Front Model Area"}
         ]
     }
 }

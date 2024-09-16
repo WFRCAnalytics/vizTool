@@ -13,9 +13,7 @@ class DataAttribute {
         this.DisplayName = data.DisplayName;
         if (data.filterGroup) {
             this.filterGroup = data.filterGroup;
-        }// else if (data.dimensions) {
-        //    this.filterGroup = data.dimensions;
-        //}
+        }
         else {
             this.filterGroup = "";
         }

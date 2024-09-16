@@ -28,7 +28,7 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariocheckerdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenarios', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Scenario Groups', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
       _scenariocheckerdiv.appendChild(scenarioChecker.render());
     }
 
@@ -107,15 +107,24 @@ class VizTrends {
   }
 
   getFilterGroup() {
-
     const scenarioWithData = getFirstScenarioWithTrendData(this.jsonName);
-
     if (scenarioWithData) {
-      return scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
-    } else {
-      return "";
+      let _baseFilterGroup = scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
+      let _selectedAttribute = this.sidebar.attributes.find(attribute =>
+        attribute.attributeCode == this.getACode()
+      ) || null;
+      if (_selectedAttribute) {
+        if (_selectedAttribute.filterOverride) {
+          console.log('There is a filter override');
+          // Loop through the filterOverride and replace filterIn with filterOut in the string
+          _selectedAttribute.filterOverride.forEach(item => {
+            // Use a global replace for each filterOut to filterIn
+            _baseFilterGroup = _baseFilterGroup.replace(item.filterOut, item.filterIn);
+          });
+        }
+      }
+      return _baseFilterGroup;
     }
-    
   }
 
   getFilterGroupArray() {
@@ -126,35 +135,6 @@ class VizTrends {
       return _filterGroup.split("_");
     }
   }
-
-//  getChartData(attributeCode, filterSelectionData) {
-//    if (attributeCode === 'aVmt') {
-//        return filterSelectionData.aVmt; // Change this to the appropriate property based on your data structure
-//    } else if (attributeCode === 'aVht') {
-//        return filterSelectionData.aVht; // Change this to the appropriate property based on your data structure
-//    } else if (attributeCode === 'aLMl') {
-//        return filterSelectionData.aLMl;
-//    } else {
-//        return 0; // return 0 if nothing is found
-//    }
-//
-//    //This needs to include filter direction, tod, and vehicle type -- not just attribute. Do it here: (copy what bill did in vizmap L#272)
-//
-//    // Handle other display names if needed
-//    return null;
-//  }
-//
-//  getSegidOptions() {
-//    const segidOptions = [];
-//    const filter = this.getFilterGroup();
-//
-//    const scenarioData = this.getScenarioMain().jsonData['roadway-trends'].data[filter];
-//    Object.keys(scenarioData).forEach(segId => {
-//        segidOptions.push(segId);
-//    });
-//
-//    return segidOptions;
-//  }
     
   createLineChart(attributeCode, labels, chartData, agIdsString) {
     console.log('viztrends:Creating the chart:' + this.id);

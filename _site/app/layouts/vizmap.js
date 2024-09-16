@@ -225,7 +225,21 @@ require([
     getFilterGroup() {
       const _scenario = this.getScenarioMain();
       if (_scenario) {
-        return _scenario.getFilterGroupForAttribute(this.jsonName, this.getACode())
+        let _baseFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, this.getACode());
+        let _selectedAttribute = this.sidebar.attributes.find(attribute =>
+          attribute.attributeCode == this.getACode()
+        ) || null;
+        if (_selectedAttribute) {
+          if (_selectedAttribute.filterOverride) {
+            console.log('There is a filter override');
+            // Loop through the filterOverride and replace filterIn with filterOut in the string
+            _selectedAttribute.filterOverride.forEach(item => {
+              // Use a global replace for each filterOut to filterIn
+              _baseFilterGroup = _baseFilterGroup.replace(item.filterOut, item.filterIn);
+            });
+          }
+        }
+        return _baseFilterGroup;
       }
     }
 
@@ -298,40 +312,6 @@ require([
 
     initializeLayer() {
       
-//      // remove layer
-//      if (this.geojsonLayer) {
-//        map.remove(this.geojsonLayer);
-//      }
-//      
-//      // ADD GEOJSONS
-//      // need to check geometry type before adding!!
-//      this.geojsonLayer = new GeoJSONLayer({
-//        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey),
-//        title: "dummy layer"
-//      });
-//      map.add(this.geojsonLayer);
-//      this.geojsonLayer.visible = false;
-//
-//      
-//      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
-//      // Read JSON file
-//      if (this.baseGeoJsonKey!="") {
-//        fetch('geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
-//          .then(response => {
-//            if (!response.ok) {
-//              throw new Error(`HTTP error! status: ${response.status}`);
-//            }
-//            return response.json();
-//        })
-//        .then(data => {
-//          this.baseGeometryGeoJson = data;
-//        })
-//        .catch(error => {
-//          console.error('Error reading the JSON file:', error);
-//          // Handle the error appropriately
-//          });
-//      }
-
       let dValFieldType;
 
       // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
@@ -380,7 +360,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
@@ -459,7 +439,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [
@@ -516,6 +496,15 @@ require([
             id: 0,
             idLabel: "",
             dVal: null
+          },
+          reunderer: {
+            "type": "simple-marker",
+            "color": "#EEEEEE",
+            "size":  1,
+            "outline": {
+              "color": "#CCCCCC",
+              "width": 0.2
+            }
           }
         };
 
@@ -536,7 +525,7 @@ require([
               },
               {
                 type: "text",
-                text: this.getACode() + ": {expression/formatDisplayValue}"
+                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
               }
             ],
             expressionInfos: [

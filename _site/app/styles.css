@@ -312,6 +312,7 @@ th, td {
     z-index: 1;
     left: 20px; /* Adjust based on the exact positioning you need */
     top: 32px; /* Adjust to ensure the popup shows correctly */
+    font-size: 11px; /* Adjust font size as needed (e.g., 12px or smaller) */
   }
   
   .info-icon:hover + .popup {
