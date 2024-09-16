@@ -469,7 +469,7 @@
                     { "minValue":  60000, "maxValue":      79999, "symbol": { "type": "simple-line", "color": [108,183, 74], "width": 2.3 }, "label":   "60,000 to 80,000"},
                     { "minValue":  80000, "maxValue":      99999, "symbol": { "type": "simple-line", "color": [141,195, 72], "width": 3.9 }, "label":  "80,000 to 100,000"},
                     { "minValue": 100000, "maxValue":     149999, "symbol": { "type": "simple-line", "color": [224,157, 46], "width": 3.5 }, "label": "100,000 to 150,000"},
-                    { "minValue": 150000, "maxValue":     199999, "symbol": { "type": "simple-line", "color": [235,103, 45], "width": 4.1 }, "label": "150,000 to 250,000"},
+                    { "minValue": 150000, "maxValue":     249999, "symbol": { "type": "simple-line", "color": [235,103, 45], "width": 4.1 }, "label": "150,000 to 250,000"},
                     { "minValue": 250000, "maxValue":     499999, "symbol": { "type": "simple-line", "color": [229, 39, 45], "width": 4.7 }, "label": "250,000 to 500,000"},
                     { "minValue": 500000, "maxValue": 9999999999, "symbol": { "type": "simple-line", "color": [175, 41, 68], "width": 5.3 }, "label":  "More than 500,000"}
                 ],
