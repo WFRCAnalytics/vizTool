@@ -395,15 +395,16 @@
         "rendererCollection": {
             "main": {
                 "legendTitle": "Functional Type",
-                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '0')",
+                "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '#0')",
                 "classBreakInfos": [
-                    { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 0.50 }, "label": "Minor Collector"    },
-                    { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 1.00 }, "label": "Major Collector"    },
-                    { "minValue":  3, "maxValue":  3.9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.00 }, "label": "Minor Arterial"     },
-                    { "minValue":  2, "maxValue":  2.9, "symbol": { "type": "simple-line", "color": "#66023C", "width": 4.00 }, "label": "Principal Arterial" },
-                    { "minValue": 11, "maxValue": 19.9, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 5.00 }, "label": "Expressway"         },
-                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#800000", "width": 6.00 }, "label": "Managed Motorway"   },
-                    { "minValue": 30, "maxValue": 49.9, "symbol": { "type": "simple-line", "color": "#222222", "width": 6.00 }, "label": "Freeway"            }
+                    { "minValue": 6, "maxValue": 7.9, "symbol": { "type": "simple-line", "color": "#808080", "width": 0.50 }, "label": "Local Roads (6-7)" },
+                    { "minValue": 5, "maxValue": 5.9, "symbol": { "type": "simple-line", "color": "#606060", "width": 0.75 }, "label": "Minor Collector (5)" },
+                    { "minValue": 4, "maxValue": 4.9, "symbol": { "type": "simple-line", "color": "#0096EA", "width": 1.00 }, "label": "Major Collector (4)" },
+                    { "minValue": 3, "maxValue": 3.9, "symbol": { "type": "simple-line", "color": "#22AA22", "width": 2.00 }, "label": "Minor Arterial (3)" },
+                    { "minValue": 2, "maxValue": 2.9, "symbol": { "type": "simple-line", "color": "#666666", "width": 3.00 }, "label": "Principal Arterial (2)" },
+                    { "minValue": 11, "maxValue": 19.9, "symbol": { "type": "simple-line", "color": "#FF2020", "width": 4.00 }, "label": "Expressway (11-19)" },
+                    { "minValue": 30, "maxValue": 49.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 5.00 }, "label": "Freeway (30-49)" },
+                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#006542", "width": 5.50 }, "label": "Managed Motorway (20-29)" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -529,7 +530,7 @@
         }
     },
     "aCp": {
-        "alias": "Capacity per Hour per Lane",
+        "alias": "Lane Hourly Capacity",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Capacity per Hour per Lane",
@@ -1855,15 +1856,15 @@
                 "legendTitle": "Headway",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "1 to 5 minutes"   },
-                    { "minValue":  5.001, "maxValue":     10, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label": ">5 to 10 minutes" },
-                    { "minValue": 10.001, "maxValue":     15, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label": ">10 to 15 minutes"},
-                    { "minValue": 15.001, "maxValue":     20, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label": ">15 to 20 minutes"},
-                    { "minValue": 20.001, "maxValue":     30, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label": ">20 to 30 minutes"},
-                    { "minValue": 30.001, "maxValue":     40, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label": ">30 to 40 minutes"},
-                    { "minValue": 40.001, "maxValue":     60, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label": ">40 to 60 minutes"},
-                    { "minValue": 60.001, "maxValue":     90, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label": ">60 to 90 minutes"},
-                    { "minValue": 90.001, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": ">90 minutes"      }
+                    { "minValue":  0, "maxValue":   4.99, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 5.3 }, "label": "Less than 5 minutes"},
+                    { "minValue":  5, "maxValue":   9.99, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 4.7 }, "label":      "5 to 9 minutes"},
+                    { "minValue": 10, "maxValue":  14.99, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.1 }, "label":    "10 to 14 minutes"},
+                    { "minValue": 15, "maxValue":  19.99, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.5 }, "label":    "15 to 19 minutes"},
+                    { "minValue": 20, "maxValue":  29.99, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 3.9 }, "label":    "20 to 29 minutes"},
+                    { "minValue": 30, "maxValue":  39.99, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 2.3 }, "label":    "30 to 39 minutes"},
+                    { "minValue": 40, "maxValue":  59.99, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.7 }, "label":    "40 to 59 minutes"},
+                    { "minValue": 60, "maxValue":  89.99, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.1 }, "label":    "60 to 89 minutes"},
+                    { "minValue": 90, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":  "90 minutes or more"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
