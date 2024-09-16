@@ -43,10 +43,30 @@
             {"value":"HV" , "label":"Heavy Trucks" }
         ]
     },
+    "fTrkTypeMdHv": {
+        "fName"    : "Truck Type",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["MD","HV"],
+        "fOptions" : [
+            {"value":"MD" , "label":"Medium Trucks"},
+            {"value":"HV" , "label":"Heavy Trucks" }
+        ]
+    },
     "fTod4": {
         "fName"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["AM","MD","PM","EV"],
+        "fOptions" :[
+            {"value":"AM", "label":"AM Period"     },
+            {"value":"MD", "label":"Midday Period" },
+            {"value":"PM", "label":"PM Period"     },
+            {"value":"EV", "label":"Evening Period"}
+        ]
+    },
+    "fTod4Pm": {
+        "fName"    : "Time of Day",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["PM"],
         "fOptions" :[
             {"value":"AM", "label":"AM Period"     },
             {"value":"MD", "label":"Midday Period" },
@@ -306,11 +326,11 @@
         "fName"    : "Area Type",
         "fWidget"  : "checkboxes",
         "fOptions" : [
-            {"value":"1", "label": "1-Rural"     },
-            {"value":"2", "label": "2-Transition"},
-            {"value":"3", "label": "3-Suburban"  },
-            {"value":"4", "label": "4-Urban"     },
-            {"value":"5", "label": "5-CBD-Like"  }
+            {"value":"Rural"     , "label": "1-Rural"     },
+            {"value":"Transition", "label": "2-Transition"},
+            {"value":"Suburban"  , "label": "3-Suburban"  },
+            {"value":"Urban"     , "label": "4-Urban"     },
+            {"value":"CBD-like"  , "label": "5-CBD-like"  }
         ]
     },
     "fDirName4pAll": {
@@ -329,6 +349,17 @@
         "fName"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "checkboxes",
         "fSelected": ["NB","SB","EB","WB"],
+        "fOptions" : [
+            {"value":"NB" , "label":"Northbound" },
+            {"value":"SB" , "label":"Southbound" },
+            {"value":"EB" , "label":"Eastbound"  },
+            {"value":"WB" , "label":"Westbound"  }
+        ]
+    },
+    "fDirNameNoAllSelect": {
+        "fName"    : "Cardinal Travel Direction on Segment",
+        "fWidget"  : "select",
+        "fSelected": "NB",
         "fOptions" : [
             {"value":"NB" , "label":"Northbound" },
             {"value":"SB" , "label":"Southbound" },
