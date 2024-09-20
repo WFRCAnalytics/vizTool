@@ -78,7 +78,7 @@
           }
         },
         { "submenuText": "Transit Segment Trends",
-          "submenuIconStart": "line-straight",
+          "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
             "jsonName": "j-transit-segment-trends",
