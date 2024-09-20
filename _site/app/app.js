@@ -10,6 +10,7 @@ let dummyFeature;
 let dataMenu;
 let activeModelEntity;
 let scenarioChecker; // vizTrends global item
+let scenarioRadioer; // vizTrends global item
 let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};
@@ -24,6 +25,9 @@ let onOpenMenuItem;
 let onOpenModelEntity;
 let centerMap = [-111.8910, 40.7608]; // default value replaced programatically from json value
 let zoom = 10; // default value replaced programatically from json value
+let yearSelect = {};
+let activeLayout = {};
+let lineModeSelect;
 
 // Global variables to track total files and loaded files across all scenarios
 let totalFilesToLoad = 0;

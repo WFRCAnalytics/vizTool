@@ -33,9 +33,11 @@ class WijSelect {
       select.appendChild(optionEl);
     });
 
+
+    // perhaps pass function that should be run as argument
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-    
+
       if (this.id.includes('filter-subag-wij')) {
         const modifiedId = this.id.replace(/-subag-wij$/, '');
         let filter = this.vizLayout.sidebar.filters.find(o => o.id === modifiedId) 
@@ -45,10 +47,10 @@ class WijSelect {
     
       } else if (this.id.includes('_aggregator-selector')) {
         // Run only if aggregator
-        this.vizLayout.afterUpdateAggregator();
+        activeLayout.afterUpdateAggregator();
     
       } else {
-        this.vizLayout.afterUpdateSidebar();
+        activeLayout.afterUpdateSidebar();
       }
     });
     
@@ -79,4 +81,12 @@ class WijSelect {
     return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
   }
 
+  hide() {
+    document.getElementById(this.containerId).style.display = 'none';
+  }
+
+  show() {
+    document.getElementById(this.containerId).style.display = 'block';
+  }
+  
 }

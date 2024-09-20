@@ -77,6 +77,10 @@ require([
       }
     }
     
+    updateScenarioSelector() {
+      
+    }
+
     afterUpdateSidebar() {
       console.log('vizmap:afterUpdateSidebar');
       this.updateDisplay();

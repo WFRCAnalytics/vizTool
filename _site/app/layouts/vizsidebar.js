@@ -155,6 +155,28 @@ class VizSidebar {
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
+  getListOfSelectedFilterOptionsWithLock(lockedFCode, lockedValue) {
+    // Get the list of filters excluding the lockedFilter
+
+    const _fCodeList = this.filters
+                                   .filter(filter => filter.isVisible()) // Only include filters where isVisible is false
+                                   .map(filter => filter.fCode)
+
+    const _lockedFCodeIndex = _fCodeList.indexOf(lockedFCode);
+
+    const _listsOfEachFilter = this.filters
+                                     .filter(filter => filter.isVisible() && filter.fCode !== lockedFCode) // Exclude locked filter
+                                     .map(filter => filter.getSelectedOptionsAsList());
+  
+
+    // Insert the locked filter's value as a single-item list at the locked filter's index
+    if (_lockedFCodeIndex !== -1) {
+      _listsOfEachFilter.splice(_lockedFCodeIndex, 0, [lockedValue]); // Insert as a single item list
+    }
+  
+    return this.findAllCombinationsOfLists(_listsOfEachFilter);
+  }
+
   getSelectedOptionsAsLongText() {
     return this.filters.filter(filter => filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
   }
