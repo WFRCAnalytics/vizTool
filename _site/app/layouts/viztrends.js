@@ -52,7 +52,7 @@ class VizTrends {
       _trendChange.appendChild(modeSelect.render());
     }
 
-    this.lineModeOptions = [{ value: 'line'      , label: 'Line Chart'              , title:''},
+    this.lineModeOptions = [{ value: 'scatter'   , label: 'Line Chart'              , title:''},
                             { value: 'stacked'   , label: 'Stacked Area Chart'      , title:''},
                             { value: 'stacked100', label: '100% Stacked Area Chart' , title:''}];
 
@@ -61,7 +61,7 @@ class VizTrends {
     if (_trendLineMode.innerHTML.trim() === '') {
       lineModeSelect  = new WijSelect(this.id + "-line-mode-select",
                                   "Select Chart Line Mode",
-                                  "line",
+                                  "scatter",
                                   this.lineModeOptions,
                                   this);
       _trendLineMode.appendChild(lineModeSelect.render());
@@ -237,6 +237,35 @@ class VizTrends {
   
     const _aggCode = this.getSelectedAggregator();
 
+    if (lineModeSelect.selected==='stacked100') {
+      // Loop through each agId in chartData
+      Object.keys(chartData).forEach(agId => {
+        // Loop through each year within the series for the current agId
+        const years = Object.keys(chartData[agId][Object.keys(chartData[agId])[0]]); // Get the years from the first series
+
+        years.forEach(year => {
+          // Calculate the total value for all series for the current agId and year
+          let total = Object.keys(chartData[agId]).reduce((sum, series) => {
+            return sum + (chartData[agId][series][year] || 0);
+          }, 0);
+
+          // Check if the total is greater than zero to avoid division by zero
+          if (total > 0) {
+            // Loop through each series again to calculate the percentage
+            Object.keys(chartData[agId]).forEach(series => {
+              const value = chartData[agId][series][year] || 0;
+              chartData[agId][series][year] = (value / total) * 100; // Calculate percentage and update
+            });
+          } else {
+            // If the total is zero, set each percentage to 0 for consistency
+            Object.keys(chartData[agId]).forEach(series => {
+              chartData[agId][series][year] = 0;
+            });
+          }
+        });
+      });
+    }
+
     var _title;
 
     if (isAllYears) {
@@ -329,77 +358,82 @@ class VizTrends {
   
       if (isAllYears) {
         currentChart = new Chart(ctx, {
-          type: (lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100') ? 'line' : 'scatter', // Enable stacking
+          type: (lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100') ? 'line' : 'scatter', 
           data: {
             datasets: agIds.flatMap(agId => {
-              // For each agId, create a dataset for each scenario group
               return seriesValues.map(series => {
                 const code = series.code;
-              
                 let values = chartData[agId][code];
                 let dataPoints;
-              
-                // Error checking: Ensure values exist and are of expected type (object)
+                
                 if (!values || typeof values !== 'object') {
                   console.error(`Invalid or missing values for aggregator ID ${agId} and scenario ${code}`);
-                  return null; // Skip this scenario if values are invalid
+                  return null; 
                 }
-              
-                // Process data points based on mode
+                
                 if (mode === 'pct_change' || mode === 'change') {
                   try {
                     dataPoints = modifyDataForChange(values, mode);
                   } catch (error) {
                     console.error(`Error modifying data for change: ${error.message}`);
-                    dataPoints = []; // Handle error and set dataPoints to an empty array
+                    dataPoints = [];
                   }
-                } else { // mode === 'regular'
+                } else {
                   try {
                     dataPoints = Object.keys(values).map(year => {
                       if (isNaN(year)) {
                         throw new Error(`Invalid year value: ${year}`);
                       }
-              
+        
                       const yValue = +values[year].toPrecision(4);
                       if (isNaN(yValue)) {
                         throw new Error(`Invalid numeric value for year ${year}: ${values[year]}`);
                       }
-              
+        
                       return { 
-                        x: parseInt(year, 10), // Ensure the year is a number
-                        y: yValue // Round y values to 4 significant figures
+                        x: parseInt(year, 10), 
+                        y: yValue 
                       };
                     });
                   } catch (error) {
                     console.error(`Error processing data points: ${error.message}`);
-                    dataPoints = []; // Handle error and set dataPoints to an empty array
+                    dataPoints = [];
                   }
                 }
-                
-                // Check if all y values in dataPoints are 0
+        
                 const allYZero = dataPoints.every(point => point.y === 0);
+        
+                const color = this.getRandomColor(); // Get the random color once
 
                 if (dataPoints && dataPoints.length > 0 && !allYZero) {
                   return {
                     label: this.getAgNameFromAgId(agId) + ':' + series.alias,
                     data: dataPoints,
-                    fill: false,
-                    borderColor: this.getRandomColor(),
+                    borderColor: color,
+                    backgroundColor: color,
                     borderWidth: 3,
-                    pointRadius: 8,
-                    showLine: true, // Show lines only in stacked modes
-                    pointRadius: lineModeSelect.selected === 'scatter' ? 5 : 0, // Show points only in scatter mode
-                    fill: lineModeSelect.selected === 'stacked100' || lineModeSelect.selected === 'stacked', // Fill areas only for 100% stacked
-            
+                    showLine: true, 
+                    pointRadius: lineModeSelect.selected === 'scatter' ? 8 : 5,
+                    fill: lineModeSelect.selected === 'stacked100' || lineModeSelect.selected === 'stacked',
+                    stack: lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
                   };
                 }
                 return null;
-
-              }).filter(dataset => dataset !== null); // Filter out any null datasets
-              
+              }).filter(dataset => dataset !== null);
             })
           },
           options: {
+            responsive: true,
+            //plugins: {
+            //  tooltip: {
+            //    mode: 'index',
+            //    intersect: false,
+            //  },
+            //},
+            //interaction: {
+            //  mode: 'index',
+            //  intersect: false,
+            //},
             scales: {
               x: {
                 type: 'linear',
@@ -413,29 +447,32 @@ class VizTrends {
               },
               y: {
                 beginAtZero: mode !== 'pct_change' && mode !== 'change',
-                stacked: lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100', // Enable stacking for both modes
+                stacked: lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100',
                 ticks: {
                   callback: function(value) {
-                    let sign = value > 0 ? "+" : ""; // Determine the sign for positive values
-                    if (mode === 'pct_change') {
-                      return sign + Number(value).toFixed(0) + '%'; // Format as percent for pct_change mode
+                    let sign = value > 0 ? "+" : "";
+                    if (lineModeSelect.selected === 'stacked100') {
+                      return value.toFixed(0) + '%'; 
+                    } else if (mode === 'pct_change') {
+                      return sign + Number(value).toFixed(0) + '%';
                     } else if (mode === 'change') {
-                      // Format with commas for change mode for better readability
                       return sign + Number(value).toLocaleString(); 
                     } else {
-                      // Format with commas for regular mode
                       return Number(value).toLocaleString(); 
                     }
                   }
                 },
                 title: {
                   display: true,
-                  text: _yaxisTitle, // Replace with your actual label text
-                }
+                  text: _yaxisTitle, 
+                },
+                min: lineModeSelect.selected === 'stacked100' ? 0 : undefined,
+                max: lineModeSelect.selected === 'stacked100' ? 100 : undefined
               }
             }
           }
         });
+        
       } else {
         currentChart = new Chart(ctx, {
           type: 'bar', // Grouped bar chart
