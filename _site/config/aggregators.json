@@ -54,11 +54,11 @@
         "agCodeLabelField" : "PLANAREA",
         "baseAgCode"       : "TAZID"
     },
-    "SUBPLNAREA": {
+    "CITYGRP": {
         "agTitleText"      : "Sub Plan Area",
         "agDefaultSelected" : ["WFRC"],
         "agGeoJsonKey"     : "subplanarea",
-        "agCodeLabelField" : "SUBPLNAREA",
+        "agCodeLabelField" : "CITYGRP",
         "baseAgCode"       : "TAZID"
     },
     "EFA": {
