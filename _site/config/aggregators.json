@@ -13,6 +13,12 @@
         "subAgSelected"    : "All",
         "subAgDisplayName" : "List Cities for"
     },
+    "CITYGRP": {
+        "agTitleText"      : "City Group",
+        "agGeoJsonKey"     : "citygroup",
+        "agCodeLabelField" : "CITYGRP",
+        "baseAgCode"       : "TAZID"
+    },
     "DISTSML": {
         "agTitleText"      : "Small District",
         "agGeoJsonKey"     : "distSml",
@@ -52,13 +58,6 @@
         "agDefaultSelected" : ["WFRC"],
         "agGeoJsonKey"     : "planarea",
         "agCodeLabelField" : "PLANAREA",
-        "baseAgCode"       : "TAZID"
-    },
-    "CITYGRP": {
-        "agTitleText"      : "Sub Plan Area",
-        "agDefaultSelected" : ["WFRC"],
-        "agGeoJsonKey"     : "subplanarea",
-        "agCodeLabelField" : "CITYGRP",
         "baseAgCode"       : "TAZID"
     },
     "EFA": {
