@@ -99,6 +99,33 @@ class VizTrends {
 
     this.defaultSeries = 'trendGroup'; // default selection
 
+    // Function to copy the table content to the clipboard
+    function copyTableToClipboard() {
+      const table = document.getElementById('trendTable').innerHTML;
+
+      // Create a temporary textarea to hold the table HTML
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.style.position = 'fixed'; // Avoid scrolling to bottom
+      tempTextArea.style.opacity = 0; // Make it invisible
+      tempTextArea.value = table;
+
+      // Append the textarea to the document
+      document.body.appendChild(tempTextArea);
+
+      // Select the content and copy it to clipboard
+      tempTextArea.select();
+      document.execCommand('copy');
+
+      // Remove the temporary textarea
+      document.body.removeChild(tempTextArea);
+
+      // Provide feedback to the user (optional)
+      //alert('Table copied to clipboard!');
+    }
+
+    // Add event listener to the copy button
+    document.getElementById('copyTableBtn').addEventListener('click', copyTableToClipboard);
+
   }
 
   generateIdFromText(text) {
@@ -141,6 +168,11 @@ class VizTrends {
                                         _seriesList,
                                         this);
     _trendSeries.appendChild(this.seriesSelect.render());
+  }
+
+  afterUpdateScenarioSelector() {
+    console.log('viztrends:afterUpdateScenarioSelector:' + this.id);
+    this.updateDisplay();
   }
 
   afterUpdateSidebar() {
@@ -573,6 +605,7 @@ class VizTrends {
           }
         });
       }
+      this.generateTableFromChart(currentChart);
     };
   
     // Initial chart creation
@@ -893,4 +926,68 @@ class VizTrends {
     
     this.buildChart(_aCode, chartData, _seriesValues);
   }
+
+  // Function to format values similar to y-axis tick callback
+  formatYValue(value) {
+    let sign = value > 0 ? "+" : "";
+
+    var mode = "";
+    if (modeSelect) {
+      mode = modeSelect.selected;
+    } else {
+      mode = 'regular';
+    }
+    
+    if (seriesModeSelect.selected === 'stacked100') {
+      return value.toFixed(1) + '%'; // Show as percentage
+    } else if (mode === 'pct_change') {
+      return sign + Number(value).toFixed(1) + '%'; // Show as percentage with change
+    } else if (mode === 'change') {
+      return sign + Number(value).toLocaleString(); // Comma-separated for large numbers
+    } else {
+      return Number(value).toLocaleString(); // General number formatting with commas
+    }
+  }
+
+    // Function to generate an HTML table from chart data
+  generateTableFromChart(chartInstance) {
+    // Get the chart's data
+    const datasets = chartInstance.data.datasets;
+    const seriesMode = chartInstance.options.scales.y.stacked100 ? 'stacked100' : chartInstance.options.scales.y.stacked; // Determine the series mode
+
+    // Extract unique x-axis values (years)
+    const xValues = [...new Set(datasets.flatMap(dataset => dataset.data.map(point => point.x)))];
+    xValues.sort((a, b) => a - b); // Sort by year
+
+    // Create table element
+    let tableHTML = '<table class="custom-chart-table"><thead><tr><th></th>';
+
+    // Add column headers for each x-value (year)
+    xValues.forEach(xValue => {
+      tableHTML += `<th>${xValue}</th>`;
+    });
+    tableHTML += '</tr></thead><tbody>';
+
+    // Add rows for each dataset (series)
+    datasets.forEach(dataset => {
+      // First column: series label, left-aligned
+      tableHTML += `<tr><td style="text-align: left;">${dataset.label}</td>`;
+      
+      // Add y-values for each x-value (year), formatted accordingly and right-aligned
+      xValues.forEach(x => {
+        const dataPoint = dataset.data.find(point => point.x === x);
+        const yValue = dataPoint ? this.formatYValue(dataPoint.y) : ''; // If no y-value, leave blank
+        tableHTML += `<td style="text-align: right;">${yValue}</td>`;
+      });
+      
+      tableHTML += '</tr>';
+    });
+
+    tableHTML += '</tbody></table>';
+
+    // Append the table to the DOM (or replace existing one)
+    document.getElementById('trendTable').innerHTML = tableHTML;
+  }
+
+
 }

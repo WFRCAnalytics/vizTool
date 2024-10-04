@@ -403,4 +403,39 @@ th, td {
     background-color: rgb(153, 204, 255); /* Even lighter blue color */
     color: rgb(33, 33, 33); /* Very dark grey text color */
   }
-  
+
+  .custom-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom-chart-table th, .custom-chart-table td {
+    padding: 12px 15px;
+    border: 1px solid #dddddd;
+  }
+
+  .custom-chart-table th {
+    background-color: #f4f4f4;
+    text-align: center;
+  }
+
+  .custom-chart-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .custom-chart-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+
+  /* Specific alignment rules for the first column and other columns */
+  .custom-chart-table td:first-child {
+    text-align: left;
+  }
+
+  .custom-chart-table td {
+    text-align: right;
+  }
