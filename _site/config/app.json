@@ -36,8 +36,8 @@
             "attributeTitle": "Roadway Segment Attributes",
             "attributeInfoTextHtml": "<b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Capacity per Hour per Lane</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Volume</b> is the total number of vehicles using the segment.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period voluem to daily volume.",
             "attributeSelected": "aLn",
-            "attributes": ["aLn","aAT","aFt","aCp","aCT","aFS","aVl","aTP","aRS","aXVc","aDF","aPF"],
-            "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fTod4pDy","fTod4","fTod4Pm","fVehTypeLiMdHvAll","fTrkTypeMdHv"]
+            "attributes": ["aLn","aAT","aFt","aCp","aCT","aFS","aVl","aTP","aRS","aXVc","aDF","aPF","aFGs"],
+            "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTod4pDy","fTod4","fTod4Pm","fVehTypeLiMdHvAll","fTrkTypeMdHv"]
           }
         },
         { "submenuText": "Road Segment Trends",

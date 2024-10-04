@@ -1040,8 +1040,8 @@
                 "legendTitle": "Period Factor",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#0.000')))",
                 "classBreakInfos": [
-                    { "minValue": 0.0001, "maxValue":   0.0500, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 0.50"     },
-                    { "minValue": 0.0501, "maxValue":   0.1500, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "0.50 to 0.15"  },
+                    { "minValue": 0.0001, "maxValue":   0.0500, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 0.05"     },
+                    { "minValue": 0.0501, "maxValue":   0.1500, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "0.05 to 0.15"  },
                     { "minValue": 0.1501, "maxValue":   0.2500, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "0.15 to 0.25"  },
                     { "minValue": 0.2501, "maxValue":   0.3500, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "0.25 to 0.35"  },
                     { "minValue": 0.3501, "maxValue":   0.4500, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "0.35 to 0.45"  },
@@ -1102,6 +1102,84 @@
                     "width": 0.5
                 },
                 "defaultLabel": "No Period Factor"
+            }
+        }
+    },
+    "aFGs": {
+        "alias": "Function Group Share",
+        "filterOverride":[
+            {
+            "filterOut": "fRoadSegFuncGroup",
+            "filterIn": "fRoadSegFuncGroupNoTotal"
+            }
+        ],
+        "rendererCollection": {
+            "main": {
+                "legendTitle": "Functional Group Share",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#0.000')))",
+                "classBreakInfos": [
+                    { "minValue": 0.0001, "maxValue":   0.0250, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 0.025"    },
+                    { "minValue": 0.0251, "maxValue":   0.0500, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 0.50 }, "label": "0.025 to 0.05" },
+                    { "minValue": 0.0501, "maxValue":   0.1500, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 1.00 }, "label": "0.05 to 0.15"  },
+                    { "minValue": 0.1501, "maxValue":   0.3500, "symbol": { "type": "simple-line", "color": "#6cb74a", "width": 1.50 }, "label": "0.15 to 0.35"  },
+                    { "minValue": 0.3501, "maxValue":   0.4500, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.00 }, "label": "0.35 to 0.45"  },
+                    { "minValue": 0.4501, "maxValue":   0.6500, "symbol": { "type": "simple-line", "color": "#E09d2e", "width": 3.00 }, "label": "0.45 to 0.65"  },
+                    { "minValue": 0.6501, "maxValue":   0.8500, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 4.00 }, "label": "0.65 to 0.75"  },
+                    { "minValue": 0.8501, "maxValue":   0.9500, "symbol": { "type": "simple-line", "color": "#E5272d", "width": 5.00 }, "label": "0.85 to 0.95"  },
+                    { "minValue": 0.9501, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.00 }, "label": "More than 0.95"}
+                ],
+                "defaultSymbol": {
+                    "type": "simple-line",
+                    "color": "#EEEEEE",
+                    "width": 0.5
+                },
+                "defaultLabel": "No Functional Group Share"
+            },
+            "compare_abs": {
+                "legendTitle": "Difference in Functional Group Share",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+                "classBreakInfos": [
+                    { "minValue":  0.2501, "maxValue": 9999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +0.25"},
+                    { "minValue":  0.1001, "maxValue":  0.2500, "symbol": { "type": "simple-line", "color": "#0070FF", "width": 2.5000 }, "label": "+0.10 to +0.25" },
+                    { "minValue":  0.0501, "maxValue":  0.1000, "symbol": { "type": "simple-line", "color": "#73B2FF", "width": 1.2500 }, "label": "+0.05 to +0.10" },
+                    { "minValue":  0.0201, "maxValue":  0.0500, "symbol": { "type": "simple-line", "color": "#BED2FF", "width": 0.6250 }, "label": "+0.02 to +0.05" },
+                    { "minValue": -0.0200, "maxValue":  0.0200, "symbol": { "type": "simple-line", "color": "#AAAAAA", "width": 0.3125 }, "label": "-0.02 to +0.02" },
+                    { "minValue": -0.0500, "maxValue": -0.0201, "symbol": { "type": "simple-line", "color": "#FFBEBE", "width": 0.6250 }, "label": "-0.02 to -0.05" },
+                    { "minValue": -0.1000, "maxValue": -0.0501, "symbol": { "type": "simple-line", "color": "#FF7F7F", "width": 1.2500 }, "label": "-0.05 to -0.10" },
+                    { "minValue": -0.2500, "maxValue": -0.1001, "symbol": { "type": "simple-line", "color": "#E60000", "width": 2.5000 }, "label": "-0.10 to -0.25" },
+                    { "minValue":  -99999, "maxValue": -0.2501, "symbol": { "type": "simple-line", "color": "#510000", "width": 5.0000 }, "label": "More than -0.25"}
+                ],
+                "defaultSymbol": {
+                    "type": "simple-line",
+                    "color": "#EEEEEE",
+                    "width": 0.5
+                },
+                "defaultLabel": "No Functional Group Share"
+            },
+            "compare_pct": {
+                "legendTitle": "Percent Difference in Functional Group Share",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
+                "classBreakInfos": [
+                    { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
+                    { "minValue":   -5.00, "maxValue":  -1.00, "symbol": { "type": "simple-line", "color": "#0033ff", "width":  8.0, "cap": "butt"}, "label": "-100% to -500%"},
+                    { "minValue":   -1.00, "maxValue":  -0.50, "symbol": { "type": "simple-line", "color": "#0066ff", "width":  6.0, "cap": "butt"}, "label": "-50% to -100%" },
+                    { "minValue":   -0.50, "maxValue":  -0.25, "symbol": { "type": "simple-line", "color": "#0099ff", "width":  4.0, "cap": "butt"}, "label": "-25% to -50%"  },
+                    { "minValue":   -0.25, "maxValue":  -0.10, "symbol": { "type": "simple-line", "color": "#00ccff", "width":  2.0, "cap": "butt"}, "label": "-10% to -25%"  },
+                    { "minValue":   -0.10, "maxValue":  -0.05, "symbol": { "type": "simple-line", "color": "#66e6ff", "width":  1.0, "cap": "butt"}, "label": "-5% to -10%"   },
+                    { "minValue":   -0.05, "maxValue":   0.05, "symbol": { "type": "simple-line", "color": "#cfcfcf", "width":  0.5, "cap": "butt"}, "label": "-5% to +5%"    },
+                    { "minValue":    0.05, "maxValue":   0.10, "symbol": { "type": "simple-line", "color": "#ffb266", "width":  1.0, "cap": "butt"}, "label": "+5% to +10%"   },
+                    { "minValue":    0.10, "maxValue":   0.25, "symbol": { "type": "simple-line", "color": "#ff6633", "width":  2.0, "cap": "butt"}, "label": "+10% to +25%"  },
+                    { "minValue":    0.25, "maxValue":   0.50, "symbol": { "type": "simple-line", "color": "#ff3300", "width":  4.0, "cap": "butt"}, "label": "+25% to +50%"  },
+                    { "minValue":    0.50, "maxValue":   1.00, "symbol": { "type": "simple-line", "color": "#e60000", "width":  6.0, "cap": "butt"}, "label": "+50% to +100%" },
+                    { "minValue":    1.00, "maxValue":   5.00, "symbol": { "type": "simple-line", "color": "#b30000", "width":  8.0, "cap": "butt"}, "label": "+100% to +500%"},
+                    { "minValue":    5.00, "maxValue": 999999, "symbol": { "type": "simple-line", "color": "#7f0000", "width": 10.0, "cap": "butt"}, "label": "+500% or More" }
+                ],
+                "defaultSymbol": {
+                    "type": "simple-line",
+                    "color": "#EEEEEE",
+                    "width": 0.5
+                },
+                "defaultLabel": "No Functional Group Share"
             }
         }
     },
