@@ -1,12 +1,12 @@
 class WijSelect {
-  constructor(parentid, title, selected, options, vizLayout, spaceafter=false) {
+  constructor(parentid, title, selected, options, vizLayout, spaceafter=false, subTotals=[]) {
     this.id = parentid + '-wij';
     this.title = title;
     this.selected = selected;
     this.options = options;
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
-
+    this.subTotals = subTotals
     this.containerId = this.id + "-container";
   }
 
@@ -47,7 +47,7 @@ class WijSelect {
     
       } else if (this.id.includes('_aggregator-selector')) {
         // Run only if aggregator
-        activeLayout.afterUpdateAggregator();
+        activeLayout.sidebar.afterUpdateAggregator();
     
       } else {
         activeLayout.afterUpdateSidebar();
@@ -75,6 +75,12 @@ class WijSelect {
 
   getSelectedOptionsAsList() {
     return [this.selected];
+  }
+
+  getSelectedOptionsNotSubTotalsAsList() {
+    // Get option values that are not in the subTotals list
+    return this.options.filter(option => !this.subTotals.includes(option.value))
+                       .map(option => option.value);
   }
   
   getSelectedOptionsAsListOfLabels() {

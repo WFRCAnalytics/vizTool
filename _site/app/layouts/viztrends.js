@@ -52,19 +52,19 @@ class VizTrends {
       _trendChange.appendChild(modeSelect.render());
     }
 
-    this.lineModeOptions = [{ value: 'scatter'   , label: 'Line Chart'              , title:''},
-                            { value: 'stacked'   , label: 'Stacked Area Chart'      , title:''},
-                            { value: 'stacked100', label: '100% Stacked Area Chart' , title:''}];
+    this.lineModeOptions = [{ value: 'scatter'   , label: 'Regular Chart'      , title:''},
+                            { value: 'stacked'   , label: 'Stacked Chart'      , title:''},
+                            { value: 'stacked100', label: '100% Stacked Chart' , title:''}];
 
     // add settings in header
-    const _trendLineMode = document.getElementById('trendLineMode');
-    if (_trendLineMode.innerHTML.trim() === '') {
-      lineModeSelect  = new WijSelect(this.id + "-line-mode-select",
-                                  "Select Chart Line Mode",
+    const _seriesMode = document.getElementById('trendSeriesMode');
+    if (_seriesMode.innerHTML.trim() === '') {
+      seriesModeSelect  = new WijSelect(this.id + "-line-mode-select",
+                                  "Select Series Mode",
                                   "scatter",
                                   this.lineModeOptions,
                                   this);
-      _trendLineMode.appendChild(lineModeSelect.render());
+      _seriesMode.appendChild(seriesModeSelect.render());
     }
     this.seriesSelect = {};
 
@@ -136,7 +136,7 @@ class VizTrends {
     const _trendSeries = document.getElementById('trendSeries');
     _trendSeries.innerHTML = '';
     this.seriesSelect  = new WijSelect(this.id + "-series-select",
-                                        "Select Chart Seriees",
+                                        "Select Chart Series",
                                         _selection,
                                         _seriesList,
                                         this);
@@ -221,7 +221,7 @@ class VizTrends {
     }
   }
     
-  createLineChart(attributeCode, labels, chartData, agIdsString, seriesValues) {
+  buildChart(attributeCode, chartData, seriesValues) {
     console.log('viztrends:Creating the chart:' + this.id);
     console.log("Selected radio button option under 'Display':", attributeCode);
 
@@ -237,7 +237,7 @@ class VizTrends {
   
     const _aggCode = this.getSelectedAggregator();
 
-    if (lineModeSelect.selected==='stacked100') {
+    if (seriesModeSelect.selected==='stacked100') {
       // Loop through each agId in chartData
       Object.keys(chartData).forEach(agId => {
         // Loop through each year within the series for the current agId
@@ -358,7 +358,7 @@ class VizTrends {
   
       if (isAllYears) {
         currentChart = new Chart(ctx, {
-          type: (lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100') ? 'line' : 'scatter', 
+          type: (seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100') ? 'line' : 'scatter', 
           data: {
             datasets: agIds.flatMap(agId => {
               return seriesValues.map(series => {
@@ -413,9 +413,9 @@ class VizTrends {
                     backgroundColor: color,
                     borderWidth: 3,
                     showLine: true, 
-                    pointRadius: lineModeSelect.selected === 'scatter' ? 8 : 5,
-                    fill: lineModeSelect.selected === 'stacked100' || lineModeSelect.selected === 'stacked',
-                    stack: lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
+                    pointRadius: seriesModeSelect.selected === 'scatter' ? 8 : 5,
+                    fill: seriesModeSelect.selected === 'stacked100' || seriesModeSelect.selected === 'stacked',
+                    stack: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
                   };
                 }
                 return null;
@@ -447,11 +447,11 @@ class VizTrends {
               },
               y: {
                 beginAtZero: mode !== 'pct_change' && mode !== 'change',
-                stacked: lineModeSelect.selected === 'stacked' || lineModeSelect.selected === 'stacked100',
+                stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 ticks: {
                   callback: function(value) {
                     let sign = value > 0 ? "+" : "";
-                    if (lineModeSelect.selected === 'stacked100') {
+                    if (seriesModeSelect.selected === 'stacked100') {
                       return value.toFixed(0) + '%'; 
                     } else if (mode === 'pct_change') {
                       return sign + Number(value).toFixed(0) + '%';
@@ -466,8 +466,8 @@ class VizTrends {
                   display: true,
                   text: _yaxisTitle, 
                 },
-                min: lineModeSelect.selected === 'stacked100' ? 0 : undefined,
-                max: lineModeSelect.selected === 'stacked100' ? 100 : undefined
+                min: seriesModeSelect.selected === 'stacked100' ? 0 : undefined,
+                max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined
               }
             }
           }
@@ -541,10 +541,13 @@ class VizTrends {
           options: {
             scales: {
               x: {
-                beginAtZero: true
+                beginAtZero: true,
+                stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100', // Ensure x-axis is also stacked
               },
               y: {
                 beginAtZero: true,
+                stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
+                max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined, // Set max to 100 for stacked100 mode
                 ticks: {
                   callback: function(value) {
                     let sign = value > 0 ? "+" : ""; // Determine the sign for positive values
@@ -612,6 +615,7 @@ class VizTrends {
     const _agCode = this.getSelectedAggregator()?.agCode ?? null;
 
     const seriesIsFilter = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
+    //const trendsIsFilter = this.seriesSelect.selected === 'trendGroup'; // Check if the first character is 'f'
 
     if (this.sidebar.dividers) {
       var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === _dCode) || null;
@@ -619,7 +623,6 @@ class VizTrends {
 
     const _agIds = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
   
-    const labels = [2019,2023,2028,2032,2042,2050];
     const chartData = {};
 
     var _data_divide;
@@ -630,13 +633,19 @@ class VizTrends {
 
     if (seriesIsFilter) {
 
+      //seriesModeSelect.show();
+
       // make scenario selector radio visibile and hide checker
       scenarioChecker.hide();
       scenarioRadioer.show();
 
       // get list 
       var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
-      var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+      if (_filterForSeries.filterWij instanceof WijSelect) {
+        var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+      } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+        var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+      }
 
       // Ensure _selectedFilterOptions is always an array
       if (typeof _selectedFilterOptions === 'string') {
@@ -756,6 +765,9 @@ class VizTrends {
       });
 
     } else {
+
+      // hide Series Mode
+      //seriesModeSelect.hide();
 
       scenarioRadioer.hide();
       scenarioChecker.show();
@@ -879,6 +891,6 @@ class VizTrends {
         });;
     }
     
-    this.createLineChart(_aCode, labels, chartData, _agIds, _seriesValues);
+    this.buildChart(_aCode, chartData, _seriesValues);
   }
 }

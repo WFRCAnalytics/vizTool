@@ -2,9 +2,9 @@
   <div id="trendSidebar" class="sidebar">
     <div class="colAttributes">
       <div class="rowAttributes" id="vizTrendsAttributes"></div>
-      <div class="rowAttributes" id="vizTrendsDividers"  ></div>
-      <div class="rowAttributes" id="vizTrendsAggregator"></div>
-      <div class="rowAttributes" id="vizTrendsAggregatorFilters"></div>
+      <div class="rowAttributeSettings" id="vizTrendsDividers"  ></div>
+      <div class="rowGeography" id="vizTrendsAggregator"></div>
+      <div class="rowGeography" id="vizTrendsAggregatorFilters"></div>
       <!-- Row 3 Chart Selector-->
       <div class="rowChart">
           <!-- Content for the third row -->
@@ -15,6 +15,8 @@
       <div class="rowFilters" id="vizTrendsDividerFilters"   ></div>
     </div>
   </div>
+  <!-- Collapse button -->
+  <button id="openbtntrend" class="openbtn bottom"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
   <div id="trendMain">
     <div id="trendHeader"></div>
     <div id="trendContent">
@@ -22,10 +24,10 @@
     </div>
   </div>
   <div id="trendSettings">
-    <div id="trendScenarios"></div><br/>
-    <div id="trendSeries"></div><br/>
-    <div id="trendYears"></div><br/>
-    <div id="trendLineMode"></div><br/>
+    <div id="trendScenarios"></div>
+    <div id="trendSeries"></div>
+    <div id="trendSeriesMode"></div>
+    <div id="trendYears"></div>
     <div id="trendChange"></div>
   </div>
 </div>

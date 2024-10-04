@@ -60,7 +60,8 @@ class VizSidebar {
                                             dividerTitle,
                                             dividerSelected,
                                             [_nothing, ...this.dividers.map(item => ({ value: item.attributeCode, label: item.alias }))],
-                                            this);
+                                            this,
+                                            false);
       //this.dividerFilters = (dividerFilters || []).map(item => new Filter (item, vizLayout));
     }
 
@@ -68,54 +69,73 @@ class VizSidebar {
 
   render() {
     console.log('vizsidebar:render:' + this.id);
-
+  
     // Function to create and append a container
     function createAndAppendContainer(parentId, containerId) {
       const parentDiv = document.getElementById(parentId);
       if (parentDiv) {
-          parentDiv.innerHTML = '';
-          const containerDiv = document.createElement('div');
-          containerDiv.id = containerId;
-          parentDiv.appendChild(containerDiv);
-          return containerDiv;
+        parentDiv.innerHTML = '';
+        const containerDiv = document.createElement('div');
+        containerDiv.id = containerId;
+        return containerDiv;
       }
+      return null;
     }
-
+  
     // Define the elements to process
     const elements = [
-      { name: "Attributes"       , render: () => this.attributeSelect ? this.attributeSelect.render() : null   },
-      { name: "AttributeFilters" , render: () => this.filters.map(filter => filter.render())                   },
-      { name: "Aggregator"       , render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
+      { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
+      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render()) },
+      { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
       { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
-      { name: "Dividers"         , render: () => this.dividerSelect ? this.dividerSelect.render() : null       },
-      { name: "DividerFilters"                                                                                 }
+      { name: "Dividers", render: () => this.dividerSelect ? this.dividerSelect.render() : null },
+      { name: "DividerFilters" }
     ];
-
+  
     // Process each element
     elements.forEach(element => {
       const divId = this.getDiv(element.name);
-      const container = createAndAppendContainer(divId, `container${element.name}`);
-      var divElement = document.getElementById(divId);
-      if (divElement) {
-        if ((element.name==="Aggregator" || element.name==="AggregatorFilters") && (!this.aggregatorSelect)) {
-          divElement.style.display='none';
+  
+      // Only create and append a container if there is content to render
+      if (element.render) {
+        const content = element.render();
+
+        if (content) {
+          const container = createAndAppendContainer(divId, `container${element.name}`);
+    
+          if (container) {
+            const divElement = document.getElementById(divId);
+            if (divElement) {
+              if ((element.name === "Aggregator" || element.name === "AggregatorFilters") && (!this.aggregatorSelect)) {
+                divElement.style.display = 'none';
+              } else {
+                divElement.style.display = 'block';
+              }
+            }
+    
+            if (Array.isArray(content)) {
+              content.forEach(child => container.appendChild(child));
+            } else if (content) {
+              container.appendChild(content);
+            }
+            // Append the container only if it contains content
+            const parentDiv = document.getElementById(divId);
+            if (parentDiv && container.hasChildNodes()) {
+              parentDiv.appendChild(container);
+            }
+          }
         } else {
-          divElement.style.display='block';
+          const divElement = document.getElementById(divId);
+          if (divElement) {
+            divElement.style.display = 'none';
+          }
         }
       }
-
-      if (container && element.render) {
-          const content = element.render();
-          if (Array.isArray(content)) {
-              content.forEach(child => container.appendChild(child));
-          } else if (content) {
-              container.appendChild(content);
-          }
-      }
     });
+  
     this.updateFilterDisplay();
   }
-
+  
   hideLayout() {
     console.log('vizsidebar:hideLayout');
   }
