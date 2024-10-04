@@ -91,5 +91,13 @@ class WijRadio {
   getSelectedOptionsAsListOfLabels() {
     return this.options.filter(option => getSelectedOptionsAsList().includes(option.value)).map(option => option.label).join(', ');
   }
+
+  hide() {
+    document.getElementById(this.containerId).style.display = 'none';
+  }
+
+  show() {
+    document.getElementById(this.containerId).style.display = 'block';
+  }
   
 }

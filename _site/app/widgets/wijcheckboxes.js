@@ -242,4 +242,13 @@ class WijCheckboxes {
     this.vizLayout.updateDisplay();
   }
 
+  hide() {
+    document.getElementById(this.containerId).style.display = 'none';
+  }
+
+  show() {
+    document.getElementById(this.containerId).style.display = 'block';
+  }
+
+
 }

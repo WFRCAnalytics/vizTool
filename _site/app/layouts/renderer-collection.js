@@ -8,16 +8,37 @@ require([
   
   class RendererCollection {
     constructor(data) {
-      this.main        = {"name": data.main       .legendTitle, "renderer": createRenderer(data.main       ) , "labelExpressionInfo": data.main       .labelExpressionInfo};
-      this.compare_abs = {"name": data.compare_abs.legendTitle, "renderer": createRenderer(data.compare_abs) , "labelExpressionInfo": data.compare_abs.labelExpressionInfo};
+      this.main        = {
+        "name": data.main.legendTitle,
+        "renderer": createRenderer(data.main),
+        "labelExpressionInfo": data.main.labelExpressionInfo,
+        "title": data.main.legendTitle
+      };
+      this.compare_abs = {
+        "name": data.compare_abs.legendTitle,
+        "renderer": createRenderer(data.compare_abs) ,
+        "labelExpressionInfo": data.compare_abs.labelExpressionInfo,
+        "title": data.compare_abs.legendTitle
+      };
       if (data.compare_pct) {
         this.compare_pct = {
             "name": data.compare_pct.legendTitle, 
             "renderer": createRenderer(data.compare_pct), 
-            "labelExpressionInfo": data.compare_pct.labelExpressionInfo
+            "labelExpressionInfo": data.compare_pct.labelExpressionInfo,
+            "title": data.compare_pct.legendTitle
         };
       } else {
         console.warn("data.compare_pct is undefined or null");
+      }
+      if (data.main_divide_by) {
+        this.main_divide_by = {
+          "name": data.main_divide_by.legendTitle,
+          "renderer": createRenderer(data.main_divide_by),
+          "labelExpressionInfo": data.main_divide_by.labelExpressionInfo,
+          "title": data.main_divide_by.legendTitle
+        };
+      } else {
+        console.warn("data.main_divide_by is undefined or null");
       }
     }
   }

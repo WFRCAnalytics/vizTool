@@ -5,14 +5,7 @@
         "baseGeoJsonId": "TAZID",
         "attributeCode": "aTH",
         "alias": "Total Households",
-        "filter": ""
-    },
-    "TAZ_WRK": {
-        "jsonName": "j-zone-se",
-        "baseGeoJsonKey": "taz",
-        "baseGeoJsonId": "TAZID",
-        "attributeCode": "aWk",
-        "alias": "Total Workers",
+        "legendSuffix": " per Household",
         "filter": ""
     },
     "TAZ_POP": {
@@ -21,6 +14,43 @@
         "baseGeoJsonId": "TAZID",
         "attributeCode": "aHP",
         "alias": "Total Population",
+        "legendSuffix": " per Capita",
+        "filter": ""
+    },
+    "TAZ_EMP": {
+        "jsonName": "j-zone-se",
+        "baseGeoJsonKey": "taz",
+        "baseGeoJsonId": "TAZID",
+        "attributeCode": "aEt",
+        "alias": "Total Employment",
+        "legendSuffix": " per Employee",
+        "filter": ""
+    },
+    "TAZ_WRK": {
+        "jsonName": "j-zone-se",
+        "baseGeoJsonKey": "taz",
+        "baseGeoJsonId": "TAZID",
+        "attributeCode": "aWk",
+        "alias": "Total Workers",
+        "legendSuffix": " per Worker",
+        "filter": ""
+    },
+    "TAZ_VEH": {
+        "jsonName": "j-zone-se",
+        "baseGeoJsonKey": "taz",
+        "baseGeoJsonId": "TAZID",
+        "attributeCode": "aV",
+        "alias": "Total Vehicles",
+        "legendSuffix": " per Vehicle",
+        "filter": ""
+    },
+    "TAZ_HJI": {
+        "jsonName": "j-zone-se",
+        "baseGeoJsonKey": "taz",
+        "baseGeoJsonId": "TAZID",
+        "attributeCode": "aHJI",
+        "alias": "Household+Job Intensity",
+        "legendSuffix": " per Household+Job",
         "filter": ""
     }
 }

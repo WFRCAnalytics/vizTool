@@ -60,8 +60,11 @@ class ModelEntity {
       
       modelEntityInstance.menuItem.hideAllLayoutLayers()
 
-      modelEntityInstance.vizLayout.renderSidebar();  // Use the saved instance context here as well
-      modelEntityInstance.vizLayout.updateDisplay();
+      activeLayout = modelEntityInstance.vizLayout;
+
+      activeLayout.renderSidebar();  // Use the saved instance context here as well
+      activeLayout.updateScenarioSelector();  // Use the saved instance context here as well
+      activeLayout.updateDisplay();
       //modelEntityInstance.displayJSONData();
     });
     return modelEntity;

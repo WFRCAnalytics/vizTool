@@ -141,11 +141,11 @@ class Filter {
     this.userModifiable = _configFilter.userModifiable === undefined ? true : _configFilter.userModifiable; // set to true if undefined
 
     if (_configFilter.subAgDisplayName) {
-      this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, true);
+      this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, true, _configFilter.subTotals);
     }
   
     if (_configFilter.fWidget === 'select') {
-      this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, true);
+      this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, true, _configFilter.subTotals);
     } else if (_configFilter.fWidget === 'radio') {
       this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, true);
     } else if (_configFilter.fWidget === 'checkboxes') {

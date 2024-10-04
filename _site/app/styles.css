@@ -108,6 +108,24 @@ th, td {
     cursor: pointer;
 }
 
+.rowGeography:empty {
+    display: none;
+}
+
+.rowAttributeSettings:empty {
+    display: none;
+}
+
+.rowGeography {
+    padding: 15px;
+    background-color: #ADD8E6;
+}
+
+.rowAttributeSettings {
+    padding: 15px;
+    background-color: #E5F3FD;
+}
+
 /* MAIN DISPLAYS */
 #mainVizMap {
     display: flex; /* Enables flexbox layout */
@@ -141,6 +159,14 @@ th, td {
     width: 500px; /* or any other value */
     height: calc(100vh - 114px);
     display: flex;
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+/* Collapsed sidebar */
+.sidebar.collapsed {
+    width: 0;
+    overflow: hidden;
 }
 
 #trendMain{
@@ -148,11 +174,16 @@ th, td {
     overflow-y: auto; /* Enable vertical scrollbar */
 }
 
+.rowAttributes {
+    background-color: #FFFFFF;
+}
+
 .colAttributes {
     width: 250px; /* or any other value */
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     /* Style your columns */
+    background-color: #ADD8E6;
 }
 
 .colFilters {
@@ -185,6 +216,7 @@ th, td {
 
 .rowAttributes {
     padding: 15px;
+    background-color: #FFFFFF;
 }
 
 /*.rowChart {
@@ -200,8 +232,56 @@ th, td {
     height: calc(100vh - 114px); /* Adjust height as needed */
     box-sizing: border-box; /* Include padding and border in width calculation */
     width: 100%; /* Ensure it fills the width of its parent */
-
 }
+
+#mainMap.collapsed {
+    margin-left: 0;
+}
+
+.openbtn {
+    font-size: 16px;
+    padding: 8px 8px;
+    cursor: pointer;
+    background-color: #666666;
+    color: white;
+    border: none;
+    position: fixed;
+    left: 530px; /* Adjusted to match the sidebar's width */
+    top: 144px;
+    z-index: 2;
+    transition: left 0.3s ease, transform 0.3s ease;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add simple drop shadow */
+}
+
+.openbtn.bottom {
+    left: 515px; /* Adjusted to match the sidebar's width */
+    top: calc(100vh - 50px);
+}
+
+.openbtn.bottom.collapsed {
+    left: 15px;
+}
+
+.openbtn.collapsed {
+    left: 30px;
+}
+
+.openbtn:hover {
+    background-color: #116ce4;
+    color: #FFFFFF;
+}
+
+.sidebar .colAttributes,
+.sidebar .colFilters {
+  opacity: 1; /* Full opacity when expanded */
+  transition: opacity 0.3s ease; /* Smooth fade-out */
+}
+
+  /* Move button left when sidebar is collapsed */
+.sidebar.collapsed + .collapse-btn {
+    transform: translateX(-200px); /* Moves button left with sidebar */
+}
+  
 
 #mapView {
     flex-grow: 1; /* Grow to fill available space */
@@ -225,7 +305,7 @@ th, td {
 }
 
 #trendSettings {
-    width: 190px;
+    width: 180px;
     background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
     padding: 10px;
     height: calc(100vh - 134px);
@@ -323,4 +403,39 @@ th, td {
     background-color: rgb(153, 204, 255); /* Even lighter blue color */
     color: rgb(33, 33, 33); /* Very dark grey text color */
   }
-  
+
+  .custom-chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom-chart-table th, .custom-chart-table td {
+    padding: 12px 15px;
+    border: 1px solid #dddddd;
+  }
+
+  .custom-chart-table th {
+    background-color: #f4f4f4;
+    text-align: center;
+  }
+
+  .custom-chart-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .custom-chart-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+
+  /* Specific alignment rules for the first column and other columns */
+  .custom-chart-table td:first-child {
+    text-align: left;
+  }
+
+  .custom-chart-table td {
+    text-align: right;
+  }

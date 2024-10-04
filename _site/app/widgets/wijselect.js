@@ -1,12 +1,12 @@
 class WijSelect {
-  constructor(parentid, title, selected, options, vizLayout, spaceafter=false) {
+  constructor(parentid, title, selected, options, vizLayout, spaceafter=false, subTotals=[]) {
     this.id = parentid + '-wij';
     this.title = title;
     this.selected = selected;
     this.options = options;
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
-
+    this.subTotals = subTotals
     this.containerId = this.id + "-container";
   }
 
@@ -33,9 +33,11 @@ class WijSelect {
       select.appendChild(optionEl);
     });
 
+
+    // perhaps pass function that should be run as argument
     select.addEventListener('calciteSelectChange', (e) => {
       this.selected = e.target.selectedOption.value;
-    
+
       if (this.id.includes('filter-subag-wij')) {
         const modifiedId = this.id.replace(/-subag-wij$/, '');
         let filter = this.vizLayout.sidebar.filters.find(o => o.id === modifiedId) 
@@ -45,10 +47,10 @@ class WijSelect {
     
       } else if (this.id.includes('_aggregator-selector')) {
         // Run only if aggregator
-        this.vizLayout.afterUpdateAggregator();
+        activeLayout.sidebar.afterUpdateAggregator();
     
       } else {
-        this.vizLayout.afterUpdateSidebar();
+        activeLayout.afterUpdateSidebar();
       }
     });
     
@@ -74,9 +76,23 @@ class WijSelect {
   getSelectedOptionsAsList() {
     return [this.selected];
   }
+
+  getSelectedOptionsNotSubTotalsAsList() {
+    // Get option values that are not in the subTotals list
+    return this.options.filter(option => !this.subTotals.includes(option.value))
+                       .map(option => option.value);
+  }
   
   getSelectedOptionsAsListOfLabels() {
     return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
   }
 
+  hide() {
+    document.getElementById(this.containerId).style.display = 'none';
+  }
+
+  show() {
+    document.getElementById(this.containerId).style.display = 'block';
+  }
+  
 }

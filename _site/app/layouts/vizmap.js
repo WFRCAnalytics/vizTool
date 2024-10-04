@@ -77,6 +77,10 @@ require([
       }
     }
     
+    updateScenarioSelector() {
+      
+    }
+
     afterUpdateSidebar() {
       console.log('vizmap:afterUpdateSidebar');
       this.updateDisplay();
@@ -126,7 +130,6 @@ require([
       }
     }
 
-    
     getDataWeightMain() {
       const _scenario = this.getMain()
       if (_scenario) {
@@ -215,7 +218,7 @@ require([
 
     // get the divider code that is selected
     getDCode() {
-      return this.divideByAttributeSelect.selected;
+      return this.sidebar.getDCode();
     }
   
     getSelectedAggregator()  {
@@ -271,20 +274,31 @@ require([
       return attributeRenderer ? attributeRenderer.renderer : null;
     }
     
+    getLayerTitle() {
+      let attributeRenderer = this.getAttributeRendererPath();
+      return attributeRenderer ? attributeRenderer.title : null;
+    }
+    
     getAttributeRendererPath() {
 
+      const _dCode = this.getDCode();
       var compareType = document.getElementById('selectCompareType');
       this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
       const collection = this.sidebar.getAttributeRendererCollection();
       if (this.mode == 'main') {
-        return collection.main;
+        if (_dCode!="Nothing") {
+          return collection.main_divide_by;
+        } else {
+          return collection.main;
+        }
       } else if (this.mode == 'compare') {
         return this.modeCompare == 'diff' ? collection.compare_abs :
                this.modeCompare == 'pctdiff' ? collection.compare_pct : null;
       }
       return null;
     }
+    
 
     getPopupLayerName() {
       if (this.sidebar.aggregators.length>0) {
@@ -638,6 +652,7 @@ require([
       this.initializeLayer();
 
       const _aCode = this.getACode();
+      const _dCode = this.getDCode();
 
       const setRendererAndLegend = () => {
 
@@ -688,10 +703,23 @@ require([
           console.log("Total number of features in layer:", results.features.length);
         });
 
-        if (this.legend) {
-          mapView.ui.remove(this.legend);
+        let isLegendExpanded = true; // Default state
+        if (this.expandLengend) {
+          isLegendExpanded = this.expandLengend.expanded; // Capture the current state
           mapView.ui.remove(this.expandLengend);
         }
+
+        // Proceed to remove the old legend
+        if (this.legend) {
+          mapView.ui.remove(this.legend);
+        }
+        
+        const _dCode = this.getDCode();
+
+        if (_dCode!="Nothing") {
+          this.layerDisplay.renderer.legendOptions.title = this.getLayerTitle() + this.sidebar.dividers.find(divider => divider.attributeCode === _dCode).legendSuffix;
+        }
+
         var _title = "";
         //if (this.sidebar.aggregators.length>0) {
         //  const _aggCode = this.sidebar.getSelectedAggregator();
@@ -702,6 +730,7 @@ require([
         } else if(this.mode==='compare' & (this.modeCompare==='diff' | this.modeCompare==='pctdiff')) {
           _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
         }
+        
         this.legend = new Legend({
           view: mapView,
           layerInfos: [{
@@ -716,7 +745,7 @@ require([
           view: mapView,
           content: this.legend,
           expandIcon: "legend",
-          expanded: true,
+          expanded: isLegendExpanded, // Use the previous state
           expandTooltip: 'Show Legend',
           group: "bottom-right"
         });
@@ -764,11 +793,22 @@ require([
 
       const vizMapInstance = this;
 
+      var _data_divide_main;
+      var _geojsondata_divide_main;
+  
+      var _data_divide_comp;
+      var _geojsondata_divide_comp;
+
       // GET MAP FEATURES
 
       this.geojsonLayer.when(() => {
         this.geojsonLayer.queryFeatures().then((result) => {
           let graphicsToAdd = [];  // Temporary array to hold graphics
+
+                
+          if (this.sidebar.dividers) {
+            var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === _dCode) || null;
+          }
 
 
           // there will be two pathways
@@ -788,6 +828,11 @@ require([
           if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() &&
                                                         this.getSelectedAggregator().agCode == this.baseGeoJsonId)) {
             
+            if (_dCode!="Nothing") {
+              var _dataMainDivide = this.getMain().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
+              var _dataCompDivide = this.getComp().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
+            }
+
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
@@ -795,6 +840,8 @@ require([
               
               var _valueMain = 0;
               var _valueComp = 0;
+              var _valueMainDivide = 0;
+              var _valueCompDivide = 0;
               var _valueDisp = 0;
 
               // main value
@@ -808,6 +855,28 @@ require([
               if (_dataComp!==undefined) {
                 if (_dataComp[_id]) {
                 _valueComp = _dataComp[_id][_aCode];
+                }
+              }
+              
+              if (_dCode!="Nothing") {
+                // main value
+                if (_dataMainDivide!==undefined) {
+                  if (_dataMainDivide[_id]) {
+                    _valueMainDivide = _dataMainDivide[_id][_selectedDivider.attributeCode];
+                  }
+                  if (_valueMainDivide>0) {
+                    _valueMain /= _valueMainDivide;
+                  }
+                }
+
+                // comp value
+                if (_dataCompDivide!==undefined) {
+                  if (_dataCompDivide[_id]) {
+                  _valueCompDivide = _dataCompDivide[_id][_selectedDivider.attributeCode];
+                  }
+                  if (_valueCompDivide>0) {
+                    _valueComp /= _valueCompDivide;
+                  }
                 }
               }
 
@@ -858,6 +927,15 @@ require([
 
             const _idAgFieldName = this.getSelectedAggregator().agCode;
             const _wtCode = this.sidebar.getWeightCode() || "";
+            
+            if (_dCode!="Nothing") {
+              _data_divide_main = this.getMain().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+              _geojsondata_divide_main = dataGeojsons[this.getMain().geojsons[_selectedDivider.baseGeoJsonKey]];
+              if (this.mode==='compare') {
+                _data_divide_comp = this.getComp().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+                _geojsondata_divide_comp = dataGeojsons[this.getComp().geojsons[_selectedDivider.baseGeoJsonKey]];
+              }
+            }
 
             // go through display geometry features
             result.features.forEach((feature) => {
@@ -865,6 +943,8 @@ require([
               var _valueMain = 0;
               var _valueComp = 0;
               var _valueDisp = 0;
+              var _valueMainDivide = 0;
+              var _valueCompDivide = 0;
               var _valueMainXWt = 0;
               var _valueCompXWt = 0;
               var _valueMainSumWt = 0;
@@ -940,6 +1020,83 @@ require([
                 }
               }
 
+              if (_dCode!="Nothing") {
+                
+                var _sumDivideMain = 0;
+                var _sumDivideComp = 0;
+
+                // get divide features with the same _idAg
+                const filteredFeatures_divide_main = _geojsondata_divide_main.features.filter(feature => 
+                  feature.properties[_idAgFieldName]==_idAg
+                );
+
+                // loop through divide features and baseGeoJsonIds
+                var filteredFeatures_divide_main_set = new Set();
+                filteredFeatures_divide_main.forEach((feature) => {
+                  if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
+                    filteredFeatures_divide_main_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
+                  }
+                });
+
+                const _filteredFeatures_divide_main_list = [...filteredFeatures_divide_main_set];
+  
+                //filter the zonesSeData to only those zones that are within filteredTazList
+                const filtered_geojsondata_divide_main = Object.keys(_geojsondata_divide_main)
+                  .filter((key) => _filteredFeatures_divide_main_list.includes(parseInt(key)))
+                  .reduce((result, key) => {
+                    result[key] = _geojsondata_divide_main[key];
+                    return result;
+                }, {});
+  
+                //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+                for (const key in _filteredFeatures_divide_main_list) {
+                  if (_data_divide_main[_filteredFeatures_divide_main_list[key]][_dCode] !== undefined) {
+                    _sumDivideMain += _data_divide_main[_filteredFeatures_divide_main_list[key]][_dCode];
+                  }
+                }
+
+                if (this.mode==='compare') {
+                  // get divide features with the same _idAg
+                  const filteredFeatures_divide_comp = _geojsondata_divide_comp.features.filter(feature => 
+                    feature.properties[_idAgFieldName]==_idAg
+                  );
+  
+                  // loop through divide features and baseGeoJsonIds
+                  var filteredFeatures_divide_comp_set = new Set();
+                  filteredFeatures_divide_comp.forEach((feature) => {
+                    if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
+                      filteredFeatures_divide_comp_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
+                    }
+                  });
+  
+                  const _filteredFeatures_divide_comp_list = [...filteredFeatures_divide_comp_set];
+    
+                  //filter the zonesSeData to only those zones that are within filteredTazList
+                  const filtered_geojsondata_divide_comp = Object.keys(_geojsondata_divide_comp)
+                    .filter((key) => _filteredFeatures_divide_comp_list.includes(parseInt(key)))
+                    .reduce((result, key) => {
+                      result[key] = _geojsondata_divide_comp[key];
+                      return result;
+                  }, {});
+    
+                  //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+                  for (const key in _filteredFeatures_divide_comp_list) {
+                    if (_data_divide_comp[_filteredFeatures_divide_comp_list[key]][_dCode] !== undefined) {
+                      _sumDivideComp += _data_divide_comp[_filteredFeatures_divide_comp_list[key]][_dCode];
+                    }
+                  }
+                }
+
+                if (_sumDivideMain>0) {
+                  _valueMain /= _sumDivideMain;
+                }
+
+                if (_sumDivideComp>0) {
+                  _valueComp /= _sumDivideComp;
+                }
+
+              }
+              
               var compareType = document.getElementById('selectCompareType');
               this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
@@ -987,8 +1144,6 @@ require([
                 
                 // update agg table
                 vizMapInstance.sidebar.updateFilterDisplay();
-                vizMapInstance.sidebar.updateAggregations();
-
               } else {
                 console.log("No features were added.");
               }

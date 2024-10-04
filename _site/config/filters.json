@@ -32,15 +32,15 @@
             {"value":"A", "label":"Attraction"}
         ]
     },
-    "fVehTypeLiMdHvAll": {
+    "fVehTypePcLiMdHv": {
         "fName"    : "Vehicle Type",
-        "fWidget"  : "select",
-        "fSelected": "All",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["PC","LT","MD","HV"],
         "fOptions" : [
-            {"value":"All", "label":"All Vehicles" },
-            {"value":"LT" , "label":"Light Trucks" },
-            {"value":"MD" , "label":"Medium Trucks"},
-            {"value":"HV" , "label":"Heavy Trucks" }
+            {"value":"PC" , "label":"Passenger Cars"},
+            {"value":"LT" , "label":"Light Trucks"  },
+            {"value":"MD" , "label":"Medium Trucks" },
+            {"value":"HV" , "label":"Heavy Trucks"  }
         ]
     },
     "fTrkTypeMdHv": {
@@ -84,7 +84,8 @@
             {"value":"MD", "label":"Midday Period" },
             {"value":"PM", "label":"PM Period"     },
             {"value":"EV", "label":"Evening Period"}
-        ]
+        ],
+        "subTotals": ["DY"]
     },
     "fPurpOnlyAll": {
         "fName"    : "Trip Purpose",
@@ -120,7 +121,8 @@
             {"value":"Dy", "label":"Daily"     },
             {"value":"Pk", "label":"Peak"     },
             {"value":"Ok", "label":"Off-Peak" }
-        ]
+        ],
+        "subTotals": ["Dy"]
     },
     "fModeAccess": {
         "fName"    : "Production Access Mode",
@@ -156,8 +158,8 @@
         "fOptions" : [
             {"value":4, "label":"Local Bus"            },
             {"value":5, "label":"Core Bus"             },
-            {"value":9, "label":"Bus Rapid Transit"    },
             {"value":6, "label":"Express Bus"          },
+            {"value":9, "label":"Bus Rapid Transit"    },
             {"value":7, "label":"Light Rail Transit"   },
             {"value":8, "label":"Commuter Rail Transit"}
         ]
@@ -169,8 +171,8 @@
         "fOptions" : [
             {"value":"LCL", "label":"Local Bus"            },
             {"value":"COR", "label":"Core Bus"             },
-            {"value":"BRT", "label":"Bus Rapid Transit"    },
             {"value":"EXP", "label":"Express Bus"          },
+            {"value":"BRT", "label":"Bus Rapid Transit"    },
             {"value":"LRT", "label":"Light Rail Transit"   },
             {"value":"CRT", "label":"Commuter Rail Transit"}
         ]
@@ -188,11 +190,12 @@
             {"value":"All", "label":"All Modes"            },
             {"value":"4"  , "label":"Local Bus"            },
             {"value":"5"  , "label":"Core Bus"             },
-            {"value":"9"  , "label":"Bus Rapid Transit"    },
             {"value":"6"  , "label":"Express Bus"          },
+            {"value":"9"  , "label":"Bus Rapid Transit"    },
             {"value":"7"  , "label":"Light Rail Transit"   },
             {"value":"8"  , "label":"Commuter Rail Transit"}
-        ]
+        ],
+        "subTotals": ["All"]
     },
     "fModeHier": {
         "fName"    : "Hierarchacal Mode",
@@ -202,11 +205,12 @@
             {"value":"ALL", "label":"All Modes"            },
             {"value":"LCL", "label":"Local Bus"            },
             {"value":"COR", "label":"Core Bus"             },
-            {"value":"BRT", "label":"Bus Rapid Transit"    },
             {"value":"EXP", "label":"Express Bus"          },
+            {"value":"BRT", "label":"Bus Rapid Transit"    },
             {"value":"LRT", "label":"Light Rail Transit"   },
             {"value":"CRT", "label":"Commuter Rail Transit"}
-        ]
+        ],
+        "subTotals": ["ALL"]
     },
     "fVehNum": {
         "fName": "HH by Number of Vehicles",
@@ -308,7 +312,8 @@
             {"value":"HBSch", "label": "Home-Based School" },
             {"value":"HBW"  , "label": "Home-Based Work"   },
             {"value":"NHB"  , "label": "Non-Home-Based"    }
-        ]
+        ],
+        "subTotals": ["All"]
     },
     "fRoadSegFuncGroup": {
         "fName"    : "Functional Group",
@@ -316,6 +321,18 @@
         "fSelected": "Total",
         "fOptions" : [
             {"value":"Total"   , "label": "All"               },
+            {"value":"Arterial", "label": "Arterial/Collector"},
+            {"value":"CD Road" , "label": "Freeway-CD Road"   },
+            {"value":"Freeway" , "label": "Freeway-GP Only"   },
+            {"value":"Managed" , "label": "Freeway-Managed"   }
+        ],
+        "subTotals": ["Total"]
+    },
+    "fRoadSegFuncGroupNoTotal": {
+        "fName"    : "Functional Group",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["Managed"],
+        "fOptions" : [
             {"value":"Arterial", "label": "Arterial/Collector"},
             {"value":"CD Road" , "label": "Freeway-CD Road"   },
             {"value":"Freeway" , "label": "Freeway-GP Only"   },
@@ -354,7 +371,8 @@
             {"value":"EB" , "label":"Eastbound"  },
             {"value":"WB" , "label":"Westbound"  },
             {"value":"All", "label":"All"        }
-        ]
+        ],
+        "subTotals": ["All"]
     },
     "fDirNameNoAll": {
         "fName"    : "Cardinal Travel Direction on Segment",
@@ -380,20 +398,17 @@
     },
     "fModeRoad": {
         "fName"    : "Non-Transit Modes",
-        "fWidget"  : "select",
-        "fSelected": "Tot",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb"],
         "fOptions" : [
-            { "value":"Tot", "label":  "Total"      },
-            { "value":"DA" , "label":  "DriveAlone" },
-            { "value":"Sh" , "label":  "SharedRide" },
-            { "value":"DAn", "label":  "DA_NON"     },
-            { "value":"DAt", "label":  "DA_TOL"     },
-            { "value":"SRn", "label":  "SR_NON"     },
-            { "value":"SRt", "label":  "SR_TOL"     },
-            { "value":"SRh", "label":  "SR_HOV"     },
-            { "value":"Ss" , "label":  "DriveSelf"  },
-            { "value":"Sd" , "label":  "DropOff"    },
-            { "value":"Sb" , "label":  "SchoolBus"  }
+            { "value":"DAn", "label":  "Drive Alone - Non-Toll"},
+            { "value":"DAt", "label":  "Drive Alone - Toll"    },
+            { "value":"SRn", "label":  "Shared Ride - Non-Toll"},
+            { "value":"SRt", "label":  "Shared Ride - Toll"    },
+            { "value":"SRh", "label":  "Shared Ride - HOV"     },
+            { "value":"Ss" , "label":  "School - Drive Self"   },
+            { "value":"Sd" , "label":  "School - Drop Off"     },
+            { "value":"Sb" , "label":  "School - Bus"          }
         ]
     },
     "fShareMode": {

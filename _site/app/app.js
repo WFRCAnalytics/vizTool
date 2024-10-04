@@ -10,6 +10,7 @@ let dummyFeature;
 let dataMenu;
 let activeModelEntity;
 let scenarioChecker; // vizTrends global item
+let scenarioRadioer; // vizTrends global item
 let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};
@@ -24,6 +25,9 @@ let onOpenMenuItem;
 let onOpenModelEntity;
 let centerMap = [-111.8910, 40.7608]; // default value replaced programatically from json value
 let zoom = 10; // default value replaced programatically from json value
+let yearSelect = {};
+let activeLayout = {};
+let seriesModeSelect;
 
 // Global variables to track total files and loaded files across all scenarios
 let totalFilesToLoad = 0;
@@ -38,9 +42,10 @@ require([
   "esri/Map",
   "esri/views/MapView",
   "esri/widgets/Expand",
-  "esri/widgets/BasemapToggle"
+  "esri/widgets/BasemapToggle",
+  "esri/widgets/Zoom"
 ],
-function(esriConfig, Map, MapView, Expand, BasemapToggle) {
+function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
 
   // TODO: LOOK FOR WAYS TO HIDE KEY OR USE OTHER SOURCE
   esriConfig.apiKey = "AAPK5f27bfeca6bb49728b7e12a3bfb8f423zlKckukFK95EWyRa-ie_X31rRIrqzGNoqBH3t3Chvz2aUbTKiDvCPyhvMJumf7Wk";
@@ -510,6 +515,43 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle) {
         });
       });
     });
+
+    document.getElementById("openbtn").addEventListener("click", function() {
+      const sidebar = document.getElementById("mapSidebar");
+      const mainMap = document.getElementById("mainMap");
+    
+      // Toggle the collapsed class
+      sidebar.classList.toggle("collapsed");
+      mainMap.classList.toggle("collapsed");
+      this.classList.toggle("collapsed");
+    
+      // Change button text based on state
+      if (sidebar.classList.contains("collapsed")) {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
+      } else {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
+      }
+      
+    });
+    
+    document.getElementById("openbtntrend").addEventListener("click", function() {
+      const sidebar = document.getElementById("trendSidebar");
+      const main = document.getElementById("trendMain");
+    
+      // Toggle the collapsed class
+      sidebar.classList.toggle("collapsed");
+      main.classList.toggle("collapsed");
+      this.classList.toggle("collapsed");
+    
+      // Change button text based on state
+      if (sidebar.classList.contains("collapsed")) {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
+      } else {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
+      }
+      
+    });
+    
   }
 
   async function populateTemplates() {
@@ -709,6 +751,18 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle) {
 
       // Add the Expand widget to the view
       mapView.ui.add(expandLabelToggle, "top-right");
+        
+      // Remove default zoom controls
+      mapView.ui.remove("zoom");
+
+      // Create a new Zoom widget
+      const zoomWidget = new Zoom({
+          view: mapView
+      });
+
+          
+      // Add the Zoom widget to the top-right corner of the view
+      mapView.ui.add(zoomWidget, "top-right");
 
     });
 

@@ -2,7 +2,9 @@
   <div id="mapSidebar" class="sidebar">
     <div class="colAttributes">
       <div class="rowAttributes" id="vizMapAttributes"></div>
-      <div class="rowAttributes" id="vizMapAggregator"></div>
+      <div class="rowAttributeSettings" id="vizMapDividers"></div>
+      <div class="rowAttributeSettings" id="vizMapDividerFilters"></div>
+      <div class="rowGeography" id="vizMapAggregator"></div>
       <!-- Row 3 Chart Selector-->
       <div class="rowChart">
           <!-- Content for the third row -->
@@ -10,10 +12,10 @@
     </div>
     <div class="colFilters">
       <div class="rowFilters" id="vizMapAttributeFilters"></div>
-      <div class="rowFilters" id="vizMapDividers"></div>
-      <div class="rowFilters" id="vizMapDividerFilters"></div>
     </div>
   </div>
+  <!-- Collapse button -->
+  <button id="openbtn" class="openbtn"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
   <div id="mainMap">
     <div id="mapView"></div>
     <div id="mapFooter"></div>

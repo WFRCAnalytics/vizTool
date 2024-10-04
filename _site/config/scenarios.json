@@ -24,11 +24,11 @@
                 "distLrg": "WFv900_TAZ_DLRG.geojson",
                 "distSup": "WFv900_TAZ_DSUP.geojson",
                 "city": "WFv900_TAZ_CITY.geojson",
+                "citygroup": "WFv900_TAZ_CTGP.geojson",
                 "subarea": "WFv900_TAZ_SAID.geojson",
                 "planarea": "WFv900_TAZ_PLAN.geojson",
-                "subplanarea": "WFv900_TAZ_SUBP.geojson",
-                "segment": "WFv901_Segments.geojson",
-                "stops": "WFv901_Segments_STOP.geojson"
+                "segment": "WFv910_Segments.geojson",
+                "stops": "WFv910_Segments_STOP.geojson"
             }
         }
     ],

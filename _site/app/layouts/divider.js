@@ -14,8 +14,9 @@ class Divider {
     this.jsonName       = _configDivider.jsonName      ;
     this.baseGeoJsonKey = _configDivider.baseGeoJsonKey;
     this.baseGeoJsonId  = _configDivider.baseGeoJsonId ;
-    this.attributeCode          = _configDivider.attributeCode         ;
-    this.alias   = _configDivider.alias  ;
+    this.attributeCode  = _configDivider.attributeCode ;
+    this.alias          = _configDivider.alias         ;
+    this.legendSuffix   = _configDivider.legendSuffix  ;
     this.filter         = _configDivider.filter        ;
   }
 }
