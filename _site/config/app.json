@@ -37,7 +37,7 @@
             "attributeInfoTextHtml": "<b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Capacity per Hour per Lane</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Volume</b> is the total number of vehicles using the segment.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period voluem to daily volume.",
             "attributeSelected": "aLn",
             "attributes": ["aLn","aAT","aFt","aCp","aCT","aFS","aVl","aTP","aRS","aXVc","aDF","aPF","aFGs"],
-            "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTod4pDy","fTod4","fTod4Pm","fVehTypeLiMdHvAll","fTrkTypeMdHv"]
+            "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTod4pDy","fTod4","fTod4Pm","fVehTypePcLiMdHv","fTrkTypeMdHv"]
           }
         },
         { "submenuText": "Road Segment Trends",
@@ -55,7 +55,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypePcLiMdHv"]
@@ -103,7 +103,7 @@
           "template": "vizMap",
           "templateSettings": {
             "jsonName": "j-transit-stops",
-            "baseGeoJsonKey": "stops",
+            "baseGeoJsonKey": "stop",
             "baseGeoJsonId": "STOPID",
             "geometryType": "point",
             "popupTitle": "Transit Stops",
@@ -119,7 +119,7 @@
           "template": "vizTrends",
           "templateSettings": {
             "jsonName": "j-transit-stops",
-            "baseGeoJsonKey": "stops",
+            "baseGeoJsonKey": "stop",
             "baseGeoJsonId": "STOPID",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
@@ -168,7 +168,7 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Mode Share",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","CITYGRP"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributeTitle": "Trip Mode",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/><b>Walk Trips</b> is specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using only a bicycle.",
@@ -222,7 +222,7 @@
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","CITYGRP"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
             "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
@@ -304,7 +304,7 @@
             "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
             "attributeSelected": "aJA",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","CITYGRP"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
             "filters" : ["fModeAutoTransit","fAtoCondition"]

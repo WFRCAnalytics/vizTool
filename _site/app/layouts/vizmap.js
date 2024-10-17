@@ -24,7 +24,11 @@ require([
       this.baseGeoJsonKey = data.baseGeoJsonKey;
       this.baseGeoJsonId = data.baseGeoJsonId;
       this.geometryType = data.geometryType;
-      this.popupTitle = data.popupTitle;
+      if (data.popupTitle !== undefined) {
+        this.popupTitle = data.popupTitle;
+      } else {
+        this.popupTitle = this.modelEntity.submenuText;
+      }
       this.layerTitle = layerTitle;
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
@@ -55,28 +59,45 @@ require([
       });
       map.add(this.geojsonLayer);
       this.geojsonLayer.visible = false;
-
-      
-      // Get GEOJSON NON-GEOMTRY FOR EASY QUERYING
-      // Read JSON file
-      if (this.baseGeoJsonKey!="") {
-        fetch('geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.baseGeoJsonKey))
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-          this.baseGeometryGeoJson = data;
-        })
-        .catch(error => {
-          console.error('Error reading the JSON file:', error);
-          // Handle the error appropriately
-          });
-      }
     }
     
+    // Define reusable popup content and expression info
+    get popupContent() {
+      return [
+        {
+          type: "text",
+          text: `${this.getPopupLayerName()}: {expression/featureName}`
+        },
+        {
+          type: "text",
+          text: `${this.getLayerDisplayName()}: {expression/formatDisplayValue}`
+        }
+      ];
+    }
+
+    get expressionInfos() {
+      return [
+        {
+          name: "featureName",
+          title: "Feature Name",
+          expression: "$feature.idLabel"
+        },
+        {
+          name: "formatDisplayValue",
+          title: "Formatted Display Value",
+          expression: this.getLabelInfo()
+        }
+      ];
+    }
+    
+    getPopupLayerName() {
+      if (this.sidebar.aggregators.length>0) {
+        return this.sidebar.getSelectedAggregator().agTitleText;
+      } else {
+        return this.baseGeoJsonId;
+      }
+    }
+
     updateScenarioSelector() {
       
     }
@@ -107,6 +128,37 @@ require([
       this.afterUpdateSidebar();
     }
 
+    getAggregatorKeyFile() {
+
+      if (this.sidebar.aggregators.length > 0 && (!this.getSelectedAggregator() ||
+      this.getSelectedAggregator().agCode != this.baseGeoJsonId)) {
+
+        // Ensure both keys are non-empty
+        if (this.baseGeoJsonKey !== "" && this.sidebar.getSelectedAggregator()['agGeoJsonKey'] !== "") {
+          
+          // Return the fetch promise
+          return fetch('geo-data/keys/' + 
+            this.getScenarioMain().getKeyFileNameFromGeoJsonKey(this.baseGeoJsonKey, this.sidebar.getSelectedAggregator()['agGeoJsonKey']))
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .catch(error => {
+              console.error('Error reading the JSON file:', error);
+              throw error; // Propagate the error for handling upstream
+            });
+        } else {
+          // Return a resolved promise with null if keys are empty
+          return Promise.resolve(null);
+        }
+      } else {
+        // Return a resolved promise with null when the main condition is false
+        return Promise.resolve(null);
+      }
+    }
+  
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
@@ -208,7 +260,7 @@ require([
       }
     }
 
-    getACode() {
+    get aCode() {
       return this.sidebar.getACode();
     }
 
@@ -216,8 +268,16 @@ require([
       return this.sidebar.getADisplayName();
     }
 
+    getLayerDisplayName() {
+      if (this.dCode!="Nothing") {
+        return this.getLayerTitle() + this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode).legendSuffix;
+      } else {
+        return this.getLayerTitle();
+      }
+    }
+
     // get the divider code that is selected
-    getDCode() {
+    get dCode() {
       return this.sidebar.getDCode();
     }
   
@@ -228,9 +288,9 @@ require([
     getFilterGroup() {
       const _scenario = this.getScenarioMain();
       if (_scenario) {
-        let _baseFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, this.getACode());
+        let _baseFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, this.aCode);
         let _selectedAttribute = this.sidebar.attributes.find(attribute =>
-          attribute.attributeCode == this.getACode()
+          attribute.attributeCode == this.aCode
         ) || null;
         if (_selectedAttribute) {
           if (_selectedAttribute.filterOverride) {
@@ -281,31 +341,24 @@ require([
     
     getAttributeRendererPath() {
 
-      const _dCode = this.getDCode();
       var compareType = document.getElementById('selectCompareType');
       this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
       const collection = this.sidebar.getAttributeRendererCollection();
-      if (this.mode == 'main') {
-        if (_dCode!="Nothing") {
-          return collection.main_divide_by;
+      if (this.mode === 'main') {
+        if (this.dCode !== "Nothing") {
+          const _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
+          return _selectedDivider && _selectedDivider.dCode in collection.main_divide_by
+            ? collection.main_divide_by[_selectedDivider.dCode]
+            : collection.main_divide_by["default"];
         } else {
           return collection.main;
         }
-      } else if (this.mode == 'compare') {
-        return this.modeCompare == 'diff' ? collection.compare_abs :
-               this.modeCompare == 'pctdiff' ? collection.compare_pct : null;
+      } else if (this.mode === 'compare') {
+        return this.modeCompare === 'diff' ? collection.compare_abs :
+               this.modeCompare === 'pctdiff' ? collection.compare_pct : null;
       }
       return null;
-    }
-    
-
-    getPopupLayerName() {
-      if (this.sidebar.aggregators.length>0) {
-        return this.sidebar.getSelectedAggregator().agTitleText;
-      } else {
-        return this.baseGeoJsonId;
-      }
     }
 
     getPopupFeatureCode() {
@@ -329,7 +382,7 @@ require([
       let dValFieldType;
 
       // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (this.getACode() === 'aFtClass') {
+      if (this.aCode === 'aFtClass') {
         dValFieldType = "string";
       } else {
         dValFieldType = "double";  // or "int" based on your requirement
@@ -362,33 +415,13 @@ require([
             // ... your other fields
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.getACode() },
+            { name: "dVal", type: dValFieldType, alias: this.aCode },
 
           ],
           popupTemplate: {
             title: this.popupTitle,
-            content: [
-              {
-                type: "text",
-                text: this.getPopupLayerName() + " {expression/featureName}"
-              },
-              {
-                type: "text",
-                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
-              }
-            ],
-            expressionInfos: [
-              {
-                name: "featureName",
-                title: "Feature Name",
-                expression: '$feature.idLabel'
-              },
-              {
-                name: "formatDisplayValue",
-                title: "Formatted Display Value",
-                expression: this.getLabelInfo()
-              }
-            ]
+            content: this.popupContent,
+            expressionInfos: this.expressionInfos
           },
           labelingInfo: [{
             symbol: {
@@ -442,32 +475,12 @@ require([
             // ... your other fields
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.getACode() },
+            { name: "dVal", type: dValFieldType, alias: this.aCode },
           ],
           popupTemplate: {
             title: this.popupTitle,
-            content: [
-              {
-                type: "text",
-                text: this.getPopupLayerName() + " {expression/featureName}"
-              },
-              {
-                type: "text",
-                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
-              }
-            ],
-            expressionInfos: [
-              {
-                name: "featureName",
-                title: "Feature Name",
-                expression: '$feature.idLabel'
-              },
-              {
-                name: "formatDisplayValue",
-                title: "Formatted Display Value",
-                expression: this.getLabelInfo()
-              }
-            ]
+            content: this.popupContent,
+            expressionInfos: this.expressionInfos
           },
           labelingInfo: [{
             symbol: {
@@ -528,32 +541,12 @@ require([
             // ... your other fields
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.getACode() },
+            { name: "dVal", type: dValFieldType, alias: this.aCode },
           ],
           popupTemplate: {
             title: this.popupTitle,
-            content: [
-              {
-                type: "text",
-                text: this.getPopupLayerName() + " {expression/featureName}"
-              },
-              {
-                type: "text",
-                text: this.getADisplayName() + ": {expression/formatDisplayValue}"
-              }
-            ],
-            expressionInfos: [
-              {
-                name: "featureName",
-                title: "Feature Name",
-                expression: '$feature.idLabel'
-              },
-              {
-                name: "formatDisplayValue",
-                title: "Formatted Display Value",
-                expression: this.getLabelInfo()
-              }
-            ]
+            content: this.popupContent,
+            expressionInfos: this.expressionInfos
           },
           labelingInfo: [{
             symbol: {
@@ -651,12 +644,9 @@ require([
 
       this.initializeLayer();
 
-      const _aCode = this.getACode();
-      const _dCode = this.getDCode();
-
       const setRendererAndLegend = () => {
 
-        if (_aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
+        if (this.aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
           if (this.mode==='main') {
             // Define the color ramp from yellow to blue
             var colorVisVar = new ColorVariable({
@@ -714,10 +704,10 @@ require([
           mapView.ui.remove(this.legend);
         }
         
-        const _dCode = this.getDCode();
-
-        if (_dCode!="Nothing") {
-          this.layerDisplay.renderer.legendOptions.title = this.getLayerTitle() + this.sidebar.dividers.find(divider => divider.attributeCode === _dCode).legendSuffix;
+        if (this.dCode!="Nothing") {
+          if (this.layerDisplay.renderer.visualVariables.legendOptions.title) {
+            this.layerDisplay.renderer.visualVariables.legendOptions.title = this.getLayerDisplayName();
+          }
         }
 
         var _title = "";
@@ -761,20 +751,6 @@ require([
 
       // set map header
       var _title = "";
-      
-      //_title += this.modelEntity.submenuText + ' - ' 
-      //_title = this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '');
-      //if (this.sidebar.aggregators.length>0) {
-      //  const _aggCode = this.sidebar.getSelectedAggregator();
-      //  _title += ' by ' + _aggCode.agTitleText;
-      //}
-      //if (this.mode==='main') {
-      //  _title += ' - ' + this.getMainScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='diff') {
-      //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName();
-      //} else if(this.mode==='compare' & this.modeCompare==='pctdiff') {
-      //  _title += ' - ' + this.getMainScenarioDisplayName() + ' vs ' + this.getCompScenarioDisplayName() + ' - Percent Difference';
-      //}
 
       const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
 
@@ -802,14 +778,12 @@ require([
       // GET MAP FEATURES
 
       this.geojsonLayer.when(() => {
-        this.geojsonLayer.queryFeatures().then((result) => {
+        this.geojsonLayer.queryFeatures().then(async (result) => {
           let graphicsToAdd = [];  // Temporary array to hold graphics
 
-                
           if (this.sidebar.dividers) {
-            var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === _dCode) || null;
+            var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
           }
-
 
           // there will be two pathways
           // A: one with new aggregation possible this.aggregator is empty
@@ -828,7 +802,7 @@ require([
           if (this.sidebar.aggregators.length === 0 || (this.getSelectedAggregator() &&
                                                         this.getSelectedAggregator().agCode == this.baseGeoJsonId)) {
             
-            if (_dCode!="Nothing") {
+            if (this.dCode!="Nothing") {
               var _dataMainDivide = this.getMain().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
               var _dataCompDivide = this.getComp().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
             }
@@ -847,26 +821,24 @@ require([
               // main value
               if (_dataMain!==undefined) {
                 if (_dataMain[_id]) {
-                  _valueMain = _dataMain[_id][_aCode];
+                  _valueMain = _dataMain[_id][this.aCode];
                 }
               }
 
               // comp value
               if (_dataComp!==undefined) {
                 if (_dataComp[_id]) {
-                _valueComp = _dataComp[_id][_aCode];
+                _valueComp = _dataComp[_id][this.aCode];
                 }
               }
               
-              if (_dCode!="Nothing") {
+              if (this.dCode!="Nothing") {
                 // main value
                 if (_dataMainDivide!==undefined) {
                   if (_dataMainDivide[_id]) {
                     _valueMainDivide = _dataMainDivide[_id][_selectedDivider.attributeCode];
                   }
-                  if (_valueMainDivide>0) {
-                    _valueMain /= _valueMainDivide;
-                  }
+                  _valueMain = _valueMainDivide > 0 ? _valueMain / _valueMainDivide : null;
                 }
 
                 // comp value
@@ -875,7 +847,7 @@ require([
                   _valueCompDivide = _dataCompDivide[_id][_selectedDivider.attributeCode];
                   }
                   if (_valueCompDivide>0) {
-                    _valueComp /= _valueCompDivide;
+                    _valueComp = _valueCompDivide > 0 ? _valueComp / _valueCompDivide : null;
                   }
                 }
               }
@@ -923,213 +895,219 @@ require([
             });
 
           // B: Aggregator
-          } else if (this.baseGeometryGeoJson.features) {
+          } else{
+                    
+            // Call this.getAggregatorKeyFile() once and store the result
+            const aggregatorKeyFile = await this.getAggregatorKeyFile();
 
-            const _idAgFieldName = this.getSelectedAggregator().agCode;
-            const _wtCode = this.sidebar.getWeightCode() || "";
-            
-            if (_dCode!="Nothing") {
-              _data_divide_main = this.getMain().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
-              _geojsondata_divide_main = dataGeojsons[this.getMain().geojsons[_selectedDivider.baseGeoJsonKey]];
-              if (this.mode==='compare') {
-                _data_divide_comp = this.getComp().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
-                _geojsondata_divide_comp = dataGeojsons[this.getComp().geojsons[_selectedDivider.baseGeoJsonKey]];
-              }
-            }
+            if (aggregatorKeyFile) {
 
-            // go through display geometry features
-            result.features.forEach((feature) => {
-
-              var _valueMain = 0;
-              var _valueComp = 0;
-              var _valueDisp = 0;
-              var _valueMainDivide = 0;
-              var _valueCompDivide = 0;
-              var _valueMainXWt = 0;
-              var _valueCompXWt = 0;
-              var _valueMainSumWt = 0;
-              var _valueCompSumWt = 0;
-
-              // Get ID from the feature's attributes
-              var _idAg = feature.attributes[_idAgFieldName];
+              const _idAgFieldName = this.getSelectedAggregator().agCode;
+              const _wtCode = this.sidebar.getWeightCode() || "";
               
-              // get associated json records for given aggregator
-              let _featuresToAg = this.baseGeometryGeoJson.features.filter(feature => 
-                feature.properties[_idAgFieldName] === _idAg
-              );
+              if (this.dCode!="Nothing") {
+                _data_divide_main = this.getMain().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+                _geojsondata_divide_main = dataGeojsons[this.getMain().geojsons[_selectedDivider.baseGeoJsonKey]];
+                if (this.mode==='compare') {
+                  _data_divide_comp = this.getComp().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+                  _geojsondata_divide_comp = dataGeojsons[this.getComp().geojsons[_selectedDivider.baseGeoJsonKey]];
+                }
+              }
 
-              // aggregate json data for give display feature
-              _featuresToAg.forEach((baseFt) => {
+              // go through display geometry features
+              result.features.forEach((feature) => {
+
+                var _valueMain = 0;
+                var _valueComp = 0;
+                var _valueDisp = 0;
+                var _valueMainDivide = 0;
+                var _valueCompDivide = 0;
+                var _valueMainXWt = 0;
+                var _valueCompXWt = 0;
+                var _valueMainSumWt = 0;
+                var _valueCompSumWt = 0;
+
+                // Get ID from the feature's attributes
+                var _idAg = feature.attributes[_idAgFieldName];
                 
-                const _idFt = baseFt.properties[this.baseGeoJsonId];
+                // get associated json records for given aggregator
+                const agRecords = aggregatorKeyFile.filter(record => 
+                  record[_idAgFieldName] === _idAg
+                );
 
-                // main value
-                if (_dataMain !== undefined) {
-                  if (_dataMain[_idFt]) {
-                    if (_dataMain[_idFt][_aCode]) {
-                      if (!_wtCode) {
-                        _valueMain += _dataMain[_idFt][_aCode];
-                      } else {
-                        try {
-                          var _wtMain = _dataWeightMain[_idFt][_wtCode];
-                          if (_wtMain) {
-                            _valueMainXWt += _dataMain[_idFt][_aCode] * _wtMain;
-                            _valueMainSumWt += _wtMain;
+                // aggregate json data for give display feature
+                agRecords.forEach((agRecord) => {
+                  
+                  const _idFt = agRecord[this.baseGeoJsonId];
+
+                  // main value
+                  if (_dataMain !== undefined) {
+                    if (_dataMain[_idFt]) {
+                      if (_dataMain[_idFt][this.aCode]) {
+                        if (!_wtCode) {
+                          _valueMain += _dataMain[_idFt][this.aCode];
+                        } else {
+                          try {
+                            var _wtMain = _dataWeightMain[_idFt][_wtCode];
+                            if (_wtMain) {
+                              _valueMainXWt += _dataMain[_idFt][this.aCode] * _wtMain;
+                              _valueMainSumWt += _wtMain;
+                            }
+                          } catch (error) {
+                            //console.error("An error occurred while processing the weight:", error);
+                            // Handle the error or perform error recovery
+                            _valueMainXWt += 0;
+                            _valueMainSumWt += 0;
                           }
-                        } catch (error) {
-                          //console.error("An error occurred while processing the weight:", error);
-                          // Handle the error or perform error recovery
-                          _valueMainXWt += 0;
-                          _valueMainSumWt += 0;
                         }
                       }
                     }
                   }
-                }
 
-                
-                // comp value
-                if (_dataComp!==undefined) {
-                  if (_dataComp[_idFt]) {
-                    if (_dataComp[_idFt][_aCode]) {
-                      if (!_wtCode) {
-                        _valueComp += _dataComp[_idFt][_aCode];
-                      } else {
-                        try {
-                          var _wtComp = _dataWeightComp[_idFt][_wtCode];
-                          if (_wtComp) {
-                            _valueCompXWt += _dataComp[_idFt][_aCode] * _wtComp;
-                            _valueCompSumWt += _wtComp;
-                          }  
-                        } catch (error) {
-                          _valueCompXWt += 0;
-                          _valueCompSumWt += 0;
-                        }
-                      } 
+                  
+                  // comp value
+                  if (_dataComp!==undefined) {
+                    if (_dataComp[_idFt]) {
+                      if (_dataComp[_idFt][this.aCode]) {
+                        if (!_wtCode) {
+                          _valueComp += _dataComp[_idFt][this.aCode];
+                        } else {
+                          try {
+                            var _wtComp = _dataWeightComp[_idFt][_wtCode];
+                            if (_wtComp) {
+                              _valueCompXWt += _dataComp[_idFt][this.aCode] * _wtComp;
+                              _valueCompSumWt += _wtComp;
+                            }  
+                          } catch (error) {
+                            _valueCompXWt += 0;
+                            _valueCompSumWt += 0;
+                          }
+                        } 
+                      }
                     }
-                  }
-                }
-              });
-
-              if (_wtCode) {
-                if (_valueMainSumWt>0) {
-                  _valueMain = _valueMainXWt / _valueMainSumWt;
-                }
-                if (_valueCompSumWt>0) {
-                  _valueComp = _valueCompXWt / _valueCompSumWt;
-                }
-              }
-
-              if (_dCode!="Nothing") {
-                
-                var _sumDivideMain = 0;
-                var _sumDivideComp = 0;
-
-                // get divide features with the same _idAg
-                const filteredFeatures_divide_main = _geojsondata_divide_main.features.filter(feature => 
-                  feature.properties[_idAgFieldName]==_idAg
-                );
-
-                // loop through divide features and baseGeoJsonIds
-                var filteredFeatures_divide_main_set = new Set();
-                filteredFeatures_divide_main.forEach((feature) => {
-                  if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
-                    filteredFeatures_divide_main_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
                   }
                 });
 
-                const _filteredFeatures_divide_main_list = [...filteredFeatures_divide_main_set];
-  
-                //filter the zonesSeData to only those zones that are within filteredTazList
-                const filtered_geojsondata_divide_main = Object.keys(_geojsondata_divide_main)
-                  .filter((key) => _filteredFeatures_divide_main_list.includes(parseInt(key)))
-                  .reduce((result, key) => {
-                    result[key] = _geojsondata_divide_main[key];
-                    return result;
-                }, {});
-  
-                //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
-                for (const key in _filteredFeatures_divide_main_list) {
-                  if (_data_divide_main[_filteredFeatures_divide_main_list[key]][_dCode] !== undefined) {
-                    _sumDivideMain += _data_divide_main[_filteredFeatures_divide_main_list[key]][_dCode];
+                if (_wtCode) {
+                  if (_valueMainSumWt>0) {
+                    _valueMain = _valueMainXWt / _valueMainSumWt;
+                  }
+                  if (_valueCompSumWt>0) {
+                    _valueComp = _valueCompXWt / _valueCompSumWt;
                   }
                 }
 
-                if (this.mode==='compare') {
+                if (this.dCode!="Nothing") {
+                  
+                  var _sumDivideMain = 0;
+                  var _sumDivideComp = 0;
+
                   // get divide features with the same _idAg
-                  const filteredFeatures_divide_comp = _geojsondata_divide_comp.features.filter(feature => 
-                    feature.properties[_idAgFieldName]==_idAg
+                  const filteredRecords_divide_main = aggregatorKeyFile.filter(record => 
+                    record[_idAgFieldName]==_idAg
                   );
-  
+
                   // loop through divide features and baseGeoJsonIds
-                  var filteredFeatures_divide_comp_set = new Set();
-                  filteredFeatures_divide_comp.forEach((feature) => {
-                    if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
-                      filteredFeatures_divide_comp_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
+                  var filteredRecords_divide_main_set = new Set();
+                  filteredRecords_divide_main.forEach((record) => {
+                    if (record && record[_selectedDivider.baseGeoJsonId]) {
+                      filteredRecords_divide_main_set.add(record[_selectedDivider.baseGeoJsonId]);
                     }
                   });
-  
-                  const _filteredFeatures_divide_comp_list = [...filteredFeatures_divide_comp_set];
+
+                  const _filteredRecords_divide_main_list = [...filteredRecords_divide_main_set];
     
                   //filter the zonesSeData to only those zones that are within filteredTazList
-                  const filtered_geojsondata_divide_comp = Object.keys(_geojsondata_divide_comp)
-                    .filter((key) => _filteredFeatures_divide_comp_list.includes(parseInt(key)))
+                  const filtered_geojsondata_divide_main = Object.keys(_geojsondata_divide_main.features)
+                    .filter((key) => _filteredRecords_divide_main_list.includes(parseInt(key)))
                     .reduce((result, key) => {
-                      result[key] = _geojsondata_divide_comp[key];
+                      result[key] = _geojsondata_divide_main.features[key];
                       return result;
                   }, {});
     
                   //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
-                  for (const key in _filteredFeatures_divide_comp_list) {
-                    if (_data_divide_comp[_filteredFeatures_divide_comp_list[key]][_dCode] !== undefined) {
-                      _sumDivideComp += _data_divide_comp[_filteredFeatures_divide_comp_list[key]][_dCode];
+                  for (const key in _filteredRecords_divide_main_list) {
+                    if (_data_divide_main[_filteredRecords_divide_main_list[key]][this.dCode] !== undefined) {
+                      _sumDivideMain += _data_divide_main[_filteredRecords_divide_main_list[key]][this.dCode];
                     }
                   }
+
+                  if (this.mode==='compare') {
+                    // get divide features with the same _idAg
+                    const filteredRecords_divide_comp = aggregatorKeyFile.filter(record => 
+                      record[_idAgFieldName]==_idAg
+                    );
+    
+                    // loop through divide features and baseGeoJsonIds
+                    var filteredRecords_divide_comp_set = new Set();
+                    filteredRecords_divide_comp.forEach((record) => {
+                      if (record && record[_selectedDivider.baseGeoJsonId]) {
+                        filteredRecords_divide_comp_set.add(record[_selectedDivider.baseGeoJsonId]);
+                      }
+                    });
+    
+                    const _filteredRecords_divide_comp_list = [...filteredRecords_divide_comp_set];
+      
+                    //filter the zonesSeData to only those zones that are within filteredTazList
+                    const filtered_geojsondata_divide_comp = Object.keys(_geojsondata_divide_comp)
+                      .filter((key) => _filteredRecords_divide_comp_list.includes(parseInt(key)))
+                      .reduce((result, key) => {
+                        result[key] = _geojsondata_divide_comp.features[key];
+                        return result;
+                    }, {});
+      
+                    //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
+                    for (const key in _filteredRecords_divide_comp_list) {
+                      if (_data_divide_comp[_filteredRecords_divide_comp_list[key]][this.dCode] !== undefined) {
+                        _sumDivideComp += _data_divide_comp[_filteredRecords_divide_comp_list[key]][this.dCode];
+                      }
+                    }
+                  }
+
+                  if (_sumDivideMain>0) {
+                    _valueMain /= _sumDivideMain;
+                  }
+
+                  if (_sumDivideComp>0) {
+                    _valueComp /= _sumDivideComp;
+                  }
+
                 }
+                
+                var compareType = document.getElementById('selectCompareType');
+                this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
-                if (_sumDivideMain>0) {
-                  _valueMain /= _sumDivideMain;
+                // calculate final display value based on selection (absolute or change)
+                try {
+                  if (this.modeCompare=='diff') { // absolute change
+                  _valueDisp = _valueMain - _valueComp;
+                  } else if (this.modeCompare=='pctdiff') { // percent change
+                    if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
+                  }
+                } catch(err) {
+                  _valueDisp = _valueMain;
                 }
+                
+                // If there's a display value for the given SEGID in the _dataMain object, set it
+                let attributes = {
+                  ...feature.attributes,
+                  idLabel: _idAg,
+                  dVal: _valueDisp  // Add the dVal to attributes
+                };
 
-                if (_sumDivideComp>0) {
-                  _valueComp /= _sumDivideComp;
-                }
+                // Create a new graphic with the updated attributes
+                var graphic = new Graphic({
+                  geometry: feature.geometry,
+                  attributes: attributes
+                });
 
-              }
-              
-              var compareType = document.getElementById('selectCompareType');
-              this.modeCompare = compareType ? compareType.selectedOption.value : null;
+                graphicsToAdd.push(graphic);  // Add graphic to the temporary array
 
-              // calculate final display value based on selection (absolute or change)
-              try {
-                if (this.modeCompare=='diff') { // absolute change
-                _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pctdiff') { // percent change
-                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
-                }
-              } catch(err) {
-                _valueDisp = _valueMain;
-              }
-              
-              // If there's a display value for the given SEGID in the _dataMain object, set it
-              let attributes = {
-                ...feature.attributes,
-                idLabel: _idAg,
-                dVal: _valueDisp  // Add the dVal to attributes
-              };
-
-              // Create a new graphic with the updated attributes
-              var graphic = new Graphic({
-                geometry: feature.geometry,
-                attributes: attributes
+                
               });
-
-              graphicsToAdd.push(graphic);  // Add graphic to the temporary array
-
-              
-            });
+            }
           }
-
+          
           vizMapInstance.layerDisplay.on("error", function(event){
             console.log("Layer error: ", event.error);
           });
@@ -1149,7 +1127,7 @@ require([
               }
           })
           .catch(function(error) {
-            console.log("Error applying edits:", error);
+            console.error("Error applying edits:", error);
           });
           // Add graphics to the FeatureLayer's source
           //vizMapInstance.layerDisplay.source.addMany(graphicsToAdd);

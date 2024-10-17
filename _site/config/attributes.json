@@ -827,29 +827,40 @@
                 "legendTitle": "Max Volume-to-Capacity Ratio",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                 "valueExpression": "var v  = $feature.dVal; if (v == null || v==0  ) { return 'nodata'  ; } else if (v< 0.7) { return 'class_00'; } else if (v< 0.8) { return 'class_01'; } else if (v< 0.9) { return 'class_02'; } else if (v< 1.0) { return 'class_03'; } else if (v< 1.1) { return 'class_r0'; } else if (v< 1.2) { return 'class_r1'; } else if (v< 1.3) { return 'class_r2'; } else if (v< 1.4) { return 'class_r3'; } else if (v< 1.5) { return 'class_r4'; } else if (v< 1.6) { return 'class_r5'; } else if (v< 1.7) { return 'class_r6'; } else if (v< 1.8) { return 'class_r7'; } else if (v< 1.9) { return 'class_r8'; } else if (v< 2.0) { return 'class_r9'; } else if (v>=2.0) { return 'class_b0'; } ",
-                "uniqueValueInfos" : [
-                    { "value": "class_00", "symbol": { "type": "simple-line", "color": "#00FF00", "width": 0.25}, "label": "Less than 0.7" },
-                    { "value": "class_01", "symbol": { "type": "simple-line", "color": "#39FF14", "width": 1.00}, "label": "0.7 to 0.8"    },
-                    { "value": "class_02", "symbol": { "type": "simple-line", "color": "#FFFC00", "width": 2.00}, "label": "0.8 to 0.9"    },
-                    { "value": "class_03", "symbol": { "type": "simple-line", "color": "#FF6A00", "width": 3.50}, "label": "0.9 to 1.0"    },
-                    { "value": "class_r0", "symbol": { "type": "simple-line", "color": "#FF4D4D", "width": 4.00}, "label": "1.0 to 1.1"    },
-                    { "value": "class_r1", "symbol": { "type": "simple-line", "color": "#E64545", "width": 4.50}, "label": "1.1 to 1.2"    },
-                    { "value": "class_r2", "symbol": { "type": "simple-line", "color": "#CC3E3E", "width": 5.00}, "label": "1.2 to 1.3"    },
-                    { "value": "class_r3", "symbol": { "type": "simple-line", "color": "#B33636", "width": 5.50}, "label": "1.3 to 1.4"    },
-                    { "value": "class_r4", "symbol": { "type": "simple-line", "color": "#992E2E", "width": 6.00}, "label": "1.4 to 1.5"    },
-                    { "value": "class_r5", "symbol": { "type": "simple-line", "color": "#802727", "width": 6.50}, "label": "1.5 to 1.6"    },
-                    { "value": "class_r6", "symbol": { "type": "simple-line", "color": "#661F1F", "width": 7.00}, "label": "1.6 to 1.7"    },
-                    { "value": "class_r7", "symbol": { "type": "simple-line", "color": "#4C1717", "width": 7.50}, "label": "1.7 to 1.8"    },
-                    { "value": "class_r8", "symbol": { "type": "simple-line", "color": "#330F0F", "width": 8.00}, "label": "1.8 to 1.9"    },
-                    { "value": "class_r9", "symbol": { "type": "simple-line", "color": "#1A0808", "width": 8.50}, "label": "1.9 to 2.0"    },
-                    { "value": "class_b0", "symbol": { "type": "simple-line", "color": "#000000", "width": 9.00}, "label": "More than 2.0" }
-                ],
-                "defaultSymbol": {
-                    "type": "simple-line",
-                    "color": "#EEEEEE",
-                    "width": 0.5
-                },
-                "defaultLabel": "No Volume-to-Capacity"
+                "simpleRenderer": {
+                    "symbol": {
+                        "type": "simple-line",
+                        "color": "white",
+                        "width": 0.2
+                    },
+                    "visualVariables": [
+                        {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value": 0   , "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#0000FF" },
+                                { "value": 0.75, "color": "#00FF00" },
+                                { "value": 0.85, "color": "#FFFF00" },
+                                { "value": 0.95, "color": "#FFA500" },
+                                { "value": 1   , "color": "#FF0000" },
+                                { "value": 1.5 , "color": "#000000" }
+                            ]
+                        },
+                        {
+                            "type": "size",
+                            "field": "dVal",
+                            "stops": [
+                                { "value": 0   , "size": 0.25 },
+                                { "value": 0.01, "size": 0.50 },
+                                { "value": 0.75, "size": 0.75 },
+                                { "value": 0.85, "size": 1.25 },
+                                { "value": 0.95, "size": 2.00 },
+                                { "value": 1   , "size": 4.00 }
+                            ]
+                        }
+                    ]
+                }
             },
             "compare_abs": {
                 "legendTitle": "Difference in Volume-to-Capacity Ratio",
@@ -904,7 +915,7 @@
         "alias": "Truck Percent",
         "filterOverride":[
             {
-            "filterOut": "fVehTypeLiMdHvAll",
+            "filterOut": "fVehTypePcLiMdHv",
             "filterIn": "fTrkTypeMdHv"
             }
         ],
@@ -1264,7 +1275,81 @@
                     }
                 },
                 "defaultLabel": "No Population"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Population",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "divider": "TAZ_HH",
+                    "legendTitle": "Household Size",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal",
+                            "stops": [
+                                { "value":    0, "color": "#CCCCCC" },
+                                { "value": 0.99, "color": "#CCCCCC" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    3, "color": "#FFD700" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "divider": "TAZ_WRK",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    3, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aHV" : {
@@ -1348,7 +1433,33 @@
                     }
                 },
                 "defaultLabel": "No Households"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Households",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aV" : {
@@ -1432,7 +1543,32 @@
                     }
                 },
                 "defaultLabel": "No Vehicles"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal",
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aWk" : {
@@ -1516,7 +1652,33 @@
                     }
                 },
                 "defaultLabel": "No Total Workers"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Workers",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal",
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aE3" : {
@@ -1600,7 +1762,33 @@
                     }
                 },
                 "defaultLabel": "No Employment - 3 Categories"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Employment",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aE12" : {
@@ -1684,7 +1872,33 @@
                     }
                 },
                 "defaultLabel": "No Employment - 12 Categories"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Employment",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aI" : {
@@ -1850,7 +2064,33 @@
                     }
                 },
                 "defaultLabel": "No K-12 School Enrollment"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "K-12 School Enrollment",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":    5, "color": "#FF0000" }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     },
     "aR" : {
@@ -3319,31 +3559,31 @@
                 },
                 "defaultLabel": "No Person Miles Traveled"
             },
-            "main_divide_by": {
-                "legendTitle": "Person Miles Traveled",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Person Miles Traveled"
-            }
+                }
+            ]
         }
     },
     "aPHT": {
@@ -3428,31 +3668,31 @@
                 },
                 "defaultLabel": "No Person Hours Traveled"
             },
-            "main_divide_by": {
-                "legendTitle": "Person Hours Traveled",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Person Hours Traveled"
-            }
+                }
+            ]
         }
     },
     "aPHD": {
@@ -3537,31 +3777,31 @@
                 },
                 "defaultLabel": "No Person Hours of Delay"
             },
-            "main_divide_by": {
-                "legendTitle": "Person Hours of Delay",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Person Hours of Delay"
-            }
+                }
+            ]
         }
     },
     "aVMT": {
@@ -3646,31 +3886,31 @@
                 },
                 "defaultLabel": "No Vehicle Miles Traveled"
             },
-            "main_divide_by": {
-                "legendTitle": "Vehicle Miles Traveled",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Vehicle Miles Traveled"
-            }
+                }
+            ]
         }
     },
     "aVHT": {
@@ -3755,31 +3995,31 @@
                 },
                 "defaultLabel": "No Vehicle Hours Traveled"
             },
-            "main_divide_by": {
-                "legendTitle": "Vehicle Hours Traveled",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Vehicle Hours Traveled"
-            }
+                }
+            ]
         }
     },
     "aVHD": {
@@ -3864,31 +4104,31 @@
                 },
                 "defaultLabel": "No Vehicle Hours of Delay"
             },
-            "main_divide_by": {
-                "legendTitle": "Vehicle Hours of Delay",
-                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0, '', Text($feature.dVal, '#,##0.0')))",
-                "classBreakInfos": [
-                    { "minValue":  0, "maxValue":     5, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "0 to 5"      },
-                    { "minValue":  5, "maxValue":    10, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "5 to 10"     },
-                    { "minValue": 10, "maxValue":    15, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10 to 15"    },
-                    { "minValue": 15, "maxValue":    20, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "15 to 20"    },
-                    { "minValue": 20, "maxValue":    30, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "20 to 30"    },
-                    { "minValue": 30, "maxValue":    40, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "30 to 40"    },
-                    { "minValue": 40, "maxValue":    60, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "40 to 60"    },
-                    { "minValue": 60, "maxValue":    80, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "60 to 80"    },
-                    { "minValue": 80, "maxValue":999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 80"}
-                    ],
-                "defaultSymbol": {
-                    "type": "simple-fill",
-                    "color": [221,221,221,0.75],
-                    "outline": {
-                        "type": "simple-line",
-                        "color": "#FFFFFF",
-                        "width": 1
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "white",
+                                "width": 0.2
+                            }
+                        },
+                        "visualVariables": {
+                            "type": "color",
+                            "field": "dVal", 
+                            "stops": [
+                                { "value":    0, "color": "#D3D3FF" },
+                                { "value": 0.01, "color": "#D3D3FF" },
+                                { "value":    1, "color": "#0000FF" },
+                                { "value":   80, "color": "#FF0000" }
+                            ]
+                        }
                     }
-                },
-                "defaultLabel": "No Vehicle Hours of Delay"
-            }
+                }
+            ]
         }
     },
     "aTPMT": {

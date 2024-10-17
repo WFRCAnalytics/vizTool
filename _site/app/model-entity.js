@@ -161,9 +161,13 @@ class ModelEntity {
     activeModelEntity= this;
     
     this.menuItem.hideAllLayoutLayers()
+    
+    if (activeModelEntity.vizLayout) {
+      activeLayout = this.vizLayout;
+      this.vizLayout.renderSidebar();  // Use the saved instance context here as well
+      this.vizLayout.updateDisplay();
+    }
 
-    this.vizLayout.renderSidebar();  // Use the saved instance context here as well
-    this.vizLayout.updateDisplay();
     //this.displayJSONData();
 
   }

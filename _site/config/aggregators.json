@@ -76,5 +76,35 @@
         "agOptions": [
             {"value":"1" , "label":"Wasatch Front Model Area"}
         ]
+    },
+    "WFRCHIGHWAY_ID": {
+        "agTitleText"      : "WFRC Highway Projects",
+        "agGeoJsonKey"     : "corrWFRCHIGHWAY",
+        "agCodeLabelField" : "WFRCHIGHWAY_NAME",
+        "baseAgCode"       : "SEGID"
+    },
+    "WFRCTRANSIT_ID": {
+        "agTitleText"      : "WFRC Transit Projects",
+        "agGeoJsonKey"     : "corrWFRCTRANSIT",
+        "agCodeLabelField" : "WFRCTRANSIT_NAME",
+        "baseAgCode"       : "SEGID"
+    },
+    "MAGHIGHWAY_ID": {
+        "agTitleText"      : "MAG Highway Projects",
+        "agGeoJsonKey"     : "corrMAGHIGHWAY",
+        "agCodeLabelField" : "MAGHIGHWAY_NAME",
+        "baseAgCode"       : "SEGID"
+    },
+    "MAGTRANSIT_ID": {
+        "agTitleText"      : "MAG Transit Projects",
+        "agGeoJsonKey"     : "corrMAGTRANSIT",
+        "agCodeLabelField" : "MAGTRANSIT_NAME",
+        "baseAgCode"       : "SEGID"
+    },
+    "FREIGHT_ID": {
+        "agTitleText"      : "Freight Corridors",
+        "agGeoJsonKey"     : "corrFREIGHT",
+        "agCodeLabelField" : "FREIGHT_NAME",
+        "baseAgCode"       : "SEGID"
     }
 }

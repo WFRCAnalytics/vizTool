@@ -1,7 +1,8 @@
 let globalTemplates = [];
 let dataScenarios = []; // this object contains all the scenarios and their data
 let dataScenarioTrends = []; // this object contains all the scneario trends definitions
-let dataGeojsons = {}; // this object contains 
+let dataGeojson = {};
+let dataKeys = {};
 let map;
 let geojsonSegments;
 let mapView;
@@ -144,18 +145,26 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
       };
     }).filter(trend => trend !== null); // Remove any null values from the array
     
-    
     dataScenarioTrends = scenarioTrends.map(item => new ScenarioTrend(item));
   
     dataGeojsons = {};
+    dataKeys     = {};
 
-    const _geojsonfilenames = new Set();
+    let _geojsonfilenames = new Set();
+    let _keysfilenames    = new Set();
 
     for (const model of jsonScenario.models) {
-        let _geojsons = Object.values(model.geojsons);
-        for (const _geojson of _geojsons) {
-            _geojsonfilenames.add(_geojson);
+      let _geojsons = Object.values(model.geojsons);
+      for (const _geojson of _geojsons) {
+        _geojsonfilenames.add(_geojson);
+      }
+      let _keygroups = Object.values(model.keys);
+      for (const _keygroup of _keygroups) {
+        let _keys = Object.values(_keygroup);
+        for (const _key of _keys) {
+          _keysfilenames.add(_key);
         }
+      }
     }
 
     totalFilesToLoadGeo = _geojsonfilenames.size;
@@ -188,6 +197,12 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
         fetchPromises.push(fetchPromise);
     }
 
+    // Fetch and store GeoJSON data for each filename
+    for (const _keysfilename of _keysfilenames) {
+      let fetchPromise = fetchAndStoreJsonKeys(_keysfilename, updateProgressGeo);
+      fetchPromises.push(fetchPromise);
+    }
+
     // Wait for all GeoJSON data fetching to complete
     await Promise.all(fetchPromises);
 
@@ -209,6 +224,18 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
       console.error(`Error fetching data from ${fileName}:`, error);
       totalLoadedFilesGeo++;  // Still increment the loaded files counter
       updateProgressGeo();  // Call the progress update function even if file doesn't exist
+    }
+  }
+
+  // Function to fetch and store data
+  async function fetchAndStoreJsonKeys(fileName) {
+    try {
+      const response = await fetch(`geo-data/keys/${fileName}`);
+      const jsonData = await response.json();
+      // Store the processed data in the object with the filename as key
+      dataKeys[fileName] = jsonData;
+    } catch (error) {
+      console.error(`Error fetching data from ${fileName}:`, error);
     }
   }
 

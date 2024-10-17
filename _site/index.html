@@ -87,11 +87,15 @@
                 
                 // Show the modal
                 modal.style.display = 'block';
-                
-                // When the user clicks OK, close the modal
-                okButton.onclick = function() {
-                    modal.style.display = 'none';
-                };
+                // Check if okButton exists before setting onclick
+
+                if (okButton) {
+                    okButton.onclick = function() {
+                        modal.style.display = 'none';
+                    };
+                } else {
+                    console.warn('okButton not found in the DOM.');
+                }
             });
         </script>
     </body>

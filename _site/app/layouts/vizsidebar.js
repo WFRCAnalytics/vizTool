@@ -268,31 +268,6 @@ class VizSidebar {
   getAttributeRendererCollection() {
     return this.attributes.find(item => item.attributeCode === this.getACode()).rendererCollection;
   }
-
-  // Function to be called when checkbox status changes
-  toggleLabels() {
-    var labelCheckbox = document.getElementById('vizsidebar:toggleLabels');
-    
-    if (this.layerDisplay) {
-      if (labelCheckbox.checked) {
-        // Checkbox is checked, show labels
-        // Restore labels if originalLabelInfo has been stored
-        if (!this.originalLabelInfo) {
-          // Set originalLabelInfo if not set previously
-          this.originalLabelInfo = this.layerDisplay.labelingInfo;
-        }
-        this.layerDisplay.labelingInfo = this.originalLabelInfo;
-      } else {
-        // Checkbox is unchecked, hide labels
-        // Store the current label info before hiding if not already stored
-        if (!this.originalLabelInfo) {
-          this.originalLabelInfo = this.layerDisplay.labelingInfo;
-        }
-        this.layerDisplay.labelingInfo = [];
-      }
-      this.layerDisplay.refresh(); // Refresh the layer to apply changes
-    }
-  }
   
   afterUpdateSidebar() {
     this.updateFilterDisplay();
@@ -315,7 +290,12 @@ class VizSidebar {
   
       if (_filterGroupArray) {
         this.filters.forEach(filterObject => {
-          const containsFilterText = _filterGroupArray.some(filterText => filterObject.id.includes(filterText + '-filter'));
+          // Ensure _filterGroupArray is an array and filterObject.id is defined and a string
+          const containsFilterText = Array.isArray(_filterGroupArray) &&
+                                    typeof filterObject.id === 'string' &&
+                                    _filterGroupArray.some(filterText => 
+                                        typeof filterText === 'string' && filterObject.id.includes(filterText + '-filter')
+                                    );
           if (containsFilterText) {
             if (!filterObject.isVisible()) {
               filterObject.show();

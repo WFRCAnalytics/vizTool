@@ -8,6 +8,7 @@ class Scenario {
     this.scnFolder  = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
     this.geojsons   = jsonScenario.models.find(entry => entry.modVersion === this.modVersion).geojsons;
     this.jsonData   = {}; // Array to store the data
+    this.keys       = jsonScenario.models.find(entry => entry.modVersion === this.modVersion).keys;
   }
 
   // loadData has to be called after menuItems is loaded
@@ -45,6 +46,10 @@ class Scenario {
     return this.geojsons[key];
   }
 
+  getKeyFileNameFromGeoJsonKey(basegeometrykey, aggeometrykey) {
+    return this.keys[basegeometrykey][aggeometrykey];
+  }
+
   // Function to fetch and store data
   async fetchAndStoreData(fileName) {
     try {
@@ -52,7 +57,7 @@ class Scenario {
 
         if (!response.ok) {
             // If the response is not OK (e.g., 404), log an error and return
-            console.error(`File not found: ${fileName}`);
+            console.log(`File not found: ${fileName}`);
             return;  // Do not proceed with storing data
         }
 
@@ -61,7 +66,7 @@ class Scenario {
         this.jsonData[fileName] = new AttributeFilterData(jsonData);
     } catch (error) {
         // Log any other errors (e.g., network issues)
-        console.error(`Error fetching data from ${fileName}:`, error);
+        console.log(`Error fetching data from ${fileName}:`, error);
     }
   }
 

@@ -339,17 +339,6 @@
             {"value":"Managed" , "label": "Freeway-Managed"   }
         ]
     },
-    "fRoadSegFuncGroupNoTotal": {
-        "fName"    : "Functional Group",
-        "fWidget"  : "checkboxes",
-        "fSelected": ["Managed"],
-        "fOptions" : [
-            {"value":"Arterial", "label": "Arterial/Collector"},
-            {"value":"CD Road" , "label": "Freeway-CD Road"   },
-            {"value":"Freeway" , "label": "Freeway-GP Only"   },
-            {"value":"Managed" , "label": "Freeway-Managed"   }
-        ]
-    },
     "fAreaType": {
         "fName"    : "Area Type",
         "fWidget"  : "checkboxes",

@@ -31,12 +31,21 @@ require([
         console.warn("data.compare_pct is undefined or null");
       }
       if (data.main_divide_by) {
-        this.main_divide_by = {
-          "name": data.main_divide_by.legendTitle,
-          "renderer": createRenderer(data.main_divide_by),
-          "labelExpressionInfo": data.main_divide_by.labelExpressionInfo,
-          "title": data.main_divide_by.legendTitle
-        };
+        if (!this.main_divide_by) {
+          this.main_divide_by = {};  // Initialize as an empty object if not already initialized
+        }
+        if (Array.isArray(data.main_divide_by)) {
+          for (const main_divide_by of data.main_divide_by) {
+            this.main_divide_by[main_divide_by.divider] = {
+              name: main_divide_by.legendTitle,
+              renderer: createRenderer(main_divide_by),
+              labelExpressionInfo: main_divide_by.labelExpressionInfo,
+              title: main_divide_by.legendTitle
+            };
+          }
+        } else {
+          console.warn("data.main_divide_by is not an array or is undefined");
+        }
       } else {
         console.warn("data.main_divide_by is undefined or null");
       }
@@ -79,6 +88,23 @@ require([
         renderer.legendOptions = {
           title: data.legendTitle
         };
+      }
+      return renderer;
+    } else if (data.simpleRenderer) {
+      const renderer = new SimpleRenderer(data.simpleRenderer);
+      // Add legend options
+      if (renderer.visualVariables) {
+        if (data.legendTitle) {
+          renderer.visualVariables.legendOptions = {
+            title: data.legendTitle
+          };
+        } 
+      } else {
+        if (data.legendTitle) {
+          renderer.legendOptions = {
+            title: data.legendTitle
+          };
+        } 
       }
       return renderer;
     }
