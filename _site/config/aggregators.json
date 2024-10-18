@@ -5,7 +5,7 @@
         "agCodeLabelField": "TAZID"
     },
     "CITY_NAME": {
-        "agTitleText"      : "City",
+        "agTitleText"      : "City Area",
         "agGeoJsonKey"     : "city",
         "agCodeLabelField" : "CITY_NAME",
         "baseAgCode"       : "TAZID",
