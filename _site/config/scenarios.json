@@ -86,12 +86,12 @@
     "trends": [
         {
             "scnTrendCode": "RTP",
-            "displayName": "RTP",
+            "alias": "RTP 2023",
             "displayByDefault": true
         },
         {
             "scnTrendCode": "NB28",
-            "displayName": "NB28",
+            "alias": "No Build on 2028 Network",
             "displayByDefault": true
         }
     ],

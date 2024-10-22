@@ -17,17 +17,26 @@
   </div>
   <!-- Collapse button -->
   <button id="openbtntrend" class="openbtn bottom"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
+  <div id="trendSelector">
+  </div>
   <div id="trendMain">
     <div id="trendHeader"></div>
     <div id="trendContent"></div>
     <div id="trendTable"></div>
-    <button id="copyTableBtn">Copy Table to Clipboard</button>
-  </div>
+    <div style="height: 25px;">
+      <calcite-button id="copyTableBtn" appearance="solid" color="blue" scale="s">
+        Copy Table to Clipboard
+      </calcite-button>
+    </div>
+      </div>
   <div id="trendSettings">
     <div id="trendScenarios"></div>
-    <div id="trendSeries"></div>
-    <div id="trendSeriesMode"></div>
-    <div id="trendYears"></div>
-    <div id="trendChange"></div>
+    <br/>
+    <div id="trendOptions">
+      <div id="trendYears"></div>
+      <div id="trendSeries"></div>
+      <div id="trendSeriesMode"></div>
+      <div id="trendChange"></div>
+    </div>
   </div>
 </div>

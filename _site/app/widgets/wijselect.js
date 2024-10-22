@@ -95,4 +95,38 @@ class WijSelect {
     document.getElementById(this.containerId).style.display = 'block';
   }
   
+  removeOptionByValue(optionValue) {
+    const select = document.getElementById(this.id); // Get the select element by its id
+    const options = select.querySelectorAll('calcite-option'); // Get all the option elements
+  
+    options.forEach((option, index) => {
+      if (option.value === optionValue) {
+        select.removeChild(option); // Remove the option from the select
+      }
+    });
+  }
+
+  // Method to add an option to the beginning of the list if it doesn't exist
+  addOptionIfNotExistsToBeginning(optionValue, optionText) {
+    const select = document.getElementById(this.id); // Get the select element by its id
+    const options = select.querySelectorAll('calcite-option'); // Get all the option elements
+
+    // Check if the option already exists
+    let optionExists = false;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].value === optionValue) {
+        optionExists = true;
+        break;
+      }
+    }
+
+    // Add the option to the beginning if it doesn't exist
+    if (!optionExists) {
+      const newOption = document.createElement('calcite-option');
+      newOption.value = optionValue;
+      newOption.textContent = optionText;
+      select.insertBefore(newOption, select.firstChild); // Insert the option at the beginning
+    }
+  }
+
 }

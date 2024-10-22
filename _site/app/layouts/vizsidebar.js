@@ -257,9 +257,7 @@ class VizSidebar {
   }
   
   getSelectedAggregator() {
-
     let foundAggregator = this.aggregators.find(obj => obj.agCode === this.aggregatorSelect.selected);
-
     if (foundAggregator) {
       return foundAggregator;
     }

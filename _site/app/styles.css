@@ -154,6 +154,12 @@ th, td {
     flex-grow: 1; /* Allows the container to take up available space */
 }
 
+#trendSelector {
+    padding:15px;
+    background-color: #EEEEEE;
+    width:250px;
+}
+
 /* SIDEBARS */
 .sidebar {
     width: 500px; /* or any other value */
@@ -172,6 +178,11 @@ th, td {
 #trendMain{
     width: 100px; /* or any other value */
     overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+#trendOptions{
+    padding: 15px;
+    background-color: #ADD8E6;
 }
 
 .rowAttributes {
@@ -409,13 +420,13 @@ th, td {
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 1em;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .custom-chart-table th, .custom-chart-table td {
-    padding: 12px 15px;
-    border: 1px solid #dddddd;
+    padding: 10px 10px;
+    border: 0px solid #dddddd;
   }
 
   .custom-chart-table th {

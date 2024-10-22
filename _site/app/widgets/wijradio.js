@@ -2,12 +2,19 @@ class WijRadio {
   constructor(parentid, title, selected, options, vizLayout, infoTextHtml="", spaceafter=false) {
     this.id = parentid + '-wij';
     this.title = title;
-    this.selected = selected;
     this.options = options;
     this.vizLayout = vizLayout;
     this.infoTextHtml = infoTextHtml;
     this.spaceafter = spaceafter;
     this.containerId = this.id + "-container"
+    // Check if the selected value is part of options
+    if (selected && options.some(option => option.value === selected)) {
+      this.selected = selected;
+    } else {
+      if (options.length>0) {
+        this.selected = options[0].value; // Default to the first option
+      }
+    }
   }
 
   render() {
@@ -66,7 +73,12 @@ class WijRadio {
         // Update renderer with value of radio button
         console.log('radio button change '+ this.id + ':' + rbValue );
         this.selected = rbValue;
-        wijRadioInstance.vizLayout.afterUpdateSidebar();
+        if (this.id.includes('chart-filter')) {
+          wijRadioInstance.vizLayout.afterUpdateTrendSelector();
+        } else {
+          wijRadioInstance.vizLayout.afterUpdateSidebar();
+        }
+        
       });
 
       // Nest the radio button directly inside the calcite-label

@@ -11,7 +11,6 @@ let dummyFeature;
 let dataMenu;
 let activeModelEntity;
 let scenarioChecker; // vizTrends global item
-let scenarioRadioer; // vizTrends global item
 let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
 let selectedScenario_Comp = {};

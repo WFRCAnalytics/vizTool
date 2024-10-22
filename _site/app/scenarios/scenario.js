@@ -41,13 +41,22 @@ class Scenario {
     });
   }
 
-
   getGeoJsonFileNameFromKey(key) {
     return this.geojsons[key];
   }
 
   getKeyFileNameFromGeoJsonKey(basegeometrykey, aggeometrykey) {
     return this.keys[basegeometrykey][aggeometrykey];
+  }
+  
+  getAggregatorKeyFile(selectedAggregator, _baseKey) {
+    if (!selectedAggregator || selectedAggregator.agCode != _baseKey) {
+      const agKey = selectedAggregator['agGeoJsonKey'];
+      // Ensure both keys are non-empty
+      if (_baseKey !== "" && agKey !== "") {
+        return dataKeys[this.getKeyFileNameFromGeoJsonKey(_baseKey, selectedAggregator['agGeoJsonKey'])];
+      }
+    }
   }
 
   // Function to fetch and store data

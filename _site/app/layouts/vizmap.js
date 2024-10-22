@@ -128,36 +128,6 @@ require([
       this.afterUpdateSidebar();
     }
 
-    getAggregatorKeyFile() {
-
-      if (this.sidebar.aggregators.length > 0 && (!this.getSelectedAggregator() ||
-      this.getSelectedAggregator().agCode != this.baseGeoJsonId)) {
-
-        // Ensure both keys are non-empty
-        if (this.baseGeoJsonKey !== "" && this.sidebar.getSelectedAggregator()['agGeoJsonKey'] !== "") {
-          
-          // Return the fetch promise
-          return fetch('geo-data/keys/' + 
-            this.getScenarioMain().getKeyFileNameFromGeoJsonKey(this.baseGeoJsonKey, this.sidebar.getSelectedAggregator()['agGeoJsonKey']))
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json();
-            })
-            .catch(error => {
-              console.error('Error reading the JSON file:', error);
-              throw error; // Propagate the error for handling upstream
-            });
-        } else {
-          // Return a resolved promise with null if keys are empty
-          return Promise.resolve(null);
-        }
-      } else {
-        // Return a resolved promise with null when the main condition is false
-        return Promise.resolve(null);
-      }
-    }
   
     generateIdFromText(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -608,7 +578,7 @@ require([
 
     updateDisplay() {
       console.log('vizmap:updateDisplay');
-      
+
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
 
@@ -895,10 +865,10 @@ require([
             });
 
           // B: Aggregator
-          } else{
-                    
+          } else {
+
             // Call this.getAggregatorKeyFile() once and store the result
-            const aggregatorKeyFile = await this.getAggregatorKeyFile();
+            const aggregatorKeyFile = this.getScenarioMain().getAggregatorKeyFile(this.sidebar.getSelectedAggregator(), this.baseGeoJsonKey);
 
             if (aggregatorKeyFile) {
 

@@ -1,3 +1,4 @@
+
 class VizTrends {
   constructor(data, modelEntity) {
     this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
@@ -6,7 +7,8 @@ class VizTrends {
     this.baseGeoJsonKey = data.baseGeoJsonKey;
     this.baseGeoJsonId = data.baseGeoJsonId;
     this.jsonName = data.jsonName;
-     
+    this.allChartData = [];
+
     // link to parent
     this.modelEntity = modelEntity;
 
@@ -30,16 +32,11 @@ class VizTrends {
     if (_scenariochooserdiv.innerHTML.trim() === '') {
       scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Trend Groups', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
       _scenariochooserdiv.appendChild(scenarioChecker.render());
-      const firstScnTrendCode = dataScenarioTrends.find(a => a.displayByDefault === true)?.scnTrendCode; 
-      scenarioRadioer = new WijRadio('scenario-radioer', 'Select Trend Group', firstScnTrendCode, dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
-      _scenariochooserdiv.appendChild(scenarioRadioer.render());
-      const scenarioRadioerwijdiv = document.getElementById('scenario-radioer-wij-container');
-      scenarioRadioerwijdiv.style.display = 'none';
     }
 
-    this.modeOptions = [{ value: 'regular'   , label: 'Values'                 , title:''                                 },
-                        { value: 'change'    , label: 'Change from Base Year'  , title:' - Change from Base Year'         },
-                        { value: 'pct_change', label: '% Change from Base Year', title:' - Percent Change from Base Year' }];
+    this.modeOptions = [{ value: 'regular'   , label: 'Values'                 , title:''                           },
+                        { value: 'change'    , label: 'Change from Base Year'  , title:' - Change from Base Year'   },
+                        { value: 'pct_change', label: '% Change from Base Year', title:' - % Change from Base Year' }];
 
     // add settings in header
     const _trendChange = document.getElementById('trendChange');
@@ -58,6 +55,8 @@ class VizTrends {
 
     // add settings in header
     const _seriesMode = document.getElementById('trendSeriesMode');
+    _seriesMode.style.display=('none');
+
     if (_seriesMode.innerHTML.trim() === '') {
       seriesModeSelect  = new WijSelect(this.id + "-line-mode-select",
                                   "Select Series Mode",
@@ -66,6 +65,8 @@ class VizTrends {
                                   this);
       _seriesMode.appendChild(seriesModeSelect.render());
     }
+
+
     this.seriesSelect = {};
 
     if (Object.keys(yearSelect).length === 0 && yearSelect.constructor === Object) {
@@ -99,15 +100,19 @@ class VizTrends {
 
     this.defaultSeries = 'trendGroup'; // default selection
 
-    // Function to copy the table content to the clipboard
+    // Function to copy the trendHeader and table content to the clipboard 
     function copyTableToClipboard() {
-      const table = document.getElementById('trendTable').innerHTML;
+      const trendHeader = document.getElementById('trendHeader').innerHTML; // Get trendHeader content
+      const table = document.getElementById('trendTable').innerHTML; // Get table content
 
-      // Create a temporary textarea to hold the table HTML
+      // Combine trendHeader and table content
+      const combinedContent = trendHeader + '\n\n' + table;
+
+      // Create a temporary textarea to hold the combined content
       const tempTextArea = document.createElement('textarea');
       tempTextArea.style.position = 'fixed'; // Avoid scrolling to bottom
       tempTextArea.style.opacity = 0; // Make it invisible
-      tempTextArea.value = table;
+      tempTextArea.value = combinedContent;
 
       // Append the textarea to the document
       document.body.appendChild(tempTextArea);
@@ -120,11 +125,17 @@ class VizTrends {
       document.body.removeChild(tempTextArea);
 
       // Provide feedback to the user (optional)
-      //alert('Table copied to clipboard!');
+      // alert('Header and table copied to clipboard!');
     }
 
     // Add event listener to the copy button
     document.getElementById('copyTableBtn').addEventListener('click', copyTableToClipboard);
+
+    this.wijRadioAgId = null;
+    this.wijRadioTrendCode = null;
+
+    this.counterColor = 0;
+    this.currentChart = null;
 
   }
 
@@ -144,8 +155,8 @@ class VizTrends {
     // scenarios is first
     let _seriesList = [{ value: "trendGroup", label: "Trend Groups" }];
     // aggregator is next
-    //_seriesList = _seriesList.concat([{ value: 'aggregator', label: "Summary Geography" }]);
-
+    _seriesList = _seriesList.concat([{ value: 'aggregator', label: "Summary Geography" }]);
+    // finally filters
     _seriesList = _seriesList.concat([{ value: '--', label: '------Filters-------'}]);
 
     // filters are last
@@ -204,13 +215,17 @@ class VizTrends {
   }
   
   // get the attribute code that is selected
-  getACode() {
+  get aCode() {
     return this.sidebar.getACode();
   }
 
   // get the divider code that is selected
-  getDCode() {
+  get dCode() {
     return this.sidebar.getDCode();
+  }
+
+  get agCode() {
+    return this.getSelectedAggregator()?.agCode ?? null;
   }
 
   getSelectedAggregator() {
@@ -226,9 +241,9 @@ class VizTrends {
   getFilterGroup() {
     const scenarioWithData = getFirstScenarioWithTrendData(this.jsonName);
     if (scenarioWithData) {
-      let _baseFilterGroup = scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.getACode());
+      let _baseFilterGroup = scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.aCode);
       let _selectedAttribute = this.sidebar.attributes.find(attribute =>
-        attribute.attributeCode == this.getACode()
+        attribute.attributeCode == this.aCode
       ) || null;
       if (_selectedAttribute) {
         if (_selectedAttribute.filterOverride) {
@@ -252,10 +267,65 @@ class VizTrends {
       return _filterGroup.split("_");
     }
   }
-    
-  buildChart(attributeCode, chartData, seriesValues) {
+  
+  afterUpdateTrendSelector() {
+    this.buildChart();
+  };
+
+  getColor = (() => {
+    const colors = [
+      'rgba( 75, 210, 192, 1)', // Teal
+      'rgba(255,  99, 132, 1)', // Pink/Red
+      'rgba(255, 216,  96, 1)', // Yellow
+      'rgba( 54, 162, 225, 1)', // Blue
+      'rgba(153, 102, 255, 1)', // Purple
+      'rgba(255, 159,  64, 1)', // Orange
+      'rgba(  0, 128, 128, 1)', // Dark Teal
+      'rgba(128,   0, 128, 1)', // Dark Purple
+      'rgba(255,  69,   0, 1)', // Red-Orange
+      'rgba(  0, 128,   0, 1)', // Green
+      'rgba(  0,   0, 128, 1)', // Navy Blue
+      'rgba(128, 128,   0, 1)', // Olive
+      'rgba(128,   0,   0, 1)', // Maroon
+      'rgba(  0, 255, 127, 1)', // Spring Green
+      'rgba( 70, 130, 180, 1)', // Steel Blue
+      'rgba(255, 215,   0, 1)', // Gold
+      'rgba(255, 140,   0, 1)', // Dark Orange
+      'rgba(123, 104, 238, 1)', // Medium Slate Blue
+      'rgba( 34, 139,  34, 1)', // Forest Green
+      'rgba(220,  20,  60, 1)'  // Crimson
+    ];
+  
+    return () => {
+      const color = colors[this.counterColor % colors.length];
+      this.counterColor++;
+      // Reset this.counterColor to 0 when it reaches the max value
+      if (this.counterColor >= colors.length) {
+        this.counterColor = 0;
+      }
+      return color;
+    };
+  })();
+  
+
+  buildChart() {
+
+    let chartData = {};
+    let allChartDataFiltered;
+    let _seriesValues;
+    let groupIds;
+    let groupLabels;
+
+    if (this.currentChart) {
+      // Destroy existing Chart instance
+      this.currentChart.destroy();
+    }
+
+    // color this.counterColor, so always same order of colors
+    this.counterColor = 0;
+
     console.log('viztrends:Creating the chart:' + this.id);
-    console.log("Selected radio button option under 'Display':", attributeCode);
+    document.getElementById('trendTable').innerHTML = "";
 
     var mode = "";
     if (modeSelect) {
@@ -263,49 +333,267 @@ class VizTrends {
     } else {
       mode = 'regular';
     }
-      
+
+    const seriesIsTrend      = this.seriesSelect.selected    === 'trendGroup';
+    const seriesIsAggregator = this.seriesSelect.selected    === 'aggregator';
     const selectedYear = yearSelect.selected; // Get the selected year
     const isAllYears = selectedYear === 'allYears'; // Check if all years are selected
   
-    const _aggCode = this.getSelectedAggregator();
+    const _agg = this.getSelectedAggregator();
 
-    if (seriesModeSelect.selected==='stacked100') {
-      // Loop through each agId in chartData
-      Object.keys(chartData).forEach(agId => {
-        // Loop through each year within the series for the current agId
-        const years = Object.keys(chartData[agId][Object.keys(chartData[agId])[0]]); // Get the years from the first series
-
-        years.forEach(year => {
-          // Calculate the total value for all series for the current agId and year
-          let total = Object.keys(chartData[agId]).reduce((sum, series) => {
-            return sum + (chartData[agId][series][year] || 0);
-          }, 0);
-
-          // Check if the total is greater than zero to avoid division by zero
-          if (total > 0) {
-            // Loop through each series again to calculate the percentage
-            Object.keys(chartData[agId]).forEach(series => {
-              const value = chartData[agId][series][year] || 0;
-              chartData[agId][series][year] = (value / total) * 100; // Calculate percentage and update
-            });
-          } else {
-            // If the total is zero, set each percentage to 0 for consistency
-            Object.keys(chartData[agId]).forEach(series => {
-              chartData[agId][series][year] = 0;
-            });
-          }
-        });
-      });
+    function roundUpToTwoSignificantFigures(value) {
+      if (value === 0) return 0; // Special case for zero
+      const magnitude = Math.pow(10, Math.floor(Math.log10(Math.abs(value)))); // Find the magnitude of the value
+      return Math.ceil(value / (magnitude / 10)) * (magnitude / 10); // Adjust to round up to two significant figures
     }
 
-    var _title;
-
-    if (isAllYears) {
-      _title = _aggCode.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
-    } else {
-      _title = _aggCode.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' - ' + String(selectedYear) + this.modeOptions.find(option => option.value===mode).title;
+    function roundUpToSingleSignificantDigit(value) {
+      if (value === 0) return 0; // Special case for zero
+      const magnitude = Math.pow(10, Math.floor(Math.log10(Math.abs(value)))); // Find the magnitude of the value
+      return Math.ceil(value / magnitude) * magnitude; // Round up to the nearest significant digit
     }
     
+    let maxValue = -Infinity;  // Initialize max value
+    
+    for (const item of this.allChartData) {
+      const { value } = item;
+      
+      if (typeof value === 'number') {
+        const roundedValue = roundUpToSingleSignificantDigit(value); // Round up to a single significant digit
+        maxValue = Math.max(maxValue, roundedValue);  // Update maxValue if the current rounded value is larger
+      }
+    }
+
+    const uniqueValues = {
+      scnTrendCodes: new Set(),
+      fCodes: new Set(),
+      agIds: new Set(),
+    };
+    
+    // Loop through this.allChartData to populate uniqueValues
+    this.allChartData.forEach(data => {
+      uniqueValues.scnTrendCodes.add(data._scnTrendCode);
+      uniqueValues.fCodes.add(data._fCode);
+      uniqueValues.agIds.add(data._agId);
+    });
+    
+
+    // set up chart data based on what type of series is selected
+    if (isAllYears) {
+      if (seriesIsTrend) {
+
+        // series is trend, so only use one agId as defined by radio button
+        allChartDataFiltered = this.allChartData.filter(item => item._agId === this.wijRadioAgId.selected);
+        
+        for (const item of allChartDataFiltered) {
+          const { _scnTrendCode, _scnYear, value } = item;
+          
+          chartData[_scnTrendCode] = chartData[_scnTrendCode] || {}; // Ensure the trendCode exists in chartData
+          chartData[_scnTrendCode][_scnYear] = value; // Assign the year-level value
+        }
+      
+        _seriesValues = dataScenarioTrends
+          .filter(a => scenarioChecker.selected.includes(a.scnTrendCode))
+          .map(item => {
+            return { code: item.scnTrendCode, alias: item.alias, color: this.getColor() };
+          });
+  
+      } else if (seriesIsAggregator) {
+        // series is aggregator, so only use one trendCode as defined by radio button
+        allChartDataFiltered = this.allChartData.filter(item => item._scnTrendCode === this.wijRadioTrendCode.selected);
+        
+        for (const item of allChartDataFiltered) {
+          const { _agId, _scnYear, value } = item;
+          
+          chartData[_agId] = chartData[_agId] || {}; // Ensure the agId exists in chartData
+          chartData[_agId][_scnYear] = value; // Assign the year-level value
+        }  
+  
+        _seriesValues = this.sidebar.aggregatorFilter.options
+          .filter(a => this.sidebar.aggregatorFilter.getSelectedOptionsAsList().includes(a.value))
+          .map(item => {
+            return { code: item.value, alias: item.label, color: this.getColor() };
+          });
+      
+      } else {
+  
+        // All others use only one of each (both agId and trendCode defined by radio buttons)
+        allChartDataFiltered = this.allChartData.filter(item => 
+          item._scnTrendCode === this.wijRadioTrendCode.selected && item._agId === this.wijRadioAgId.selected
+        );
+        
+        for (const item of allChartDataFiltered) {
+          const { _fCode, _scnYear, value } = item;
+          
+          chartData[_fCode] = chartData[_fCode] || {}; // Ensure the fCode exists in chartData
+          chartData[_fCode][_scnYear] = value; // Assign the year-level value
+        }
+        
+        // get list of filters
+        var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
+        if (_filterForSeries.filterWij instanceof WijSelect) {
+          var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+        } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+          var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+        }
+  
+        _seriesValues = _filterForSeries.options
+        .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
+        .map(filterOption => {
+          return { code: filterOption.value, alias: filterOption.label , color: this.getColor()};
+        });
+  
+      }
+
+    // not isAllYears - single year - so grouped bar chart
+    } else {
+      if (seriesIsAggregator) {
+        // series is aggregator, so only use one trendCode as defined by radio button
+        allChartDataFiltered = this.allChartData;
+        
+        for (const item of allChartDataFiltered) {
+          const { _scnTrendCode, _agId, _scnYear, value } = item;
+          
+          chartData[_scnTrendCode] = chartData[_scnTrendCode] || {};
+          chartData[_scnTrendCode][_agId] = chartData[_scnTrendCode][_agId] || {}; // Ensure the agId exists in chartData
+          chartData[_scnTrendCode][_agId][_scnYear] = value; // Assign the year-level value
+        }  
+  
+        _seriesValues = this.sidebar.aggregatorFilter.options
+          .filter(a => this.sidebar.aggregatorFilter.getSelectedOptionsAsList().includes(a.value))
+          .map(item => {
+            return { code: item.value, alias: item.label, color: this.getColor() };
+          });
+        
+        // bar chart is grouped by scnTrendCodes
+        // Ensure groupIds is an array
+        groupIds = uniqueValues.scnTrendCodes;
+
+        // Use filter instead of find, and map to get the labels
+        groupLabels = scenarioChecker.options
+          .filter(item => groupIds.has(item.value)) // Filter items where value is in groupIds
+          .map(item => item.label); // Map to get labels
+
+      } else {
+  
+        // All others use only one of each (both agId and trendCode defined by radio buttons)
+        allChartDataFiltered = this.allChartData.filter(item => 
+          item._scnTrendCode === this.wijRadioTrendCode.selected
+        );
+        
+        for (const item of allChartDataFiltered) {
+          const { _agId, _fCode, _scnYear, value } = item;
+
+          chartData[_agId] = chartData[_agId] || {};
+          chartData[_agId][_fCode] = chartData[_agId][_fCode] || {}; // Ensure the agId exists in chartData
+          chartData[_agId][_fCode][_scnYear] = value; // Assign the year-level value
+        }
+        
+        // get list of filters
+        var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
+        if (_filterForSeries.filterWij instanceof WijSelect) {
+          var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+        } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+          var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+        }
+  
+        _seriesValues = _filterForSeries.options
+        .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
+        .map(filterOption => {
+          return { code: filterOption.value, alias: filterOption.label , color: this.getColor()};
+        });
+  
+        // bar chart is grouped by agIds
+        // Ensure groupIds is an array
+        groupIds = uniqueValues.agIds;
+        groupLabels = this.sidebar.aggregatorFilter.options
+          .filter(item=>groupIds.has(item.value))
+          .map(item => item.label);
+      }
+    }
+
+    if (seriesModeSelect.selected === 'stacked100') {
+      if (isAllYears) {
+        // Case when isAllYears = true, simple structure chartData[currentSeries][year]
+        Object.keys(chartData).forEach(series => {
+          const years = Object.keys(chartData[series]);
+    
+          years.forEach(year => {
+            // Calculate the total value for all series for the current year
+            let total = Object.keys(chartData).reduce((sum, currentSeries) => {
+              return sum + (chartData[currentSeries][year] || 0);
+            }, 0);
+    
+            // Check if the total is greater than zero to avoid division by zero
+            if (total > 0) {
+              Object.keys(chartData).forEach(currentSeries => {
+                const value = chartData[currentSeries][year] || 0;
+                chartData[currentSeries][year] = (value / total) * 100; // Calculate percentage and update
+              });
+            } else {
+              Object.keys(chartData).forEach(currentSeries => {
+                chartData[currentSeries][year] = 0;
+              });
+            }
+          });
+        });
+      } else {
+        // Case when isAllYears = false, complex structure chartData[grouped][currentSeries][year]
+        Object.keys(chartData).forEach(grouped => {
+          Object.keys(chartData[grouped]).forEach(series => {
+            const years = Object.keys(chartData[grouped][series]);
+    
+            years.forEach(year => {
+              // Calculate the total value for all series for the current year
+              let total = Object.keys(chartData[grouped]).reduce((sum, currentSeries) => {
+                return sum + (chartData[grouped][currentSeries][year] || 0);
+              }, 0);
+    
+              // Check if the total is greater than zero to avoid division by zero
+              if (total > 0) {
+                Object.keys(chartData[grouped]).forEach(currentSeries => {
+                  const value = chartData[grouped][currentSeries][year] || 0;
+                  chartData[grouped][currentSeries][year] = (value / total) * 100; // Calculate percentage and update
+                });
+              } else {
+                Object.keys(chartData[grouped]).forEach(currentSeries => {
+                  chartData[grouped][currentSeries][year] = 0;
+                });
+              }
+            });
+          });
+        });
+      }
+    }
+
+    // Prepare title of chart
+    var _title;
+    var selectedTrendTitle;
+    var selectedAgTitle;
+
+    if (this.wijRadioTrendCode) {
+      const selectedTrend = this.wijRadioTrendCode.options.find(item => item.value === this.wijRadioTrendCode.selected);
+      selectedTrendTitle = selectedTrend ? selectedTrend.label + ' ' : '';
+    }
+
+    if (this.wijRadioAgId) {
+      const selectedAg = this.wijRadioAgId.options.find(item => item.value === this.wijRadioAgId.selected);
+      selectedAgTitle = selectedAg ? selectedAg.label + ' ' : ''
+    }
+    
+    
+    if (isAllYears) {
+      if (seriesIsAggregator) {
+        _title = selectedTrendTitle + _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
+      } else if (seriesIsTrend) {
+        _title = selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
+      } else {
+        _title = selectedTrendTitle + selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
+      }
+      
+    } else {
+      _title = _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' - ' + String(selectedYear) + this.modeOptions.find(option => option.value===mode).title;
+    }
     
     const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
 
@@ -313,8 +601,8 @@ class VizTrends {
     var _yaxisTitle = this.sidebar.getADisplayName();
 
     if (this.sidebar.dividers) {
-      if (this.getDCode()!="Nothing") {
-        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.attributeCode === this.getDCode()).alias;
+      if (this.dCode!="Nothing") {
+        _yaxisTitle += ' divided by ' + this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode).alias;
       }
     }
 
@@ -344,10 +632,7 @@ class VizTrends {
     chartContainer.appendChild(canvas);
   
     const ctx = canvas.getContext('2d');
-    let currentChart = null;
-  
-    const agIds = this.recastArrayIfNumeric(Object.keys(chartData));
-  
+    
     const calculatePercentChange = (currentValue, initialValue) => ((currentValue - initialValue) / initialValue) * 100;
   
     const calculateChange = (currentValue, initialValue) => currentValue - initialValue;
@@ -381,91 +666,86 @@ class VizTrends {
       }
       return change;
     };
-      
-    const createChart = () => {
-      if (currentChart) {
-        // Destroy existing Chart instance
-        currentChart.destroy();
-      }
-  
+
+
+    let max;
+
+    if (seriesModeSelect.selected === 'stacked100') {
+      max = 100;
+    } else if (seriesModeSelect.selected === 'scatter') {
+      max = maxValue; // Ensure maxValue is available and round it
+    } else {
+      max = undefined;
+    }
+
+    const createChart=()=>{
+
+      // all years is always a line or stacked line chart
       if (isAllYears) {
-        currentChart = new Chart(ctx, {
+        this.currentChart = new Chart(ctx, {
           type: (seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100') ? 'line' : 'scatter', 
           data: {
-            datasets: agIds.flatMap(agId => {
-              return seriesValues.map(series => {
-                const code = series.code;
-                let values = chartData[agId][code];
-                let dataPoints;
-                
-                if (!values || typeof values !== 'object') {
-                  console.error(`Invalid or missing values for aggregator ID ${agId} and scenario ${code}`);
-                  return null; 
+            datasets: _seriesValues.flatMap(series => {
+              const code = series.code;
+              let values = chartData[code];
+              let dataPoints;
+              
+              if (!values || typeof values !== 'object') {
+                console.error(`Invalid or missing values for scenario ${code}`);
+                return null; 
+              }
+              
+              if (mode === 'pct_change' || mode === 'change') {
+                try {
+                  dataPoints = modifyDataForChange(values, mode);
+                } catch (error) {
+                  console.error(`Error modifying data for change: ${error.message}`);
+                  dataPoints = [];
                 }
-                
-                if (mode === 'pct_change' || mode === 'change') {
-                  try {
-                    dataPoints = modifyDataForChange(values, mode);
-                  } catch (error) {
-                    console.error(`Error modifying data for change: ${error.message}`);
-                    dataPoints = [];
-                  }
-                } else {
-                  try {
-                    dataPoints = Object.keys(values).map(year => {
-                      if (isNaN(year)) {
-                        throw new Error(`Invalid year value: ${year}`);
-                      }
-        
-                      const yValue = +values[year].toPrecision(4);
-                      if (isNaN(yValue)) {
-                        throw new Error(`Invalid numeric value for year ${year}: ${values[year]}`);
-                      }
-        
-                      return { 
-                        x: parseInt(year, 10), 
-                        y: yValue 
-                      };
-                    });
-                  } catch (error) {
-                    console.error(`Error processing data points: ${error.message}`);
-                    dataPoints = [];
-                  }
+              } else {
+                try {
+                  dataPoints = Object.keys(values).map(year => {
+                    if (isNaN(year)) {
+                      throw new Error(`Invalid year value: ${year}`);
+                    }
+      
+                    const yValue = +values[year].toPrecision(4);
+                    if (isNaN(yValue)) {
+                      throw new Error(`Invalid numeric value for year ${year}: ${values[year]}`);
+                    }
+      
+                    return { 
+                      x: parseInt(year, 10), 
+                      y: yValue 
+                    };
+                  });
+                } catch (error) {
+                  console.error(`Error processing data points: ${error.message}`);
+                  dataPoints = [];
                 }
-        
-                const allYZero = dataPoints.every(point => point.y === 0);
-        
-                const color = this.getRandomColor(); // Get the random color once
-
-                if (dataPoints && dataPoints.length > 0 && !allYZero) {
-                  return {
-                    label: this.getAgNameFromAgId(agId) + ':' + series.alias,
-                    data: dataPoints,
-                    borderColor: color,
-                    backgroundColor: color,
-                    borderWidth: 3,
-                    showLine: true, 
-                    pointRadius: seriesModeSelect.selected === 'scatter' ? 8 : 5,
-                    fill: seriesModeSelect.selected === 'stacked100' || seriesModeSelect.selected === 'stacked',
-                    stack: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
-                  };
-                }
-                return null;
-              }).filter(dataset => dataset !== null);
-            })
+              }
+      
+              const allYZero = dataPoints.every(point => point.y === 0);
+      
+              if (dataPoints && dataPoints.length > 0 && !allYZero) {
+                return {
+                  label: series.alias,
+                  data: dataPoints,
+                  borderColor: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'rgba(255,255,255,1)' : _seriesValues.find(item=>item.code===code).color,
+                  backgroundColor: _seriesValues.find(item=>item.code===code).color,
+                  borderWidth: 3,
+                  showLine: true, 
+                  pointRadius: seriesModeSelect.selected === 'scatter' ? 8 : 5,
+                  fill: seriesModeSelect.selected === 'stacked100' || seriesModeSelect.selected === 'stacked' ? true : false,
+                  stack: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
+                };
+              }
+              return null;
+            }).filter(dataset => dataset !== null)
           },
           options: {
+            animation: false,  // Disable animation
             responsive: true,
-            //plugins: {
-            //  tooltip: {
-            //    mode: 'index',
-            //    intersect: false,
-            //  },
-            //},
-            //interaction: {
-            //  mode: 'index',
-            //  intersect: false,
-            //},
             scales: {
               x: {
                 type: 'linear',
@@ -499,29 +779,32 @@ class VizTrends {
                   text: _yaxisTitle, 
                 },
                 min: seriesModeSelect.selected === 'stacked100' ? 0 : undefined,
-                max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined
+                max: max
               }
             }
           }
         });
-        
+        this.generateTableFromChart(this.currentChart, _seriesValues);
+
+      // single year is always a bar chart
       } else {
-        currentChart = new Chart(ctx, {
+
+        this.currentChart = new Chart(ctx, {
           type: 'bar', // Grouped bar chart
           data: {
-            labels: agIds.map(agId => this.getAgNameFromAgId(agId)), // X-axis labels as agIds
-            datasets: seriesValues.map(series => {
+            labels: groupLabels,
+            datasets: _seriesValues.map(series => {
               const code = series.code;
         
-              // Data points for each agId for the selected year
-              const dataPoints = agIds.map(agId => {
-                const values = chartData[agId][code];
+              // Data points for each groupId for the selected year
+              const dataPoints = Array.from(groupIds).map(groupId => {
+                const values = chartData[groupId][code];
                 var yValue;
 
-                // Error checking: Ensure values exist for the agId and code
+                // Error checking: Ensure values exist for the groupId and code
                 if (!values || typeof values !== 'object') {
-                  console.error(`Invalid or missing values for agId: ${agId}, scenario: ${code}`);
-                  return null; // Skip this agId if values are invalid
+                  console.error(`Invalid or missing values for groupId: ${groupId}, scenario: ${code}`);
+                  return null; // Skip this groupId if values are invalid
                 }
                 
                 // Process data points based on mode
@@ -531,8 +814,8 @@ class VizTrends {
                     if (!isNaN(yValue)) {
                       return yValue; // Return the y-value for the selected year
                     } else {
-                      console.error(`Invalid numeric value for year ${selectedYear} in agId: ${agId}, scenario: ${code}`);
-                      return null; // Skip this agId if the value is invalid
+                      console.error(`Invalid numeric value for year ${selectedYear} in groupId: ${groupId}, scenario: ${code}`);
+                      return null; // Skip this groupId if the value is invalid
                     }
                   } catch (error) {
                     console.error(`Error modifying data for change: ${error.message}`);
@@ -545,11 +828,11 @@ class VizTrends {
                     if (!isNaN(yValue)) {
                       return yValue; // Return the y-value for the selected year
                     } else {
-                      console.error(`Invalid numeric value for year ${selectedYear} in agId: ${agId}, scenario: ${code}`);
-                      return null; // Skip this agId if the value is invalid
+                      console.error(`Invalid numeric value for year ${selectedYear} in groupId: ${groupId}, scenario: ${code}`);
+                      return null; // Skip this groupId if the value is invalid
                     }
                   } else {
-                    console.warn(`No data found for agId: ${agId}, scenario: ${code}, selectedYear: ${selectedYear}`);
+                    console.warn(`No data found for groupId: ${groupId}, scenario: ${code}, selectedYear: ${selectedYear}`);
                     return null; // Return null if no data found for the selected year
                   }
                 }
@@ -561,9 +844,9 @@ class VizTrends {
               if (dataPoints && dataPoints.length > 0 && !allValuesZero) {
                 return {
                   label: series.alias, // Label for each scenario group
-                  data: dataPoints, // Data points for each agId for the selected year
-                  backgroundColor: this.getRandomColor(), // Random color for each scenario group
-                  borderColor: this.getRandomColor(), // Random border color
+                  data: dataPoints, // Data points for each groupId for the selected year
+                  backgroundColor: _seriesValues.find(item=>item.code===code).color, // Random color for each scenario group
+                  borderColor: _seriesValues.find(item=>item.code===code).color, // Random border color
                   borderWidth: 3
                 };
               }
@@ -571,6 +854,7 @@ class VizTrends {
             }).filter(dataset => dataset !== null) // Filter out any null datasets
           },
           options: {
+            animation: false,  // Disable animation
             scales: {
               x: {
                 beginAtZero: true,
@@ -605,27 +889,13 @@ class VizTrends {
           }
         });
       }
-      this.generateTableFromChart(currentChart);
+      this.generateTableFromChart(this.currentChart);
     };
   
     // Initial chart creation
     createChart();
   }
-  
 
-  getRandomColor(index) {
-    // Generate a random color based on index
-    const colors = [
-        'rgba( 75, 192, 192, 1)',
-        'rgba(255,  99, 132, 1)',
-        'rgba(255, 206,  86, 1)',
-        'rgba( 54, 162, 235, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159,  64, 1)'
-    ];
-
-    return colors[index % colors.length];
-  }
 
   recastArrayIfNumeric(arr) {
     // Check if every item in the array is a numeric string
@@ -642,42 +912,43 @@ class VizTrends {
 
   updateDisplay() {
     console.log('viztrends:updateDisplay:' + this.id);
-
-    const _aCode = this.getACode();
-    const _dCode = this.getDCode();
-    const _agCode = this.getSelectedAggregator()?.agCode ?? null;
-
-    const seriesIsFilter = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
-    //const trendsIsFilter = this.seriesSelect.selected === 'trendGroup'; // Check if the first character is 'f'
+    const trendSelectorDiv = document.getElementById("trendSelector");
+    trendSelectorDiv.innerHTML = "";
+    if (this.currentChart) {
+      // Destroy existing Chart instance
+      this.currentChart.destroy();
+    }
+    this.updateAllChartData();
+  }
+  
+  updateAllChartData() {
+    console.log('viztrends:updateAllChartData:' + this.id);
+    
+    const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
 
     if (this.sidebar.dividers) {
-      var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === _dCode) || null;
+      var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
     }
 
-    const _agIds = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
-  
-    const chartData = {};
+    const _trendsSelected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
+    const _aggregatorOptionsSelected = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
+    const _selectedAggregator = this.sidebar.getSelectedAggregator();
 
-    var _data_divide;
-    var _geojsondata_divide;  
+    var _selectedFilterOptions = [];
+    var _lstOfSelectedFilterOptions = [];
 
-    var listOfSelectedFilterOptions = [];
-    var listOfSelectedFilterOptions_byFilterLock = {};
+    this.allChartData = [];
 
     if (seriesIsFilter) {
 
       //seriesModeSelect.show();
 
-      // make scenario selector radio visibile and hide checker
-      scenarioChecker.hide();
-      scenarioRadioer.show();
-
-      // get list 
+      // get list
       var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
       if (_filterForSeries.filterWij instanceof WijSelect) {
-        var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+        _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
       } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
-        var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+        _selectedFilterOptions = _filterForSeries.filterWij.selected;
       }
 
       // Ensure _selectedFilterOptions is always an array
@@ -688,243 +959,227 @@ class VizTrends {
       }
 
       for (const _selectedFilter of _selectedFilterOptions) {
-        listOfSelectedFilterOptions_byFilterLock[_selectedFilter] = this.sidebar.getListOfSelectedFilterOptionsWithLock(this.seriesSelect.selected, _selectedFilter);
+        _lstOfSelectedFilterOptions[_selectedFilter] = this.sidebar.getListOfSelectedFilterOptionsWithLock(this.seriesSelect.selected, _selectedFilter);
       }
 
-      const dataScenarioTrend_selected = dataScenarioTrends.find(a => a.scnTrendCode===scenarioRadioer.selected);
+    } else {
+      _selectedFilterOptions = [""];
+      _lstOfSelectedFilterOptions[""] = this.sidebar.getListOfSelectedFilterOptions();
+    }
 
-      dataScenarioTrend_selected.modelruns.forEach(modelrun => {
+    // Loop through each trendCode and all scenarios
+    _trendsSelected.forEach(trend => {
+
+      var _scnTrendCode = trend.scnTrendCode;
+
+      trend.modelruns.forEach(modelrun => {
         
-        const _scnYear    = modelrun.scnYear;
-        const _modVersion = modelrun.modVersion;
-        const _scnGroup   = modelrun.scnGroup;
-        const _scenario   = this.getScenario(_modVersion, _scnGroup, _scnYear);
-                    
+        var _bNoDivideData = false;
+        const _scnYear     = modelrun.scnYear;
+        const _scenario    = this.getScenario(modelrun.modVersion, modelrun.scnGroup, _scnYear);
+        
         if (_scenario) {
           
-          // get geojson key data
-          const _geojsondata = dataGeojsons[_scenario.geojsons[this.baseGeoJsonKey]];
+          // Call this.getAggregatorKeyFile() once and store the result
+          const aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
 
-          if (!_geojsondata) {
-            return;
-          }
-
-          _agIds.forEach(agId => {
-              
-            const _filteredFeatures = _geojsondata.features.filter(feature => 
-              feature.properties[_agCode]==agId
-            );
-
-            if (_dCode!="Nothing") {
-
-              var _sumDivide = 0;
-
-              // get divide features with the same agId
-              const filteredFeatures_divide = _geojsondata_divide.features.filter(feature => 
-                feature.properties[_agCode]==agId
-              );
-
-              // loop through divide features and baseGeoJsonIds
-              var filteredFeatures_divide_set = new Set();
-              filteredFeatures_divide.forEach((feature) => {
-                if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
-                  filteredFeatures_divide_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
-                }
-              });
-
-              const _filteredFeatures_divide_list = [...filteredFeatures_divide_set];
-
-              //filter the zonesSeData to only those zones that are within filteredTazList
-              const filtered_geojsondata_divide = Object.keys(_geojsondata_divide)
-                .filter((key) => _filteredFeatures_divide_list.includes(parseInt(key)))
-                .reduce((result, key) => {
-                  result[key] = _geojsondata_divide[key];
-                  return result;
-              }, {});
-
-              //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
-              for (const key in _filteredFeatures_divide_list) {
-                if (_data_divide[_filteredFeatures_divide_list[key]][_dCode] !== undefined) {
-                  _sumDivide += _data_divide[_filteredFeatures_divide_list[key]][_dCode];
-                }
-              }
-            }
-
-            if (!chartData[agId]) {
-              chartData[agId] = {};
-            }
+          if (aggregatorKeyFile) {
 
             _selectedFilterOptions.forEach(_fCode => {
+
+              const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
+
+              _aggregatorOptionsSelected.forEach(_agId => {
                 
-              if (!chartData[agId][_fCode]) {
-                chartData[agId][_fCode] = {};
-              }
-
-              var _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonName, listOfSelectedFilterOptions_byFilterLock[_fCode]);
-
-              chartData[agId][_fCode][_scnYear] = 0;
-
-              _filteredFeatures.forEach(feature => {
-
-                const baseId = feature.properties[this.baseGeoJsonId];
-                const filterSelectionData = _filteredScenario[baseId];
-        
-                if (filterSelectionData) {
-                  //const selectedValue = this.getChartData(_aCode, filterSelectionData);
-
-                  const selectedValue = filterSelectionData[_aCode];
-
-                  if (selectedValue == null | selectedValue == undefined) {
-                    console.log("null data found in here: " + agId + '_' + _fCode + '_' + _scnYear)
-                  }
-
-                  if (selectedValue !== null & selectedValue !== undefined) {
-                    chartData[agId][_fCode][_scnYear] += selectedValue;
-                  }
-                }
-              })
-
-            });
-
-          });
-        }
-
-      });
-      
-      var _seriesValues = _filterForSeries.options
-      .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
-      .map(filterOption => {
-        return { code: filterOption.value, alias: filterOption.label };
-      });
-
-    } else {
-
-      // hide Series Mode
-      //seriesModeSelect.hide();
-
-      scenarioRadioer.hide();
-      scenarioChecker.show();
-
-      const dataScenarioTrends_selected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
-
-      listOfSelectedFilterOptions = this.sidebar.getListOfSelectedFilterOptions();
-
-      dataScenarioTrends_selected.forEach(trend => {
-
-        var _scnTrendCode = trend.scnTrendCode;
-  
-        trend.modelruns.forEach(modelrun => {
-          
-          const _scnYear    = modelrun.scnYear;
-          const _modVersion = modelrun.modVersion;
-          const _scnGroup   = modelrun.scnGroup;
-          const _scenario   = this.getScenario(_modVersion, _scnGroup, _scnYear);
-          
-          if (_scenario) {
-          
-            // get geojson key data
-            const _geojsondata = dataGeojsons[_scenario.geojsons[this.baseGeoJsonKey]];
-  
-            if (!_geojsondata) {
-              return;
-            }
-  
-            _data_divide = {};
-            _geojsondata_divide = {};
-  
-            if (_dCode!="Nothing") {
-              _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
-              _geojsondata_divide = dataGeojsons[_scenario.geojsons[_selectedDivider.baseGeoJsonKey]];
-            }  
-
-            var _filteredScenario = _scenario.getDataForFilterOptionsList(this.jsonName, listOfSelectedFilterOptions);
-
-            _agIds.forEach(agId => {
-              
-              const _filteredFeatures = _geojsondata.features.filter(feature => 
-                feature.properties[_agCode]==agId
-              );
-  
-              if (_dCode!="Nothing") {
-  
+                let _dataSum = 0;
+                var _data_divide = {};
                 var _sumDivide = 0;
-  
-                // get divide features with the same agId
-                const filteredFeatures_divide = _geojsondata_divide.features.filter(feature => 
-                  feature.properties[_agCode]==agId
-                );
-  
-                // loop through divide features and baseGeoJsonIds
-                var filteredFeatures_divide_set = new Set();
-                filteredFeatures_divide.forEach((feature) => {
-                  if (feature.properties && feature.properties[_selectedDivider.baseGeoJsonId]) {
-                    filteredFeatures_divide_set.add(feature.properties[_selectedDivider.baseGeoJsonId]);
-                  }
-                });
-  
-                const _filteredFeatures_divide_list = [...filteredFeatures_divide_set];
-  
-                //filter the zonesSeData to only those zones that are within filteredTazList
-                const filtered_geojsondata_divide = Object.keys(_geojsondata_divide)
-                  .filter((key) => _filteredFeatures_divide_list.includes(parseInt(key)))
-                  .reduce((result, key) => {
-                    result[key] = _geojsondata_divide[key];
-                    return result;
-                }, {});
-  
-                //sum up all the "selected divide by attribute"'s  value within the filtered zonesSeData list to get a sum total
-                for (const key in _filteredFeatures_divide_list) {
-                  if (_data_divide[_filteredFeatures_divide_list[key]][_dCode] !== undefined) {
-                    _sumDivide += _data_divide[_filteredFeatures_divide_list[key]][_dCode];
-                  }
-                }
-              }
-  
-              if (!chartData[agId]) {
-                chartData[agId] = {};
-              }
-              if (!chartData[agId][_scnTrendCode]) {
-                chartData[agId][_scnTrendCode] = {};
-              }
-  
-              chartData[agId][_scnTrendCode][_scnYear] = 0;
 
-              _filteredFeatures.forEach(feature => {
+                // Get associated json records for given aggregator
+                const lstBaseGeoJsonIds = aggregatorKeyFile
+                  .filter(record => record[_selectedAggregator.agCode] === _agId)
+                  .map(record => record[this.baseGeoJsonId]);
 
-                const baseId = feature.properties[this.baseGeoJsonId];
-                const filterSelectionData = _filteredScenario[baseId];
-        
-                if (filterSelectionData) {
-                  //const selectedValue = this.getChartData(_aCode, filterSelectionData);
-
-                  const selectedValue = filterSelectionData[_aCode];
-
+                // Filter the _dataForFilterOptions object based on matching keys (assuming keys represent the this.baseGeoJsonId)
+                const _dataForAg = Object.keys(_dataForFilterOptions)
+                  .filter(key => lstBaseGeoJsonIds.includes(key))
+                  .map(key => ({ key, ..._dataForFilterOptions[key] })); // Include both key and its associated data
+                    
+                _dataForAg.forEach(record => {
+                  const selectedValue = record[this.aCode];
                   if (selectedValue == null | selectedValue == undefined) {
-                    console.log("null data found in here: " + agId + '_' + _scnTrendCode + '_' + _scnYear)
+                    console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId)
                   }
-
                   if (selectedValue !== null & selectedValue !== undefined) {
-                    chartData[agId][_scnTrendCode][_scnYear] += selectedValue;
+                    _dataSum += selectedValue;
+                  }
+                })
+
+                if (this.dCode!="Nothing") {
+      
+                  // Call this.getAggregatorKeyFile() once and store the result
+                  const aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
+      
+                  if (aggregatorKeyFile_divide) {
+                    if (_scenario.jsonData[_selectedDivider.jsonName]) {
+                      _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+                    } else {
+                      _bNoDivideData = true;
+                    }
+                    
+                    // Get associated json records for given aggregator
+                    const lstBaseGeoJsonIds_divide = aggregatorKeyFile_divide
+                      .filter(record => record[_selectedAggregator.agCode] === _agId)
+                      .map(record => String(record[_selectedDivider.baseGeoJsonId])); // Convert each value to a string
+    
+                    // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
+                    const _dataForAg_divide = Object.keys(_data_divide)
+                      .filter(key => lstBaseGeoJsonIds_divide.includes(key))
+                      .map(key => ({ key, ..._data_divide[key] })); // Include both key and its associated data
+                        
+                    _dataForAg_divide.forEach(record => {
+                      const selectedValue = record[_selectedDivider.attributeCode];
+                      if (selectedValue !== null & selectedValue !== undefined) {
+                        _sumDivide += selectedValue;
+                      }
+                    })
                   }
                 }
-              })
-
-              if (_dCode!="Nothing") {
-                chartData[agId][_scnTrendCode][_scnYear] /= _sumDivide;
-              }
-
+                if (this.dCode!="Nothing" & _sumDivide>0) {
+                  _dataSum /= _sumDivide;
+                } else if (this.dCode!="Nothing" & _sumDivide==0) {
+                  _dataSum = null;
+                }
+                // Push the resulting data to allChartData as an object
+                if (_dataSum) {
+                  this.allChartData.push({
+                    _scnTrendCode,
+                    _scnYear,
+                    _fCode,
+                    _agId,
+                    value: _dataSum
+                  });
+                }
+              });
             });
           }
-        });
+        }
       });
-      var _seriesValues = dataScenarioTrends
-        .filter(a => scenarioChecker.selected.includes(a.scnTrendCode))
-        .map(item => {
-          return { code: item.scnTrendCode, alias: item.alias };
-        });;
-    }
+    });
+
+    const uniqueValues = {
+      scnTrendCodes: new Set(),
+      scnYears: new Set(),
+      fCodes: new Set(),
+      agIds: new Set(),
+    };
     
-    this.buildChart(_aCode, chartData, _seriesValues);
+    // Loop through this.allChartData to populate uniqueValues
+    this.allChartData.forEach(data => {
+      uniqueValues.scnTrendCodes.add(data._scnTrendCode);
+      uniqueValues.scnYears.add(data._scnYear);
+      uniqueValues.fCodes.add(data._fCode);
+      uniqueValues.agIds.add(data._agId);
+    });
+    
+    // Convert sets to arrays for further usage
+    uniqueValues.scnTrendCodes = Array.from(uniqueValues.scnTrendCodes).sort();
+    uniqueValues.scnYears = Array.from(uniqueValues.scnYears).sort();
+    uniqueValues.fCodes = Array.from(uniqueValues.fCodes).sort();
+    uniqueValues.agIds = Array.from(uniqueValues.agIds).sort();
+
+    // Prepare chart filters based on series selection
+    var seriesIsTrend = this.seriesSelect.selected === 'trendGroup';
+    var seriesIsAggregator = this.seriesSelect.selected === 'aggregator';
+
+    var selectedYear = yearSelect.selected; // Get the selected year
+    var isAllYears = selectedYear === 'allYears'; // Check if all years are selected
+
+    var selectedFilterAgId = this.wijRadioAgId ? this.wijRadioAgId.selected : null;
+    var selectedFilterTrendCode = this.wijRadioTrendCode ? this.wijRadioTrendCode.selected : null;
+
+    const createRadioFilter = (id, label, options, selected) =>
+      new WijRadio(id, label, selected, options, this);
+    
+    const _seriesMode = document.getElementById('trendSeriesMode');
+    
+    const _radioTrend = this.wijRadioTrendCode = createRadioFilter(
+      'chart-filter-scntrendcodes', 
+      'Trend Group', 
+      scenarioChecker.options.filter(item => uniqueValues.scnTrendCodes.includes(item.value))
+        .map(item => ({ value: item.value, label: item.label })), 
+      selectedFilterTrendCode
+    );
+    const _radioAg = createRadioFilter(
+      'chart-filter-agids', 
+      'Summary Geography', 
+      this.sidebar.aggregatorFilter.options.filter(item => uniqueValues.agIds.includes(item.value))
+        .map(item => ({ value: item.value, label: item.label })), 
+        selectedFilterAgId
+    );
+
+    if (isAllYears) {
+
+      const originalSelected = this.seriesSelect.selected;
+
+      this.seriesSelect.addOptionIfNotExistsToBeginning("trendGroup", "Trend Group"); // Add the option if not already there
+
+      this.seriesSelect.selected = originalSelected;
+
+      if (seriesIsTrend) {
+        _seriesMode.style.display=('none');
+        seriesModeSelect.selected = 'scatter';
+        this.wijRadioAgId = _radioAg
+        this.wijRadioTrendCode = null;
+      } else if (seriesIsAggregator) {
+        _seriesMode.style.display=('block');
+        this.wijRadioAgId = null;
+        this.wijRadioTrendCode = _radioTrend;
+      } else if (seriesIsFilter) {
+        _seriesMode.style.display=('block');
+        this.wijRadioAgId = _radioAg
+        this.wijRadioTrendCode = _radioTrend;
+      }
+    } else {
+
+      const originalSelected = this.seriesSelect.selected;
+
+      this.seriesSelect.removeOptionByValue("trendGroup"); // Remove the option with value "trendGroup"
+
+      // selecte aggregator if trend Group was selected
+      if (originalSelected=="trendGroup") {
+        this.seriesSelect.selected = 'aggregator';
+        seriesIsTrend = false;
+        seriesIsAggregator = true;
+      }
+
+      if (seriesIsTrend) {
+        _seriesMode.style.display=('none');
+        seriesModeSelect.selected = 'scatter';
+        this.wijRadioAgId = null;
+        this.wijRadioTrendCode = null;
+      } else if (seriesIsAggregator) {
+        _seriesMode.style.display=('block');
+        this.wijRadioAgId = null;
+        this.wijRadioTrendCode = null;
+      } else if (seriesIsFilter) {
+        _seriesMode.style.display=('block');
+        this.wijRadioAgId = null;
+        this.wijRadioTrendCode = _radioTrend;
+      }
+    }
+
+    // Step 3: Update DOM elements with the rendered filters
+    const trendSelectorDiv = document.getElementById("trendSelector");
+    trendSelectorDiv.innerHTML = "";
+
+    if (this.wijRadioAgId) {
+      trendSelectorDiv.append(this.wijRadioAgId.render());
+    }
+    if (this.wijRadioTrendCode) {
+      trendSelectorDiv.append(this.wijRadioTrendCode.render());
+    }
+    this.buildChart();
   }
 
   // Function to format values similar to y-axis tick callback
@@ -950,17 +1205,36 @@ class VizTrends {
   }
 
     // Function to generate an HTML table from chart data
-  generateTableFromChart(chartInstance) {
+  generateTableFromChart(chartInstance, _seriesValues) {
+    
+    const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
+    const seriesIsTrend      = this.seriesSelect.selected    === 'trendGroup';
+    const seriesIsAggregator = this.seriesSelect.selected    === 'aggregator';
+    const selectedYear       = yearSelect.selected; // Get the selected year
+    const isAllYears         = selectedYear === 'allYears'; // Check if all years are selected
+  
+    let _title;
+    
+    if (isAllYears) {
+      if (seriesIsAggregator) {
+        _title = this.getSelectedAggregator().agTitleText;
+      } else if (seriesIsTrend) {
+        _title = "Trend Group";
+      } else if (seriesIsFilter) {
+        const selectedItem = this.seriesSelect.options.find(item => item.value === this.seriesSelect.selected);
+        _title = selectedItem ? selectedItem.label : '';
+      }
+    }
+
     // Get the chart's data
     const datasets = chartInstance.data.datasets;
-    const seriesMode = chartInstance.options.scales.y.stacked100 ? 'stacked100' : chartInstance.options.scales.y.stacked; // Determine the series mode
 
     // Extract unique x-axis values (years)
     const xValues = [...new Set(datasets.flatMap(dataset => dataset.data.map(point => point.x)))];
     xValues.sort((a, b) => a - b); // Sort by year
 
     // Create table element
-    let tableHTML = '<table class="custom-chart-table"><thead><tr><th></th>';
+    let tableHTML = '<table class="custom-chart-table"><thead><tr><th></th><th>' + _title + '</th>';
 
     // Add column headers for each x-value (year)
     xValues.forEach(xValue => {
@@ -970,8 +1244,21 @@ class VizTrends {
 
     // Add rows for each dataset (series)
     datasets.forEach(dataset => {
-      // First column: series label, left-aligned
-      tableHTML += `<tr><td style="text-align: left;">${dataset.label}</td>`;
+
+      let _colorRGBA;
+
+      if (_seriesValues) {
+        _colorRGBA = _seriesValues.find(item=>item.alias===dataset.label).color;
+      } else {
+        _colorRGBA = undefined;
+      }
+      
+
+      // First column: Color square, no header
+      tableHTML += `<tr><td style="width: 20px;"><div style="width: 15px; height: 15px; background-color: ${_colorRGBA};"></div></td>`;
+
+      // Second column: series label, left-aligned
+      tableHTML += `<td style="text-align: left;">${dataset.label}</td>`;
       
       // Add y-values for each x-value (year), formatted accordingly and right-aligned
       xValues.forEach(x => {
@@ -988,6 +1275,5 @@ class VizTrends {
     // Append the table to the DOM (or replace existing one)
     document.getElementById('trendTable').innerHTML = tableHTML;
   }
-
 
 }
