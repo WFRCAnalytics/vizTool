@@ -154,10 +154,30 @@ th, td {
     flex-grow: 1; /* Allows the container to take up available space */
 }
 
+
+#trendSettings {
+    width: 180px;
+    background-color: ADD8E6; /* White background with 25% transparency */
+    height: calc(100vh - 134px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+    /* Style your columns */
+}
+
 #trendSelector {
     padding:15px;
     background-color: #EEEEEE;
-    width:250px;
+    width:150px;
+}
+
+
+#trendScenarios {
+    padding:15px;
+    background-color: rgba(185, 185, 255, 0.95);
+}
+
+#trendOptions{
+    padding: 15px;
+    background-color: #ADD8E6;
 }
 
 /* SIDEBARS */
@@ -178,11 +198,6 @@ th, td {
 #trendMain{
     width: 100px; /* or any other value */
     overflow-y: auto; /* Enable vertical scrollbar */
-}
-
-#trendOptions{
-    padding: 15px;
-    background-color: #ADD8E6;
 }
 
 .rowAttributes {
@@ -313,15 +328,6 @@ th, td {
     box-sizing: border-box; /* Include padding and border in the width calculation */
     min-width: 0; /* Optional: Ensures it can shrink below its content's intrinsic width */
     /* Add any additional styling you need */
-}
-
-#trendSettings {
-    width: 180px;
-    background-color: rgba(185, 185, 255, 0.95); /* White background with 25% transparency */
-    padding: 10px;
-    height: calc(100vh - 134px);
-    overflow-y: auto; /* Enable vertical scrollbar */
-    /* Style your columns */
 }
 
 #mainMatrix {

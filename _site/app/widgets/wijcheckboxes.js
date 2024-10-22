@@ -2,11 +2,19 @@ class WijCheckboxes {
   constructor(parentid, title, selected, options, vizLayout, spaceafter=false) {
     this.id = parentid + '-wij';
     this.title = title;
-    this.selected = selected || [];
     this.options = options;
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
-    
+
+    // Check if the selected value is part of options
+    if (selected) {
+      this.selected = selected;
+    } else {
+      if (options.length>0) {
+        this.selected = [options[0].value]; // Default to the first option
+      }
+    }
+
     this.containerId = this.id + "-container";
 
     this.numOptionsForCheckAllButton = configApp.checkboxesSelector.numOptionsForCheckAllButton;

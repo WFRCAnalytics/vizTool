@@ -323,5 +323,14 @@ class VizSidebar {
     }
   }
   
+  hideTrendSelector() {
+    const trendSelector = document.getElementById("trendSelector");
+    trendSelector.style.display = 'none';
+  }
+
+  showTrendSelector() {
+    const trendSelector = document.getElementById("trendSelector");
+    trendSelector.style.display = 'block';
+  }
 
 }

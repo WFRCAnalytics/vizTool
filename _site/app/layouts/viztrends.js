@@ -567,9 +567,16 @@ class VizTrends {
     }
 
     // Prepare title of chart
-    var _title;
-    var selectedTrendTitle;
-    var selectedAgTitle;
+    var _title = "";
+    var selectedTrendTitle = "";
+    var selectedAgTitle = "";
+    var selectedYearTitle = "";
+
+    if (!isAllYears) {
+      selectedYearTitle = ' ' + selectedYear + ' ';
+    } else {
+      selectedYearTitle = ' Trends';
+    }
 
     if (this.wijRadioTrendCode) {
       const selectedTrend = this.wijRadioTrendCode.options.find(item => item.value === this.wijRadioTrendCode.selected);
@@ -581,20 +588,14 @@ class VizTrends {
       selectedAgTitle = selectedAg ? selectedAg.label + ' ' : ''
     }
     
-    
-    if (isAllYears) {
-      if (seriesIsAggregator) {
-        _title = selectedTrendTitle + _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
-      } else if (seriesIsTrend) {
-        _title = selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
-      } else {
-        _title = selectedTrendTitle + selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' Trends' + this.modeOptions.find(option => option.value===mode).title;
-      }
-      
+    if (seriesIsAggregator) {
+      _title = selectedTrendTitle + _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
+    } else if (seriesIsTrend) {
+      _title = selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
     } else {
-      _title = _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + ' - ' + String(selectedYear) + this.modeOptions.find(option => option.value===mode).title;
+      _title = selectedTrendTitle + selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
     }
-    
+
     const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
 
     // build y-axis title
@@ -672,7 +673,7 @@ class VizTrends {
 
     if (seriesModeSelect.selected === 'stacked100') {
       max = 100;
-    } else if (seriesModeSelect.selected === 'scatter') {
+    } else if (seriesModeSelect.selected === 'scatter' & mode === 'regular') {
       max = maxValue; // Ensure maxValue is available and round it
     } else {
       max = undefined;
@@ -861,6 +862,10 @@ class VizTrends {
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100', // Ensure x-axis is also stacked
               },
               y: {
+                title: {
+                  display: true,
+                  text: seriesModeSelect.selected === 'stacked100' ? 'Percent Share' : _yaxisTitle // Set y-axis label dynamically
+                },
                 beginAtZero: true,
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined, // Set max to 100 for stacked100 mode
@@ -888,28 +893,27 @@ class VizTrends {
             }
           }
         });
+        this.generateTableFromChart(this.currentChart, _seriesValues, true);
       }
-      this.generateTableFromChart(this.currentChart);
     };
   
     // Initial chart creation
     createChart();
   }
 
-
   recastArrayIfNumeric(arr) {
-    // Check if every item in the array is a numeric string
-    const allNumeric = arr.every(item => !isNaN(item) && typeof item === 'string');
-
-    // If all items are numeric strings, convert them to integers
+    // Check if every item in the array is numeric (either a number or a numeric string)
+    const allNumeric = arr.every(item => !isNaN(item) && item !== null && item !== '' && isFinite(item));
+  
+    // If all items are numeric, convert them to integers (or numbers)
     if (allNumeric) {
-      return arr.map(item => parseInt(item, 10));
+      return arr.map(item => Number(item)); // Using Number() to handle numeric strings and numbers
     } else {
-      // Return the original array if not all items are numeric strings
+      // Return the original array if not all items are numeric
       return arr;
     }
   }
-
+  
   updateDisplay() {
     console.log('viztrends:updateDisplay:' + this.id);
     const trendSelectorDiv = document.getElementById("trendSelector");
@@ -1169,6 +1173,19 @@ class VizTrends {
       }
     }
 
+    if (this.wijRadioAgId || this.wijRadioTrendCode) {
+      this.sidebar.showTrendSelector();
+    } else {
+      this.sidebar.hideTrendSelector()
+    }
+
+    if (seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100') {
+      modeSelect.selected = 'regular';
+      modeSelect.hide();
+    } else {
+      modeSelect.show();
+    }
+
     // Step 3: Update DOM elements with the rendered filters
     const trendSelectorDiv = document.getElementById("trendSelector");
     trendSelectorDiv.innerHTML = "";
@@ -1184,6 +1201,7 @@ class VizTrends {
 
   // Function to format values similar to y-axis tick callback
   formatYValue(value) {
+
     let sign = value > 0 ? "+" : "";
 
     var mode = "";
@@ -1194,7 +1212,7 @@ class VizTrends {
     }
     
     if (seriesModeSelect.selected === 'stacked100') {
-      return value.toFixed(1) + '%'; // Show as percentage
+      return Number(value).toFixed(1) + '%'; // Show as percentage
     } else if (mode === 'pct_change') {
       return sign + Number(value).toFixed(1) + '%'; // Show as percentage with change
     } else if (mode === 'change') {
@@ -1204,69 +1222,79 @@ class VizTrends {
     }
   }
 
-    // Function to generate an HTML table from chart data
-  generateTableFromChart(chartInstance, _seriesValues) {
-    
+  // Function to generate an HTML table from chart data (regular or grouped bar)
+  generateTableFromChart(chartInstance, _seriesValues, isGroupedBar = false) {
+
     const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
     const seriesIsTrend      = this.seriesSelect.selected    === 'trendGroup';
     const seriesIsAggregator = this.seriesSelect.selected    === 'aggregator';
     const selectedYear       = yearSelect.selected; // Get the selected year
     const isAllYears         = selectedYear === 'allYears'; // Check if all years are selected
-  
-    let _title;
-    
-    if (isAllYears) {
-      if (seriesIsAggregator) {
-        _title = this.getSelectedAggregator().agTitleText;
-      } else if (seriesIsTrend) {
-        _title = "Trend Group";
-      } else if (seriesIsFilter) {
-        const selectedItem = this.seriesSelect.options.find(item => item.value === this.seriesSelect.selected);
-        _title = selectedItem ? selectedItem.label : '';
-      }
+
+    let _title = "";
+
+    if (seriesIsAggregator) {
+      _title = this.getSelectedAggregator().agTitleText;
+    } else if (seriesIsTrend) {
+      _title = "Trend Group";
+    } else if (seriesIsFilter) {
+      const selectedItem = this.seriesSelect.options.find(item => item.value === this.seriesSelect.selected);
+      _title = selectedItem ? selectedItem.label : '';
     }
 
-    // Get the chart's data
-    const datasets = chartInstance.data.datasets;
 
-    // Extract unique x-axis values (years)
-    const xValues = [...new Set(datasets.flatMap(dataset => dataset.data.map(point => point.x)))];
-    xValues.sort((a, b) => a - b); // Sort by year
+    // Get the chart's datasets (the series in the chart)
+    const datasets = chartInstance.data.datasets;
+    let labels;
+
+    // Use groupLabels for grouped bar charts, otherwise use x-axis (years) labels
+    if (isGroupedBar) {
+      labels = chartInstance.data.labels; // Group labels (columns)
+    } else {
+      // Extract unique x-axis values (years)
+      labels = [...new Set(datasets.flatMap(dataset => dataset.data.map(point => point.x)))];
+      labels.sort((a, b) => a - b); // Sort by year
+    }
 
     // Create table element
     let tableHTML = '<table class="custom-chart-table"><thead><tr><th></th><th>' + _title + '</th>';
 
-    // Add column headers for each x-value (year)
-    xValues.forEach(xValue => {
-      tableHTML += `<th>${xValue}</th>`;
+    // Add column headers (years or groupLabels)
+    labels.forEach(label => {
+      tableHTML += `<th>${label}</th>`;
     });
     tableHTML += '</tr></thead><tbody>';
 
     // Add rows for each dataset (series)
     datasets.forEach(dataset => {
-
       let _colorRGBA;
 
       if (_seriesValues) {
-        _colorRGBA = _seriesValues.find(item=>item.alias===dataset.label).color;
+        _colorRGBA = _seriesValues.find(item => item.alias === dataset.label).color;
       } else {
         _colorRGBA = undefined;
       }
-      
 
       // First column: Color square, no header
       tableHTML += `<tr><td style="width: 20px;"><div style="width: 15px; height: 15px; background-color: ${_colorRGBA};"></div></td>`;
 
       // Second column: series label, left-aligned
       tableHTML += `<td style="text-align: left;">${dataset.label}</td>`;
-      
-      // Add y-values for each x-value (year), formatted accordingly and right-aligned
-      xValues.forEach(x => {
-        const dataPoint = dataset.data.find(point => point.x === x);
-        const yValue = dataPoint ? this.formatYValue(dataPoint.y) : ''; // If no y-value, leave blank
+
+      // Add y-values for each label (year or group), formatted and right-aligned
+      labels.forEach((label, index) => {
+        let yValue;
+        if (isGroupedBar) {
+          // Handle grouped bar chart data
+          yValue = dataset.data[index] !== undefined ? this.formatYValue(dataset.data[index]) : ''; // Use the index for grouped bar
+        } else {
+          // Handle regular chart data
+          const dataPoint = dataset.data.find(point => point.x === label); // Match year with x-value
+          yValue = dataPoint ? this.formatYValue(dataPoint.y) : ''; // If no y-value, leave blank
+        }
         tableHTML += `<td style="text-align: right;">${yValue}</td>`;
       });
-      
+
       tableHTML += '</tr>';
     });
 
@@ -1275,5 +1303,6 @@ class VizTrends {
     // Append the table to the DOM (or replace existing one)
     document.getElementById('trendTable').innerHTML = tableHTML;
   }
+
 
 }
