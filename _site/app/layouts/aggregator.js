@@ -23,7 +23,7 @@ class Aggregator {
     let _optionsSubAg = [];
 
     // only run if it is vizTrends and has an agGeoJson defined
-    if (this.agGeoJsonKey) {
+    if (this.agGeoJsonKey && this.agOptions===undefined) {
       
       // Step 1: Collect all unique filenames
       let filenamesSet = new Set();
@@ -71,26 +71,68 @@ class Aggregator {
         const _configBaseAg = configAggregators[this.baseAgCode];
         const _configSubAg  = configAggregators[this.subAgCode ];
   
-        // Step 1: Collect all unique filenames for base ag
-        let filenamesSetAg = new Set();
+        // Step 1: Collect all unique filenames
+        let filenamesSetBaseAg = new Set();
+        let filenamesSetBaseSubAg = new Set();
         for (let scenario of dataScenarios) {
-          let geojson_filename = scenario.geojsons[_configBaseAg.agGeoJsonKey];
-          filenamesSetAg.add(geojson_filename);
+          let key_filenameAg = scenario.getKeyFileNameFromGeoJsonKey(_configBaseAg['agGeoJsonKey'],this.agGeoJsonKey);
+          let key_filenameSubAg = scenario.getKeyFileNameFromGeoJsonKey(_configBaseAg['agGeoJsonKey'],_configSubAg['agGeoJsonKey']);
+          filenamesSetBaseAg.add(key_filenameAg);
+          filenamesSetBaseSubAg.add(key_filenameSubAg);
         }
-  
         
-        // Step 2: Iterate through the unique filenames
-        for (let filenameAg of filenamesSetAg) {
-          if (dataGeojsons[filenameAg]) {
-            _optionsAg = _optionsAg.concat(
-              dataGeojsons[filenameAg].features.map(feature => ({
-                value: feature.properties[this.agCode], // Assuming these are under `properties`
-                subag: feature.properties[this.subAgCode]  // Adjust if they are located elsewhere
+        let _combinationsBaseAg = [];
+                
+        // Step 2a: Iterate through the unique filenames
+        for (let filenameSetBaseAg of filenamesSetBaseAg) {
+          if (dataKeys[filenameSetBaseAg]) {
+            _combinationsBaseAg = _combinationsBaseAg.concat(
+              dataKeys[filenameSetBaseAg].map(record => ({
+                keyBaseAg: record[this.baseAgCode], // Assuming these are under `properties`
+                keyAg    : record[this.agCode]  // Adjust if they are located elsewhere
               }))
             );
           }
         }
-      
+
+        let _combinationsBaseSubAg = [];
+                
+        // Step 2b: Iterate through the unique filenames
+        for (let filenameSetBaseSubAg of filenamesSetBaseSubAg) {
+          if (dataKeys[filenameSetBaseSubAg]) {
+            _combinationsBaseSubAg = _combinationsBaseSubAg.concat(
+              dataKeys[filenameSetBaseSubAg].map(record => ({
+                keyBaseAg: record[this.baseAgCode], // Assuming these are under `properties`
+                keySubAg : record[this.subAgCode]  // Adjust if they are located elsewhere
+              }))
+            );
+          }
+        }
+
+        // Step 3
+        const result = [];
+
+        // Step 2: Loop through json1 and json2, matching by sharedkey
+        _combinationsBaseAg.forEach(jsonAgItem => {
+          _combinationsBaseSubAg.forEach(jsonSubAgItem => {
+            if (jsonAgItem.keyBaseAg === jsonSubAgItem.keyBaseAg) {
+              // Step 3: Add the matching combination to the result
+              result.push({
+                value: jsonAgItem.keyAg,
+                subag: jsonSubAgItem.keySubAg
+              });
+            }
+          });
+        });
+
+        // Step 4: Remove any duplicate combinations (if needed)
+        let _optionsAg = result.filter((value, index, self) =>
+          index === self.findIndex((t) => (
+            t.value === value.value && t.subag === value.subag
+          ))
+        );
+
+
         // Remove duplicates
         let uniqueOptionsAg = [];
         let seenAg = new Set();

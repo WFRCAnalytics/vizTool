@@ -266,6 +266,14 @@ class VizSidebar {
   getAttributeRendererCollection() {
     return this.attributes.find(item => item.attributeCode === this.getACode()).rendererCollection;
   }
+
+  getAttributeLabelStatus() {
+    return this.attributes.find(item => item.attributeCode === this.getACode()).labelsOn;
+  }
+  
+  setAttributeLabelStatus(status) {
+    this.attributes.find(item => item.attributeCode === this.getACode()).labelsOn = status;
+  }
   
   afterUpdateSidebar() {
     this.updateFilterDisplay();

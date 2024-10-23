@@ -55,7 +55,7 @@
     },
     "PLANAREA": {
         "agTitleText"      : "Plan Area",
-        "agDefaultSelected" : ["WFRC"],
+        "agDefaultSelected" : ["WFRC","MAG"],
         "agGeoJsonKey"     : "planarea",
         "agCodeLabelField" : "PLANAREA",
         "baseAgCode"       : "TAZID"
@@ -72,6 +72,7 @@
     "SUBAREAID": {
         "agTitleText"          : "Subarea",
         "agDefaultSelected"    : ["1"],
+        "agGeoJsonKey"         : "subarea",
         "agCodeLabelField"     : "SUBAREAID",
         "agOptions": [
             {"value":"1" , "label":"Wasatch Front Model Area"}

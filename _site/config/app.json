@@ -1,6 +1,6 @@
 {
-  "title": "vizTool",
-  "subtitle": "v24.9.9 beta",
+  "title": "vizTool for TDM v9.1",
+  "subtitle": "v24.10.23 beta",
   "splash": {
     "title": "IMPORTANT: BETA VERSION",
     "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
@@ -20,6 +20,10 @@
     },
     "zoomMap": 10
   },
+  "trendsDefaults":{
+    "PLANAREA": "WFRC",
+    "DISTSUPER": "6"
+  },
   "menuItems": [
     { "menuText": "Roads and Transit",
       "menuIconStart": "driving-distance",
@@ -34,7 +38,7 @@
             "geometryType": "polyline",
             "popupTitle": "Roadway Segments",
             "attributeTitle": "Roadway Segment Attributes",
-            "attributeInfoTextHtml": "<b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Capacity per Hour per Lane</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Volume</b> is the total number of vehicles using the segment.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period voluem to daily volume.",
+            "attributeInfoTextHtml": "<b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Lane Hourly Capacity</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Volume</b> is the total number of vehicles using the segment.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period volume to daily volume.<br/><b>Functional Group Share</b> is the ratio of volume for functional group lanes to volume for all lanes.",
             "attributeSelected": "aLn",
             "attributes": ["aLn","aAT","aFt","aCp","aCT","aFS","aVl","aTP","aRS","aXVc","aDF","aPF","aFGs"],
             "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTod4pDy","fTod4","fTod4Pm","fVehTypePcLiMdHv","fTrkTypeMdHv"]
@@ -55,7 +59,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","FREIGHT_ID"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
             "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypePcLiMdHv"]
@@ -93,7 +97,7 @@
             "dividerTitle": "Divide By",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
             "dividerSelected": "",
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "filters" : ["fPurpOnlyAll","fTod2","fTod2Select","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
@@ -129,7 +133,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aBd","aAl"],
             "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
@@ -168,7 +172,7 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Mode Share",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","CITYGRP","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributeTitle": "Trip Mode",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/><b>Walk Trips</b> is specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using only a bicycle.",
@@ -192,7 +196,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
             "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
@@ -243,7 +247,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aSc"],
             "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
@@ -259,7 +263,7 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Metrics",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","CITYGRP","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributeTitle": "Zone Metric",
             "attributeInfoTextHtml": "",
@@ -286,7 +290,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
             "filters" : ["fTod4","fPurp12","fPA","fModeRoad"]
@@ -304,7 +308,7 @@
             "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
             "attributeSelected": "aJA",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","CITY_NAME","CITYGRP","EFA","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributes": ["aJA","aHA","aCA","aJ","aH"],
             "filters" : ["fModeAutoTransit","fAtoCondition"]

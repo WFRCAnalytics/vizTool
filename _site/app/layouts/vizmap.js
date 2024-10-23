@@ -554,8 +554,8 @@ require([
     toggleLabels() {
       console.log('vizmap:toggleLabels')
       var labelCheckbox = document.getElementById('vizMapLabelToggle');
-      
       if (this.layerDisplay) {
+        this.sidebar.setAttributeLabelStatus(labelCheckbox.checked);
         if (labelCheckbox.checked) {
           // Checkbox is checked, show labels
           // Restore labels if originalLabelInfo has been stored
@@ -715,6 +715,9 @@ require([
 
         // toggle labels based on checkbox
         this.originalLabelInfo = this.layerDisplay.labelingInfo;
+
+        var labelCheckbox = document.getElementById('vizMapLabelToggle');
+        labelCheckbox.checked = this.sidebar.getAttributeLabelStatus();
         this.toggleLabels();
 
       };

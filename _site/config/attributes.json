@@ -31,6 +31,7 @@
     },
     "aDM": {
         "alias": "Maximum Mode",
+        "labelsOn": false,
         "agFilterOptionsMethod": "maximum",
         "rendererCollection": {
             "main": {
@@ -263,8 +264,8 @@
                     { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5"    },
                     { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7"    },
                     { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9"    },
-                    { "minValue": 10, "maxValue": 14, "symbol": { "type": "simple-line", "color": "#66023C", "width": 3.50 }, "label": "10 to 14"  },
-                    { "minValue": 15, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 4.25 }, "label": "15 or More"}
+                    { "minValue": 10, "maxValue": 14, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 3.50 }, "label": "10 to 14"  },
+                    { "minValue": 15, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#66023C", "width": 4.25 }, "label": "15 or More"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -323,6 +324,7 @@
     },
     "aAT": {
         "alias": "Area Type",
+        "labelsOn": false,
         "rendererCollection": {
             "main": {
                 "legendTitle": "Area Type",
@@ -397,14 +399,14 @@
                 "legendTitle": "Functional Type",
                 "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '#0')",
                 "classBreakInfos": [
-                    { "minValue": 6, "maxValue": 7.9, "symbol": { "type": "simple-line", "color": "#808080", "width": 0.50 }, "label": "Local Roads (6-7)" },
-                    { "minValue": 5, "maxValue": 5.9, "symbol": { "type": "simple-line", "color": "#606060", "width": 0.75 }, "label": "Minor Collector (5)" },
-                    { "minValue": 4, "maxValue": 4.9, "symbol": { "type": "simple-line", "color": "#0096EA", "width": 1.00 }, "label": "Major Collector (4)" },
-                    { "minValue": 3, "maxValue": 3.9, "symbol": { "type": "simple-line", "color": "#22AA22", "width": 2.00 }, "label": "Minor Arterial (3)" },
-                    { "minValue": 2, "maxValue": 2.9, "symbol": { "type": "simple-line", "color": "#666666", "width": 3.00 }, "label": "Principal Arterial (2)" },
+                    { "minValue":  6, "maxValue":  7.9, "symbol": { "type": "simple-line", "color": "#808080", "width": 0.50 }, "label": "Local Roads (6-7)" },
+                    { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#606060", "width": 0.75 }, "label": "Minor Collector (5)" },
+                    { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#0096EA", "width": 1.00 }, "label": "Major Collector (4)" },
+                    { "minValue":  3, "maxValue":  3.9, "symbol": { "type": "simple-line", "color": "#22AA22", "width": 2.00 }, "label": "Minor Arterial (3)" },
+                    { "minValue":  2, "maxValue":  2.9, "symbol": { "type": "simple-line", "color": "#666666", "width": 3.00 }, "label": "Principal Arterial (2)" },
                     { "minValue": 11, "maxValue": 19.9, "symbol": { "type": "simple-line", "color": "#FF2020", "width": 4.00 }, "label": "Expressway (11-19)" },
                     { "minValue": 30, "maxValue": 49.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 5.00 }, "label": "Freeway (30-49)" },
-                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#006542", "width": 5.50 }, "label": "Managed Motorway (20-29)" }
+                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#0065FF", "width": 5.50 }, "label": "Managed Motorway (20-29)" }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -459,7 +461,7 @@
         "alias": "Total Capacity",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Total Capacity",
+                "legendTitle": "Total Capacity (vehicles)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
@@ -481,7 +483,7 @@
                 "defaultLabel": "No Capacity"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Total Capacity",
+                "legendTitle": "Difference in Total Capacity (vehicles)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
@@ -533,7 +535,7 @@
         "alias": "Lane Hourly Capacity",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Capacity per Hour per Lane",
+                "legendTitle": "Lane Hourly Capacity (vehicles per hour per lane)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
@@ -555,7 +557,7 @@
                 "defaultLabel": "No Capacity"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Capacity per Hour per Lane",
+                "legendTitle": "Difference in Lane Hourly Capacity (vehicles per hour per lane)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
@@ -577,7 +579,7 @@
                 "defaultLabel": "No Capacity"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Capacity per Hour per Lane",
+                "legendTitle": "Percent Difference in Lane Hourly Capacity",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
@@ -607,7 +609,7 @@
         "alias": "Free-flow Speed",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Free-flow Speed (mph)",
+                "legendTitle": "Free-flow Speed (miles per hour)",
                 "type": "ClassBreaksRenderer",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
@@ -629,7 +631,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Free-flow Speed (mph)",
+                "legendTitle": "Difference in Free-flow Speed (miles per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25"},
@@ -650,7 +652,7 @@
                 "defaultLabel": "No Speed"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Free-flow Speed (mph)",
+                "legendTitle": "Percent Difference in Free-flow Speed (miles per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
@@ -680,7 +682,7 @@
         "alias": "Volume",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Volume",
+                "legendTitle": "Volume (vehicles)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue":   0.01, "maxValue":     5999, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label":    "Less than 6,000"},
@@ -701,7 +703,7 @@
                 "defaultLabel": "No Volume"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Volume",
+                "legendTitle": "Difference in Volume (vehicles)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue":   -25001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -25,000"  },
@@ -752,7 +754,7 @@
         "alias": "Congested Speed",
         "rendererCollection": {
         "main": {
-            "legendTitle": "Congested Speed (mph)",
+            "legendTitle": "Congested Speed (miles per hour)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
                 { "minValue": 0.01, "maxValue":        5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.25 }, "label": "0 to 5"      },
@@ -770,10 +772,10 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Congested Speed (mph)"
+            "defaultLabel": "No Congested Speed (miles per hour)"
         },
         "compare_abs": {
-            "legendTitle": "Difference in Congested Speed (mph)",
+            "legendTitle": "Difference in Congested Speed (miles per hour)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
             "classBreakInfos": [
                 { "minValue":  25.01, "maxValue": 99999999, "symbol": { "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than +25"},
@@ -791,10 +793,10 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Congested Speed (mph)"
+            "defaultLabel": "No Congested Speed (miles per hour)"
         },
         "compare_pct": {
-            "legendTitle": "Percent Difference in Congested Speed (mph)",
+            "legendTitle": "Percent Difference in Congested Speed (miles per hour)",
             "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
             "classBreakInfos": [
                 { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
@@ -816,7 +818,7 @@
             "color": "#EEEEEE",
             "width": 0.5
             },
-            "defaultLabel": "No Congested Speed (mph)"
+            "defaultLabel": "No Congested Speed (miles per hour)"
         }
         }
     },
@@ -824,7 +826,6 @@
         "alias": "Max Volume-to-Capacity Ratio",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Max Volume-to-Capacity Ratio",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))",
                 "valueExpression": "var v  = $feature.dVal; if (v == null || v==0  ) { return 'nodata'  ; } else if (v< 0.7) { return 'class_00'; } else if (v< 0.8) { return 'class_01'; } else if (v< 0.9) { return 'class_02'; } else if (v< 1.0) { return 'class_03'; } else if (v< 1.1) { return 'class_r0'; } else if (v< 1.2) { return 'class_r1'; } else if (v< 1.3) { return 'class_r2'; } else if (v< 1.4) { return 'class_r3'; } else if (v< 1.5) { return 'class_r4'; } else if (v< 1.6) { return 'class_r5'; } else if (v< 1.7) { return 'class_r6'; } else if (v< 1.8) { return 'class_r7'; } else if (v< 1.9) { return 'class_r8'; } else if (v< 2.0) { return 'class_r9'; } else if (v>=2.0) { return 'class_b0'; } ",
                 "simpleRenderer": {
@@ -835,8 +836,8 @@
                     },
                     "visualVariables": [
                         {
+                            "legendTitle": "Max Volume-to-Capacity Ratio",
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value": 0   , "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#0000FF" },
@@ -848,8 +849,8 @@
                             ]
                         },
                         {
+                            "legendTitle": "Max Volume-to-Capacity Ratio",
                             "type": "size",
-                            "field": "dVal",
                             "stops": [
                                 { "value": 0   , "size": 0.25 },
                                 { "value": 0.01, "size": 0.50 },
@@ -1117,7 +1118,7 @@
         }
     },
     "aFGs": {
-        "alias": "Function Group Share",
+        "alias": "Functional Group Share",
         "filterOverride":[
             {
             "filterOut": "fRoadSegFuncGroup",
@@ -1291,7 +1292,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1315,7 +1315,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal",
                             "stops": [
                                 { "value":    0, "color": "#CCCCCC" },
                                 { "value": 0.99, "color": "#CCCCCC" },
@@ -1339,7 +1338,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1449,7 +1447,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1547,6 +1544,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Vehicles",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -1558,7 +1556,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal",
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1668,7 +1665,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal",
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1778,7 +1774,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -1888,7 +1883,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -2080,7 +2074,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -2323,7 +2316,7 @@
         "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Average Travel Speed (mph)",
+                "legendTitle": "Average Travel Speed (miles per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue":      0, "maxValue":      5, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.5 }, "label": "1 to 5"   },
@@ -2344,7 +2337,7 @@
                 "defaultLabel": "No Trains/Buses"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Average Travel Speed (mph)",
+                "legendTitle": "Difference in Average Travel Speed (miles per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999, "maxValue": -60.001, "symbol":{ "type": "simple-line", "color": "#005CC4", "width": 5.0000 }, "label": "More than -60" },
@@ -2365,7 +2358,7 @@
                 "defaultLabel": "No Trains/Buses"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Average Travel Speed (mph)",
+                "legendTitle": "Percent Difference in Average Travel Speed (miles per hour)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-line", "color": "#0000ff", "width": 10.0, "cap": "butt"}, "label": "-500% or More" },
@@ -3562,6 +3555,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Person Miles Traveled",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3573,7 +3567,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -3671,6 +3664,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Person Hours Traveled",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3682,7 +3676,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -3780,6 +3773,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Person Hours of Delay",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3791,7 +3785,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -3889,6 +3882,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Vehicle Miles Traveled",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3900,7 +3894,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -3998,6 +3991,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Vehicle Hours Traveled",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4009,7 +4003,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },
@@ -4107,6 +4100,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
+                    "legendTitle": "Vehicle Hours of Delay",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4118,7 +4112,6 @@
                         },
                         "visualVariables": {
                             "type": "color",
-                            "field": "dVal", 
                             "stops": [
                                 { "value":    0, "color": "#D3D3FF" },
                                 { "value": 0.01, "color": "#D3D3FF" },

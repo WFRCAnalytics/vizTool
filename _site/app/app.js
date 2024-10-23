@@ -28,6 +28,7 @@ let zoom = 10; // default value replaced programatically from json value
 let yearSelect = {};
 let activeLayout = {};
 let seriesModeSelect;
+let barGroupSelect;
 
 // Global variables to track total files and loaded files across all scenarios
 let totalFilesToLoad = 0;

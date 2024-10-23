@@ -55,18 +55,34 @@ class VizTrends {
 
     // add settings in header
     const _seriesMode = document.getElementById('trendSeriesMode');
-    _seriesMode.style.display=('none');
 
     if (_seriesMode.innerHTML.trim() === '') {
       seriesModeSelect  = new WijSelect(this.id + "-line-mode-select",
-                                  "Select Series Mode",
-                                  "scatter",
-                                  this.lineModeOptions,
-                                  this);
+                                        "Select Series Mode",
+                                        "scatter",
+                                        this.lineModeOptions,
+                                        this);
       _seriesMode.appendChild(seriesModeSelect.render());
     }
+    seriesModeSelect.hide();
 
+    // add bar group settings
+    this.barGroupOptions = [{ value: 'trendGroup', label: 'Trend Group'     , title:''},
+                            { value: 'aggregator', label: 'Summary Geograpy', title:''}]
 
+    const _barGroups = document.getElementById('trendBarGroups');
+
+    if (_barGroups.innerHTML.trim() === '') {
+      barGroupSelect  = new WijSelect(this.id + "-bar-group-select",
+                                      "Select Bar Group",
+                                      "trendGroup",
+                                      this.barGroupOptions,
+                                      this);
+      _barGroups.appendChild(barGroupSelect.render());
+    }
+    barGroupSelect.hide();
+
+    // initialize and fill programatically later
     this.seriesSelect = {};
 
     if (Object.keys(yearSelect).length === 0 && yearSelect.constructor === Object) {
@@ -336,6 +352,7 @@ class VizTrends {
 
     const seriesIsTrend      = this.seriesSelect.selected    === 'trendGroup';
     const seriesIsAggregator = this.seriesSelect.selected    === 'aggregator';
+    const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
     const selectedYear = yearSelect.selected; // Get the selected year
     const isAllYears = selectedYear === 'allYears'; // Check if all years are selected
   
@@ -372,18 +389,17 @@ class VizTrends {
     
     // Loop through this.allChartData to populate uniqueValues
     this.allChartData.forEach(data => {
-      uniqueValues.scnTrendCodes.add(data._scnTrendCode);
-      uniqueValues.fCodes.add(data._fCode);
-      uniqueValues.agIds.add(data._agId);
+      uniqueValues.scnTrendCodes.add(String(data._scnTrendCode));
+      uniqueValues.fCodes.add(String(data._fCode));
+      uniqueValues.agIds.add(String(data._agId));
     });
-    
 
     // set up chart data based on what type of series is selected
     if (isAllYears) {
       if (seriesIsTrend) {
 
         // series is trend, so only use one agId as defined by radio button
-        allChartDataFiltered = this.allChartData.filter(item => item._agId === this.wijRadioAgId.selected);
+        allChartDataFiltered = this.allChartData.filter(item => String(item._agId) === String(this.wijRadioAgId.selected));
         
         for (const item of allChartDataFiltered) {
           const { _scnTrendCode, _scnYear, value } = item;
@@ -400,7 +416,7 @@ class VizTrends {
   
       } else if (seriesIsAggregator) {
         // series is aggregator, so only use one trendCode as defined by radio button
-        allChartDataFiltered = this.allChartData.filter(item => item._scnTrendCode === this.wijRadioTrendCode.selected);
+        allChartDataFiltered = this.allChartData.filter(item => String(item._scnTrendCode) === String(this.wijRadioTrendCode.selected));
         
         for (const item of allChartDataFiltered) {
           const { _agId, _scnYear, value } = item;
@@ -419,7 +435,7 @@ class VizTrends {
   
         // All others use only one of each (both agId and trendCode defined by radio buttons)
         allChartDataFiltered = this.allChartData.filter(item => 
-          item._scnTrendCode === this.wijRadioTrendCode.selected && item._agId === this.wijRadioAgId.selected
+          String(item._scnTrendCode) === String(this.wijRadioTrendCode.selected) && String(item._agId) === String(this.wijRadioAgId.selected)
         );
         
         for (const item of allChartDataFiltered) {
@@ -474,41 +490,82 @@ class VizTrends {
           .filter(item => groupIds.has(item.value)) // Filter items where value is in groupIds
           .map(item => item.label); // Map to get labels
 
-      } else {
+      } else if (seriesIsFilter) {
   
-        // All others use only one of each (both agId and trendCode defined by radio buttons)
-        allChartDataFiltered = this.allChartData.filter(item => 
-          item._scnTrendCode === this.wijRadioTrendCode.selected
-        );
-        
-        for (const item of allChartDataFiltered) {
-          const { _agId, _fCode, _scnYear, value } = item;
+        // aggregator is grouped, so only trend series is optional
+        if (barGroupSelect.selected=='aggregator') {
 
-          chartData[_agId] = chartData[_agId] || {};
-          chartData[_agId][_fCode] = chartData[_agId][_fCode] || {}; // Ensure the agId exists in chartData
-          chartData[_agId][_fCode][_scnYear] = value; // Assign the year-level value
-        }
+          // All others use only one of each (both agId and trendCode defined by radio buttons)
+          allChartDataFiltered = this.allChartData.filter(item => 
+            item._scnTrendCode === this.wijRadioTrendCode.selected
+          );
+          
+          for (const item of allChartDataFiltered) {
+            const { _agId, _fCode, _scnYear, value } = item;
+
+            chartData[_agId] = chartData[_agId] || {};
+            chartData[_agId][_fCode] = chartData[_agId][_fCode] || {}; // Ensure the agId exists in chartData
+            chartData[_agId][_fCode][_scnYear] = value; // Assign the year-level value
+          }
+          
+          // get list of filters
+          var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
+          if (_filterForSeries.filterWij instanceof WijSelect) {
+            var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+          } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+            var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+          }
+    
+          _seriesValues = _filterForSeries.options
+          .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
+          .map(filterOption => {
+            return { code: filterOption.value, alias: filterOption.label , color: this.getColor()};
+          });
+    
+          // bar chart is grouped by agIds
+          // Ensure groupIds is an array
+          groupIds = uniqueValues.agIds;
+          groupLabels = this.sidebar.aggregatorFilter.options
+            .filter(item=>groupIds.has(item.value))
+            .map(item => item.label);
         
-        // get list of filters
-        var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
-        if (_filterForSeries.filterWij instanceof WijSelect) {
-          var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
-        } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
-          var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+        // trend goup is grouped, so only aggregator is optional
+        } else if (barGroupSelect.selected=='trendGroup') {
+
+          // All others use only one of each (both agId and trendCode defined by radio buttons)
+          allChartDataFiltered = this.allChartData.filter(item => String(item._agId) === String(this.wijRadioAgId.selected));
+          
+          for (const item of allChartDataFiltered) {
+            const { _scnTrendCode, _fCode, _scnYear, value } = item;
+
+            chartData[_scnTrendCode] = chartData[_scnTrendCode] || {};
+            chartData[_scnTrendCode][_fCode] = chartData[_scnTrendCode][_fCode] || {}; // Ensure the agId exists in chartData
+            chartData[_scnTrendCode][_fCode][_scnYear] = value; // Assign the year-level value
+          }
+          
+          // get list of filters
+          var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
+          if (_filterForSeries.filterWij instanceof WijSelect) {
+            var _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+          } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+            var _selectedFilterOptions = _filterForSeries.filterWij.selected;
+          }
+    
+          _seriesValues = _filterForSeries.options
+          .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
+          .map(filterOption => {
+            return { code: filterOption.value, alias: filterOption.label , color: this.getColor()};
+          });
+    
+          // bar chart is grouped by scnTrendCodes
+          // Ensure groupIds is an array
+          groupIds = uniqueValues.scnTrendCodes;
+
+          // Use filter instead of find, and map to get the labels
+          groupLabels = scenarioChecker.options
+            .filter(item => groupIds.has(item.value)) // Filter items where value is in groupIds
+            .map(item => item.label); // Map to get labels
         }
-  
-        _seriesValues = _filterForSeries.options
-        .filter(filterOption => _selectedFilterOptions.includes(filterOption.value))
-        .map(filterOption => {
-          return { code: filterOption.value, alias: filterOption.label , color: this.getColor()};
-        });
-  
-        // bar chart is grouped by agIds
-        // Ensure groupIds is an array
-        groupIds = uniqueValues.agIds;
-        groupLabels = this.sidebar.aggregatorFilter.options
-          .filter(item=>groupIds.has(item.value))
-          .map(item => item.label);
       }
     }
 
@@ -627,6 +684,7 @@ class VizTrends {
 
     const chartContainer = document.createElement('div');
     chartContainer.id = 'chartContainer';
+    chartContainer.style="width: 95%;";
     containerElement.appendChild(chartContainer);
   
     const canvas = document.createElement('canvas');
@@ -677,6 +735,12 @@ class VizTrends {
       max = maxValue; // Ensure maxValue is available and round it
     } else {
       max = undefined;
+    }
+
+    if (this.currentChart) {
+      console.log('destroy chart');
+      // Destroy existing Chart instance
+      this.currentChart.destroy();
     }
 
     const createChart=()=>{
@@ -781,6 +845,12 @@ class VizTrends {
                 },
                 min: seriesModeSelect.selected === 'stacked100' ? 0 : undefined,
                 max: max
+              }
+            },
+            plugins: {
+              legend: {
+                display: false,
+                position: 'top'
               }
             }
           }
@@ -887,7 +957,7 @@ class VizTrends {
             },
             plugins: {
               legend: {
-                display: true,
+                display: false,
                 position: 'top'
               }
             }
@@ -918,10 +988,7 @@ class VizTrends {
     console.log('viztrends:updateDisplay:' + this.id);
     const trendSelectorDiv = document.getElementById("trendSelector");
     trendSelectorDiv.innerHTML = "";
-    if (this.currentChart) {
-      // Destroy existing Chart instance
-      this.currentChart.destroy();
-    }
+
     this.updateAllChartData();
   }
   
@@ -999,26 +1066,24 @@ class VizTrends {
                 var _data_divide = {};
                 var _sumDivide = 0;
 
-                // Get associated json records for given aggregator
-                const lstBaseGeoJsonIds = aggregatorKeyFile
-                  .filter(record => record[_selectedAggregator.agCode] === _agId)
-                  .map(record => record[this.baseGeoJsonId]);
+                // Create a Set directly from the filtered aggregatorKeyFile
+                const geoJsonIdSet = new Set(
+                  aggregatorKeyFile
+                    .filter(record => record[_selectedAggregator.agCode] === _agId)
+                    .map(record => String(record[this.baseGeoJsonId]))
+                );
 
-                // Filter the _dataForFilterOptions object based on matching keys (assuming keys represent the this.baseGeoJsonId)
-                const _dataForAg = Object.keys(_dataForFilterOptions)
-                  .filter(key => lstBaseGeoJsonIds.includes(key))
-                  .map(key => ({ key, ..._dataForFilterOptions[key] })); // Include both key and its associated data
-                    
-                _dataForAg.forEach(record => {
-                  const selectedValue = record[this.aCode];
-                  if (selectedValue == null | selectedValue == undefined) {
-                    console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId)
-                  }
-                  if (selectedValue !== null & selectedValue !== undefined) {
-                    _dataSum += selectedValue;
-                  }
-                })
-
+                Object.keys(_dataForFilterOptions)
+                  .filter(key => geoJsonIdSet.has(String(key)))  // Filter based on set membership
+                  .forEach(key => {
+                    const selectedValue = _dataForFilterOptions[key][this.aCode];
+                    if (selectedValue !== null && selectedValue !== undefined) {
+                      _dataSum += selectedValue; // Sum directly if valid
+                    } //else {
+                      //console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId);
+                    //}
+                  });
+              
                 if (this.dCode!="Nothing") {
       
                   // Call this.getAggregatorKeyFile() once and store the result
@@ -1030,23 +1095,25 @@ class VizTrends {
                     } else {
                       _bNoDivideData = true;
                     }
-                    
-                    // Get associated json records for given aggregator
-                    const lstBaseGeoJsonIds_divide = aggregatorKeyFile_divide
-                      .filter(record => record[_selectedAggregator.agCode] === _agId)
-                      .map(record => String(record[_selectedDivider.baseGeoJsonId])); // Convert each value to a string
+
+                      // Create a Set directly from the filtered aggregatorKeyFile
+                    const geoJsonIdSetDivide = new Set(
+                      aggregatorKeyFile_divide
+                        .filter(record => record[_selectedAggregator.agCode] === _agId)
+                        .map(record => String(record[this.baseGeoJsonId]))
+                    );
     
                     // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
-                    const _dataForAg_divide = Object.keys(_data_divide)
-                      .filter(key => lstBaseGeoJsonIds_divide.includes(key))
-                      .map(key => ({ key, ..._data_divide[key] })); // Include both key and its associated data
-                        
-                    _dataForAg_divide.forEach(record => {
-                      const selectedValue = record[_selectedDivider.attributeCode];
-                      if (selectedValue !== null & selectedValue !== undefined) {
-                        _sumDivide += selectedValue;
-                      }
-                    })
+                    Object.keys(_data_divide)
+                    .filter(key => geoJsonIdSetDivide.has(String(key)))  // Filter based on set membership
+                    .forEach(key => {
+                      const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
+                      if (selectedValue !== null && selectedValue !== undefined) {
+                        _sumDivide += selectedValue; // Sum directly if valid
+                      } //else {
+                        //console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId);
+                      //}
+                    });
                   }
                 }
                 if (this.dCode!="Nothing" & _sumDivide>0) {
@@ -1080,10 +1147,10 @@ class VizTrends {
     
     // Loop through this.allChartData to populate uniqueValues
     this.allChartData.forEach(data => {
-      uniqueValues.scnTrendCodes.add(data._scnTrendCode);
-      uniqueValues.scnYears.add(data._scnYear);
-      uniqueValues.fCodes.add(data._fCode);
-      uniqueValues.agIds.add(data._agId);
+      uniqueValues.scnTrendCodes.add(String(data._scnTrendCode));
+      uniqueValues.scnYears.add(String(data._scnYear));
+      uniqueValues.fCodes.add(String(data._fCode));
+      uniqueValues.agIds.add(String(data._agId));
     });
     
     // Convert sets to arrays for further usage
@@ -1102,6 +1169,19 @@ class VizTrends {
     var selectedFilterAgId = this.wijRadioAgId ? this.wijRadioAgId.selected : null;
     var selectedFilterTrendCode = this.wijRadioTrendCode ? this.wijRadioTrendCode.selected : null;
 
+    const filteredOptions = this.sidebar.aggregatorFilter.options
+      .filter(item => uniqueValues.agIds.includes(item.value))
+      .map(item => ({ value: item.value, label: item.label }));
+
+    const isSelectedInOptions = filteredOptions.some(option => option.value === selectedFilterAgId);
+
+    // Fallback for missing selectedFilterAgId
+    if (!selectedFilterAgId || !isSelectedInOptions) {
+      if (configApp && configApp.trendsDefaults && this.sidebar.aggregatorSelect.selected in configApp.trendsDefaults) {
+        selectedFilterAgId = String(configApp.trendsDefaults[this.sidebar.aggregatorSelect.selected]);
+      }
+    }
+
     const createRadioFilter = (id, label, options, selected) =>
       new WijRadio(id, label, selected, options, this);
     
@@ -1119,7 +1199,7 @@ class VizTrends {
       'Summary Geography', 
       this.sidebar.aggregatorFilter.options.filter(item => uniqueValues.agIds.includes(item.value))
         .map(item => ({ value: item.value, label: item.label })), 
-        selectedFilterAgId
+      selectedFilterAgId
     );
 
     if (isAllYears) {
@@ -1131,16 +1211,16 @@ class VizTrends {
       this.seriesSelect.selected = originalSelected;
 
       if (seriesIsTrend) {
-        _seriesMode.style.display=('none');
+        seriesModeSelect.hide()
         seriesModeSelect.selected = 'scatter';
         this.wijRadioAgId = _radioAg
         this.wijRadioTrendCode = null;
       } else if (seriesIsAggregator) {
-        _seriesMode.style.display=('block');
+        seriesModeSelect.show();
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = _radioTrend;
       } else if (seriesIsFilter) {
-        _seriesMode.style.display=('block');
+        seriesModeSelect.show();
         this.wijRadioAgId = _radioAg
         this.wijRadioTrendCode = _radioTrend;
       }
@@ -1158,18 +1238,26 @@ class VizTrends {
       }
 
       if (seriesIsTrend) {
-        _seriesMode.style.display=('none');
+        seriesModeSelect.hide()
         seriesModeSelect.selected = 'scatter';
+        barGroupSelect.hide();
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = null;
       } else if (seriesIsAggregator) {
-        _seriesMode.style.display=('block');
+        seriesModeSelect.show();
+        barGroupSelect.hide();
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = null;
       } else if (seriesIsFilter) {
-        _seriesMode.style.display=('block');
-        this.wijRadioAgId = null;
-        this.wijRadioTrendCode = _radioTrend;
+        seriesModeSelect.show();
+        barGroupSelect.show();
+        if (barGroupSelect.selected=='trendGroup') {
+          this.wijRadioAgId = _radioAg;
+          this.wijRadioTrendCode = null;
+        } else if (barGroupSelect.selected=='aggregator') {
+          this.wijRadioAgId = null;
+          this.wijRadioTrendCode = _radioTrend;
+        }
       }
     }
 

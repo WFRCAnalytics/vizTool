@@ -46,8 +46,6 @@ require([
         } else {
           console.warn("data.main_divide_by is not an array or is undefined");
         }
-      } else {
-        console.warn("data.main_divide_by is undefined or null");
       }
     }
   }
@@ -94,13 +92,17 @@ require([
       const renderer = new SimpleRenderer(data.simpleRenderer);
       // Add legend options
       if (renderer.visualVariables) {
-        if (data.legendTitle) {
-          renderer.visualVariables.legendOptions = {
-            title: data.legendTitle
-          };
-        } 
+        renderer.visualVariables.forEach((visualVariable) => {
+          visualVariable.field = "dVal";
+          if (visualVariable.legendTitle) {
+            visualVariable.legendOptions = {
+              title: visualVariable.legendTitle,
+            };
+          }
+        });
       } else {
         if (data.legendTitle) {
+          renderer.field = "dVal";
           renderer.legendOptions = {
             title: data.legendTitle
           };

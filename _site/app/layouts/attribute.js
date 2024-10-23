@@ -17,6 +17,7 @@ class Attribute {
         this.attributeCode            = attributeCode;
         this.alias                    = _configAttribute.alias || null;
         this.agWeightCode             = _configAttribute.agWeightCode || null;
+        this.labelsOn                 = _configAttribute.hasOwnProperty('labelsOn') ? _configAttribute.labelsOn : true;
         this.agWeightCodeFilter       = _configAttribute.agWeightCodeFilter || null;
         this.rendererCollection       = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection) : null;
         this.agFilterOptionsMethod    = _configAttribute.agFilterOptionsMethod || "sum";
