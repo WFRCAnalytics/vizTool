@@ -260,12 +260,12 @@
                 "legendTitle": "Number of Lanes",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,###'))",
                 "classBreakInfos": [
-                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#BBBBBB", "width": 1.00 }, "label": "3 or Less" },
-                    { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#333333", "width": 1.50 }, "label": "4 to 5"    },
-                    { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#86DC3D", "width": 2.00 }, "label": "6 to 7"    },
-                    { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#3c59ff", "width": 2.75 }, "label": "8 to 9"    },
-                    { "minValue": 10, "maxValue": 14, "symbol": { "type": "simple-line", "color": "#FF0000", "width": 3.50 }, "label": "10 to 14"  },
-                    { "minValue": 15, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#66023C", "width": 4.25 }, "label": "15 or More"}
+                    { "minValue":  1, "maxValue":  3, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.50 }, "label": "3 or Less" },
+                    { "minValue":  4, "maxValue":  5, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.50 }, "label": "4 to 5"    },
+                    { "minValue":  6, "maxValue":  7, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 3.00 }, "label": "6 to 7"    },
+                    { "minValue":  8, "maxValue":  9, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 4.00 }, "label": "8 to 9"    },
+                    { "minValue": 10, "maxValue": 14, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 5.50 }, "label": "10 to 14"  },
+                    { "minValue": 15, "maxValue": 99, "symbol": { "type": "simple-line", "color": "#Af2944", "width": 6.50 }, "label": "15 or More"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -331,10 +331,10 @@
                 "labelExpressionInfo": "$feature.dVal",
                 "valueExpression": "return $feature.dVal;",
                 "uniqueValueInfos" : [
-                    { "value": 5, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 5   }, "label": "5-CBD-like"   },
-                    { "value": 4, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 4   }, "label": "4-Urban"      },
-                    { "value": 3, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 3   }, "label": "3-Suburban"   },
-                    { "value": 2, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 2   }, "label": "2-Transition" },
+                    { "value": 5, "symbol": { "type": "simple-line", "color": "#Eb672d", "width": 3.00}, "label": "5-CBD-like"   },
+                    { "value": 4, "symbol": { "type": "simple-line", "color": "#8dc348", "width": 2.50}, "label": "4-Urban"      },
+                    { "value": 3, "symbol": { "type": "simple-line", "color": "#00a74e", "width": 2.00}, "label": "3-Suburban"   },
+                    { "value": 2, "symbol": { "type": "simple-line", "color": "#1ba9e6", "width": 1.50}, "label": "2-Transition" },
                     { "value": 1, "symbol": { "type": "simple-line", "color": "#31398a", "width": 0.75}, "label": "1-Rural"      }
                 ],
                 "defaultSymbol": {
@@ -399,14 +399,14 @@
                 "legendTitle": "Functional Type",
                 "labelExpressionInfo": "Text(IIF(IsEmpty($feature.dVal), '', $feature.dVal), '#0')",
                 "classBreakInfos": [
-                    { "minValue":  6, "maxValue":  7.9, "symbol": { "type": "simple-line", "color": "#808080", "width": 0.50 }, "label": "Local Roads (6-7)" },
-                    { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#606060", "width": 0.75 }, "label": "Minor Collector (5)" },
-                    { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#0096EA", "width": 1.00 }, "label": "Major Collector (4)" },
-                    { "minValue":  3, "maxValue":  3.9, "symbol": { "type": "simple-line", "color": "#22AA22", "width": 2.00 }, "label": "Minor Arterial (3)" },
-                    { "minValue":  2, "maxValue":  2.9, "symbol": { "type": "simple-line", "color": "#666666", "width": 3.00 }, "label": "Principal Arterial (2)" },
-                    { "minValue": 11, "maxValue": 19.9, "symbol": { "type": "simple-line", "color": "#FF2020", "width": 4.00 }, "label": "Expressway (11-19)" },
-                    { "minValue": 30, "maxValue": 49.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 5.00 }, "label": "Freeway (30-49)" },
-                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#0065FF", "width": 5.50 }, "label": "Managed Motorway (20-29)" }
+                    { "minValue":  6, "maxValue":  7.9, "symbol": { "type": "simple-line", "color": "#808080", "width": 0.50 }, "label": "Local Roads (6-7)"       },
+                    { "minValue":  5, "maxValue":  5.9, "symbol": { "type": "simple-line", "color": "#606060", "width": 0.75 }, "label": "Minor Collector (5)"     },
+                    { "minValue":  4, "maxValue":  4.9, "symbol": { "type": "simple-line", "color": "#0096EA", "width": 1.00 }, "label": "Major Collector (4)"     },
+                    { "minValue":  3, "maxValue":  3.9, "symbol": { "type": "simple-line", "color": "#22AA22", "width": 2.00 }, "label": "Minor Arterial (3)"      },
+                    { "minValue":  2, "maxValue":  2.9, "symbol": { "type": "simple-line", "color": "#666666", "width": 3.00 }, "label": "Principal Arterial (2)"  },
+                    { "minValue": 11, "maxValue": 19.9, "symbol": { "type": "simple-line", "color": "#FF2020", "width": 4.00 }, "label": "Expressway (11-19)"      },
+                    { "minValue": 20, "maxValue": 29.9, "symbol": { "type": "simple-line", "color": "#0065FF", "width": 5.00 }, "label": "Managed Motorway (20-29)"},
+                    { "minValue": 30, "maxValue": 49.9, "symbol": { "type": "simple-line", "color": "#333333", "width": 5.50 }, "label": "Freeway (30-49)"         }
                 ],
                 "defaultSymbol": {
                     "type": "simple-line",
@@ -840,7 +840,7 @@
                             "type": "color",
                             "stops": [
                                 { "value": 0   , "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#0000FF" },
+                                { "value": 0.01, "color": "#ADD8E6" },
                                 { "value": 0.75, "color": "#00FF00" },
                                 { "value": 0.85, "color": "#FFFF00" },
                                 { "value": 0.95, "color": "#FFA500" },

@@ -826,17 +826,8 @@ class VizTrends {
                 beginAtZero: mode !== 'pct_change' && mode !== 'change',
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 ticks: {
-                  callback: function(value) {
-                    let sign = value > 0 ? "+" : "";
-                    if (seriesModeSelect.selected === 'stacked100') {
-                      return value.toFixed(0) + '%'; 
-                    } else if (mode === 'pct_change') {
-                      return sign + Number(value).toFixed(0) + '%';
-                    } else if (mode === 'change') {
-                      return sign + Number(value).toLocaleString(); 
-                    } else {
-                      return Number(value).toLocaleString(); 
-                    }
+                  callback: (value) => {
+                    return this.formatYValue(value);
                   }
                 },
                 title: {
@@ -940,17 +931,8 @@ class VizTrends {
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined, // Set max to 100 for stacked100 mode
                 ticks: {
-                  callback: function(value) {
-                    let sign = value > 0 ? "+" : ""; // Determine the sign for positive values
-                    if (mode === 'pct_change') {
-                      return sign + Number(value).toFixed(0) + '%'; // Format as percent for pct_change mode
-                    } else if (mode === 'change') {
-                      // Format with commas for change mode for better readability
-                      return sign + Number(value).toLocaleString(); 
-                    } else {
-                      // Format with commas for regular mode
-                      return Number(value).toLocaleString(); 
-                    }
+                  callback: (value) => {
+                    return this.formatYValue(value);
                   }
                 }
               }
@@ -1100,7 +1082,7 @@ class VizTrends {
                     const geoJsonIdSetDivide = new Set(
                       aggregatorKeyFile_divide
                         .filter(record => record[_selectedAggregator.agCode] === _agId)
-                        .map(record => String(record[this.baseGeoJsonId]))
+                        .map(record => String(record[_selectedDivider.baseGeoJsonId]))
                     );
     
                     // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
@@ -1306,7 +1288,12 @@ class VizTrends {
     } else if (mode === 'change') {
       return sign + Number(value).toLocaleString(); // Comma-separated for large numbers
     } else {
-      return Number(value).toLocaleString(); // General number formatting with commas
+      if (value > 0 && value < 0.001) {
+        // Round small numbers to 1 significant figure
+        return Number(value.toPrecision(2)).toLocaleString();
+      } else {
+        return Number(value).toLocaleString(); 
+      }
     }
   }
 
