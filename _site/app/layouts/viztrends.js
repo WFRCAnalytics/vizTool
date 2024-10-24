@@ -842,6 +842,26 @@ class VizTrends {
               legend: {
                 display: false,
                 position: 'top'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(tooltipItem) {
+                    // Extract the formatted value
+                    let formattedValue = tooltipItem.formattedValue;
+            
+                    // Use a regular expression to find the first number between '(' and ','
+                    let match = /\((\d{1,3}(?:,\d{3})*)/.exec(formattedValue);
+            
+                    // If a match is found, remove commas from the matched number and replace it in the formattedValue
+                    if (match && match[1]) {
+                      let numberWithoutCommas = match[1].replace(/,/g, '');
+                      // Replace the original matched number with the number without commas
+                      return tooltipItem.dataset.label + ': ' + formattedValue.replace(match[1], numberWithoutCommas);
+                    } else {
+                      return tooltipItem.dataset.label + ': ' + formattedValue; // If no match, return the original formattedValue
+                    }
+                  }
+                }
               }
             }
           }
@@ -1288,9 +1308,9 @@ class VizTrends {
     } else if (mode === 'change') {
       return sign + Number(value).toLocaleString(); // Comma-separated for large numbers
     } else {
-      if (value > 0 && value < 0.001) {
-        // Round small numbers to 1 significant figure
-        return Number(value.toPrecision(2)).toLocaleString();
+      if (value > 0 && value < 0.04) {
+        // Round small numbers to 3 significant figure
+        return Number(value.toPrecision(3));
       } else {
         return Number(value).toLocaleString(); 
       }
