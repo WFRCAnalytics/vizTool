@@ -1052,21 +1052,26 @@ class VizTrends {
         const _scenario    = this.getScenario(modelrun.modVersion, modelrun.scnGroup, _scnYear);
         
         if (_scenario) {
-          
+
           // Call this.getAggregatorKeyFile() once and store the result
           const aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
 
-          if (aggregatorKeyFile) {
+          if (this.dCode!="Nothing") {
+            // Call this.getAggregatorKeyFile() once and store the result
+            const aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
+          }
 
-            _selectedFilterOptions.forEach(_fCode => {
+          _selectedFilterOptions.forEach(_fCode => {
 
-              const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
+            const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
 
-              _aggregatorOptionsSelected.forEach(_agId => {
-                
-                let _dataSum = 0;
-                var _data_divide = {};
-                var _sumDivide = 0;
+            _aggregatorOptionsSelected.forEach(_agId => {
+              
+              let _dataSum = 0;
+              var _data_divide = {};
+              var _sumDivide = 0;
+
+              if (aggregatorKeyFile) {
 
                 // Create a Set directly from the filtered aggregatorKeyFile
                 const geoJsonIdSet = new Set(
@@ -1081,61 +1086,77 @@ class VizTrends {
                     const selectedValue = _dataForFilterOptions[key][this.aCode];
                     if (selectedValue !== null && selectedValue !== undefined) {
                       _dataSum += selectedValue; // Sum directly if valid
-                    } //else {
-                      //console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId);
-                    //}
-                  });
-              
-                if (this.dCode!="Nothing") {
-      
-                  // Call this.getAggregatorKeyFile() once and store the result
-                  const aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
-      
-                  if (aggregatorKeyFile_divide) {
-                    if (_scenario.jsonData[_selectedDivider.jsonName]) {
-                      _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
-                    } else {
-                      _bNoDivideData = true;
                     }
+                  });
+              } else if (_selectedAggregator.agCode == this.baseGeoJsonId) {
+                Object.keys(_dataForFilterOptions)
+                  .forEach(key => {
+                    const selectedValue = _dataForFilterOptions[key][this.aCode];
+                    if (selectedValue !== null && selectedValue !== undefined) {
+                      _dataSum += selectedValue; // Sum directly if valid
+                    }
+                  });
 
-                      // Create a Set directly from the filtered aggregatorKeyFile
-                    const geoJsonIdSetDivide = new Set(
-                      aggregatorKeyFile_divide
-                        .filter(record => record[_selectedAggregator.agCode] === _agId)
-                        .map(record => String(record[_selectedDivider.baseGeoJsonId]))
-                    );
-    
-                    // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
-                    Object.keys(_data_divide)
-                    .filter(key => geoJsonIdSetDivide.has(String(key)))  // Filter based on set membership
-                    .forEach(key => {
-                      const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
-                      if (selectedValue !== null && selectedValue !== undefined) {
-                        _sumDivide += selectedValue; // Sum directly if valid
-                      } //else {
-                        //console.log("null data found in here: " + _scnTrendCode + ":" + _scnYear + ":" + _fCode + ":" + _agId);
-                      //}
-                    });
-                  }
+              }
+            
+              if (this.dCode!="Nothing") {
+                  
+                if (_scenario.jsonData[_selectedDivider.jsonName]) {
+                  _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+                } else {
+                  _bNoDivideData = true;
                 }
-                if (this.dCode!="Nothing" & _sumDivide>0) {
-                  _dataSum /= _sumDivide;
-                } else if (this.dCode!="Nothing" & _sumDivide==0) {
-                  _dataSum = null;
-                }
-                // Push the resulting data to allChartData as an object
-                if (_dataSum) {
-                  this.allChartData.push({
-                    _scnTrendCode,
-                    _scnYear,
-                    _fCode,
-                    _agId,
-                    value: _dataSum
+
+                if (aggregatorKeyFile_divide) {
+
+                    // Create a Set directly from the filtered aggregatorKeyFile
+                  const geoJsonIdSetDivide = new Set(
+                    aggregatorKeyFile_divide
+                      .filter(record => record[_selectedAggregator.agCode] === _agId)
+                      .map(record => String(record[_selectedDivider.baseGeoJsonId]))
+                  );
+  
+                  // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
+                  Object.keys(_data_divide)
+                  .filter(key => geoJsonIdSetDivide.has(String(key)))  // Filter based on set membership
+                  .forEach(key => {
+                    const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
+                    if (selectedValue !== null && selectedValue !== undefined) {
+                      _sumDivide += selectedValue; // Sum directly if valid
+                    }
+                  });
+                } else if (_selectedAggregator.agCode == this.baseGeoJsonId) {
+  
+                  // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
+                  Object.keys(_data_divide)
+                  .forEach(key => {
+                    const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
+                    if (selectedValue !== null && selectedValue !== undefined) {
+                      _sumDivide += selectedValue; // Sum directly if valid
+                    }
                   });
                 }
-              });
+                  
+              }
+
+              if (this.dCode!="Nothing" & _sumDivide>0) {
+                _dataSum /= _sumDivide;
+              } else if (this.dCode!="Nothing" & _sumDivide==0) {
+                _dataSum = null;
+              }
+
+              // Push the resulting data to allChartData as an object
+              if (_dataSum) {
+                this.allChartData.push({
+                  _scnTrendCode,
+                  _scnYear,
+                  _fCode,
+                  _agId,
+                  value: _dataSum
+                });
+              }
             });
-          }
+          });
         }
       });
     });

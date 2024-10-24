@@ -42,12 +42,23 @@ class Scenario {
   }
 
   getGeoJsonFileNameFromKey(key) {
-    return this.geojsons[key];
+    try {
+      return this.geojsons[key];
+    } catch (error) {
+      console.warn('Error fetching GeoJSON file name:', error.message);
+      return null;  // or handle it based on your needs, e.g., return a default value
+    }
   }
 
   getKeyFileNameFromGeoJsonKey(basegeometrykey, aggeometrykey) {
-    return this.keys[basegeometrykey][aggeometrykey];
+    try {
+      return this.keys[basegeometrykey][aggeometrykey];
+    } catch (error) {
+      console.warn('Error fetching key file name:', error.message);
+      return null;  // or handle it based on your needs, e.g., return a default value
+    }
   }
+  
   
   getAggregatorKeyFile(selectedAggregator, _baseKey) {
     if (!selectedAggregator || selectedAggregator.agCode != _baseKey) {
