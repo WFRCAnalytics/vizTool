@@ -35,14 +35,14 @@ require([
           this.main_divide_by = {};  // Initialize as an empty object if not already initialized
         }
         if (Array.isArray(data.main_divide_by)) {
-          for (const main_divide_by of data.main_divide_by) {
+          data.main_divide_by.forEach((main_divide_by) => {
             this.main_divide_by[main_divide_by.divider] = {
               name: main_divide_by.legendTitle,
               renderer: createRenderer(main_divide_by),
               labelExpressionInfo: main_divide_by.labelExpressionInfo,
               title: main_divide_by.legendTitle
             };
-          }
+          });
         } else {
           console.warn("data.main_divide_by is not an array or is undefined");
         }
@@ -92,6 +92,7 @@ require([
       const renderer = new SimpleRenderer(data.simpleRenderer);
       // Add legend options
       if (renderer.visualVariables) {
+        // If visualVariables is an array, loop through all elements
         renderer.visualVariables.forEach((visualVariable) => {
           visualVariable.field = "dVal";
           if (visualVariable.legendTitle) {

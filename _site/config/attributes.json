@@ -840,7 +840,7 @@
                             "type": "color",
                             "stops": [
                                 { "value": 0   , "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#ADD8E6" },
+                                { "value": 0.01, "color": "#FFFFFF" },
                                 { "value": 0.75, "color": "#00FF00" },
                                 { "value": 0.85, "color": "#FFFF00" },
                                 { "value": 0.95, "color": "#FFA500" },
@@ -1286,65 +1286,71 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 },
                 {
                     "divider": "TAZ_HH",
-                    "legendTitle": "Household Size",
+                    "legendTitle": "Population",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
                                 "color": "white",
-                                "width": 0.2
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#CCCCCC" },
-                                { "value": 0.99, "color": "#CCCCCC" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    3, "color": "#FFD700" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "#CCCCCC" },
+                                    { "value": 0.99, "color": "#CCCCCC" },
+                                    { "value":    1, "color": "#0000FF" },
+                                    { "value":    3, "color": "#FFD700" },
+                                    { "value":    5, "color": "#FF0000" }
+                                ]
+                            }
+                        ]
                     }
                 },
                 {
                     "divider": "TAZ_WRK",
+                    "legendTitle": "Population",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "grey",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    3, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "lightgrey" },
+                                    { "value": 0.01, "color": "#FFFFFF" },
+                                    { "value":    3, "color": "#FF0000" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -1441,19 +1447,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -1550,19 +1557,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -1659,19 +1667,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -1768,19 +1777,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -1877,19 +1887,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -2068,19 +2079,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":    5, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -2537,7 +2549,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aM": {
@@ -2621,7 +2659,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aA": {
@@ -2705,7 +2769,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aT": {
@@ -2789,7 +2879,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aN": {
@@ -2873,7 +2989,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aW": {
@@ -2957,7 +3099,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aB": {
@@ -3041,7 +3209,33 @@
                     }
                 },
                 "defaultLabel": "No Trips"
-            }
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Trips",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75)" },
+                                    { "value":    5, "color": "rgba(255,0,0,0.75)"     }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "aJA": {
@@ -3472,6 +3666,16 @@
     },
     "aPMT": {
         "alias": "Person Miles Traveled",
+        "filterOverride":[
+            {
+            "filterOut": "fPurp12",
+            "filterIn": "fPurp12NoTruckExternal"
+            },
+            {
+                "filterOut": "fModeRoad",
+                "filterIn": "fModeRoadNoTruckExternal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Miles Traveled",
@@ -3561,19 +3765,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":   80, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -3581,20 +3786,30 @@
     },
     "aPHT": {
         "alias": "Person Hours Traveled",
+        "filterOverride":[
+            {
+            "filterOut": "fPurp12",
+            "filterIn": "fPurp12NoTruckExternal"
+            },
+            {
+                "filterOut": "fModeRoad",
+                "filterIn": "fModeRoadNoTruckExternal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
-                    { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
-                    { "minValue":   5000, "maxValue":    25000, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "5,000 to 25,000"},
-                    { "minValue":  25000, "maxValue":    50000, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "25,000 to 50,000"},
-                    { "minValue":  50000, "maxValue":   100000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "50,000 to 100,000"},
-                    { "minValue": 100000, "maxValue":   250000, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "100,000 to 250,000"},
-                    { "minValue": 250000, "maxValue":   500000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "250,000 to 500,000"},
-                    { "minValue": 500000, "maxValue":  1000000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "500,000 to 1,000,000"},
-                    { "minValue":1000000, "maxValue":  1500000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "1,000,000 to 1,500,000"},
-                    { "minValue":1500000, "maxValue":9999999999,"symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "More than 1,500,000"}
+                    { "minValue":  0.5, "maxValue":      50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":         "1 to, 50"},
+                    { "minValue":   50, "maxValue":     250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                    { "minValue":  250, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                    { "minValue":  500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                    { "minValue": 1000, "maxValue":    2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                    { "minValue": 2500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                    { "minValue": 5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                    { "minValue":10000, "maxValue":   25000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 25,000"},
+                    { "minValue":25000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 25,000"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -3611,15 +3826,15 @@
                 "legendTitle": "Difference in Person Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999999,"maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
-                    { "minValue":    -500000, "maxValue":  -100000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000"},
-                    { "minValue":    -100000, "maxValue":   -50000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100,000 to -50,000" },
-                    { "minValue":     -50000, "maxValue":    -5000, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -5,000"   },
-                    { "minValue":      -5000, "maxValue":     5000, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to +5,000"    },
-                    { "minValue":       5000, "maxValue":    50000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +50,000"   },
-                    { "minValue":      50000, "maxValue":   100000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000" },
-                    { "minValue":     100000, "maxValue":   500000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000"},
-                    { "minValue":     500000, "maxValue":9999999999,"symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000"  }
+                    { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
+                    { "minValue":     -5000, "maxValue":   -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"  },
+                    { "minValue":     -1000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"    },
+                    { "minValue":      -500, "maxValue":     -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -500"      },
+                    { "minValue":       -50, "maxValue":      50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"        },
+                    { "minValue":        50, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"       },
+                    { "minValue":       500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"    },
+                    { "minValue":      1000, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"  },
+                    { "minValue":      5000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"  }
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -3670,19 +3885,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":    4, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -3690,12 +3906,22 @@
     },
     "aPHD": {
         "alias": "Person Hours of Delay",
+        "filterOverride":[
+            {
+                "filterOut": "fPurp12",
+                "filterIn": "fPurp12NoTruckExternal"
+            },
+            {
+                "filterOut": "fModeRoad",
+                "filterIn": "fModeRoadNoTruckExternal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Person Hours of Delay",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
-                    { "minValue":  0.50, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":          "1 to 500"},
+                    { "minValue":  0.50, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":           "1 to 500"},
                     { "minValue":   500, "maxValue":    2500, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "500 to 2,500"},
                     { "minValue":  2500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "2,500 to 5,000"},
                     { "minValue":  5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "5,000 to 10,000"},
@@ -3720,15 +3946,15 @@
                 "legendTitle": "Difference in Person Hours of Delay",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -99999999, "maxValue":  -50000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -50,000" },
-                    { "minValue":    -50000, "maxValue":  -10000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000"},
-                    { "minValue":    -10000, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10,000 to -5,000" },
-                    { "minValue":     -5000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -500"    },
-                    { "minValue":      -500, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to +500"      },
-                    { "minValue":       500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +5,000"    },
-                    { "minValue":      5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +10,000" },
-                    { "minValue":     10000, "maxValue":   50000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10,000 to +50,000"},
-                    { "minValue":     50000, "maxValue":999999999,"symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +50,000" }
+                    { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
+                    { "minValue":     -5000, "maxValue":   -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"  },
+                    { "minValue":     -1000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"    },
+                    { "minValue":      -500, "maxValue":     -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -500"      },
+                    { "minValue":       -50, "maxValue":      50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"        },
+                    { "minValue":        50, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"       },
+                    { "minValue":       500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"    },
+                    { "minValue":      1000, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"  },
+                    { "minValue":      5000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"  }
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -3779,19 +4005,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":    1, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -3888,19 +4115,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":   80, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -3938,15 +4166,15 @@
                 "legendTitle": "Difference in Vehicle Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999999,"maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
-                    { "minValue":    -500000, "maxValue":  -100000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000"},
-                    { "minValue":    -100000, "maxValue":   -50000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100,000 to -50,000" },
-                    { "minValue":     -50000, "maxValue":    -5000, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -5,000"   },
-                    { "minValue":      -5000, "maxValue":     5000, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to +5,000"    },
-                    { "minValue":       5000, "maxValue":    50000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +50,000"   },
-                    { "minValue":      50000, "maxValue":   100000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000" },
-                    { "minValue":     100000, "maxValue":   500000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000"},
-                    { "minValue":     500000, "maxValue":9999999999,"symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000"  }
+                    { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
+                    { "minValue":     -5000, "maxValue":   -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"  },
+                    { "minValue":     -1000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"    },
+                    { "minValue":      -500, "maxValue":     -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -500"      },
+                    { "minValue":       -50, "maxValue":      50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"        },
+                    { "minValue":        50, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"       },
+                    { "minValue":       500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"    },
+                    { "minValue":      1000, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"  },
+                    { "minValue":      5000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"  }
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -3997,19 +4225,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":    4, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -4047,15 +4276,15 @@
                 "legendTitle": "Difference in Vehicle Hours of Delay",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -99999999, "maxValue":  -50000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -50,000" },
-                    { "minValue":    -50000, "maxValue":  -10000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -10,000"},
-                    { "minValue":    -10000, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-10,000 to -5,000" },
-                    { "minValue":     -5000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -500"    },
-                    { "minValue":      -500, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to +500"      },
-                    { "minValue":       500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +5,000"    },
-                    { "minValue":      5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +10,000" },
-                    { "minValue":     10000, "maxValue":   50000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+10,000 to +50,000"},
-                    { "minValue":     50000, "maxValue":999999999,"symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +50,000" }
+                    { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
+                    { "minValue":     -5000, "maxValue":   -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"  },
+                    { "minValue":     -1000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"    },
+                    { "minValue":      -500, "maxValue":     -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -500"      },
+                    { "minValue":       -50, "maxValue":      50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"        },
+                    { "minValue":        50, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"       },
+                    { "minValue":       500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"    },
+                    { "minValue":      1000, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"  },
+                    { "minValue":      5000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"  }
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -4106,19 +4335,20 @@
                         "symbol": {
                             "type": "simple-fill",
                             "outline": {
-                                "color": "white",
-                                "width": 0.2
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
                             }
                         },
-                        "visualVariables": {
-                            "type": "color",
-                            "stops": [
-                                { "value":    0, "color": "#D3D3FF" },
-                                { "value": 0.01, "color": "#D3D3FF" },
-                                { "value":    1, "color": "#0000FF" },
-                                { "value":   80, "color": "#FF0000" }
-                            ]
-                        }
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":    1, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]
@@ -4215,15 +4445,15 @@
                 "legendTitle": "Passenger-Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
-                    { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
-                    { "minValue":   5000, "maxValue":    25000, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "5,000 to 25,000"},
-                    { "minValue":  25000, "maxValue":    50000, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "25,000 to 50,000"},
-                    { "minValue":  50000, "maxValue":   100000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":      "50,000 to 100,000"},
-                    { "minValue": 100000, "maxValue":   250000, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "100,000 to 250,000"},
-                    { "minValue": 250000, "maxValue":   500000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "250,000 to 500,000"},
-                    { "minValue": 500000, "maxValue":  1000000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "500,000 to 1,000,000"},
-                    { "minValue":1000000, "maxValue":  1500000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "1,000,000 to 1,500,000"},
-                    { "minValue":1500000, "maxValue":9999999999,"symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":    "More than 1,500,000"}
+                    { "minValue":  0.5, "maxValue":      50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":         "1 to, 50"},
+                    { "minValue":   50, "maxValue":     250, "symbol": { "type": "simple-fill", "color": [ 27,169,230,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":        "50 to 250"},
+                    { "minValue":  250, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [  0,167, 78,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":       "250 to 500"},
+                    { "minValue":  500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color": [108,183, 74,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":     "500 to 1,000"},
+                    { "minValue": 1000, "maxValue":    2500, "symbol": { "type": "simple-fill", "color": [141,195, 72,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "1,000 to 2,500"},
+                    { "minValue": 2500, "maxValue":    5000, "symbol": { "type": "simple-fill", "color": [224,157, 46,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":   "2,500 to 5,000"},
+                    { "minValue": 5000, "maxValue":   10000, "symbol": { "type": "simple-fill", "color": [235,103, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":  "5,000 to 10,000"},
+                    { "minValue":10000, "maxValue":   25000, "symbol": { "type": "simple-fill", "color": [229, 39, 45,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "10,000 to 25,000"},
+                    { "minValue":25000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color": [175, 41, 68,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label": "More than 25,000"}
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",
@@ -4240,15 +4470,15 @@
                 "legendTitle": "Difference in Passenger-Hours Traveled",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
-                    { "minValue": -9999999999,"maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
-                    { "minValue":    -500000, "maxValue":  -100000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500,000 to -100,000"},
-                    { "minValue":    -100000, "maxValue":   -50000, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-100,000 to -50,000" },
-                    { "minValue":     -50000, "maxValue":    -5000, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50,000 to -5,000"   },
-                    { "minValue":      -5000, "maxValue":     5000, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to +5,000"    },
-                    { "minValue":       5000, "maxValue":    50000, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+5,000 to +50,000"   },
-                    { "minValue":      50000, "maxValue":   100000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50,000 to +100,000" },
-                    { "minValue":     100000, "maxValue":   500000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+100,000 to +500,000"},
-                    { "minValue":     500000, "maxValue":9999999999,"symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +500,000"  }
+                    { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
+                    { "minValue":     -5000, "maxValue":   -1000, "symbol": { "type": "simple-fill", "color":[  0,112,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-5,000 to -1,000"  },
+                    { "minValue":     -1000, "maxValue":    -500, "symbol": { "type": "simple-fill", "color":[115,178,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-1,000 to -500"    },
+                    { "minValue":      -500, "maxValue":     -50, "symbol": { "type": "simple-fill", "color":[190,210,255,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500 to -500"      },
+                    { "minValue":       -50, "maxValue":      50, "symbol": { "type": "simple-fill", "color":[170,170,170,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-50 to +50"        },
+                    { "minValue":        50, "maxValue":     500, "symbol": { "type": "simple-fill", "color":[255,190,190,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+50 to +500"       },
+                    { "minValue":       500, "maxValue":    1000, "symbol": { "type": "simple-fill", "color":[255,127,127,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+500 to +1,000"    },
+                    { "minValue":      1000, "maxValue":    5000, "symbol": { "type": "simple-fill", "color":[230,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "+1,000 to +5,000"  },
+                    { "minValue":      5000, "maxValue":99999999, "symbol": { "type": "simple-fill", "color":[ 81,  0,  0,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than +5,000"  }
                 ],
                 "defaultSymbol": {
                     "type": "simple-fill",

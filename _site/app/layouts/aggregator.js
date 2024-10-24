@@ -233,7 +233,7 @@ class Aggregator {
 
     this.filterData = {
       fCode           : this.agCode                       ,
-      fName           : this.agTitleText                  ,
+      alias           : this.agTitleText                  ,
       fWidget         : "checkboxes"                      ,
       fOptions        : _options                          ,
       fSelected       : this.selected                     ,

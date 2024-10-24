@@ -616,45 +616,7 @@ require([
 
       const setRendererAndLegend = () => {
 
-        if (this.aCode.substring(0, 2) === "aS" & this.attributeTitle =="Mode Share Attributes") {
-          if (this.mode==='main') {
-            // Define the color ramp from yellow to blue
-            var colorVisVar = new ColorVariable({
-              field: "dVal", // replace with the field name of your data
-              stops: [
-                { value: 0.0001, color: new Color("#FFFF00") }, // Yellow
-                { value: 1.0000, color: new Color("#0000FF") }  // Blue
-              ]
-            });
-          }
-          else if (this.mode==='compare') {
-            var colorVisVar = {
-              type: "color",
-              field: "dVal", // Replace with your field name
-              stops: [
-                { value: -0.25, color: "red", label: "< -0.25" },
-                { value: 0, color: "#d3d3d3", label: "0" }, // Lighter grey color
-                { value: 0.25, color: "blue", label: "> 0.25" }
-              ],
-              // Optional: Include normalizationField, minValue, maxValue, etc., if needed
-            };
-          }
-
-          // Create a simple renderer and apply the visual variable
-          this.layerDisplay.renderer = new SimpleRenderer({
-            symbol: {
-              type: "simple-fill", // Use "simple-marker" for point layers
-              outline: {
-                // You can adjust the outline properties as needed
-                color: "white",
-                width: 0.2
-              }
-            },
-            visualVariables: [colorVisVar]
-          });
-        } else {
-          this.layerDisplay.renderer = this.getRenderer();
-        }
+        this.layerDisplay.renderer = this.getRenderer();
 
         this.layerDisplay.refresh();
         this.layerDisplay.visible = true;
@@ -675,8 +637,12 @@ require([
         }
         
         if (this.dCode!="Nothing") {
-          if (this.layerDisplay.renderer.visualVariables.legendOptions.title) {
-            this.layerDisplay.renderer.visualVariables.legendOptions.title = this.getLayerDisplayName();
+          if (this.layerDisplay.renderer.visualVariables) {
+            this.layerDisplay.renderer.visualVariables.forEach((visualVariable) => {
+              visualVariable.legendOptions = {
+                title: this.getLayerDisplayName()
+              }
+            });
           }
         }
 
@@ -777,19 +743,21 @@ require([
             
             if (this.dCode!="Nothing") {
               var _dataMainDivide = this.getMain().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
-              var _dataCompDivide = this.getComp().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
+              if (this.mode==='compare') {
+                var _dataCompDivide = this.getComp().getDataForFilter(_selectedDivider.jsonName, _selectedDivider.filter);
+              }
             }
 
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
-              var _id = feature.attributes[this.baseGeoJsonId];
+              const _id = feature.attributes[this.baseGeoJsonId];
               
-              var _valueMain = 0;
-              var _valueComp = 0;
-              var _valueMainDivide = 0;
-              var _valueCompDivide = 0;
-              var _valueDisp = 0;
+              let _valueMain;
+              let _valueComp;
+              let _valueMainDivide;
+              let _valueCompDivide;
+              let _valueDisp;
 
               // main value
               if (_dataMain!==undefined) {
@@ -799,7 +767,7 @@ require([
               }
 
               // comp value
-              if (_dataComp!==undefined) {
+              if (_dataComp!==undefined && (this.mode==='compare') ) {
                 if (_dataComp[_id]) {
                 _valueComp = _dataComp[_id][this.aCode];
                 }
@@ -815,13 +783,11 @@ require([
                 }
 
                 // comp value
-                if (_dataCompDivide!==undefined) {
+                if (_dataCompDivide!==undefined && (this.mode==='compare') ) {
                   if (_dataCompDivide[_id]) {
                   _valueCompDivide = _dataCompDivide[_id][_selectedDivider.attributeCode];
                   }
-                  if (_valueCompDivide>0) {
-                    _valueComp = _valueCompDivide > 0 ? _valueComp / _valueCompDivide : null;
-                  }
+                  _valueComp = _valueCompDivide > 0 ? _valueComp / _valueCompDivide : null;
                 }
               }
 
@@ -830,10 +796,14 @@ require([
 
               // calculate final display value based on selection (absolute or change)
               try {
-                if (this.modeCompare=='diff') { // absolute change
-                _valueDisp = _valueMain - _valueComp;
-                } else if (this.modeCompare=='pctdiff') { // percent change
-                  if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
+                if (this.mode==='compare') {
+                  if (this.modeCompare=='diff') { // absolute change
+                    _valueDisp = _valueMain - _valueComp;
+                  } else if (this.modeCompare=='pctdiff') { // percent change
+                    if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
+                  }
+                } else {
+                  _valueDisp = _valueMain;
                 }
               } catch(err) {
                 _valueDisp = _valueMain;
@@ -893,8 +863,6 @@ require([
                 var _valueMain = 0;
                 var _valueComp = 0;
                 var _valueDisp = 0;
-                var _valueMainDivide = 0;
-                var _valueCompDivide = 0;
                 var _valueMainXWt = 0;
                 var _valueCompXWt = 0;
                 var _valueMainSumWt = 0;
@@ -1039,10 +1007,14 @@ require([
 
                   if (_sumDivideMain>0) {
                     _valueMain /= _sumDivideMain;
+                  } else {
+                    _valueMain = null;
                   }
 
                   if (_sumDivideComp>0) {
                     _valueComp /= _sumDivideComp;
+                  } else {
+                    _valueComp = null;
                   }
 
                 }

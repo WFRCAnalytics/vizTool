@@ -1,9 +1,9 @@
 {
   "title": "vizTool for TDM v9.1",
-  "subtitle": "v24.10.23 beta",
+  "subtitle": "v24.10.24 beta",
   "splash": {
     "title": "IMPORTANT: BETA VERSION",
-    "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>Comprehensive user guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
+    "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>User guides, a data dictionary, and additional resources will be available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
     "on": true
   },
   "checkboxesSelector": {
@@ -174,6 +174,9 @@
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
             "attributeTitle": "Trip Mode",
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/><b>Walk Trips</b> is specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using only a bicycle.",
             "attributeSelected": "a0",
@@ -266,10 +269,10 @@
             "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "attributeTitle": "Zone Metric",
-            "attributeInfoTextHtml": "",
+            "attributeInfoTextHtml": "<b>Person-Miles Traveled</b> is the total miles traveled by peope produced or attracted to the specified geography over a given time period.<br/><b> People-Hours Traveled</b> measures the total time spent by people traveling produced or attracted to the specified geography over a given period of time.<br/><b>People-Hours of Delay</b> is the cumulative delay experienced by people, calculated as the difference between actual (congested) speed and free-flow speed.<br/><b>Vehicle-Miles Traveled</b> is the total miles traveled by vehicles produced or attracted to the specified geography over a given time period.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by vehicles traveling produced or attracted to the specified geography over a given period of time.<br/><b>Vehicle-Hours of Delay</b> is the cumulative delay experienced by vehicles, calculated as the difference between actual (congested) speed and free-flow speed.<br/>",
             "attributeSelected": "aPMT",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : ["fTod4","fPurp12","fPA","fModeRoad"],
+            "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"],
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"]
@@ -284,8 +287,8 @@
             "baseGeoJsonId": "TAZID",
             "aggregatorTitle": "Select Summary Geography",
             "comboSelected": "",
-            "attributeTitle": "Zone Metric Trends",
-            "attributeInfoTextHtml": "",
+            "attributeTitle": "Zone Metrics",
+            "attributeInfoTextHtml": "<b>Person-Miles Traveled</b> is the total miles traveled by people produced or attracted to the specified geography over a given time period.<br/><b> People-Hours Traveled</b> measures the total time spent by people traveling produced or attracted to the specified geography over a given period of time.<br/><b>People-Hours of Delay</b> is the cumulative delay experienced by people, calculated as the difference between actual (congested) speed and free-flow speed.<br/><b>Vehicle-Miles Traveled</b> is the total miles traveled by vehicles produced or attracted to the specified geography over a given time period.<br/><b>Vehicle-Hours Traveled</b> measures the total time spent by vehicles traveling produced or attracted to the specified geography over a given period of time.<br/><b>Vehicle-Hours of Delay</b> is the cumulative delay experienced by vehicles, calculated as the difference between actual (congested) speed and free-flow speed.<br/>",
             "attributeSelected": "aPMT",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
@@ -293,7 +296,7 @@
             "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTSUPER",
             "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-            "filters" : ["fTod4","fPurp12","fPA","fModeRoad"]
+            "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"]
           }
         },
         { "submenuText": "Access to Opportunities",

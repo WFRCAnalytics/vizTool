@@ -1,9 +1,7 @@
 {
     "fPurp12": {
-        "fName": "Trip Purpose",
+        "alias": "Trip Purpose",
         "fWidget": "checkboxes",
-        "fOwnCol": true,
-        "col": "Purpose",
         "fSelected": ["HBW","HBO","HBC","HBS_Pr","HBS_Sc","NHB","LT","MD","HV","IX","XI","XX"],
         "fOptions":
         [
@@ -17,23 +15,34 @@
             {"value": "MD"     , "label":"Medium Trucks"                },
             {"value": "HV"     , "label":"Heavy Trucks"                 },
             {"value": "IX"     , "label":"Internal-to-External"         },
-            {"value": "XI"     , "label":"External-to-Internal "        },
-            {"value": "XX"     , "label":"External-to-External"         }
+            {"value": "XI"     , "label":"External-to-Internal "        }
+        ]
+    },
+    "fPurp12NoTruckExternal": {
+        "alias": "Trip Purpose",
+        "fWidget": "checkboxes",
+        "fSelected": ["HBW","HBO","HBC","HBS_Pr","HBS_Sc","NHB"],
+        "fOptions":
+        [
+            {"value": "HBW"    , "label":"Home-Base Work"               },
+            {"value": "HBO"    , "label":"Home-Based Other"             },
+            {"value": "HBC"    , "label":"Home-Based College"           },
+            {"value": "HBS_Pr" , "label":"Home-Based School - Primary"  },
+            {"value": "HBS_Sc" , "label":"Home-Based School - Secondary"},
+            {"value": "NHB"    , "label":"Non-Home Based"               }
         ]
     },
     "fPA": {
-        "fName": "Production/Attraction",
-        "fWidget": "checkboxes",
-        "fOwnCol": true,
-        "col": "PA",
-        "fSelected": ["P"],
+        "alias": "Production/Attraction",
+        "fWidget": "radio",
+        "fSelected": "P",
         "fOptions": [
             {"value":"P", "label":"Production"},
             {"value":"A", "label":"Attraction"}
         ]
     },
     "fVehTypePcLiMdHv": {
-        "fName"    : "Vehicle Type",
+        "alias"    : "Vehicle Type",
         "fWidget"  : "checkboxes",
         "fSelected": ["PC","LT","MD","HV"],
         "fOptions" : [
@@ -44,7 +53,7 @@
         ]
     },
     "fTrkTypeMdHv": {
-        "fName"    : "Truck Type",
+        "alias"    : "Truck Type",
         "fWidget"  : "checkboxes",
         "fSelected": ["MD","HV"],
         "fOptions" : [
@@ -53,7 +62,7 @@
         ]
     },
     "fTod4": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["AM","MD","PM","EV"],
         "fOptions" :[
@@ -64,7 +73,7 @@
         ]
     },
     "fTod4Pm": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["PM"],
         "fOptions" :[
@@ -75,7 +84,7 @@
         ]
     },
     "fTod4pDy": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "select",
         "fSelected": "DY",
         "fOptions" :[
@@ -88,7 +97,7 @@
         "subTotals": ["DY"]
     },
     "fPurpOnlyAll": {
-        "fName"    : "Trip Purpose",
+        "alias"    : "Trip Purpose",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -96,7 +105,7 @@
         ]
     },
     "fTod2": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "checkboxes",
         "fSelected": ["pk","ok"],
         "fOptions" : [
@@ -105,7 +114,7 @@
         ]
     },
     "fTod2Select": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "select",
         "fSelected": "pk",
         "fOptions" : [
@@ -114,7 +123,7 @@
         ]
     },
     "fTod2pDy": {
-        "fName"    : "Time of Day",
+        "alias"    : "Time of Day",
         "fWidget"  : "select",
         "fSelected": "Dy",
         "fOptions" : [
@@ -125,7 +134,7 @@
         "subTotals": ["Dy"]
     },
     "fModeAccess": {
-        "fName"    : "Production Access Mode",
+        "alias"    : "Production Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["drive", "walk"],
         "fOptions" : [
@@ -134,7 +143,7 @@
         ]
     },
     "fModeAccessSingleLetter": {
-        "fName"    : "Production Access Mode",
+        "alias"    : "Production Access Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["D", "W"],
         "fOptions" : [
@@ -143,7 +152,7 @@
         ]
     },
     "fIbOb": {
-        "fName"    : "Peak Direction",
+        "alias"    : "Peak Direction",
         "fWidget"  : "checkboxes",
         "fSelected": ["IB", "OB"],
         "fOptions" : [
@@ -152,7 +161,7 @@
         ]
     },
     "fModeRoute": {
-        "fName"    : "Mode",
+        "alias"    : "Mode",
         "fWidget"  : "checkboxes",
         "fSelected": [4,5,6,7,8,9],
         "fOptions" : [
@@ -165,7 +174,7 @@
         ]
     },
     "fModeRouteCode3": {
-        "fName"    : "Mode",
+        "alias"    : "Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["LCL","COR","EXP","BRT","LRT","CRT"],
         "fOptions" : [
@@ -178,7 +187,7 @@
         ]
     },
     "fRouteName": {
-        "fName"       : "Route Name",
+        "alias"       : "Route Name",
         "fWidget"     : "checkboxes",
         "fOptionsJson": "j-transit-route-names.json",
         "fOptionValue": "RouteName",
@@ -198,7 +207,7 @@
         "subTotals": ["All"]
     },
     "fModeHier": {
-        "fName"    : "Hierarchacal Mode",
+        "alias"    : "Hierarchacal Mode",
         "fWidget"  : "select",
         "fSelected": "ALL",
         "fOptions" : [
@@ -213,7 +222,7 @@
         "subTotals": ["ALL"]
     },
     "fVehNum": {
-        "fName": "HH by Number of Vehicles",
+        "alias": "HH by Number of Vehicles",
         "fWidget": "checkboxes",
         "fOwnCol": false,
         "col": "",
@@ -226,7 +235,7 @@
         ]
     },
     "fEmp3Cat" : {
-        "fName": "3-Category Employment",
+        "alias": "3-Category Employment",
         "fWidget": "checkboxes",
         "fOwnCol": false,
         "col": "",
@@ -238,7 +247,7 @@
         ]
     },
     "fEmp12Cat": {
-        "fName": "12-Category Employment",
+        "alias": "12-Category Employment",
         "fWidget": "checkboxes",
         "fOwnCol": false,
         "col": "",
@@ -259,7 +268,7 @@
         ]
     },
     "fSchType": {
-        "fName": "School Type",
+        "alias": "School Type",
         "fWidget": "checkboxes",
         "fOwnCol": false,
         "col": "",
@@ -271,7 +280,7 @@
         ]
     },
     "fModeAutoTransit": {
-        "fName"    : "Commute Mode",
+        "alias"    : "Commute Mode",
         "fWidget"  : "select",
         "fSelected": "A",
         "fOptions" : [
@@ -280,7 +289,7 @@
         ]
     },
     "fAtoCondition": {
-        "fName"    : "Condition",
+        "alias"    : "Condition",
         "fWidget"  : "select",
         "fSelected": "C",
         "fOptions" : [
@@ -290,7 +299,7 @@
         ]
     },
     "fPurp5": {
-        "fName"    : "Trip Purpose",
+        "alias"    : "Trip Purpose",
         "fWidget"  : "checkboxes",
         "fSelected": ["HBC","HBO","HBSch","HBW","NHB"],
         "fOptions" : [
@@ -302,7 +311,7 @@
         ]
     },
     "fPurp5pAll": {
-        "fName"    : "Trip Purpose",
+        "alias"    : "Trip Purpose",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -316,7 +325,7 @@
         "subTotals": ["All"]
     },
     "fRoadSegFuncGroup": {
-        "fName"    : "Functional Group",
+        "alias"    : "Functional Group",
         "fWidget"  : "select",
         "fSelected": "Total",
         "fOptions" : [
@@ -329,7 +338,7 @@
         "subTotals": ["Total"]
     },
     "fRoadSegFuncGroupNoTotal": {
-        "fName"    : "Functional Group",
+        "alias"    : "Functional Group",
         "fWidget"  : "checkboxes",
         "fSelected": ["Freeway"],
         "fOptions" : [
@@ -340,7 +349,7 @@
         ]
     },
     "fAreaType": {
-        "fName"    : "Area Type",
+        "alias"    : "Area Type",
         "fWidget"  : "checkboxes",
         "fOptions" : [
             {"value":"Rural"     , "label": "1-Rural"     },
@@ -351,7 +360,7 @@
         ]
     },
     "fDirName4pAll": {
-        "fName"    : "Cardinal Travel Direction on Segment",
+        "alias"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "select",
         "fSelected": "All",
         "fOptions" : [
@@ -364,7 +373,7 @@
         "subTotals": ["All"]
     },
     "fDirNameNoAll": {
-        "fName"    : "Cardinal Travel Direction on Segment",
+        "alias"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "checkboxes",
         "fSelected": ["NB","SB","EB","WB"],
         "fOptions" : [
@@ -375,7 +384,7 @@
         ]
     },
     "fDirNameNoAllSelect": {
-        "fName"    : "Cardinal Travel Direction on Segment",
+        "alias"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "select",
         "fSelected": "NB",
         "fOptions" : [
@@ -386,22 +395,39 @@
         ]
     },
     "fModeRoad": {
-        "fName"    : "Non-Transit Modes",
+        "alias"    : "Roadway Modes",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"],
+        "fOptions" : [
+            { "value":"DAn"      , "label":  "Drive Alone - Non-Toll"},
+            { "value":"DAt"      , "label":  "Drive Alone - Toll"    },
+            { "value":"SRn"      , "label":  "Shared Ride - Non-Toll"},
+            { "value":"SRt"      , "label":  "Shared Ride - Toll"    },
+            { "value":"SRh"      , "label":  "Shared Ride - HOV"     },
+            { "value":"Ss"       , "label":  "School - Drive Self"   },
+            { "value":"Sd"       , "label":  "School - Drop Off"     },
+            { "value":"Sb"       , "label":  "School - Bus"          },
+            { "value":"Truck"    , "label":  "Truck"                 },
+            { "value":"External" , "label":  "External"              }
+        ]
+    },
+    "fModeRoadNoTruckExternal": {
+        "alias"    : "Roadway Modes",
         "fWidget"  : "checkboxes",
         "fSelected": ["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb"],
         "fOptions" : [
-            { "value":"DAn", "label":  "Drive Alone - Non-Toll"},
-            { "value":"DAt", "label":  "Drive Alone - Toll"    },
-            { "value":"SRn", "label":  "Shared Ride - Non-Toll"},
-            { "value":"SRt", "label":  "Shared Ride - Toll"    },
-            { "value":"SRh", "label":  "Shared Ride - HOV"     },
-            { "value":"Ss" , "label":  "School - Drive Self"   },
-            { "value":"Sd" , "label":  "School - Drop Off"     },
-            { "value":"Sb" , "label":  "School - Bus"          }
+            { "value":"DAn"      , "label":  "Drive Alone - Non-Toll"},
+            { "value":"DAt"      , "label":  "Drive Alone - Toll"    },
+            { "value":"SRn"      , "label":  "Shared Ride - Non-Toll"},
+            { "value":"SRt"      , "label":  "Shared Ride - Toll"    },
+            { "value":"SRh"      , "label":  "Shared Ride - HOV"     },
+            { "value":"Ss"       , "label":  "School - Drive Self"   },
+            { "value":"Sd"       , "label":  "School - Drop Off"     },
+            { "value":"Sb"       , "label":  "School - Bus"          }
         ]
     },
     "fShareMode": {
-        "fName"    : "Shares Mode",
+        "alias"    : "Shares Mode",
         "fWidget"  : "checkboxes",
         "fSelected": ["Walk","Bike","Auto","SchoolBus","LCL","COR","BRT","EXP","LRT","CRT"],
         "fOptions" : [

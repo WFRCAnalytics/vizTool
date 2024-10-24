@@ -23,8 +23,10 @@ class Filter {
 
     this.vizLayout = vizLayout;
 
-    this.name = (_configFilter.fWidget === 'select' || _configFilter.fWidget === 'checkboxes') ? _configFilter.fName : ''; // select and checkboxes will have blank title
-    
+    //this.name = (_configFilter.fWidget === 'select' || _configFilter.fWidget === 'checkboxes') ? _configFilter.alias : ''; // Assign alias for select and checkboxes, otherwise blank title
+
+    this.name = _configFilter.alias;
+
     this.options = [];
 
     if (_configFilter.fOptionsJson) {
@@ -147,7 +149,7 @@ class Filter {
     if (_configFilter.fWidget === 'select') {
       this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, true, _configFilter.subTotals);
     } else if (_configFilter.fWidget === 'radio') {
-      this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, true);
+      this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, "", true);
     } else if (_configFilter.fWidget === 'checkboxes') {
       this.filterWij = new WijCheckboxes(this.id, this.name, _selected, this.options, this.vizLayout, true);
     } else if (_configFilter.fWidget === 'combobox') {

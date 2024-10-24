@@ -22,14 +22,14 @@ class DataAttribute {
 
 class DataFilter {
     constructor(data) {
-        if (data.fCode && data.fName && data.fWidget && data.fOptions) {
+        if (data.fCode && data.alias && data.fWidget && data.fOptions) {
             this.fCode = data.fCode;
-            this.fName = data.fName;
+            this.alias = data.alias;
             this.fWidget = data.fWidget;
             this.fOptions = data.fOptions;
         } else if (data.dCode && data.dName && data.dWidget && data.dOptions) {
             this.fCode = data.dCode;
-            this.fName = data.dName;
+            this.alias = data.dName;
             this.fWidget = data.dWidget;
             this.fOptions = data.dOptions;
         } else {

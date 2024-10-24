@@ -291,9 +291,9 @@ class VizTrends {
   getColor = (() => {
     const colors = [
       'rgba( 75, 210, 192, 1)', // Teal
+      'rgba( 54, 162, 225, 1)', // Blue
       'rgba(255,  99, 132, 1)', // Pink/Red
       'rgba(255, 216,  96, 1)', // Yellow
-      'rgba( 54, 162, 225, 1)', // Blue
       'rgba(153, 102, 255, 1)', // Purple
       'rgba(255, 159,  64, 1)', // Orange
       'rgba(  0, 128, 128, 1)', // Dark Teal
