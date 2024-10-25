@@ -840,8 +840,10 @@ require([
           // B: Aggregator
           } else {
 
+            let aggregatorKeyFile;
+
             // Call this.getAggregatorKeyFile() once and store the result
-            const aggregatorKeyFile = this.getScenarioMain().getAggregatorKeyFile(this.sidebar.getSelectedAggregator(), this.baseGeoJsonKey);
+            aggregatorKeyFile = this.getScenarioMain().getAggregatorKeyFile(this.sidebar.getSelectedAggregator(), this.baseGeoJsonKey);
 
             if (aggregatorKeyFile) {
 
