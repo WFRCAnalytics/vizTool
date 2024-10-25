@@ -1053,12 +1053,15 @@ class VizTrends {
         
         if (_scenario) {
 
+          let aggregatorKeyFile;
+          let aggregatorKeyFile_divide;
+
           // Call this.getAggregatorKeyFile() once and store the result
-          const aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
+          aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
 
           if (this.dCode!="Nothing") {
             // Call this.getAggregatorKeyFile() once and store the result
-            const aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
+            aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
           }
 
           _selectedFilterOptions.forEach(_fCode => {
