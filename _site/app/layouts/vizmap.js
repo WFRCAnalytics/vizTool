@@ -753,11 +753,11 @@ require([
               // Get ID from the feature's attributes
               const _id = feature.attributes[this.baseGeoJsonId];
               
-              let _valueMain;
-              let _valueComp;
-              let _valueMainDivide;
-              let _valueCompDivide;
-              let _valueDisp;
+              let _valueMain = 0;
+              let _valueComp = 0;
+              let _valueMainDivide = 0;
+              let _valueCompDivide = 0;
+              let _valueDisp = 0;
 
               // main value
               if (_dataMain!==undefined) {
