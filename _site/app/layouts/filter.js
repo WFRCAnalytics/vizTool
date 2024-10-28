@@ -1,5 +1,5 @@
 class Filter {
-  constructor(fCode, vizLayout, filterData = null) {
+  constructor(fCode, vizLayout, filterData = null, geoJsonInfo={}) {
 
     let _configFilter;
 
@@ -39,6 +39,13 @@ class Filter {
     } else {
       this.initializeFilter(_configFilter);
     }
+
+    if (geoJsonInfo && Object.keys(geoJsonInfo).length > 0) {
+      this.geoJsonInfo = geoJsonInfo;
+    }
+
+    this.isMapInitialized = false; // Track map initialization    
+    this.mapView = null; // Placeholder for the ArcGIS map view
   }
 
   async loadAndProcessFOptionsJson(_configFilter) {
@@ -163,6 +170,11 @@ class Filter {
     const filterContainer = document.createElement('div');
     filterContainer.id = this.id;
 
+    if (this.geoJsonInfo && Object.keys(this.geoJsonInfo).length > 0) {
+      // Add the map popup button
+      filterContainer.appendChild(this.renderMapPopupButton());
+    }
+
     // only render if the user can modify widget... otherwise needed settings are all preserved in object
     if (this.userModifiable) {
       // append sub aggregation widget if exists
@@ -173,6 +185,123 @@ class Filter {
       filterContainer.appendChild(this.filterWij.render());
     }
     return filterContainer;
+  }
+
+
+  renderMapPopupButton() {
+    const mapButton = document.createElement('button');
+    mapButton.innerText = "Open Map";
+    mapButton.onclick = () => this.openMapPopup();
+    return mapButton;
+  }
+
+  openMapPopup() {
+    const mapPopup = document.getElementById("mapPopup");
+    mapPopup.style.display = "block";
+  
+    if (!this.isMapInitialized) {
+      // Adjust the styling of mapPopup to ensure padding for the close button
+      mapPopup.style.padding = "10px";
+      mapPopup.style.boxSizing = "border-box"; // Ensures padding is included in the width/height
+  
+      // Add close button
+      const closePopup = document.createElement("div");
+      closePopup.innerText = "Close";
+      closePopup.style.position = "absolute";
+      closePopup.style.top = "10px";
+      closePopup.style.right = "10px";
+      closePopup.style.zIndex = "1000"; // Ensures it’s above the map
+      closePopup.style.backgroundColor = "rgba(255, 255, 255, 0.8)"; // Slightly opaque background for readability
+      closePopup.style.padding = "5px 10px";
+      closePopup.style.cursor = "pointer";
+      closePopup.onclick = () => this.closeMapPopup();
+      mapPopup.appendChild(closePopup);
+  
+      // Map container
+      const mapDiv = document.createElement("div");
+      mapDiv.id = "mapDiv";
+      mapDiv.style.width = "100%";
+      mapDiv.style.height = "100%";
+      mapPopup.appendChild(mapDiv);
+  
+      // Initialize the map
+      this.initializeMap(mapDiv);
+      this.isMapInitialized = true;
+    }
+  }
+  
+  closeMapPopup() {
+    const mapPopup = document.getElementById("mapPopup");
+    if (mapPopup) {
+      mapPopup.style.display = "none";
+    }
+  }
+
+  initializeMap(container) {
+    require(["esri/Map", "esri/views/MapView", "esri/layers/GeoJSONLayer"], (Map, MapView, GeoJSONLayer) => {
+      const map = new Map({
+        basemap: "streets"
+      });
+  
+      this.mapView = new MapView({
+        container: container,
+        map: map,
+        center: [-111.891, 40.7608], // Salt Lake City coordinates
+        zoom: 10 // Initial zoom level
+      });
+  
+      let url;
+  
+      const scenarioWithData = getFirstScenarioWithGeoJsonData(this.geoJsonInfo.agGeoJsonKey);
+      if (scenarioWithData) {
+        url = scenarioWithData.getGeoJsonFileNameFromKey(this.geoJsonInfo.agGeoJsonKey);
+      }
+  
+      const geojsonLayer = new GeoJSONLayer({
+        url: 'geo-data/' + url,
+        title: "My GeoJSON Layer",
+        renderer: {
+          type: "simple", // Applies the same symbol to all features
+          symbol: {
+            type: "simple-fill", // For polygon fill
+            color: [211, 211, 211, 0.7], // Light grey fill with 70% opacity
+            outline: {
+              color: [255, 255, 255, 1], // White outline
+              width: 1
+            }
+          }
+        },
+        labelingInfo: [
+          {
+            symbol: {
+              type: "text", // Defines it as a text symbol
+              color: "black",
+              haloColor: "white",
+              haloSize: 2,
+              font: {
+                size: 14,
+                family: "sans-serif"
+              }
+            },
+            labelPlacement: "always-horizontal", // Ensures the label is placed within the polygon
+            labelExpressionInfo: {
+              expression: "$feature." + this.geoJsonInfo.agCodeLabelField // Replace 'name' with your polygon label attribute
+            }
+          }
+        ]
+      });
+  
+      map.add(geojsonLayer);
+  
+      // Once the layer is loaded, zoom to its full extent
+      geojsonLayer.when(() => {
+        if (geojsonLayer.fullExtent) {
+          this.mapView.goTo(geojsonLayer.fullExtent).catch(error => {
+            console.error("Error zooming to GeoJSON extent:", error);
+          });
+        }
+      });
+    });
   }
 
   afterUpdateSubAg() {

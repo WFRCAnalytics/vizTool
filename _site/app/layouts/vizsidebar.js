@@ -40,13 +40,15 @@ class VizSidebar {
         return { value: agCode, label: configAg.agTitleText };
       });
 
+      const currentAggregator = this.aggregators.find(item => item.agCode === aggregatorSelected) || [];
+
       this.aggregatorSelect = new WijSelect(this.id + "_aggregator-selector",
                                             aggregatorTitle,
                                             aggregatorSelected,
                                             aggregatorOptions,
                                             this);
       if (vizLayout.modelEntity.template==='vizTrends') {
-        this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === aggregatorSelected) || []).filterData);
+        this.aggregatorFilter = new Filter (null, this.vizLayout, currentAggregator.filterData, {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
       }
       
     }
@@ -282,7 +284,7 @@ class VizSidebar {
 
   afterUpdateAggregator() {
     if (this.vizLayout.modelEntity.template==='vizTrends') {
-      this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData);
+      this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData,  {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
     }
     this.vizLayout.afterUpdateAggregator();
   }
