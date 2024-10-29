@@ -470,11 +470,11 @@ th, td {
   #mapPopup {
     display: none;
     position: fixed;
-    top: 50%;
+    top: 25%;
     left: 30%;
-    width: 40%;
+    width: 30%;
     height: 80%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -10%);
     z-index: 1000;
     border: 1px solid #ddd;
     background-color: white;
@@ -491,4 +491,8 @@ th, td {
     color: white;
     padding: 5px;
     cursor: pointer;
+  }
+
+  .no-select {
+    user-select: none;
   }

@@ -295,6 +295,8 @@ class VizSidebar {
               agCodeLabelField: selectedAggregator.agCodeLabelField
           }
       );
+      const mapPopup = document.getElementById("mapPopup");
+      mapPopup.style.display = "none";
     }
     this.vizLayout.afterUpdateAggregator();
   }
