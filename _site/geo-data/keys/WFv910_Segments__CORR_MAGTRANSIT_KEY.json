@@ -172,7 +172,7 @@
     "MAGTRANSIT_ID":"T10"
   },
   {
-    "SEGID":"0089_327.9",
+    "SEGID":"0089_327.7",
     "MAGTRANSIT_ID":"T10"
   },
   {
@@ -1010,5 +1010,9 @@
   {
     "SEGID":"UTA_9576",
     "MAGTRANSIT_ID":"T13"
+  },
+  {
+    "SEGID":"2878_006.7",
+    "MAGTRANSIT_ID":"T16"
   }
 ]

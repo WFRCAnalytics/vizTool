@@ -78,7 +78,12 @@
                     "city": "WFv910_Segments__STOP__CITY_KEY.json",
                     "subarea": "WFv910_Segments__STOP__SAID_KEY.json",
                     "planarea": "WFv910_Segments__STOP__PLAN_KEY.json",
-                    "citygroup": "WFv910_Segments__STOP__CTGP_KEY.json"
+                    "citygroup": "WFv910_Segments__STOP__CTGP_KEY.json",
+                    "corrWFRCHIGHWAY": "WFv910_Segments__STOP__CORR_WFRCHIGHWAY_KEY.json",
+                    "corrWFRCTRANSIT": "WFv910_Segments__STOP__CORR_WFRCTRANSIT_KEY.json",
+                    "corrMAGHIGHWAY": "WFv910_Segments__STOP__CORR_MAGHIGHWAY_KEY.json",
+                    "corrMAGTRANSIT": "WFv910_Segments__STOP__CORR_MAGTRANSIT_KEY.json",
+                    "corrFREIGHT": "WFv910_Segments__STOP__CORR_FREIGHT_KEY.json"
                 }
             }
         }

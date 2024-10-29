@@ -1356,7 +1356,7 @@
     "WFRCTRANSIT_ID":"T-S-10"
   },
   {
-    "SEGID":"0172_006.0",
+    "SEGID":"0172_006.2",
     "WFRCTRANSIT_ID":"T-S-10"
   },
   {
@@ -1485,6 +1485,14 @@
   },
   {
     "SEGID":"2386_001.3",
+    "WFRCTRANSIT_ID":"T-S-10"
+  },
+  {
+    "SEGID":"0172_005.8",
+    "WFRCTRANSIT_ID":"T-S-10"
+  },
+  {
+    "SEGID":"0172_006.0",
     "WFRCTRANSIT_ID":"T-S-10"
   },
   {

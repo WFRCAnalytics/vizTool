@@ -208,6 +208,10 @@
     "MAGHIGHWAY_ID":"H1"
   },
   {
+    "SEGID":"0015_282.9",
+    "MAGHIGHWAY_ID":"H1"
+  },
+  {
     "SEGID":"0015_258.8",
     "MAGHIGHWAY_ID":"H45"
   },
@@ -1288,11 +1292,19 @@
     "MAGHIGHWAY_ID":"H42"
   },
   {
+    "SEGID":"3015_000.4",
+    "MAGHIGHWAY_ID":"H40"
+  },
+  {
     "SEGID":"3015_000.9",
     "MAGHIGHWAY_ID":"H40"
   },
   {
     "SEGID":"3015_001.4",
+    "MAGHIGHWAY_ID":"H40"
+  },
+  {
+    "SEGID":"3015_000.1",
     "MAGHIGHWAY_ID":"H40"
   },
   {

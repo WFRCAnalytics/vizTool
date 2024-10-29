@@ -316,11 +316,15 @@
     "CITY_NAME":"Lehi"
   },
   {
-    "STOPID":"425120_4475200",
+    "STOPID":"425620_4474640",
     "CITY_NAME":"Lehi"
   },
   {
     "STOPID":"424460_4476020",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "STOPID":"425120_4475200",
     "CITY_NAME":"Lehi"
   },
   {
@@ -836,7 +840,7 @@
     "CITY_NAME":"Springville"
   },
   {
-    "STOPID":"448000_4445540",
+    "STOPID":"447980_4445220",
     "CITY_NAME":"Springville"
   },
   {
@@ -1949,10 +1953,6 @@
   },
   {
     "STOPID":"448580_4444320",
-    "CITY_NAME":"Springville"
-  },
-  {
-    "STOPID":"448020_4445180",
     "CITY_NAME":"Springville"
   },
   {
@@ -3968,8 +3968,12 @@
     "CITY_NAME":"West Valley City"
   },
   {
-    "STOPID":"413440_4508820",
+    "STOPID":"413440_4508520",
     "CITY_NAME":"West Valley City"
+  },
+  {
+    "STOPID":"413460_4509140",
+    "CITY_NAME":"Salt Lake City"
   },
   {
     "STOPID":"413460_4509560",
@@ -4265,6 +4269,10 @@
   },
   {
     "STOPID":"444160_4461000",
+    "CITY_NAME":"Provo"
+  },
+  {
+    "STOPID":"444260_4461580",
     "CITY_NAME":"Provo"
   },
   {
@@ -6384,6 +6392,10 @@
     "CITY_NAME":"Lehi"
   },
   {
+    "STOPID":"424260_4476380",
+    "CITY_NAME":"Lehi"
+  },
+  {
     "STOPID":"422880_4478080",
     "CITY_NAME":"Lehi"
   },
@@ -6581,6 +6593,10 @@
   },
   {
     "STOPID":"416500_4491040",
+    "CITY_NAME":"South Jordan"
+  },
+  {
+    "STOPID":"421320_4488960",
     "CITY_NAME":"South Jordan"
   },
   {
@@ -6932,7 +6948,7 @@
     "CITY_NAME":"Midvale"
   },
   {
-    "STOPID":"424140_4495400",
+    "STOPID":"424180_4495400",
     "CITY_NAME":"Midvale"
   },
   {
@@ -7025,6 +7041,10 @@
   },
   {
     "STOPID":"417920_4510400",
+    "CITY_NAME":"Salt Lake City"
+  },
+  {
+    "STOPID":"418240_4509040",
     "CITY_NAME":"Salt Lake City"
   },
   {
@@ -7306,10 +7326,6 @@
   {
     "STOPID":"427400_4492540",
     "CITY_NAME":"Sandy"
-  },
-  {
-    "STOPID":"418240_4509040",
-    "CITY_NAME":"Salt Lake City"
   },
   {
     "STOPID":"419100_4509580",
@@ -7846,6 +7862,10 @@
   {
     "STOPID":"426000_4513520",
     "CITY_NAME":"Salt Lake City"
+  },
+  {
+    "STOPID":"422320_4489000",
+    "CITY_NAME":"South Jordan"
   },
   {
     "STOPID":"426900_4507220",
@@ -9260,7 +9280,15 @@
     "CITY_NAME":"Lehi"
   },
   {
+    "STOPID":"426300_4476020",
+    "CITY_NAME":"Lehi"
+  },
+  {
     "STOPID":"426300_4475040",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "STOPID":"426300_4474540",
     "CITY_NAME":"Lehi"
   },
   {
@@ -9313,6 +9341,10 @@
   },
   {
     "STOPID":"424880_4474780",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "STOPID":"425300_4475900",
     "CITY_NAME":"Lehi"
   },
   {
@@ -9948,6 +9980,10 @@
     "CITY_NAME":"Lehi"
   },
   {
+    "STOPID":"424460_4476600",
+    "CITY_NAME":"Lehi"
+  },
+  {
     "STOPID":"426540_4476600",
     "CITY_NAME":"Lehi"
   },
@@ -10082,6 +10118,10 @@
   {
     "STOPID":"443060_4460940",
     "CITY_NAME":"Orem"
+  },
+  {
+    "STOPID":"443640_4461000",
+    "CITY_NAME":"Provo"
   },
   {
     "STOPID":"444500_4460520",
@@ -10245,6 +10285,10 @@
   },
   {
     "STOPID":"440420_4456500",
+    "CITY_NAME":"Orem"
+  },
+  {
+    "STOPID":"439480_4458060",
     "CITY_NAME":"Orem"
   },
   {
@@ -10470,6 +10514,10 @@
   {
     "STOPID":"443780_4452580",
     "CITY_NAME":"Provo"
+  },
+  {
+    "STOPID":"438880_4458720",
+    "CITY_NAME":"Orem"
   },
   {
     "STOPID":"445300_4454920",
@@ -11396,7 +11444,7 @@
     "CITY_NAME":"Lehi"
   },
   {
-    "STOPID":"425640_4476440",
+    "STOPID":"425680_4476440",
     "CITY_NAME":"Lehi"
   },
   {
@@ -13760,16 +13808,8 @@
     "CITY_NAME":"Magna"
   },
   {
-    "STOPID":"413460_4509140",
-    "CITY_NAME":"Salt Lake City"
-  },
-  {
     "STOPID":"415060_4508840",
     "CITY_NAME":"Salt Lake City"
-  },
-  {
-    "STOPID":"413440_4508520",
-    "CITY_NAME":"West Valley City"
   },
   {
     "STOPID":"415060_4508780",
@@ -14108,23 +14148,11 @@
     "CITY_NAME":"West Jordan"
   },
   {
-    "STOPID":"439480_4458060",
-    "CITY_NAME":"Orem"
-  },
-  {
-    "STOPID":"443640_4461000",
-    "CITY_NAME":"Provo"
-  },
-  {
-    "STOPID":"444260_4461580",
-    "CITY_NAME":"Provo"
-  },
-  {
-    "STOPID":"424260_4476380",
+    "STOPID":"425520_4475840",
     "CITY_NAME":"Lehi"
   },
   {
-    "STOPID":"424460_4476600",
-    "CITY_NAME":"Lehi"
+    "STOPID":"413440_4508820",
+    "CITY_NAME":"West Valley City"
   }
 ]

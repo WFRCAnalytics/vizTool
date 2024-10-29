@@ -1940,10 +1940,6 @@
     "DISTSUPER":7.0
   },
   {
-    "SEGID":"0089_327.9",
-    "DISTSUPER":7.0
-  },
-  {
     "SEGID":"0089_328.1",
     "DISTSUPER":7.0
   },
@@ -4240,7 +4236,7 @@
     "DISTSUPER":6.0
   },
   {
-    "SEGID":"0172_006.0",
+    "SEGID":"0172_006.2",
     "DISTSUPER":6.0
   },
   {
@@ -7564,7 +7560,7 @@
     "DISTSUPER":6.0
   },
   {
-    "SEGID":"2046_000.0",
+    "SEGID":"2046_000.4",
     "DISTSUPER":7.0
   },
   {
@@ -7824,7 +7820,7 @@
     "DISTSUPER":6.0
   },
   {
-    "SEGID":"2066_004.2",
+    "SEGID":"2066_004.4",
     "DISTSUPER":6.0
   },
   {
@@ -8564,7 +8560,7 @@
     "DISTSUPER":6.0
   },
   {
-    "SEGID":"2094_013.1",
+    "SEGID":"2094_013.2",
     "DISTSUPER":6.0
   },
   {
@@ -9988,7 +9984,7 @@
     "DISTSUPER":6.0
   },
   {
-    "SEGID":"2179_000.0",
+    "SEGID":"2179_000.3",
     "DISTSUPER":6.0
   },
   {
@@ -12624,7 +12620,7 @@
     "DISTSUPER":7.0
   },
   {
-    "SEGID":"2875_000.0",
+    "SEGID":"2875_000.1",
     "DISTSUPER":7.0
   },
   {
@@ -13620,7 +13616,7 @@
     "DISTSUPER":7.0
   },
   {
-    "SEGID":"2945_000.0",
+    "SEGID":"2945_000.6",
     "DISTSUPER":7.0
   },
   {
@@ -14620,7 +14616,7 @@
     "DISTSUPER":7.0
   },
   {
-    "SEGID":"3015_000.0",
+    "SEGID":"3015_000.4",
     "DISTSUPER":7.0
   },
   {
@@ -21934,5 +21930,105 @@
   {
     "SEGID":"MAG_6874",
     "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"3015_000.0",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"3015_000.1",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"MAG_6875",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"0015_282.9",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2875_001.0",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"MAG_6876",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2945_000.0",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2046_000.0",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2878_006.7",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2875_000.0",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"MAG_6879",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"MAG_6877",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"MAG_6878",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"0189_006.7",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2960_003.7",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"2975_002.7",
+    "DISTSUPER":7.0
+  },
+  {
+    "SEGID":"WFRC_8494",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"2179_000.0",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"2066_004.2",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"WFRC_8496",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"WFRC_8495",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"2094_013.1",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"2094_013.0",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"0172_005.8",
+    "DISTSUPER":6.0
+  },
+  {
+    "SEGID":"0172_006.0",
+    "DISTSUPER":6.0
   }
 ]

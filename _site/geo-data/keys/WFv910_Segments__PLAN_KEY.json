@@ -1940,10 +1940,6 @@
     "PLANAREA":"MAG"
   },
   {
-    "SEGID":"0089_327.9",
-    "PLANAREA":"MAG"
-  },
-  {
     "SEGID":"0089_328.1",
     "PLANAREA":"MAG"
   },
@@ -4240,7 +4236,7 @@
     "PLANAREA":"WFRC"
   },
   {
-    "SEGID":"0172_006.0",
+    "SEGID":"0172_006.2",
     "PLANAREA":"WFRC"
   },
   {
@@ -7564,7 +7560,7 @@
     "PLANAREA":"WFRC"
   },
   {
-    "SEGID":"2046_000.0",
+    "SEGID":"2046_000.4",
     "PLANAREA":"MAG"
   },
   {
@@ -7824,7 +7820,7 @@
     "PLANAREA":"WFRC"
   },
   {
-    "SEGID":"2066_004.2",
+    "SEGID":"2066_004.4",
     "PLANAREA":"WFRC"
   },
   {
@@ -8564,7 +8560,7 @@
     "PLANAREA":"WFRC"
   },
   {
-    "SEGID":"2094_013.1",
+    "SEGID":"2094_013.2",
     "PLANAREA":"WFRC"
   },
   {
@@ -9988,7 +9984,7 @@
     "PLANAREA":"WFRC"
   },
   {
-    "SEGID":"2179_000.0",
+    "SEGID":"2179_000.3",
     "PLANAREA":"WFRC"
   },
   {
@@ -12624,7 +12620,7 @@
     "PLANAREA":"MAG"
   },
   {
-    "SEGID":"2875_000.0",
+    "SEGID":"2875_000.1",
     "PLANAREA":"MAG"
   },
   {
@@ -13620,7 +13616,7 @@
     "PLANAREA":"MAG"
   },
   {
-    "SEGID":"2945_000.0",
+    "SEGID":"2945_000.6",
     "PLANAREA":"MAG"
   },
   {
@@ -14620,7 +14616,7 @@
     "PLANAREA":"MAG"
   },
   {
-    "SEGID":"3015_000.0",
+    "SEGID":"3015_000.4",
     "PLANAREA":"MAG"
   },
   {
@@ -21934,5 +21930,105 @@
   {
     "SEGID":"MAG_6874",
     "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"3015_000.0",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"3015_000.1",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"MAG_6875",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"0015_282.9",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2875_001.0",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"MAG_6876",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2945_000.0",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2046_000.0",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2878_006.7",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2875_000.0",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"MAG_6879",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"MAG_6877",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"MAG_6878",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"0189_006.7",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2960_003.7",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"2975_002.7",
+    "PLANAREA":"MAG"
+  },
+  {
+    "SEGID":"WFRC_8494",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"2179_000.0",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"2066_004.2",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"WFRC_8496",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"WFRC_8495",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"2094_013.1",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"2094_013.0",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"0172_005.8",
+    "PLANAREA":"WFRC"
+  },
+  {
+    "SEGID":"0172_006.0",
+    "PLANAREA":"WFRC"
   }
 ]

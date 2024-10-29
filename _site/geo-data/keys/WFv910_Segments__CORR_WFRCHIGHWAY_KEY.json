@@ -4638,5 +4638,9 @@
   {
     "SEGID":"WFRC_8490",
     "WFRCHIGHWAY_ID":"R-S-120"
+  },
+  {
+    "SEGID":"2179_000.0",
+    "WFRCHIGHWAY_ID":"R-S-162"
   }
 ]

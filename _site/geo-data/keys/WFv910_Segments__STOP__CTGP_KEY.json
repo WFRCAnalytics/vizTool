@@ -316,11 +316,15 @@
     "CITYGRP":"West Utah County"
   },
   {
-    "STOPID":"425120_4475200",
+    "STOPID":"425620_4474640",
     "CITYGRP":"West Utah County"
   },
   {
     "STOPID":"424460_4476020",
+    "CITYGRP":"West Utah County"
+  },
+  {
+    "STOPID":"425120_4475200",
     "CITYGRP":"West Utah County"
   },
   {
@@ -836,7 +840,7 @@
     "CITYGRP":"South Utah County"
   },
   {
-    "STOPID":"448000_4445540",
+    "STOPID":"447980_4445220",
     "CITYGRP":"South Utah County"
   },
   {
@@ -1949,10 +1953,6 @@
   },
   {
     "STOPID":"448580_4444320",
-    "CITYGRP":"South Utah County"
-  },
-  {
-    "STOPID":"448020_4445180",
     "CITYGRP":"South Utah County"
   },
   {
@@ -3968,7 +3968,11 @@
     "CITYGRP":"Northern Salt Lake County"
   },
   {
-    "STOPID":"413440_4508820",
+    "STOPID":"413440_4508520",
+    "CITYGRP":"Northern Salt Lake County"
+  },
+  {
+    "STOPID":"413460_4509140",
     "CITYGRP":"Northern Salt Lake County"
   },
   {
@@ -4265,6 +4269,10 @@
   },
   {
     "STOPID":"444160_4461000",
+    "CITYGRP":"Central Utah County"
+  },
+  {
+    "STOPID":"444260_4461580",
     "CITYGRP":"Central Utah County"
   },
   {
@@ -6384,6 +6392,10 @@
     "CITYGRP":"West Utah County"
   },
   {
+    "STOPID":"424260_4476380",
+    "CITYGRP":"West Utah County"
+  },
+  {
     "STOPID":"422880_4478080",
     "CITYGRP":"West Utah County"
   },
@@ -6581,6 +6593,10 @@
   },
   {
     "STOPID":"416500_4491040",
+    "CITYGRP":"Southwest Salt Lake County"
+  },
+  {
+    "STOPID":"421320_4488960",
     "CITYGRP":"Southwest Salt Lake County"
   },
   {
@@ -6932,7 +6948,7 @@
     "CITYGRP":"Southeast Salt Lake County"
   },
   {
-    "STOPID":"424140_4495400",
+    "STOPID":"424180_4495400",
     "CITYGRP":"Southeast Salt Lake County"
   },
   {
@@ -7025,6 +7041,10 @@
   },
   {
     "STOPID":"417920_4510400",
+    "CITYGRP":"Northern Salt Lake County"
+  },
+  {
+    "STOPID":"418240_4509040",
     "CITYGRP":"Northern Salt Lake County"
   },
   {
@@ -7306,10 +7326,6 @@
   {
     "STOPID":"427400_4492540",
     "CITYGRP":"Southeast Salt Lake County"
-  },
-  {
-    "STOPID":"418240_4509040",
-    "CITYGRP":"Northern Salt Lake County"
   },
   {
     "STOPID":"419100_4509580",
@@ -7846,6 +7862,10 @@
   {
     "STOPID":"426000_4513520",
     "CITYGRP":"Northern Salt Lake County"
+  },
+  {
+    "STOPID":"422320_4489000",
+    "CITYGRP":"Southwest Salt Lake County"
   },
   {
     "STOPID":"426900_4507220",
@@ -9260,7 +9280,15 @@
     "CITYGRP":"West Utah County"
   },
   {
+    "STOPID":"426300_4476020",
+    "CITYGRP":"West Utah County"
+  },
+  {
     "STOPID":"426300_4475040",
+    "CITYGRP":"West Utah County"
+  },
+  {
+    "STOPID":"426300_4474540",
     "CITYGRP":"West Utah County"
   },
   {
@@ -9313,6 +9341,10 @@
   },
   {
     "STOPID":"424880_4474780",
+    "CITYGRP":"West Utah County"
+  },
+  {
+    "STOPID":"425300_4475900",
     "CITYGRP":"West Utah County"
   },
   {
@@ -9948,6 +9980,10 @@
     "CITYGRP":"West Utah County"
   },
   {
+    "STOPID":"424460_4476600",
+    "CITYGRP":"West Utah County"
+  },
+  {
     "STOPID":"426540_4476600",
     "CITYGRP":"West Utah County"
   },
@@ -10081,6 +10117,10 @@
   },
   {
     "STOPID":"443060_4460940",
+    "CITYGRP":"Central Utah County"
+  },
+  {
+    "STOPID":"443640_4461000",
     "CITYGRP":"Central Utah County"
   },
   {
@@ -10245,6 +10285,10 @@
   },
   {
     "STOPID":"440420_4456500",
+    "CITYGRP":"Central Utah County"
+  },
+  {
+    "STOPID":"439480_4458060",
     "CITYGRP":"Central Utah County"
   },
   {
@@ -10469,6 +10513,10 @@
   },
   {
     "STOPID":"443780_4452580",
+    "CITYGRP":"Central Utah County"
+  },
+  {
+    "STOPID":"438880_4458720",
     "CITYGRP":"Central Utah County"
   },
   {
@@ -11396,7 +11444,7 @@
     "CITYGRP":"West Utah County"
   },
   {
-    "STOPID":"425640_4476440",
+    "STOPID":"425680_4476440",
     "CITYGRP":"West Utah County"
   },
   {
@@ -13760,15 +13808,7 @@
     "CITYGRP":"Northern Salt Lake County"
   },
   {
-    "STOPID":"413460_4509140",
-    "CITYGRP":"Northern Salt Lake County"
-  },
-  {
     "STOPID":"415060_4508840",
-    "CITYGRP":"Northern Salt Lake County"
-  },
-  {
-    "STOPID":"413440_4508520",
     "CITYGRP":"Northern Salt Lake County"
   },
   {
@@ -14108,23 +14148,11 @@
     "CITYGRP":"Southwest Salt Lake County"
   },
   {
-    "STOPID":"439480_4458060",
-    "CITYGRP":"Central Utah County"
-  },
-  {
-    "STOPID":"443640_4461000",
-    "CITYGRP":"Central Utah County"
-  },
-  {
-    "STOPID":"444260_4461580",
-    "CITYGRP":"Central Utah County"
-  },
-  {
-    "STOPID":"424260_4476380",
+    "STOPID":"425520_4475840",
     "CITYGRP":"West Utah County"
   },
   {
-    "STOPID":"424460_4476600",
-    "CITYGRP":"West Utah County"
+    "STOPID":"413440_4508820",
+    "CITYGRP":"Northern Salt Lake County"
   }
 ]

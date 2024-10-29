@@ -133,7 +133,7 @@
             "dividerTitle": "Divide By",
             "dividerSelected": "",
             "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","MAGTRANSIT_ID","WFRCTRANSIT_ID"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aBd","aAl"],
             "filters" : ["fTod2","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
@@ -153,7 +153,7 @@
             "baseGeoJsonId": "SUBAREAID",
             "comboSelected": "",
             "attributeTitle": "Trips",
-            "attributeInfoTextHtml": "<p>Trips</p> refer to the individual journeys made by people or vehicles from one location to another.",
+            "attributeInfoTextHtml": "<b>Trips</b> refer to the individual journeys made by people or vehicles from one location to another.",
             "attributeSelected": "aSTrip",
             "attributes": ["aSTrip"],
             "filters" : ["fTod2","fShareMode","fPurp5"],

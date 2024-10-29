@@ -1940,10 +1940,6 @@
     "CITY_NAME":"Springville"
   },
   {
-    "SEGID":"0089_327.9",
-    "CITY_NAME":"Springville"
-  },
-  {
     "SEGID":"0089_328.1",
     "CITY_NAME":"Springville"
   },
@@ -4240,7 +4236,7 @@
     "CITY_NAME":"West Valley City"
   },
   {
-    "SEGID":"0172_006.0",
+    "SEGID":"0172_006.2",
     "CITY_NAME":"Salt Lake City"
   },
   {
@@ -7564,7 +7560,7 @@
     "CITY_NAME":"Draper"
   },
   {
-    "SEGID":"2046_000.0",
+    "SEGID":"2046_000.4",
     "CITY_NAME":"Lehi"
   },
   {
@@ -7824,7 +7820,7 @@
     "CITY_NAME":"Riverton"
   },
   {
-    "SEGID":"2066_004.2",
+    "SEGID":"2066_004.4",
     "CITY_NAME":"South Jordan"
   },
   {
@@ -8564,7 +8560,7 @@
     "CITY_NAME":"West Valley City"
   },
   {
-    "SEGID":"2094_013.1",
+    "SEGID":"2094_013.2",
     "CITY_NAME":"Salt Lake City"
   },
   {
@@ -9988,7 +9984,7 @@
     "CITY_NAME":"Salt Lake City"
   },
   {
-    "SEGID":"2179_000.0",
+    "SEGID":"2179_000.3",
     "CITY_NAME":"South Jordan"
   },
   {
@@ -12624,7 +12620,7 @@
     "CITY_NAME":"Payson"
   },
   {
-    "SEGID":"2875_000.0",
+    "SEGID":"2875_000.1",
     "CITY_NAME":"Lehi"
   },
   {
@@ -13620,7 +13616,7 @@
     "CITY_NAME":"Lehi"
   },
   {
-    "SEGID":"2945_000.0",
+    "SEGID":"2945_000.6",
     "CITY_NAME":"Lehi"
   },
   {
@@ -14620,7 +14616,7 @@
     "CITY_NAME":"Provo"
   },
   {
-    "SEGID":"3015_000.0",
+    "SEGID":"3015_000.4",
     "CITY_NAME":"Orem"
   },
   {
@@ -21934,5 +21930,105 @@
   {
     "SEGID":"MAG_6874",
     "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"3015_000.0",
+    "CITY_NAME":"Orem"
+  },
+  {
+    "SEGID":"3015_000.1",
+    "CITY_NAME":"Orem"
+  },
+  {
+    "SEGID":"MAG_6875",
+    "CITY_NAME":"Orem"
+  },
+  {
+    "SEGID":"0015_282.9",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"2875_001.0",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"MAG_6876",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"2945_000.0",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"2046_000.0",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"2878_006.7",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"2875_000.0",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"MAG_6879",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"MAG_6877",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"MAG_6878",
+    "CITY_NAME":"Lehi"
+  },
+  {
+    "SEGID":"0189_006.7",
+    "CITY_NAME":"Provo"
+  },
+  {
+    "SEGID":"2960_003.7",
+    "CITY_NAME":"Provo"
+  },
+  {
+    "SEGID":"2975_002.7",
+    "CITY_NAME":"Orem"
+  },
+  {
+    "SEGID":"WFRC_8494",
+    "CITY_NAME":"Herriman"
+  },
+  {
+    "SEGID":"2179_000.0",
+    "CITY_NAME":"South Jordan"
+  },
+  {
+    "SEGID":"2066_004.2",
+    "CITY_NAME":"South Jordan"
+  },
+  {
+    "SEGID":"WFRC_8496",
+    "CITY_NAME":"South Jordan"
+  },
+  {
+    "SEGID":"WFRC_8495",
+    "CITY_NAME":"Midvale"
+  },
+  {
+    "SEGID":"2094_013.1",
+    "CITY_NAME":"Salt Lake City"
+  },
+  {
+    "SEGID":"2094_013.0",
+    "CITY_NAME":"West Valley City"
+  },
+  {
+    "SEGID":"0172_005.8",
+    "CITY_NAME":"West Valley City"
+  },
+  {
+    "SEGID":"0172_006.0",
+    "CITY_NAME":"Salt Lake City"
   }
 ]
