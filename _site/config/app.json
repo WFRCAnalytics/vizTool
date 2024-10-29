@@ -1,6 +1,6 @@
 {
   "title": "vizTool for TDM v9.1",
-  "subtitle": "v24.10.24 beta",
+  "subtitle": "v24.10.29 beta",
   "splash": {
     "title": "IMPORTANT: BETA VERSION",
     "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>User guides, a data dictionary, and additional resources will be available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
