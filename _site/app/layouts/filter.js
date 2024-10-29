@@ -187,12 +187,21 @@ class Filter {
     return filterContainer;
   }
 
-
   renderMapPopupButton() {
-    const mapButton = document.createElement('button');
-    mapButton.innerText = "Open Map";
+    const mapButton = document.createElement('calcite-button');
+    mapButton.innerText = "Reference Map";
+    mapButton.classList.add('check-all-toggle-button');
     mapButton.onclick = () => this.openMapPopup();
-    return mapButton;
+  
+    // Create a line break element
+    const lineBreak = document.createElement('br');
+  
+    // Create a container div if needed
+    const container = document.createElement('div');
+    container.appendChild(mapButton);
+    container.appendChild(lineBreak);
+    container.appendChild(lineBreak);
+    return container;
   }
 
   openMapPopup() {
@@ -200,6 +209,7 @@ class Filter {
     mapPopup.style.display = "block";
   
     if (!this.isMapInitialized) {
+      mapPopup.innerHTML = "";
       // Adjust the styling of mapPopup to ensure padding for the close button
       mapPopup.style.padding = "10px";
       mapPopup.style.boxSizing = "border-box"; // Ensures padding is included in the width/height
@@ -247,7 +257,7 @@ class Filter {
         container: container,
         map: map,
         center: [-111.891, 40.7608], // Salt Lake City coordinates
-        zoom: 10 // Initial zoom level
+        zoom: 9 // Initial zoom level
       });
   
       let url;
@@ -256,51 +266,110 @@ class Filter {
       if (scenarioWithData) {
         url = scenarioWithData.getGeoJsonFileNameFromKey(this.geoJsonInfo.agGeoJsonKey);
       }
-  
-      const geojsonLayer = new GeoJSONLayer({
-        url: 'geo-data/' + url,
-        title: "My GeoJSON Layer",
-        renderer: {
-          type: "simple", // Applies the same symbol to all features
-          symbol: {
-            type: "simple-fill", // For polygon fill
-            color: [211, 211, 211, 0.7], // Light grey fill with 70% opacity
-            outline: {
-              color: [255, 255, 255, 1], // White outline
-              width: 1
-            }
-          }
-        },
-        labelingInfo: [
-          {
-            symbol: {
-              type: "text", // Defines it as a text symbol
-              color: "black",
-              haloColor: "white",
-              haloSize: 2,
-              font: {
-                size: 14,
-                family: "sans-serif"
-              }
+      
+      // Initialize counter for color cycling
+      let counterColor = 0;
+
+      // Function to get the next color in the sequence
+      const getColor = (() => {
+        const colors = [
+          'rgba( 75, 210, 192, 0.75)', // Teal
+          'rgba( 54, 162, 225, 0.75)', // Blue
+          'rgba(255,  99, 132, 0.75)', // Pink/Red
+          'rgba(255, 216,  96, 0.75)', // Yellow
+          'rgba(153, 102, 255, 0.75)', // Purple
+          'rgba(255, 159,  64, 0.75)', // Orange
+          'rgba(  0, 128, 128, 0.75)', // Dark Teal
+          'rgba(128,   0, 128, 0.75)', // Dark Purple
+          'rgba(255,  69,   0, 0.75)', // Red-Orange
+          'rgba(  0, 128,   0, 0.75)', // Green
+          'rgba(  0,   0, 128, 0.75)', // Navy Blue
+          'rgba(128, 128,   0, 0.75)', // Olive
+          'rgba(128,   0,   0, 0.75)', // Maroon
+          'rgba(  0, 255, 127, 0.75)', // Spring Green
+          'rgba( 70, 130, 180, 0.75)', // Steel Blue
+          'rgba(255, 215,   0, 0.75)', // Gold
+          'rgba(255, 140,   0, 0.75)', // Dark Orange
+          'rgba(123, 104, 238, 0.75)', // Medium Slate Blue
+          'rgba( 34, 139,  34, 0.75)', // Forest Green
+          'rgba(220,  20,  60, 0.75)'  // Crimson
+        ];
+
+        return () => {
+          const color = colors[counterColor % colors.length];
+          counterColor++;
+          return color;
+        };
+      })();
+
+      // Fetch the GeoJSON data first to check its geometry type
+      fetch('geo-data/' + url)
+        .then(response => response.json())
+        .then(data => {
+          const geoType = data.features && data.features[0] && data.features[0].geometry.type;
+
+          // Use UniqueValueRenderer to assign a random color to each feature
+          const uniqueValueInfos = data.features.map((feature, index) => ({
+            value: feature.properties[this.geoJsonInfo.agCodeLabelField] || index,
+            symbol: geoType === "LineString" || geoType === "MultiLineString" 
+              ? {
+                  type: "simple-line", // For polyline
+                  color: getColor(), // Random color for each line
+                  width: 2
+                }
+              : {
+                  type: "simple-fill", // For polygon fill
+                  color: getColor(), // Random color fill
+                  outline: {
+                    color: [255, 255, 255, 1], // White outline
+                    width: 1
+                  }
+                }
+          }));
+
+          // Define the GeoJSONLayer with UniqueValueRenderer
+          const geojsonLayer = new GeoJSONLayer({
+            url: 'geo-data/' + url,
+            title: "My GeoJSON Layer",
+            renderer: {
+              type: "unique-value", // Unique renderer for individual colors
+              field: this.geoJsonInfo.agCodeLabelField, // Field to distinguish features
+              uniqueValueInfos: uniqueValueInfos
             },
-            labelPlacement: "always-horizontal", // Ensures the label is placed within the polygon
-            labelExpressionInfo: {
-              expression: "$feature." + this.geoJsonInfo.agCodeLabelField // Replace 'name' with your polygon label attribute
-            }
-          }
-        ]
-      });
-  
-      map.add(geojsonLayer);
-  
-      // Once the layer is loaded, zoom to its full extent
-      geojsonLayer.when(() => {
-        if (geojsonLayer.fullExtent) {
-          this.mapView.goTo(geojsonLayer.fullExtent).catch(error => {
-            console.error("Error zooming to GeoJSON extent:", error);
+            labelingInfo: [
+              {
+                symbol: {
+                  type: "text", // Defines it as a text symbol
+                  color: "black",
+                  haloColor: "white",
+                  haloSize: 2,
+                  font: {
+                    size: 14,
+                    family: "sans-serif"
+                  }
+                },
+                labelPlacement: "always-horizontal", // Ensures the label is placed within the polygon
+                labelExpressionInfo: {
+                  expression: "$feature." + this.geoJsonInfo.agCodeLabelField
+                }
+              }
+            ]
           });
-        }
-      });
+
+          // Add the layer to the map (assuming you have a map instance)
+          map.add(geojsonLayer);
+          
+          // Once the layer is loaded, zoom to its full extent
+          geojsonLayer.when(() => {
+            if (geojsonLayer.fullExtent) {
+              this.mapView.goTo(geojsonLayer.fullExtent).catch(error => {
+                console.error("Error zooming to GeoJSON extent:", error);
+              });
+            }
+          });
+        })
+        .catch(error => console.error('Error loading GeoJSON:', error));
+  
     });
   }
 

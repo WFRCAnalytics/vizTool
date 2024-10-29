@@ -55,6 +55,7 @@ h1 {
     font-size: 10px; /* Adjusted font size */
     padding: 0 5px; /* Adjusted padding */
     /* Additional styles if needed */
+    float: right;
 }
 
 .scenario-selector-container {

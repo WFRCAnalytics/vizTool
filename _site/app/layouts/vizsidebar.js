@@ -284,7 +284,17 @@ class VizSidebar {
 
   afterUpdateAggregator() {
     if (this.vizLayout.modelEntity.template==='vizTrends') {
-      this.aggregatorFilter = new Filter (null, this.vizLayout, (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData,  {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
+      const selectedAggregator = this.getSelectedAggregator();
+      this.aggregatorFilter = new Filter(
+          null,
+          this.vizLayout,
+          (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData,
+          {
+              agGeoJsonKey: selectedAggregator.agGeoJsonKey,
+              agCode: selectedAggregator.agCode,
+              agCodeLabelField: selectedAggregator.agCodeLabelField
+          }
+      );
     }
     this.vizLayout.afterUpdateAggregator();
   }
