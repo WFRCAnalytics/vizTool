@@ -207,21 +207,21 @@ class Filter {
   openMapPopup() {
     const mapPopup = document.getElementById("mapPopup");
     mapPopup.style.display = "block";
-  
+    
     if (!this.isMapInitialized) {
       mapPopup.innerHTML = "";
-      // Adjust the styling of mapPopup to ensure padding for the close button
       mapPopup.style.padding = "10px";
-      mapPopup.style.boxSizing = "border-box"; // Ensures padding is included in the width/height
+      mapPopup.style.boxSizing = "border-box";
+      mapPopup.style.position = "fixed";
   
-      // Add close button
+      // Close button
       const closePopup = document.createElement("div");
       closePopup.innerText = "Close";
       closePopup.style.position = "absolute";
       closePopup.style.top = "10px";
       closePopup.style.right = "10px";
-      closePopup.style.zIndex = "1000"; // Ensures it’s above the map
-      closePopup.style.backgroundColor = "rgba(255, 255, 255, 0.8)"; // Slightly opaque background for readability
+      closePopup.style.zIndex = "1000";
+      closePopup.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
       closePopup.style.padding = "5px 10px";
       closePopup.style.cursor = "pointer";
       closePopup.onclick = () => this.closeMapPopup();
@@ -231,15 +231,86 @@ class Filter {
       const mapDiv = document.createElement("div");
       mapDiv.id = "mapDiv";
       mapDiv.style.width = "100%";
-      mapDiv.style.height = "100%";
+      mapDiv.style.height = "calc(100% - 40px)";
       mapPopup.appendChild(mapDiv);
   
       // Initialize the map
       this.initializeMap(mapDiv);
       this.isMapInitialized = true;
+  
+      // Make the popup draggable
+      this.makePopupDraggable(mapPopup);
+      // Make the popup resizable
+      this.makePopupResizable(mapPopup);
     }
   }
   
+  // Function to make popup draggable
+  makePopupDraggable(popup) {
+    let isDragging = false;
+    let offsetX, offsetY;
+  
+    popup.addEventListener("mousedown", function (event) {
+      if (event.target.className === "resize-handle") return;
+  
+      isDragging = true;
+      offsetX = event.clientX - popup.offsetLeft;
+      offsetY = event.clientY - popup.offsetTop;
+  
+      document.onmousemove = function (event) {
+        if (isDragging) {
+          popup.style.left = event.clientX - offsetX + "px";
+          popup.style.top = event.clientY - offsetY + "px";
+        }
+      };
+  
+      document.onmouseup = function () {
+        isDragging = false;
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    });
+  }
+  
+  // Function to make popup resizable
+  makePopupResizable(popup) {
+    const resizeHandle = document.createElement("div");
+    resizeHandle.className = "resize-handle";
+    resizeHandle.style.width = "10px";
+    resizeHandle.style.height = "10px";
+    resizeHandle.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    resizeHandle.style.position = "absolute";
+    resizeHandle.style.right = "0";
+    resizeHandle.style.bottom = "0";
+    resizeHandle.style.cursor = "se-resize";
+    popup.appendChild(resizeHandle);
+  
+    resizeHandle.addEventListener("mousedown", function (event) {
+      event.stopPropagation();
+  
+      // Disable text selection during resize
+      document.body.classList.add("no-select");
+  
+      const startWidth = popup.offsetWidth;
+      const startHeight = popup.offsetHeight;
+      const startX = event.clientX;
+      const startY = event.clientY;
+  
+      document.onmousemove = function (event) {
+        popup.style.width = startWidth + (event.clientX - startX) + "px";
+        popup.style.height = startHeight + (event.clientY - startY) + "px";
+      };
+  
+      document.onmouseup = function () {
+        document.onmousemove = null;
+        document.onmouseup = null;
+  
+        // Re-enable text selection after resizing
+        document.body.classList.remove("no-select");
+      };
+    });
+  }
+    
   closeMapPopup() {
     const mapPopup = document.getElementById("mapPopup");
     if (mapPopup) {
