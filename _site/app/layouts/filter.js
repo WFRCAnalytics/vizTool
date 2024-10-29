@@ -210,9 +210,9 @@ class Filter {
     
     if (!this.isMapInitialized) {
       mapPopup.innerHTML = "";
-      mapPopup.style.padding = "10px";
       mapPopup.style.boxSizing = "border-box";
       mapPopup.style.position = "fixed";
+      mapPopup.style.padding = "0"; // Remove padding to avoid overflow issues
   
       // Close button
       const closePopup = document.createElement("div");
@@ -220,39 +220,56 @@ class Filter {
       closePopup.style.position = "absolute";
       closePopup.style.top = "10px";
       closePopup.style.right = "10px";
-      closePopup.style.zIndex = "1000";
+      closePopup.style.zIndex = "3000";
       closePopup.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
       closePopup.style.padding = "5px 10px";
       closePopup.style.cursor = "pointer";
       closePopup.onclick = () => this.closeMapPopup();
       mapPopup.appendChild(closePopup);
   
+      // Header (for dragging)
+      const header = document.createElement("div");
+      header.style.position = "absolute";
+      header.style.top = "0";
+      header.style.left = "0";
+      header.style.width = "100%";
+      header.style.height = "60px"; // Adjusted height of the header
+      header.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+      header.style.cursor = "move";
+      header.style.padding = "10px"; // Padding for content within header
+      header.style.boxSizing = "border-box"; // Ensures padding doesn't increase header width
+      header.style.zIndex = "1000"; // Ensures header is above the map
+      header.innerHTML = "<h1>Reference Map</h1>";
+      mapPopup.appendChild(header);
+  
       // Map container
       const mapDiv = document.createElement("div");
       mapDiv.id = "mapDiv";
+      mapDiv.style.position = "absolute";
+      mapDiv.style.top = "60px"; // Position it below the header
       mapDiv.style.width = "100%";
-      mapDiv.style.height = "calc(100% - 40px)";
-      mapPopup.appendChild(mapDiv);
+      mapDiv.style.height = "calc(100% - 70px)"; // Leaves space for header and padding
+      mapDiv.style.padding = "10px"; // Padding for content within mapDiv
+      mapDiv.style.boxSizing = "border-box"; // Ensures padding doesn't increase mapDiv width
+      mapPopup.appendChild(mapDiv);  
   
       // Initialize the map
       this.initializeMap(mapDiv);
       this.isMapInitialized = true;
   
-      // Make the popup draggable
-      this.makePopupDraggable(mapPopup);
+      // Make the popup draggable via the header only
+      this.makePopupDraggable(mapPopup, header);
       // Make the popup resizable
       this.makePopupResizable(mapPopup);
     }
   }
   
-  // Function to make popup draggable
-  makePopupDraggable(popup) {
+  // Function to make popup draggable, restricted to header
+  makePopupDraggable(popup, dragHandle) {
     let isDragging = false;
     let offsetX, offsetY;
   
-    popup.addEventListener("mousedown", function (event) {
-      if (event.target.className === "resize-handle") return;
-  
+    dragHandle.addEventListener("mousedown", function (event) {
       isDragging = true;
       offsetX = event.clientX - popup.offsetLeft;
       offsetY = event.clientY - popup.offsetTop;
@@ -282,35 +299,41 @@ class Filter {
     resizeHandle.style.position = "absolute";
     resizeHandle.style.right = "0";
     resizeHandle.style.bottom = "0";
-    resizeHandle.style.cursor = "se-resize";
+    resizeHandle.style.cursor = "se-resize"; // Ensure cursor style here
+    resizeHandle.style.zIndex = "3000";
+
     popup.appendChild(resizeHandle);
-  
+
     resizeHandle.addEventListener("mousedown", function (event) {
       event.stopPropagation();
-  
+
       // Disable text selection during resize
       document.body.classList.add("no-select");
-  
+
+      // Apply se-resize cursor during resizing
+      document.body.style.cursor = "se-resize";
+
       const startWidth = popup.offsetWidth;
       const startHeight = popup.offsetHeight;
       const startX = event.clientX;
       const startY = event.clientY;
-  
+
       document.onmousemove = function (event) {
         popup.style.width = startWidth + (event.clientX - startX) + "px";
         popup.style.height = startHeight + (event.clientY - startY) + "px";
       };
-  
+
       document.onmouseup = function () {
         document.onmousemove = null;
         document.onmouseup = null;
-  
-        // Re-enable text selection after resizing
+
+        // Re-enable text selection and reset cursor after resizing
         document.body.classList.remove("no-select");
+        document.body.style.cursor = "default";
       };
     });
   }
-    
+  
   closeMapPopup() {
     const mapPopup = document.getElementById("mapPopup");
     if (mapPopup) {
