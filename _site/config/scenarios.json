@@ -165,11 +165,6 @@
             "scnTrendCode": "RTP",
             "alias": "2023 RTP",
             "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NB28",
-            "alias": "No Build on 2028 Network",
-            "displayByDefault": true
         }
     ],
     "scenarios": [
@@ -180,18 +175,16 @@
             "scnCode": "v902__Base__2019",
             "alias": "Base 2019",
             "scnTrendCodes": [
-                "NB28",
                 "RTP"
             ]
         },
         {
             "modVersion": "v902",
             "scnGroup": "RTP",
-            "scnYear": 2019,
+            "scnYear": 2050,
             "scnCode": "v902__RTP__2019",
-            "alias": "RTP 2019",
+            "alias": "RTP 2050",
             "scnTrendCodes": [
-                "NB28",
                 "RTP"
             ]
         },
@@ -201,49 +194,6 @@
             "scnYear": 2019,
             "scnCode": "WFv9.1__BY__2019",
             "alias": "BY 2019",
-            "scnTrendCodes": [
-                "NB28",
-                "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "OY",
-            "scnYear": 2023,
-            "scnCode": "WFv9.1__OY__2023",
-            "alias": "OY 2023",
-            "scnTrendCodes": [
-                "NB28",
-                "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "TIP",
-            "scnYear": 2028,
-            "scnCode": "WFv9.1__TIP__2028",
-            "alias": "TIP 2028",
-            "scnTrendCodes": [
-                "NB28",
-                "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "RTP",
-            "scnYear": 2032,
-            "scnCode": "WFv9.1__RTP__2032",
-            "alias": "RTP 2032",
-            "scnTrendCodes": [
-                "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "RTP",
-            "scnYear": 2042,
-            "scnCode": "WFv9.1__RTP__2042",
-            "alias": "RTP 2042",
             "scnTrendCodes": [
                 "RTP"
             ]
@@ -256,36 +206,6 @@
             "alias": "RTP 2050",
             "scnTrendCodes": [
                 "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "NB28",
-            "scnYear": 2032,
-            "scnCode": "WFv9.1__NB28__2032",
-            "alias": "NB28 2032",
-            "scnTrendCodes": [
-                "NB28"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "NB28",
-            "scnYear": 2042,
-            "scnCode": "WFv9.1__NB28__2042",
-            "alias": "NB28 2042",
-            "scnTrendCodes": [
-                "NB28"
-            ]
-        },
-        {
-            "modVersion": "WFv9.1",
-            "scnGroup": "NB28",
-            "scnYear": 2050,
-            "scnCode": "WFv9.1__NB28__2050",
-            "alias": "NB28 2050",
-            "scnTrendCodes": [
-                "NB28"
             ]
         }
     ]
