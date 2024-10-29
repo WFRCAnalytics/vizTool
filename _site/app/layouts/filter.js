@@ -344,7 +344,7 @@ class Filter {
   initializeMap(container) {
     require(["esri/Map", "esri/views/MapView", "esri/layers/GeoJSONLayer"], (Map, MapView, GeoJSONLayer) => {
       const map = new Map({
-        basemap: "streets"
+        basemap: "gray-vector"
       });
   
       this.mapView = new MapView({
