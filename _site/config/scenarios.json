@@ -16,6 +16,78 @@
     ],
     "models": [
         {
+            "modVersion": "v902",
+            "geojsons": {
+                "taz": "WFv910_TAZ.geojson",
+                "distSml": "WFv910_TAZ__DSML.geojson",
+                "distMed": "WFv910_TAZ__DMED.geojson",
+                "distLrg": "WFv910_TAZ__DLRG.geojson",
+                "distSup": "WFv910_TAZ__DSUP.geojson",
+                "subarea": "WFv910_TAZ__SAID.geojson",
+                "planarea": "WFv910_TAZ__PLAN.geojson",
+                "city": "WFv910_TAZ__CITY.geojson",
+                "citygroup": "WFv910_TAZ__CTGP.geojson",
+                "segment": "WFv910_Segments.geojson",
+                "stop": "WFv910_Segments__STOP.geojson",
+                "corrWFRCHIGHWAY": "WFv910_Segments__CORR_WFRCHIGHWAY.geojson",
+                "corrWFRCTRANSIT": "WFv910_Segments__CORR_WFRCTRANSIT.geojson",
+                "corrMAGHIGHWAY": "WFv910_Segments__CORR_MAGHIGHWAY.geojson",
+                "corrMAGTRANSIT": "WFv910_Segments__CORR_MAGTRANSIT.geojson",
+                "corrFREIGHT": "WFv910_Segments__CORR_FREIGHT.geojson"
+            },
+            "keys": {
+                "taz": {
+                    "distSml": "WFv910_TAZ__DSML_KEY.json",
+                    "distMed": "WFv910_TAZ__DMED_KEY.json",
+                    "distLrg": "WFv910_TAZ__DLRG_KEY.json",
+                    "distSup": "WFv910_TAZ__DSUP_KEY.json",
+                    "subarea": "WFv910_TAZ__SAID_KEY.json",
+                    "planarea": "WFv910_TAZ__PLAN_KEY.json",
+                    "city": "WFv910_TAZ__CITY_KEY.json",
+                    "citygroup": "WFv910_TAZ__CTGP_KEY.json"
+                },
+                "segment": {
+                    "taz": "WFv910_Segments__TAZ_KEY.json",
+                    "distSml": "WFv910_Segments__DSML_KEY.json",
+                    "distMed": "WFv910_Segments__DMED_KEY.json",
+                    "distLrg": "WFv910_Segments__DLRG_KEY.json",
+                    "distSup": "WFv910_Segments__DSUP_KEY.json",
+                    "city": "WFv910_Segments__CITY_KEY.json",
+                    "subarea": "WFv910_Segments__SAID_KEY.json",
+                    "planarea": "WFv910_Segments__PLAN_KEY.json",
+                    "citygroup": "WFv910_Segments__CTGP_KEY.json",
+                    "corrWFRCHIGHWAY": "WFv910_Segments__CORR_WFRCHIGHWAY_KEY.json",
+                    "corrWFRCTRANSIT": "WFv910_Segments__CORR_WFRCTRANSIT_KEY.json",
+                    "corrMAGHIGHWAY": "WFv910_Segments__CORR_MAGHIGHWAY_KEY.json",
+                    "corrMAGTRANSIT": "WFv910_Segments__CORR_MAGTRANSIT_KEY.json",
+                    "corrFREIGHT": "WFv910_Segments__CORR_FREIGHT_KEY.json"
+                },
+                "distSml": {
+                    "distMed": "WFv910_TAZ__DSML__DMED_KEY.json",
+                    "distLrg": "WFv910_TAZ__DSML__DLRG_KEY.json",
+                    "distSup": "WFv910_TAZ__DSML__DSUP_KEY.json",
+                    "subarea": "WFv910_TAZ__DSML__SAID_KEY.json",
+                    "planarea": "WFv910_TAZ__DSML__PLAN_KEY.json"
+                },
+                "stop": {
+                    "taz": "WFv910_Segments__STOP__TAZ_KEY.json",
+                    "distSml": "WFv910_Segments__STOP__DSML_KEY.json",
+                    "distMed": "WFv910_Segments__STOP__DMED_KEY.json",
+                    "distLrg": "WFv910_Segments__STOP__DLRG_KEY.json",
+                    "distSup": "WFv910_Segments__STOP__DSUP_KEY.json",
+                    "city": "WFv910_Segments__STOP__CITY_KEY.json",
+                    "subarea": "WFv910_Segments__STOP__SAID_KEY.json",
+                    "planarea": "WFv910_Segments__STOP__PLAN_KEY.json",
+                    "citygroup": "WFv910_Segments__STOP__CTGP_KEY.json",
+                    "corrWFRCHIGHWAY": "WFv910_Segments__STOP__CORR_WFRCHIGHWAY_KEY.json",
+                    "corrWFRCTRANSIT": "WFv910_Segments__STOP__CORR_WFRCTRANSIT_KEY.json",
+                    "corrMAGHIGHWAY": "WFv910_Segments__STOP__CORR_MAGHIGHWAY_KEY.json",
+                    "corrMAGTRANSIT": "WFv910_Segments__STOP__CORR_MAGTRANSIT_KEY.json",
+                    "corrFREIGHT": "WFv910_Segments__STOP__CORR_FREIGHT_KEY.json"
+                }
+            }
+        },
+        {
             "modVersion": "WFv9.1",
             "geojsons": {
                 "taz": "WFv910_TAZ.geojson",
@@ -101,6 +173,28 @@
         }
     ],
     "scenarios": [
+        {
+            "modVersion": "v902",
+            "scnGroup": "Base",
+            "scnYear": 2019,
+            "scnCode": "v902__Base__2019",
+            "alias": "Base 2019",
+            "scnTrendCodes": [
+                "NB28",
+                "RTP"
+            ]
+        },
+        {
+            "modVersion": "v902",
+            "scnGroup": "RTP",
+            "scnYear": 2019,
+            "scnCode": "v902__RTP__2019",
+            "alias": "RTP 2019",
+            "scnTrendCodes": [
+                "NB28",
+                "RTP"
+            ]
+        },
         {
             "modVersion": "WFv9.1",
             "scnGroup": "BY",
