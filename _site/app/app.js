@@ -822,6 +822,12 @@ function getFirstScenarioWithTrendData(jsonName) {
   return dataScenarios.find(scenario => scenario.jsonData.hasOwnProperty(jsonName));
 }
 
+// find the first scenario that has trend data for a given jsonName
+function getFirstScenarioWithGeoJsonData(geoJsonKey) {
+  console.log('getFirstScenarioWithGeoJsonData');
+  return dataScenarios.find(scenario => scenario.geojsons.hasOwnProperty(geoJsonKey));
+}
+
 // Function to hide the progress container when both progress bars reach 100%
 function checkAndHideProgressContainer() {
   const progressBar = document.getElementById('progress').value;
