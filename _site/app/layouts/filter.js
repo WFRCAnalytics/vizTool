@@ -190,7 +190,7 @@ class Filter {
   renderMapPopupButton() {
     const mapButton = document.createElement('calcite-button');
     mapButton.innerText = "Reference Map";
-    mapButton.classList.add('check-all-toggle-button');
+    mapButton.classList.add('reference-map-button');
     mapButton.onclick = () => this.openMapPopup();
   
     // Create a line break element
