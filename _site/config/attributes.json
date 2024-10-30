@@ -15,7 +15,7 @@
         "alias": "Lane-Miles"
     },
     "aTBM": {
-        "alias": "Train/Bus-Miles"
+        "alias": "Train/Bus Vehicle-Miles Traveled"
     },
     "aRM": {
         "alias": "Route-Direction-Miles",
@@ -3678,7 +3678,7 @@
         ],
         "rendererCollection": {
             "main": {
-                "legendTitle": "Person Miles Traveled",
+                "legendTitle": "Person Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -3703,7 +3703,7 @@
                 "defaultLabel": "No Person Miles Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Person Miles Traveled",
+                "legendTitle": "Difference in Person Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
@@ -3728,7 +3728,7 @@
                 "defaultLabel": "No Person Miles Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Person Miles Traveled",
+                "legendTitle": "Percent Difference in Person Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -3759,7 +3759,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Person Miles Traveled",
+                    "legendTitle": "Person Miles Traveled (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3798,7 +3798,7 @@
         ],
         "rendererCollection": {
             "main": {
-                "legendTitle": "Person Hours Traveled",
+                "legendTitle": "Person Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.5, "maxValue":      50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":         "1 to, 50"},
@@ -3823,7 +3823,7 @@
                 "defaultLabel": "No Person Hours Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Person Hours Traveled",
+                "legendTitle": "Difference in Person Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
@@ -3848,7 +3848,7 @@
                 "defaultLabel": "No Person Hours Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Person Hours Traveled",
+                "legendTitle": "Percent Difference in Person Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -3879,7 +3879,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Person Hours Traveled",
+                    "legendTitle": "Person Hours Traveled (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -3918,7 +3918,7 @@
         ],
         "rendererCollection": {
             "main": {
-                "legendTitle": "Person Hours of Delay",
+                "legendTitle": "Person Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.50, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":           "1 to 500"},
@@ -3943,7 +3943,7 @@
                 "defaultLabel": "No Person Hours of Delay"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Person Hours of Delay",
+                "legendTitle": "Difference in Person Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
@@ -3968,7 +3968,7 @@
                 "defaultLabel": "No Person Hours of Delay"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Person Hours of Delay",
+                "legendTitle": "Percent Difference in Person Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -3999,7 +3999,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Person Hours of Delay",
+                    "legendTitle": "Person Hours of Delay (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4028,7 +4028,7 @@
         "alias": "Vehicle Miles Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Vehicle Miles Traveled",
+                "legendTitle": "Vehicle Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -4053,7 +4053,7 @@
                 "defaultLabel": "No Vehicle Miles Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Vehicle Miles Traveled",
+                "legendTitle": "Difference in Vehicle Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -9999999999,"maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
@@ -4078,7 +4078,7 @@
                 "defaultLabel": "No Vehicle Miles Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in All Vehicle Miles Traveled",
+                "legendTitle": "Percent Difference in All Vehicle Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -4109,7 +4109,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Vehicle Miles Traveled",
+                    "legendTitle": "Vehicle Miles Traveled (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4138,7 +4138,7 @@
         "alias": "Vehicle Hours Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Vehicle Hours Traveled",
+                "legendTitle": "Vehicle Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -4163,7 +4163,7 @@
                 "defaultLabel": "No Vehicle Hours Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Vehicle Hours Traveled",
+                "legendTitle": "Difference in Vehicle Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
@@ -4188,7 +4188,7 @@
                 "defaultLabel": "No Vehicle Hours Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in All Vehicle Hours Traveled",
+                "legendTitle": "Percent Difference in All Vehicle Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -4219,7 +4219,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Vehicle Hours Traveled",
+                    "legendTitle": "Vehicle Hours Traveled (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4248,7 +4248,7 @@
         "alias": "Vehicle Hours of Delay",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Vehicle Hours of Delay",
+                "legendTitle": "Vehicle Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.50, "maxValue":     500, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":           "1 to 500"},
@@ -4273,7 +4273,7 @@
                 "defaultLabel": "No Vehicle Hours of Delay"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Vehicle Hours of Delay",
+                "legendTitle": "Difference in Vehicle Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
@@ -4298,7 +4298,7 @@
                 "defaultLabel": "No Vehicle Hours of Delay"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in All Vehicle Hours of Delay",
+                "legendTitle": "Percent Difference in All Vehicle Hours of Delay (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -4329,7 +4329,7 @@
             "main_divide_by": [
                 {
                     "divider": "default",
-                    "legendTitle": "Vehicle Hours of Delay",
+                    "legendTitle": "Vehicle Hours of Delay (Average Workday)",
                     "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
                     "simpleRenderer": {
                         "symbol": {
@@ -4358,7 +4358,7 @@
         "alias": "Passenger-Miles Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Passenger-Miles Traveled",
+                "legendTitle": "Passenger-Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.500, "maxValue":     5000, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":             "1 to 5,000"},
@@ -4383,7 +4383,7 @@
                 "defaultLabel": "No Passenger-Miles Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Passenger-Miles Traveled",
+                "legendTitle": "Difference in Passenger-Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -999999999, "maxValue":  -500000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -500,000"  },
@@ -4408,7 +4408,7 @@
                 "defaultLabel": "No Passenger-Miles Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Passenger-Miles Traveled",
+                "legendTitle": "Percent Difference in Passenger-Miles Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
@@ -4442,7 +4442,7 @@
         "alias": "Passenger-Hours Traveled",
         "rendererCollection": {
             "main": {
-                "legendTitle": "Passenger-Hours Traveled",
+                "legendTitle": "Passenger-Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0')))",
                 "classBreakInfos": [
                     { "minValue":  0.5, "maxValue":      50, "symbol": { "type": "simple-fill", "color": [ 49, 57,138,0.75], "outline": { "type": "simple-line", "color": "#FFFFFF", "width": 1 }}, "label":         "1 to, 50"},
@@ -4467,7 +4467,7 @@
                 "defaultLabel": "No Passenger-Hours Traveled"
             },
             "compare_abs": {
-                "legendTitle": "Difference in Passenger-Hours Traveled",
+                "legendTitle": "Difference in Passenger-Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
                 "classBreakInfos": [
                     { "minValue": -99999999, "maxValue":   -5000, "symbol": { "type": "simple-fill", "color":[  0, 92,196,0.75], "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "More than -5,000"  },
@@ -4492,7 +4492,7 @@
                 "defaultLabel": "No Passenger-Hours Traveled"
             },
             "compare_pct": {
-                "legendTitle": "Percent Difference in Passenger-Hours Traveled",
+                "legendTitle": "Percent Difference in Passenger-Hours Traveled (Average Workday)",
                 "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')",
                 "classBreakInfos": [
                     { "minValue": -999999, "maxValue":  -5.00, "symbol": { "type": "simple-fill", "color":"#0000ff", "outline": { "type": "simple-line", "color": "FFFFFF", "width": 1 }}, "label": "-500% or More" },
