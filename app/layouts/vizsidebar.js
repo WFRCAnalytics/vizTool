@@ -87,6 +87,7 @@ class VizSidebar {
     // Define the elements to process
     const elements = [
       { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
+      { name: "AttributeDomain", render: () => this.attributeDomain ? this.attributeDomain.render() : null},
       { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render()) },
       { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
       { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
