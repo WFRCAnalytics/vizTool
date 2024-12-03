@@ -162,7 +162,7 @@
             "aggregatorSelected" : "SUBAREAID"
           }
         },
-        { "submenuText": "Zone Trips Ends by Mode",
+        { "submenuText": "Zone Trip Ends by Mode",
           "submenuIconStart": "arrow-double-diagonal-1",
           "template": "vizMap",
           "templateSettings": {
@@ -184,7 +184,7 @@
             "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Trips Ends by Mode Trends",
+        { "submenuText": "Zone Trip Ends by Mode Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
