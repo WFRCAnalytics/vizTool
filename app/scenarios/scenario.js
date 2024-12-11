@@ -243,7 +243,7 @@ class Scenario {
     a_lstFilters.forEach(function(filter) {
       let _data = [];
       if (_parent.jsonData[a_jsonDataKey]) {
-        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+        _data = _parent.jsonData[a_jsonDataKey].data[filter.toLowerCase()];
       }
 
       // Aggregate the fields in the data object

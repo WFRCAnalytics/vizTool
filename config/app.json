@@ -162,7 +162,7 @@
             "aggregatorSelected" : "SUBAREAID"
           }
         },
-        { "submenuText": "Zone Trip Ends by Mode",
+        { "submenuText": "Zone Trip Ends",
           "submenuIconStart": "arrow-double-diagonal-1",
           "template": "vizMap",
           "templateSettings": {
@@ -170,7 +170,7 @@
             "baseGeoJsonKey": "taz",
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
-            "popupTitle": "Zone Mode Share",
+            "popupTitle": "Zone Trip Ends",
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "TAZID",
@@ -184,7 +184,7 @@
             "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Trip Ends by Mode Trends",
+        { "submenuText": "Zone Trip Ends Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -207,7 +207,22 @@
         },
         { "submenuText": "Zone Origin-Destination Trips",
           "submenuIconStart": "2d-explore",
-          "template": "vizComingSoon"
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-distsml-od",
+            "baseGeoJsonKey": "distSml",
+            "baseGeoJsonId": "DISTSML",
+            "geometryType": "polygon",
+            "popupTitle": "Zone OD",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["SUBAREAID","PLANAREA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSML",
+            "attributeTitle": "Trip Mode",
+            "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/>",
+            "attributeSelected": "a0",
+            "attributes": ["a0","aM","aA","aT","aNM"],
+            "filters" : ["fSmlDist2","fPA","fPurp5pAll","fModeAccessSingleLetter","fModeRouteCode3"]
+          }
         }
       ]
     },

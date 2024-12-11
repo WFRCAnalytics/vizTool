@@ -95,33 +95,8 @@
             "displayByDefault": true
         },
         {
-            "scnTrendCode": "EFRTP",
-            "alias": "RTP with External Forces",
-            "displayByDefault": true
-        },
-        {
             "scnTrendCode": "NB28",
             "alias": "No Build on TIP 2028 Network",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NB32",
-            "alias": "No Build on Phase 1 2032 Network",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NB42",
-            "alias": "No Build on Phase 2 2042 Network",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "Needs",
-            "alias": "Needs-Based",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NeedsMAG",
-            "alias": "Needs-Based MAG",
             "displayByDefault": true
         }
     ],
@@ -133,12 +108,7 @@
             "scnCode": "WFv910__BY__2019",
             "scnTrendCodes": [
                 "RTP",
-                "EFRTP",
-                "NB28",
-                "NB32",
-                "NB42",
-                "Needs",
-                "NeedsMAG"
+                "NB28"
             ]
         },
         {
@@ -148,12 +118,7 @@
             "scnCode": "WFv910__OY__2023",
             "scnTrendCodes": [
                 "RTP",
-                "EFRTP",
-                "NB28",
-                "NB32",
-                "NB42",
-                "Needs",
-                "NeedsMAG"
+                "NB28"
             ]
         },
         {
@@ -163,12 +128,7 @@
             "scnCode": "WFv910__TIP__2028",
             "scnTrendCodes": [
                 "RTP",
-                "EFRTP",
-                "NB28",
-                "NB32",
-                "NB42",
-                "Needs",
-                "NeedsMAG"
+                "NB28"
             ]
         },
         {
@@ -177,9 +137,7 @@
             "scnYear": 2032,
             "scnCode": "WFv910__RTP__2032",
             "scnTrendCodes": [
-                "RTP",
-                "NB32",
-                "NB42"
+                "RTP"
             ]
         },
         {
@@ -188,8 +146,7 @@
             "scnYear": 2042,
             "scnCode": "WFv910__RTP__2042",
             "scnTrendCodes": [
-                "RTP",
-                "NB42"
+                "RTP"
             ]
         },
         {
@@ -199,33 +156,6 @@
             "scnCode": "WFv910__RTP__2050",
             "scnTrendCodes": [
                 "RTP"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "EFRTP",
-            "scnYear": 2032,
-            "scnCode": "WFv910__EFRTP__2032",
-            "scnTrendCodes": [
-                "EFRTP"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "EFRTP",
-            "scnYear": 2042,
-            "scnCode": "WFv910__EFRTP__2042",
-            "scnTrendCodes": [
-                "EFRTP"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "EFRTP",
-            "scnYear": 2050,
-            "scnCode": "WFv910__EFRTP__2050",
-            "scnTrendCodes": [
-                "EFRTP"
             ]
         },
         {
@@ -253,87 +183,6 @@
             "scnCode": "WFv910__NB28__2050",
             "scnTrendCodes": [
                 "NB28"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NB32",
-            "scnYear": 2042,
-            "scnCode": "WFv910__NB32__2042",
-            "scnTrendCodes": [
-                "NB32"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NB32",
-            "scnYear": 2050,
-            "scnCode": "WFv910__NB32__2050",
-            "scnTrendCodes": [
-                "NB32"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NB42",
-            "scnYear": 2050,
-            "scnCode": "WFv910__NB42__2050",
-            "scnTrendCodes": [
-                "NB42"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "Needs",
-            "scnYear": 2032,
-            "scnCode": "WFv910__Needs__2032",
-            "scnTrendCodes": [
-                "Needs"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "Needs",
-            "scnYear": 2042,
-            "scnCode": "WFv910__Needs__2042",
-            "scnTrendCodes": [
-                "Needs"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "Needs",
-            "scnYear": 2050,
-            "scnCode": "WFv910__Needs__2050",
-            "scnTrendCodes": [
-                "Needs"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NeedsMAG",
-            "scnYear": 2032,
-            "scnCode": "WFv910__NeedsMAG__2032",
-            "scnTrendCodes": [
-                "NeedsMAG"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NeedsMAG",
-            "scnYear": 2042,
-            "scnCode": "WFv910__NeedsMAG__2042",
-            "scnTrendCodes": [
-                "NeedsMAG"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NeedsMAG",
-            "scnYear": 2050,
-            "scnCode": "WFv910__NeedsMAG__2050",
-            "scnTrendCodes": [
-                "NeedsMAG"
             ]
         }
     ]

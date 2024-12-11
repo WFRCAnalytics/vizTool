@@ -3,7 +3,20 @@ class AttributeFilterData {
     constructor(data) {
         this.attributes = data.attributes.map(attr => new DataAttribute(attr));
         this.filters = data.filters.map(filter => new DataFilter(filter));
-        this.data = data.data;
+        this.data = this._normalizeDataKeys(data.data);
+    }
+
+    // Normalize data keys to lowercase for case-insensitive matching
+    _normalizeDataKeys(data) {
+        return Object.fromEntries(
+            Object.entries(data).map(([key, value]) => [key.toLowerCase(), value])
+        );
+    }
+
+    // Retrieve data by a filter, case-insensitively
+    getDataByFilter(filter) {
+        const normalizedFilter = filter.toLowerCase();
+        return this.data[normalizedFilter] || null; // Return null if no match is found
     }
 }
 

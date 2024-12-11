@@ -42,6 +42,8 @@ class Filter {
 
     if (geoJsonInfo && Object.keys(geoJsonInfo).length > 0) {
       this.geoJsonInfo = geoJsonInfo;
+    } else if (_configFilter.geoJsonInfo) {
+      this.geoJsonInfo = _configFilter.geoJsonInfo;
     }
 
     this.isMapInitialized = false; // Track map initialization    
