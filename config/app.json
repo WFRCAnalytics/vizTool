@@ -221,7 +221,7 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/>",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aNM"],
-            "filters" : ["fSmlDist2","fPA","fPurp5pAll","fModeAccessSingleLetter","fModeRouteCode3"]
+            "filters" : ["fSmlDist2","fPA","fPurp5pAll","fDriveMode","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         }
       ]

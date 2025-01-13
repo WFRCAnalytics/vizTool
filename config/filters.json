@@ -310,6 +310,19 @@
             {"value":"NHB"  , "label": "Non-Home-Based"    }
         ]
     },
+    "fPurp4pAll": {
+        "alias"    : "Trip Purpose",
+        "fWidget"  : "select",
+        "fSelected": "All",
+        "fOptions" : [
+            {"value":"All"  , "label": "All Purposes"      },
+            {"value":"HBC"  , "label": "Home-Based College"},
+            {"value":"HBO"  , "label": "Home-Based Other"  },
+            {"value":"HBW"  , "label": "Home-Based Work"   },
+            {"value":"NHB"  , "label": "Non-Home-Based"    }
+        ],
+        "subTotals": ["All"]
+    },
     "fPurp5pAll": {
         "alias"    : "Trip Purpose",
         "fWidget"  : "select",
@@ -392,6 +405,16 @@
             {"value":"SB" , "label":"Southbound" },
             {"value":"EB" , "label":"Eastbound"  },
             {"value":"WB" , "label":"Westbound"  }
+        ]
+    },
+    "fDriveMode": {
+        "alias"    : "Drive Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["DA","SR2","SR3p"],
+        "fOptions" : [
+            { "value":"DA"  , "label":  "Drive Alone"   },
+            { "value":"SR2" , "label":  "Shared Ride"   },
+            { "value":"SR3p", "label":  "Shared Ride 3+"}
         ]
     },
     "fModeRoad": {
