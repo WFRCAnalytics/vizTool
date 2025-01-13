@@ -63,7 +63,7 @@ require([
     
     // Define reusable popup content and expression info
     get popupContent() {
-      return [
+      const baseContent = [
         {
           type: "text",
           text: `${this.getPopupLayerName()}: {expression/featureName}`
@@ -73,10 +73,25 @@ require([
           text: `${this.getLayerDisplayName()}: {expression/formatDisplayValue}`
         }
       ];
+
+      if (this.mode === 'compare') {
+        baseContent.push(
+          {
+            type: "text",
+            text: `${this.getMainScenarioDisplayName()}: {expression/formatMainValue}`
+          },
+          {
+            type: "text",
+            text: `${this.getCompScenarioDisplayName()}: {expression/formatCompValue}`
+          }
+        );
+      }
+
+      return baseContent;
     }
 
     get expressionInfos() {
-      return [
+      const baseExpressions = [
         {
           name: "featureName",
           title: "Feature Name",
@@ -88,6 +103,23 @@ require([
           expression: this.getLabelInfo()
         }
       ];
+
+      if (this.mode === 'compare') {
+        baseExpressions.push(
+          {
+            name: "formatMainValue",
+            title: "Formatted Main Value",
+            expression: this.getLabelInfo().replace(/dVal/g, 'mVal')
+          },
+          {
+            name: "formatCompValue",
+            title: "Formatted Comp Value",
+            expression: this.getLabelInfo().replace(/dVal/g, 'cVal')
+          }
+        );
+      }
+
+      return baseExpressions;
     }
     
     getPopupLayerName() {
@@ -373,7 +405,9 @@ require([
             id: 0, // Unique ID, using "SEGID" as the objectIdField
             idLabel: "",
             // ... add other attribute fields if necessary
-            dVal: null // Assuming you want a displayValue, you can set any initial value
+            dVal: null, // Assuming you want a displayValue, you can set any initial value
+            mVal: null,
+            cVal: null
           }
         };
 
@@ -386,6 +420,8 @@ require([
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
+            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
 
           ],
           popupTemplate: {
@@ -435,7 +471,9 @@ require([
           attributes: {
             id: 0,
             idLabel: "",
-            dVal: null
+            dVal: null,
+            mVal: null,
+            cVal: null
           }
         };
 
@@ -446,6 +484,8 @@ require([
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
+            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
           ],
           popupTemplate: {
             title: this.popupTitle,
@@ -492,7 +532,9 @@ require([
           attributes: {
             id: 0,
             idLabel: "",
-            dVal: null
+            dVal: null,
+            mVal: null,
+            cVal: null
           },
           reunderer: {
             "type": "simple-marker",
@@ -512,6 +554,8 @@ require([
             { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
+            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
           ],
           popupTemplate: {
             title: this.popupTitle,
@@ -816,13 +860,17 @@ require([
                 attributes = {
                   ...feature.attributes,
                   idLabel: _id,
-                  dVal: _valueDisp  // Add the dVal to attributes
+                  dVal: _valueDisp, // Add the dVal to attributes
+                  mVal: _valueMain,
+                  cVal: _valueComp
                 };
               } else {
                 attributes = {
                   ...feature.attributes,
                   idLabel: _id,
-                  dVal: null  // Add the dVal to attributes
+                  dVal: null, // Add the dVal to attributes
+                  mVal: null,
+                  cVal: null
                 };
               }
 
@@ -1039,7 +1087,9 @@ require([
                 let attributes = {
                   ...feature.attributes,
                   idLabel: _idAg,
-                  dVal: _valueDisp  // Add the dVal to attributes
+                  dVal: _valueDisp, // Add the dVal to attributes
+                  mVal: _valueMain,
+                  cVal: _valueComp
                 };
 
                 // Create a new graphic with the updated attributes
