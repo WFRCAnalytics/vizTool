@@ -109,12 +109,12 @@ require([
           {
             name: "formatMainValue",
             title: "Formatted Main Value",
-            expression: this.getLabelInfo().replace(/dVal/g, 'mVal')
+            expression: "$feature.mVal"
           },
           {
             name: "formatCompValue",
             title: "Formatted Comp Value",
-            expression: this.getLabelInfo().replace(/dVal/g, 'cVal')
+            expression: "$feature.cVal"
           }
         );
       }
