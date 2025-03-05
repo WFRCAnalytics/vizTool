@@ -145,7 +145,7 @@ th, td {
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
 }
-#trendMainDisplay {
+#mainTrendDisplay {
     display: flex; /* Enables flexbox layout */
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
@@ -205,7 +205,7 @@ th, td {
     overflow: hidden;
 }
 
-#trendMain{
+#mainTrend{
     width: 100px; /* or any other value */
     overflow-y: auto; /* Enable vertical scrollbar */
 }
@@ -274,6 +274,20 @@ th, td {
     margin-left: 0;
 }
 
+/* MAIN CONTENT */
+#mainMatrix {
+    display: flex; /* Use flex layout */
+    flex-direction: column; /* Stack children vertically */
+    padding: 15px;
+    height: calc(100vh - 114px); /* Adjust height as needed */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    width: 100%; /* Ensure it fills the width of its parent */
+}
+
+#maiMatrix.collapsed {
+    margin-left: 0;
+}
+
 .openbtn {
     font-size: 16px;
     padding: 8px 8px;
@@ -331,7 +345,7 @@ th, td {
     white-space: pre-line; /* Prevent text from wrapping */
 }
 
-#trendMain {
+#mainTrend {
     padding: 15px;
     height: calc(100vh - 144px); /* Adjust height as needed */
     flex-grow: 1; /* Grow to fill available space */

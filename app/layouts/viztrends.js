@@ -999,9 +999,7 @@ class VizTrends {
     
     const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
 
-    if (this.sidebar.dividers) {
-      var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
-    }
+    var _selectedDivider = this.sidebar.getSelectedDivider();
 
     const _trendsSelected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
     const _aggregatorOptionsSelected = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());

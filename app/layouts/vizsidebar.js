@@ -138,6 +138,12 @@ class VizSidebar {
     this.updateFilterDisplay();
   }
   
+  getSelectedDivider() {
+    if (this.dividers) {
+      return this.dividers.find(divider => divider.attributeCode === this.getDCode()) || null;
+    }
+  }
+
   hideLayout() {
     console.log('vizsidebar:hideLayout');
   }

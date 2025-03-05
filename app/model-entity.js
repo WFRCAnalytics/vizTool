@@ -9,6 +9,8 @@ class ModelEntity {
       this.vizLayout = new VizMap(data.templateSettings, data.submenuText, this);
     } else if (data.template=='vizTrends') {
       this.vizLayout = new VizTrends(data.templateSettings, this);
+    } else if (data.template=='vizMatrix') {
+      this.vizLayout = new VizMatrix(data.templateSettings, this);
     }
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;

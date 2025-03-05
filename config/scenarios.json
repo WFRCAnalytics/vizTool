@@ -162,91 +162,18 @@
     ],
     "trends": [
         {
-            "scnTrendCode": "RTP_v902",
-            "alias": "2023 RTP v902",
-            "displayByDefault": true
-        },
-        {
             "scnTrendCode": "RTP_v910",
             "alias": "2023 RTP v910",
-            "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NB28_v910",
-            "alias": "No Build on 2028 Network v910",
             "displayByDefault": true
         }
     ],
     "scenarios": [
-        {
-            "modVersion": "v902-official",
-            "scnGroup": "BY",
-            "scnYear": 2019,
-            "scnCode": "v902-official__BY__2019",
-            "alias": "v9.0.2 BY 2019",
-            "scnTrendCodes": [
-                "RTP_v902"
-            ]
-        },
-        {
-            "modVersion": "v902-official",
-            "scnGroup": "RTP",
-            "scnYear": 2050,
-            "scnCode": "v902-official__RTP__2050",
-            "alias": "v9.0.2 RTP 2050",
-            "scnTrendCodes": [
-                "RTP_v902"
-            ]
-        },
         {
             "modVersion": "WFv910",
             "scnGroup": "BY",
             "scnYear": 2019,
             "scnCode": "WFv910__BY__2019",
             "alias": "v9.1.0 Base 2019",
-            "scnTrendCodes": [
-                "NB28_v910",
-                "RTP_v910"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "OY",
-            "scnYear": 2023,
-            "scnCode": "WFv910__OY__2023",
-            "alias": "v9.1.0 Opening 2023",
-            "scnTrendCodes": [
-                "NB28_v910",
-                "RTP_v910"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "TIP",
-            "scnYear": 2028,
-            "scnCode": "WFv910__TIP__2028",
-            "alias": "v9.1.0 TIP 2028",
-            "scnTrendCodes": [
-                "NB28_v910",
-                "RTP_v910"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "RTP",
-            "scnYear": 2032,
-            "scnCode": "WFv910__RTP__2019",
-            "alias": "v9.1.0 RTP 2032",
-            "scnTrendCodes": [
-                "RTP_v910"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "RTP",
-            "scnYear": 2042,
-            "scnCode": "WFv910__RTP__2042",
-            "alias": "v9.1.0 RTP 2042",
             "scnTrendCodes": [
                 "RTP_v910"
             ]
@@ -259,16 +186,6 @@
             "alias": "v9.1.0 RTP 2050",
             "scnTrendCodes": [
                 "RTP_v910"
-            ]
-        },
-        {
-            "modVersion": "WFv910",
-            "scnGroup": "NB28",
-            "scnYear": 2050,
-            "scnCode": "WFv910__NB28__2050",
-            "alias": "v9.1.0 NB28 2050",
-            "scnTrendCodes": [
-                "NB28_v910"
             ]
         }
     ]

@@ -169,8 +169,6 @@ class Scenario {
     }
   }
 
-
-
   getFilterGroupForAttribute(a_jsonDataKey, a_aCode) {
     console.log('getFilterGroupForAttribute:' + a_aCode);
   
@@ -243,7 +241,7 @@ class Scenario {
     a_lstFilters.forEach(function(filter) {
       let _data = [];
       if (_parent.jsonData[a_jsonDataKey]) {
-        _data = _parent.jsonData[a_jsonDataKey].data[filter];
+        _data = _parent.jsonData[a_jsonDataKey].data[filter.toLowerCase()];
       }
 
       // Aggregate the fields in the data object
@@ -274,5 +272,88 @@ class Scenario {
     return aggregatedData;
   }
   
+  getMatrixDataForFilteredOptionListWithAggregator(
+    a_jsonDataKey, 
+    a_lstFilters, 
+    a_attributeCode, 
+    a_selectedAggregator, 
+    a_baseGeoJsonKey, 
+    a_agFilterOptionsMethod = "sum"
+  ) {
+    let ids = new Set(); // Store unique IDs
+    let combinedData = {}; // Object to store listId -> listIdAttributeData
+    let aggregatorKeyFile = "";
+  
+    // Extract unique listIds
+    Object.keys(this.jsonData[a_jsonDataKey].data).forEach(key => {
+      let match = key.match(/^(\d+)_/); // Extract the first number before "_"
+      if (match) {
+        ids.add(match[1]); // Store the first number
+      }
+    });
+  
+    let listIds = Array.from(ids).sort((a, b) => a - b); // Convert Set to sorted array
+  
+    for (let listId of listIds) {
+      let modifiedFilters = a_lstFilters.map(filter => `${listId}_${filter}`); // Concatenate lstId + "_"
+  
+      let listIdData = this.getDataForFilterOptionsList(a_jsonDataKey, modifiedFilters, a_agFilterOptionsMethod);
+  
+      let listIdAttributeData = this.extractAttribute(listIdData, a_attributeCode); // Extract only the needed attribute
+  
+      // Append extracted data to combinedData object under the key of listId
+      combinedData[listId] = listIdAttributeData;
+    }
+  
+    // Handle aggregator logic
+    if (a_selectedAggregator && a_selectedAggregator.agGeoJsonKey !== a_baseGeoJsonKey) {
+      // Call getAggregatorKeyFile only once
+      aggregatorKeyFile = this.getAggregatorKeyFile(a_selectedAggregator, a_baseGeoJsonKey);
+  
+      if (aggregatorKeyFile) {
+        let aggregatedData = {};
+  
+        // Choose aggregation key dynamically (DISTSML or DISTMED)
+        let agCode = a_selectedAggregator.agCode || "DISTSML"; // Default to DISTSML
+  
+        // Iterate over combinedData and use aggregatorKeyFile to sum values
+        Object.keys(combinedData).forEach(listId => {
+          let mappedOrigin = aggregatorKeyFile[listId]?.[agCode] || listId; // Map origin ID
+  
+          if (!aggregatedData[mappedOrigin]) {
+            aggregatedData[mappedOrigin] = {};
+          }
+  
+          Object.keys(combinedData[listId]).forEach(destKey => {
+            let mappedDest = aggregatorKeyFile[destKey]?.[agCode] || destKey; // Map destination ID
+  
+            if (!aggregatedData[mappedOrigin][mappedDest]) {
+              aggregatedData[mappedOrigin][mappedDest] = 0;
+            }
+  
+            // Sum values across both mapped indices (Origin → Destination)
+            aggregatedData[mappedOrigin][mappedDest] += combinedData[listId][destKey];
+          });
+        });
+  
+        return aggregatedData;
+      }  
+    }
+  
+    return combinedData;
+  }
+    
+  // Helper function inside the same class or object
+  extractAttribute(data, a_attributeCode) {
+    let result = {};
+  
+    Object.keys(data).forEach(key => {
+      if (data[key].hasOwnProperty(a_attributeCode)) {
+        result[key] = data[key][a_attributeCode]; // Extract only the desired attribute
+      }
+    });
+  
+    return result;
+  }
   
 }

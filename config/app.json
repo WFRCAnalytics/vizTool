@@ -207,7 +207,21 @@
         },
         { "submenuText": "Zone Origin-Destination Trips",
           "submenuIconStart": "2d-explore",
-          "template": "vizComingSoon"
+          "template": "vizMatrix",
+          "templateSettings": {
+            "jsonName": "j-distsml-od",
+            "baseGeoJsonKey": "distSml",
+            "baseGeoJsonId": "TAZID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Trip Mode",
+            "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/><b>Walk Trips</b> is specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using only a bicycle.",
+            "attributeSelected": "a0",
+            "aggregators": ["DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTSML",
+            "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
+            "filters" : ["fPA", "fPurp5pAll","fModeAccessSingleLetter","fModeRouteCode3"]
+          }
         }
       ]
     },

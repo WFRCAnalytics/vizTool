@@ -563,7 +563,25 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
     
     document.getElementById("openbtntrend").addEventListener("click", function() {
       const sidebar = document.getElementById("trendSidebar");
-      const main = document.getElementById("trendMain");
+      const main = document.getElementById("mainTrend");
+    
+      // Toggle the collapsed class
+      sidebar.classList.toggle("collapsed");
+      main.classList.toggle("collapsed");
+      this.classList.toggle("collapsed");
+    
+      // Change button text based on state
+      if (sidebar.classList.contains("collapsed")) {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
+      } else {
+        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
+      }
+      
+    });
+    
+    document.getElementById("openbtnmatrix").addEventListener("click", function() {
+      const sidebar = document.getElementById("matrixSidebar");
+      const main = document.getElementById("mainMatrix");
     
       // Toggle the collapsed class
       sidebar.classList.toggle("collapsed");
