@@ -1,1 +1,1 @@
-# Models-vizTool
+# vizTool
