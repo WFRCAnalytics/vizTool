@@ -15,9 +15,19 @@
       </div>
     </div>
     <!-- Collapse button -->
-    <button id="openbtnmatrix" class="openbtn"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
+    <button id="openbtnmatrix" class="openbtn bottom"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
     <div id="mainMatrix">
       <div id="matrixView"></div>
-      <div id="matrixFooter"></div>
+      <div id="matrixFooter">
+        <div style="height: 25px;">
+          <br/>
+          <calcite-button id="copyTableBtnMatrix" appearance="solid" color="blue" scale="s">
+            Copy Table to Clipboard
+          </calcite-button>
+        </div>
+      </div>
+    </div>
+    <div id="matrixSettings">
+
     </div>
   </div>

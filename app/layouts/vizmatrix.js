@@ -28,7 +28,41 @@ class VizMatrix {
                                   data.dividerSelected,
                                   data.dividerTitle,
                                   this)
+                                    
+    // Function to copy the trendHeader and table content to the clipboard 
+    function copyTableToClipboard() {
+      const trendHeader = document.getElementById('trendHeader').innerHTML; // Get trendHeader content
+      const table = document.getElementById('trendTable').innerHTML; // Get table content
 
+      // Combine trendHeader and table content
+      const combinedContent = trendHeader + '\n\n' + table;
+
+      // Create a temporary textarea to hold the combined content
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.style.position = 'fixed'; // Avoid scrolling to bottom
+      tempTextArea.style.opacity = 0; // Make it invisible
+      tempTextArea.value = combinedContent;
+
+      // Append the textarea to the document
+      document.body.appendChild(tempTextArea);
+
+      // Select the content and copy it to clipboard
+      tempTextArea.select();
+      document.execCommand('copy');
+
+      // Remove the temporary textarea
+      document.body.removeChild(tempTextArea);
+
+      // Provide feedback to the user (optional)
+      // alert('Header and table copied to clipboard!');
+    }
+
+    // Add event listener to the copy button
+    document.getElementById('copyTableBtnMatrix').addEventListener('click', copyTableToClipboard);
+
+    if(document.getElementById("scenario-selector-container")) {
+      document.getElementById("scenario-selector-container").style.display='block';
+    }
   }
 
   updateScenarioSelector() {
@@ -249,8 +283,5 @@ class VizMatrix {
     // Insert table into the webpage
     document.getElementById('matrixView').innerHTML = tableHTML;
   }
-  
 
-
-  
 }

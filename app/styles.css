@@ -151,7 +151,7 @@ th, td {
     flex-grow: 1; /* Allows the container to take up available space */
 
 }
-#matrixMainDisplay {
+#mainVizMatrix {
     display: flex; /* Enables flexbox layout */
     flex-direction: row; /* Places children in a row */
     flex-grow: 1; /* Allows the container to take up available space */
@@ -282,6 +282,7 @@ th, td {
     height: calc(100vh - 114px); /* Adjust height as needed */
     box-sizing: border-box; /* Include padding and border in width calculation */
     width: 100%; /* Ensure it fills the width of its parent */
+    overflow:scroll;
 }
 
 #maiMatrix.collapsed {
@@ -352,13 +353,6 @@ th, td {
     box-sizing: border-box; /* Include padding and border in the width calculation */
     min-width: 0; /* Optional: Ensures it can shrink below its content's intrinsic width */
     /* Add any additional styling you need */
-}
-
-#mainMatrix {
-    /* Main content styles */
-    flex-grow: 1;
-    display: flex;
-    flex-wrap: wrap;
 }
 
 /* CSS code to add borders to the table and cells */
