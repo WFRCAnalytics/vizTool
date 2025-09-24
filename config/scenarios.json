@@ -1,0 +1,340 @@
+{
+    "$schema": "./schema/scenario-schema.json",
+    "initial_select": [
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "RTP",
+            "scnYear": 2050
+        }
+    ],
+    "initial_select_compare": [
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "BY",
+            "scnYear": 2019
+        }
+    ],
+    "models": [
+        {
+            "modVersion": "WFv910",
+            "geojsons": {
+                "taz": "WFv910_TAZ.geojson",
+                "distSml": "WFv910_TAZ__DSML.geojson",
+                "distMed": "WFv910_TAZ__DMED.geojson",
+                "distLrg": "WFv910_TAZ__DLRG.geojson",
+                "distSup": "WFv910_TAZ__DSUP.geojson",
+                "subarea": "WFv910_TAZ__SAID.geojson",
+                "planarea": "WFv910_TAZ__PLAN.geojson",
+                "city": "WFv910_TAZ__CITY.geojson",
+                "citygroup": "WFv910_TAZ__CTGP.geojson",
+                "segment": "WFv910_Segments.geojson",
+                "stop": "WFv910_Segments__STOP.geojson",
+                "corrWFRCHIGHWAY": "WFv910_Segments__CORR_WFRCHIGHWAY.geojson",
+                "corrWFRCTRANSIT": "WFv910_Segments__CORR_WFRCTRANSIT.geojson",
+                "corrMAGHIGHWAY": "WFv910_Segments__CORR_MAGHIGHWAY.geojson",
+                "corrMAGTRANSIT": "WFv910_Segments__CORR_MAGTRANSIT.geojson",
+                "corrFREIGHT": "WFv910_Segments__CORR_FREIGHT.geojson"
+            },
+            "keys": {
+                "taz": {
+                    "distSml": "WFv910_TAZ__DSML_KEY.json",
+                    "distMed": "WFv910_TAZ__DMED_KEY.json",
+                    "distLrg": "WFv910_TAZ__DLRG_KEY.json",
+                    "distSup": "WFv910_TAZ__DSUP_KEY.json",
+                    "subarea": "WFv910_TAZ__SAID_KEY.json",
+                    "planarea": "WFv910_TAZ__PLAN_KEY.json",
+                    "city": "WFv910_TAZ__CITY_KEY.json",
+                    "citygroup": "WFv910_TAZ__CTGP_KEY.json"
+                },
+                "segment": {
+                    "taz": "WFv910_Segments__TAZ_KEY.json",
+                    "distSml": "WFv910_Segments__DSML_KEY.json",
+                    "distMed": "WFv910_Segments__DMED_KEY.json",
+                    "distLrg": "WFv910_Segments__DLRG_KEY.json",
+                    "distSup": "WFv910_Segments__DSUP_KEY.json",
+                    "city": "WFv910_Segments__CITY_KEY.json",
+                    "subarea": "WFv910_Segments__SAID_KEY.json",
+                    "planarea": "WFv910_Segments__PLAN_KEY.json",
+                    "citygroup": "WFv910_Segments__CTGP_KEY.json",
+                    "corrWFRCHIGHWAY": "WFv910_Segments__CORR_WFRCHIGHWAY_KEY.json",
+                    "corrWFRCTRANSIT": "WFv910_Segments__CORR_WFRCTRANSIT_KEY.json",
+                    "corrMAGHIGHWAY": "WFv910_Segments__CORR_MAGHIGHWAY_KEY.json",
+                    "corrMAGTRANSIT": "WFv910_Segments__CORR_MAGTRANSIT_KEY.json",
+                    "corrFREIGHT": "WFv910_Segments__CORR_FREIGHT_KEY.json"
+                },
+                "distSml": {
+                    "distMed": "WFv910_TAZ__DSML__DMED_KEY.json",
+                    "distLrg": "WFv910_TAZ__DSML__DLRG_KEY.json",
+                    "distSup": "WFv910_TAZ__DSML__DSUP_KEY.json",
+                    "subarea": "WFv910_TAZ__DSML__SAID_KEY.json",
+                    "planarea": "WFv910_TAZ__DSML__PLAN_KEY.json"
+                },
+                "stop": {
+                    "taz": "WFv910_Segments__STOP__TAZ_KEY.json",
+                    "distSml": "WFv910_Segments__STOP__DSML_KEY.json",
+                    "distMed": "WFv910_Segments__STOP__DMED_KEY.json",
+                    "distLrg": "WFv910_Segments__STOP__DLRG_KEY.json",
+                    "distSup": "WFv910_Segments__STOP__DSUP_KEY.json",
+                    "city": "WFv910_Segments__STOP__CITY_KEY.json",
+                    "subarea": "WFv910_Segments__STOP__SAID_KEY.json",
+                    "planarea": "WFv910_Segments__STOP__PLAN_KEY.json",
+                    "citygroup": "WFv910_Segments__STOP__CTGP_KEY.json",
+                    "corrWFRCHIGHWAY": "WFv910_Segments__STOP__CORR_WFRCHIGHWAY_KEY.json",
+                    "corrWFRCTRANSIT": "WFv910_Segments__STOP__CORR_WFRCTRANSIT_KEY.json",
+                    "corrMAGHIGHWAY": "WFv910_Segments__STOP__CORR_MAGHIGHWAY_KEY.json",
+                    "corrMAGTRANSIT": "WFv910_Segments__STOP__CORR_MAGTRANSIT_KEY.json",
+                    "corrFREIGHT": "WFv910_Segments__STOP__CORR_FREIGHT_KEY.json"
+                }
+            }
+        }
+    ],
+    "trends": [
+        {
+            "scnTrendCode": "RTP",
+            "alias": "RTP",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "EFRTP",
+            "alias": "RTP with External Forces",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "NB28",
+            "alias": "No Build on TIP 2028 Network",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "NB32",
+            "alias": "No Build on Phase 1 2032 Network",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "NB42",
+            "alias": "No Build on Phase 2 2042 Network",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "Needs",
+            "alias": "Needs-Based",
+            "displayByDefault": true
+        },
+        {
+            "scnTrendCode": "NeedsMAG",
+            "alias": "Needs-Based MAG",
+            "displayByDefault": true
+        }
+    ],
+    "scenarios": [
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "BY",
+            "scnYear": 2019,
+            "scnCode": "WFv910__BY__2019",
+            "scnTrendCodes": [
+                "RTP",
+                "EFRTP",
+                "NB28",
+                "NB32",
+                "NB42",
+                "Needs",
+                "NeedsMAG"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "OY",
+            "scnYear": 2023,
+            "scnCode": "WFv910__OY__2023",
+            "scnTrendCodes": [
+                "RTP",
+                "EFRTP",
+                "NB28",
+                "NB32",
+                "NB42",
+                "Needs",
+                "NeedsMAG"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "TIP",
+            "scnYear": 2028,
+            "scnCode": "WFv910__TIP__2028",
+            "scnTrendCodes": [
+                "RTP",
+                "EFRTP",
+                "NB28",
+                "NB32",
+                "NB42",
+                "Needs",
+                "NeedsMAG"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "RTP",
+            "scnYear": 2032,
+            "scnCode": "WFv910__RTP__2032",
+            "scnTrendCodes": [
+                "RTP",
+                "NB32",
+                "NB42"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "RTP",
+            "scnYear": 2042,
+            "scnCode": "WFv910__RTP__2042",
+            "scnTrendCodes": [
+                "RTP",
+                "NB42"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "scnCode": "WFv910__RTP__2050",
+            "scnTrendCodes": [
+                "RTP"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "EFRTP",
+            "scnYear": 2032,
+            "scnCode": "WFv910__EFRTP__2032",
+            "scnTrendCodes": [
+                "EFRTP"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "EFRTP",
+            "scnYear": 2042,
+            "scnCode": "WFv910__EFRTP__2042",
+            "scnTrendCodes": [
+                "EFRTP"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "EFRTP",
+            "scnYear": 2050,
+            "scnCode": "WFv910__EFRTP__2050",
+            "scnTrendCodes": [
+                "EFRTP"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB28",
+            "scnYear": 2032,
+            "scnCode": "WFv910__NB28__2032",
+            "scnTrendCodes": [
+                "NB28"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB28",
+            "scnYear": 2042,
+            "scnCode": "WFv910__NB28__2042",
+            "scnTrendCodes": [
+                "NB28"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB28",
+            "scnYear": 2050,
+            "scnCode": "WFv910__NB28__2050",
+            "scnTrendCodes": [
+                "NB28"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB32",
+            "scnYear": 2042,
+            "scnCode": "WFv910__NB32__2042",
+            "scnTrendCodes": [
+                "NB32"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB32",
+            "scnYear": 2050,
+            "scnCode": "WFv910__NB32__2050",
+            "scnTrendCodes": [
+                "NB32"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NB42",
+            "scnYear": 2050,
+            "scnCode": "WFv910__NB42__2050",
+            "scnTrendCodes": [
+                "NB42"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "Needs",
+            "scnYear": 2032,
+            "scnCode": "WFv910__Needs__2032",
+            "scnTrendCodes": [
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "Needs",
+            "scnYear": 2042,
+            "scnCode": "WFv910__Needs__2042",
+            "scnTrendCodes": [
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "Needs",
+            "scnYear": 2050,
+            "scnCode": "WFv910__Needs__2050",
+            "scnTrendCodes": [
+                "Needs"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NeedsMAG",
+            "scnYear": 2032,
+            "scnCode": "WFv910__NeedsMAG__2032",
+            "scnTrendCodes": [
+                "NeedsMAG"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NeedsMAG",
+            "scnYear": 2042,
+            "scnCode": "WFv910__NeedsMAG__2042",
+            "scnTrendCodes": [
+                "NeedsMAG"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "NeedsMAG",
+            "scnYear": 2050,
+            "scnCode": "WFv910__NeedsMAG__2050",
+            "scnTrendCodes": [
+                "NeedsMAG"
+            ]
+        }
+    ]
+}
