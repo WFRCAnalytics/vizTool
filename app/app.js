@@ -20,6 +20,8 @@ let configAttributes;
 let configAggregators;
 let configDividers;
 let configFilters;
+let configCards;
+let configMeasures;
 let menuItems;
 let onOpenMenuItem;
 let onOpenModelEntity;
@@ -91,6 +93,20 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
     const response = await fetch('config/scenarios.json');
     const dataScenario = await response.json();
     return dataScenario;
+  }
+
+  async function fetchConfigCards() {
+    console.log('app:fetchConfigCards');
+    const response = await fetch('config/cards.json');
+    const dataConfigCards = await response.json();
+    return dataConfigCards;
+  }
+
+  async function fetchConfigMeasures() {
+    console.log('app:fetchConfigMeasures');
+    const response = await fetch('config/measures.json');
+    const dataConfigMeasures = await response.json();
+    return dataConfigMeasures;
   }
 
   async function loadScenarios() {
@@ -246,6 +262,8 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
     configAttributes  = await fetchConfigAttributes ();
     configFilters     = await fetchConfigFilters();
     configDividers    = await fetchConfigDividers();
+    configCards       = await fetchConfigCards();
+    configMeasures    = await fetchConfigMeasures();
 
     configApp = await fetchConfigApp();
     const calciteMenu = document.querySelector('calcite-menu[slot="content-start"]');
