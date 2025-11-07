@@ -496,3 +496,65 @@ th, td {
   .no-select {
     user-select: none;
   }
+/* Main container */
+#dashboardMainDisplay {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  font-family: sans-serif;
+}
+
+/* Header */
+#dashboardHeader {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+#dashboardHeader h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+/* Dashboard grid */
+.dashboard {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+/* --- Card styling --- */
+.card,
+calcite-card {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden; /* ensures header corners are rounded */
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- Header inside card --- */
+.card-header {
+  background-color: #2b2b2b;   /* dark gray, or pick your brand color */
+  color: #ffffff;              /* reverse text */
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 10px 14px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* --- Card body --- */
+.card-body {
+  padding: 12px 14px;
+  background: white;
+  color: #333;
+}
+
+/* Responsive grid: 1 col on mobile, auto-fill on desktop */
+@media (min-width: 700px) {
+  .dashboard {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}

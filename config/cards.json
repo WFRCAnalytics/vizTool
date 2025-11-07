@@ -1,18 +1,19 @@
 {
   "cardPop": {
-    "cardTitle": "Population",
-    "cardMeasures": ["cmTotPop"]
+    "title": "Population",
+    "cardMeasures": ["mTotPop"]
   },
   "cardHH": {
-    "cardTitle": "Households"
+    "title": "Households"
   },
   "cardHHSize": {
-    "cardTitle": "HH Size"
+    "title": "HH Size",
+    "cardMeasures": ["mHHSize"]
   },
   "cardHHInc": {
-    "cardTitle": "HH Income"
+    "title": "HH Income"
   },
   "cardEmp": {
-    "cardTitle": "Employment"
+    "title": "Employment"
   }
 }

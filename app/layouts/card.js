@@ -11,19 +11,20 @@ class Card {
     const el = document.createElement('div');
     el.className = 'card';
 
-    const titleEl = document.createElement('div');
-    titleEl.className = 'card-title';
-    titleEl.textContent = this.title;
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.textContent = this.title;
 
-    const bodyEl = document.createElement('div');
-    this.measures.forEach(m => bodyEl.appendChild(m.renderMeasure()));
+    const body = document.createElement('div');
+    body.className = 'card-body';
 
-    el.append(titleEl, bodyEl);
+    // Render each measure row
+    this.measures.forEach(m => body.appendChild(m.renderMeasure()));
+
+    el.append(header, body);
     this.el = el;
 
-    // Only append if parentEl was given
     if (this.parentEl) this.parentEl.appendChild(el);
-
-    return el; // so VizDashboard can append it itself
+    return el;
   }
 }

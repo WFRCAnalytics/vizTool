@@ -12,7 +12,7 @@
     "textUncheckAll": "Uncheck All"
   },
   "onOpen": {
-    "menuItem": "Dashboard",
+    "menuItem": "Dashboards",
     "modelEntity": "Performance Measures",
     "centerMap": {
       "lat": 40.7707,
@@ -25,30 +25,14 @@
     "DISTSUPER": "6"
   },
   "menuItems": [
-    {"menuText": "Dashboard",
+    {"menuText": "Dashboards",
       "menuIconStart": "chart-gear",
       "modelEntities": [
         { "submenuText": "Performance Measures",
           "submenuIconStart": "desktop",
           "template": "vizDashboard",
           "templateSettings": {
-            "cards": [
-              {
-                "cardId": "cardPop"
-              },
-              {
-                "cardId": "cardHH"
-              },
-              {
-                "cardId": "cardHHSize"
-              },
-              {
-                "cardId": "cardHHInc"
-              },
-              {
-                "cardId": "cardEmp"
-              }
-            ]
+            "cards": ["cardPop","cardHH","cardHHSize","cardHHInc","cardEmp"]
           }
         }
       ]

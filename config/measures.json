@@ -1,8 +1,8 @@
 {
-  "cmTotPop": {
+  "mTotPop": {
     "cmIcon": "person"
   },
-  "cmHH": {
-    "cmIcon": "home"
+  "mHHSize": {
+    "cmIcon": "personal-homepage"
   }
 }
