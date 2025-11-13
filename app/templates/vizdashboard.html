@@ -1,8 +1,28 @@
-<div id="dashboardMainDisplay">
-    <div id="dashboardHeader">
-        <h2 id="Title"></h2>
-    </div>
+<calcite-shell>
+
+  <!-- RIGHT SIDEBAR -->
+  <calcite-shell-panel slot="panel-end" id="sidebarPanel" position="end">
+    <calcite-panel id="dashboardSidebar">
+      <div id="scenarioSidebarContent">
+        <!-- scenario selector -->
+      </div>
+    </calcite-panel>
+  </calcite-shell-panel>
+
+  <!-- MAIN CONTENT AREA -->
+  <div id="dashboardMainDisplay">
     <div id="dashboardContent">
-        <!-- Dashboard content goes here -->
+      <div class="dashboard"><!-- cards go here --></div>
     </div>
-</div>
+  </div>
+
+  <!-- FLOATING BUTTON (no slot) -->
+  <calcite-fab
+    id="toggleSidebar"
+    icon="dock-right"
+    text="Scenario"
+    label="Scenario"
+    style="position: fixed; right: 16px; bottom: 16px; z-index: 10000;"
+  ></calcite-fab>
+
+</calcite-shell>

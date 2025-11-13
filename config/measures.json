@@ -1,8 +1,150 @@
 {
   "mTotPop": {
-    "cmIcon": "person"
+    "faIcon": "fa-solid fa-users",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aHP",
+    "selected_filters" : {}
   },
-  "mHHSize": {
-    "cmIcon": "personal-homepage"
+  "mHhSize": {
+    "faIcon": "fa-solid fa-house-user",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 2,
+    "attribute": "aHP",
+    "selected_filters" : {},
+    "divide_attribute": "aHV",
+    "divide_selected_filters": {
+      "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mHh": {
+    "faIcon": "fa-solid fa-house",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aHV",
+    "selected_filters" :{
+      "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mVmt": {
+    "cmIcon": "driving-distance",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 0,
+    "attribute": "aVmt",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC","LT","MD","HV"]
+    }
+  },
+  "mPersonalVmt": {
+    "textIcon": "Pers VMT",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 0,
+    "attribute": "aVmt",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC"]
+    }
+  },
+  "mHbwVmtProduced": {
+    "textIcon": "Wrk VMT",
+    "jsonName": "j-zone-metrics",
+    "displayDecimals": 0,
+    "attribute": "aVMT",
+    "selected_filters" : {
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    }
+  },
+  "mVmtPerHh": {
+    "textIcon": "Pers VMT /HH",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 2,
+    "attribute": "aVmt",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aHV",
+    "divide_selected_filters": {
+      "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mHbwVmtPerWorker": {
+    "textIcon": "Avg Com",
+    "jsonName": "j-zone-metrics",
+    "displayDecimals": 2,
+    "attribute": "aVMT",
+    "selected_filters" : {
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aWk",
+    "divide_selected_filters": {}
+  },
+  "mWk": {
+    "textIcon": "Workers",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aWk"
+  },
+  "mWkPerHh": {
+    "textIcon": "Wrk/HH",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 2,
+    "attribute": "aWk",
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aHV",
+    "divide_selected_filters": {
+      "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mTotEmp": {
+    "faIcon": "fa-solid fa-user-tie",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aE3",
+    "selected_filters" : {
+      "fEmp3Cat": ["Ret","Ind","Oth"]
+    }
+  },
+  "mOthEmp": {
+    "faIcon": "fa-solid fa-building",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aE3",
+    "selected_filters" : {
+      "fEmp3Cat": ["Oth"]
+    }
+  },
+  "mRetEmp": {
+    "faIcon": "fa-solid fa-shopping-bag",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aE3",
+    "selected_filters" : {
+      "fEmp3Cat": ["Ret"]
+    }
+  },
+  "mIndEmp": {
+    "faIcon": "fa-solid fa-industry",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aE3",
+    "selected_filters" : {
+      "fEmp3Cat": ["Ind"]
+    }
   }
 }

@@ -93,11 +93,6 @@
             "scnTrendCode": "RTP",
             "alias": "RTP",
             "displayByDefault": true
-        },
-        {
-            "scnTrendCode": "NB28",
-            "alias": "No Build on TIP 2028 Network",
-            "displayByDefault": true
         }
     ],
     "scenarios": [
@@ -107,13 +102,16 @@
             "scnYear": 2019,
             "scnCode": "WFv910__BY__2019",
             "scnTrendCodes": [
-                "RTP",
-                "EFRTP",
-                "NB28",
-                "NB32",
-                "NB42",
-                "Needs",
-                "NeedsMAG"
+                "RTP"
+            ]
+        },
+        {
+            "modVersion": "WFv910",
+            "scnGroup": "RTP",
+            "scnYear": 2050,
+            "scnCode": "WFv910__RTP__2050",
+            "scnTrendCodes": [
+                "RTP"
             ]
         }
     ]

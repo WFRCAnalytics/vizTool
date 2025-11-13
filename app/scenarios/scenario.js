@@ -199,80 +199,104 @@ class Scenario {
     return attribute.filterGroup ?? "";
   }
   
-  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum") {
-    // Initialize objects to hold the aggregated sums, counts, and minimums
-    let aggregatedData = {};
-    let countData = {}; // To keep track of counts for averaging
-    let minData = {}; // To track minimum values
-    let maxData = {}; // To track minimum values
-  
-    const _parent = this;
-  
-    // Modified function to handle the summing, averaging, and minimum of specific attributes for each key
-    function aggregateFields(data, method) {
-      Object.keys(data).forEach(key => {
-        if (!aggregatedData[key]) {
-          aggregatedData[key] = {};
-          countData[key] = {};
-          minData[key] = {};
-          maxData[key] = {};
-        }
-  
-        _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
-          if (data[key].hasOwnProperty(attr.attributeCode)) {
-            if (!aggregatedData[key][attr.attributeCode]) {
-              aggregatedData[key][attr.attributeCode] = 0;
-              countData[key][attr.attributeCode] = 0;
-              minData[key][attr.attributeCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
-              maxData[key][attr.attributeCode] = 0;
-            }
-            aggregatedData[key][attr.attributeCode] += data[key][attr.attributeCode];
-            countData[key][attr.attributeCode] += 1;
-            if (data[key][attr.attributeCode] < minData[key][attr.attributeCode]) {
-              minData[key][attr.attributeCode] = data[key][attr.attributeCode];
-            }
-            if (data[key][attr.attributeCode] > maxData[key][attr.attributeCode]) {
-              maxData[key][attr.attributeCode] = data[key][attr.attributeCode];
-            }
-          }
-        });
-      });
-    }
-  
-    // Loop through each combination of filters
-    a_lstFilters.forEach(function(filter) {
-      let _data = [];
-      if (_parent.jsonData[a_jsonDataKey]) {
-        _data = _parent.jsonData[a_jsonDataKey].data[filter];
-      }
+/**
+ * Aggregate data for a list of filters.
+ * @param {string} a_jsonDataKey  - which jsonData bucket to read from
+ * @param {string[]} a_lstFilters - list of filter keys to aggregate (e.g., ["0_Urban", "1_Urban"])
+ * @param {"sum"|"average"|"minimum"|"maximum"} a_agFilterOptionsMethod - aggregation method
+ * @param {string|null} a_attributeCode - OPTIONAL: if provided, return only this attribute per key
+ * @returns {Object} If a_attributeCode is null: { key: {attrCode: value, ...}, ... }
+ *                   If a_attributeCode is set:  { key: value, ... }
+ */
+getDataForFilterOptionsList(
+  a_jsonDataKey,
+  a_lstFilters,
+  a_agFilterOptionsMethod = "sum",
+  a_attributeCode = null
+) {
+  // Aggregation stores
+  let aggregatedData = {};
+  let countData = {};
+  let minData = {};
+  let maxData = {};
 
-      // Aggregate the fields in the data object
-      if (_data) {
-        aggregateFields(_data, a_agFilterOptionsMethod);
+  const _parent = this;
+
+  // Utility: ensure nested objects exist
+  function ensureStores(key, attrCode) {
+    if (!aggregatedData[key]) {
+      aggregatedData[key] = {};
+      countData[key] = {};
+      minData[key] = {};
+      maxData[key] = {};
+    }
+    if (aggregatedData[key][attrCode] == null) {
+      aggregatedData[key][attrCode] = 0;
+      countData[key][attrCode] = 0;
+      minData[key][attrCode] = Number.POSITIVE_INFINITY;
+      maxData[key][attrCode] = Number.NEGATIVE_INFINITY;
+    }
+  }
+
+  // Aggregate fields for one data object
+  function aggregateFields(data) {
+    Object.keys(data).forEach(key => {
+      const attrs = _parent?.jsonData?.[a_jsonDataKey]?.attributes || [];
+      attrs.forEach(attr => {
+        const code = attr.attributeCode;
+
+        // If caller asked for a specific attribute, skip others
+        if (a_attributeCode && code !== a_attributeCode) return;
+
+        if (Object.prototype.hasOwnProperty.call(data[key], code)) {
+          const val = data[key][code];
+          if (val == null || isNaN(val)) return;
+
+          ensureStores(key, code);
+          aggregatedData[key][code] += val;
+          countData[key][code] += 1;
+          if (val < minData[key][code]) minData[key][code] = val;
+          if (val > maxData[key][code]) maxData[key][code] = val;
+        }
+      });
+    });
+  }
+
+  // Loop through each filter and aggregate
+  (a_lstFilters || []).forEach(filterKey => {
+    const bucket = _parent?.jsonData?.[a_jsonDataKey]?.data?.[filterKey];
+    if (bucket) aggregateFields(bucket);
+  });
+
+  // Compute post-aggregation transforms
+  if (a_agFilterOptionsMethod === "average") {
+    Object.keys(aggregatedData).forEach(key => {
+      Object.keys(aggregatedData[key]).forEach(code => {
+        const denom = countData[key][code] || 1; // avoid /0
+        aggregatedData[key][code] = aggregatedData[key][code] / denom;
+      });
+    });
+  } else if (a_agFilterOptionsMethod === "minimum") {
+    aggregatedData = minData;
+  } else if (a_agFilterOptionsMethod === "maximum") {
+    aggregatedData = maxData;
+  }
+  
+  // If a specific attribute was requested, flatten to { key: value }
+  if (a_attributeCode) {
+    const flat = {};
+    Object.keys(aggregatedData).forEach(key => {
+      // If attribute missing for a key, leave undefined or set null (choose your policy)
+      if (aggregatedData[key] && a_attributeCode in aggregatedData[key]) {
+        flat[key] = aggregatedData[key][a_attributeCode];
       }
     });
-
-    // If the method is "average", divide the aggregated sums by the counts
-    if (a_agFilterOptionsMethod === "average") {
-      Object.keys(aggregatedData).forEach(key => {
-        Object.keys(aggregatedData[key]).forEach(attributeCode => {
-          aggregatedData[key][attributeCode] /= countData[key][attributeCode];
-        });
-      });
-    }
-
-    // If the method is "minimum", replace the aggregated data with the minimum data
-    if (a_agFilterOptionsMethod === "minimum") {
-      aggregatedData = minData;
-    }
-
-    // If the method is "minimum", replace the aggregated data with the minimum data
-    if (a_agFilterOptionsMethod === "maximum") {
-      aggregatedData = maxData;
-    }
-  
-    return aggregatedData;
+    return flat;
   }
+
+  // Otherwise, return full { key: { attrCode: value, ... } }
+  return aggregatedData;
+}
   
   
 }

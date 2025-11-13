@@ -1,19 +1,33 @@
 {
+  "cardVmtTest": {
+    "title": "Average Commute Distance",
+    "measures": ["mHbwVmtPerWorker"]
+  },
+  "cardPopHhStats": {
+    "title": "Population/HH Stats",
+    "measures": ["mTotPop","mHh","mHhSize","mWk","mWkPerHh"]
+  },
   "cardPop": {
     "title": "Population",
-    "cardMeasures": ["mTotPop"]
+    "measures": ["mTotPop"]
   },
-  "cardHH": {
-    "title": "Households"
+  "cardHh": {
+    "title": "Households",
+    "measures": ["mHh"]
   },
-  "cardHHSize": {
+  "cardHhSize": {
     "title": "HH Size",
-    "cardMeasures": ["mHHSize"]
+    "measures": ["mHhSize"]
   },
-  "cardHHInc": {
+  "cardHhInc": {
     "title": "HH Income"
   },
   "cardEmp": {
-    "title": "Employment"
+    "title": "Employment",
+    "measures": ["mTotEmp","mOthEmp","mRetEmp","mIndEmp"]
+  },
+  "cardVmt": {
+    "title": "Vehicle Miles Traveled",
+    "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mWk","mHbwVmtPerWorker"]
   }
 }

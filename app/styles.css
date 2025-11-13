@@ -510,17 +510,36 @@ th, td {
   border-bottom: 1px solid #ddd;
 }
 
-#dashboardHeader h2 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
 /* Dashboard grid */
 .dashboard {
   display: grid;
   gap: 12px;
   padding: 12px;
 }
+@media (min-width: 700px) {
+  .dashboard {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}
+
+/* Make sure FAB floats above content */
+calcite-fab {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+/* Sidebar width (works for panel-start or panel-end) */
+#sidebarPanel {
+  /* Calcite shell-panel width token */
+  --calcite-shell-panel-width: 316px; /* ← set to your selector width */
+}
+
+/* Panel background (content + container) */
+#dashboardSidebar {
+  background-color: rgba(185, 185, 255, 0.95);
+}
+
 
 /* --- Card styling --- */
 .card,
@@ -557,4 +576,75 @@ calcite-card {
   .dashboard {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
+}
+.measure-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.measure-value {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.measure-compare-stack {
+  margin-left: auto;          /* push to right */
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.measure-main-value {
+  font-weight: 500;
+}
+
+.measure-comp-value {
+  opacity: 0.8;
+}
+
+.measure-row:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.measure-diff-hot {
+  color: #c62828; /* RED */
+  font-weight: 600;
+}
+
+.measure-diff-cool {
+  color: #1565c0; /* BLUE */
+  font-weight: 600;
+}
+
+
+.measure-text-icon {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.measure-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Fixed-width icon column (same for icons and text) */
+.measure-icon {
+  flex: 0 0 1.6rem;       /* same width for all */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text icon squished into that width, allowed to wrap */
+.measure-text-icon {
+  font-size: 0.65rem;     /* smaller so 2 lines fit nicely */
+  line-height: 0.9;
+  text-align: center;
+  word-break: break-word; /* allow breaking long tokens */
+  white-space: normal;    /* allow wrapping */
 }

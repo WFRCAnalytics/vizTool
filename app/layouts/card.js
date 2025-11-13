@@ -4,7 +4,8 @@ class Card {
     this.parentEl = parentEl; // might be null at first
     const cfg = configCards[cardId] || {};
     this.title = cfg.title || cardId;
-    this.measures = (cfg.cardMeasures || []).map(mId => new Measure(mId, this));
+    this.measures = (cfg.measures || []).map(mId => new Measure(mId, this));
+    console.log(`Initialized card ${this.cardId} with measures:`, this.measures);
   }
 
   render() {
