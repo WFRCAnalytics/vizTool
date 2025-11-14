@@ -915,7 +915,6 @@ async function setupDashboardSidebar() {
     shellPanel.collapsed = !shellPanel.collapsed;
   });
 
-  // Optional: expose a helper if you need programmatic control elsewhere
   window.openDashboardSidebar = function(open = true) {
     shellPanel.collapsed = !open;
   };
@@ -929,49 +928,6 @@ async function setupDashboardSidebar() {
       panel.collapsed = !panel.collapsed;
     });
   });
-  wireSidebarScenarioSelector();
-}
-
-async function wireSidebarScenarioSelector() {
-  const btnOpen  = document.getElementById('toggleSidebar');
-  const btnClose = document.getElementById('closeSidebar');
-  const sidebar  = document.getElementById('dashboardSidebar');
-  const bodyGrid = document.getElementById('dashboardBody');
-  const mount    = document.getElementById('scenarioSidebarContent');
-
-  const openSidebar = () => {
-    // Clone the existing selector used by the map Expand
-    const source = document.getElementById('scenarioSelector');
-    if (!source) {
-      console.warn('scenarioSelector not found');
-      return;
-    }
-
-    const clone = source.cloneNode(true);
-    clone.id = 'scenarioSelectorSidebar'; // avoid duplicate IDs
-    // Rebind handlers if your original used addEventListener on inner elements
-    if (typeof attachScenarioSelectorHandlers === 'function') {
-      attachScenarioSelectorHandlers(clone);
-    }
-
-    mount.replaceChildren(clone);
-
-    sidebar.classList.add('open');
-    bodyGrid.classList.add('has-sidebar');
-  };
-
-  const closeSidebar = () => {
-    sidebar.classList.remove('open');
-    bodyGrid.classList.remove('has-sidebar');
-    mount.innerHTML = '';
-  };
-
-  btnOpen?.addEventListener('click', () => {
-    if (sidebar.classList.contains('open')) closeSidebar();
-    else openSidebar();
-  });
-
-  btnClose?.addEventListener('click', closeSidebar);
 }
 
 async function attachScenarioSelectorHandlers(root) {

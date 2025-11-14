@@ -2,7 +2,7 @@
   "mTotPop": {
     "faIcon": "fa-solid fa-users",
     "jsonName": "j-zone-se",
-    "displayDecimals": 0,
+    "displayDecimals": 1,
     "attribute": "aHP",
     "selected_filters" : {}
   },
@@ -24,6 +24,16 @@
     "attribute": "aHV",
     "selected_filters" :{
       "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mHhZeroVeh": {
+    "faIcon": "fa-solid fa-person-walking",
+    "iconHoverText": "Zero Car Households",
+    "jsonName": "j-zone-se",
+    "displayDecimals": 0,
+    "attribute": "aHV",
+    "selected_filters" :{
+      "fVehNum": ["0"]
     }
   },
   "mVmt": {
@@ -84,6 +94,74 @@
     "jsonName": "j-zone-metrics",
     "displayDecimals": 2,
     "attribute": "aVMT",
+    "selected_filters" : {
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aWk",
+    "divide_selected_filters": {}
+  },
+  "mVht": {
+    "cmIcon": "driving-time",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 0,
+    "attribute": "aVht",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC","LT","MD","HV"]
+    }
+  },
+  "mPersonalVht": {
+    "textIcon": "Pers VHT",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 0,
+    "attribute": "aVht",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC"]
+    }
+  },
+  "mHbwVhtProduced": {
+    "textIcon": "Wrk VHT",
+    "jsonName": "j-zone-metrics",
+    "displayDecimals": 0,
+    "attribute": "aVHT",
+    "selected_filters" : {
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    }
+  },
+  "mVhtPerHh": {
+    "textIcon": "Pers VHT /HH",
+    "jsonName": "j-roadway-trends",
+    "displayDecimals": 2,
+    "attribute": "aVht",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["PC"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aHV",
+    "divide_selected_filters": {
+      "fVehNum": ["0","1","2","3p"]
+    }
+  },
+  "mHbwVhtPerWorker": {
+    "textIcon": "Avg Com",
+    "jsonName": "j-zone-metrics",
+    "displayDecimals": 2,
+    "attribute": "aVHT",
     "selected_filters" : {
       "fTod4": ["AM","MD","PM","EV"],
       "fPurp12": ["HBW"],

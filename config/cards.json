@@ -4,7 +4,7 @@
     "measures": ["mHbwVmtPerWorker"]
   },
   "cardPopHhStats": {
-    "title": "Population/HH Stats",
+    "title": "Population & Household Stats",
     "measures": ["mTotPop","mHh","mHhSize","mWk","mWkPerHh"]
   },
   "cardPop": {
@@ -13,7 +13,7 @@
   },
   "cardHh": {
     "title": "Households",
-    "measures": ["mHh"]
+    "measures": ["mHh","mHhZeroVeh"]
   },
   "cardHhSize": {
     "title": "HH Size",
@@ -29,5 +29,9 @@
   "cardVmt": {
     "title": "Vehicle Miles Traveled",
     "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mWk","mHbwVmtPerWorker"]
+  },
+  "cardVht": {
+    "title": "Vehicle Hours Traveled",
+    "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mWk","mHbwVhtPerWorker"]
   }
 }

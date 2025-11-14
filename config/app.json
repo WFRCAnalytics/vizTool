@@ -32,7 +32,7 @@
           "submenuIconStart": "desktop",
           "template": "vizDashboard",
           "templateSettings": {
-            "cards": ["cardPop","cardHh","cardHhSize","cardPopHhStats","cardEmp","cardVmt"]
+            "cards": ["cardPop","cardHh","cardHhSize","cardPopHhStats","cardEmp","cardVmt","cardVht"]
           }
         }
       ]

@@ -6,7 +6,8 @@ class Measure {
     const cfg = (configMeasures || {})[measureId] || {};
     this.cmIcon  = cfg.cmIcon;      // Calcite icon name (optional)
     this.faIcon  = cfg.faIcon;      // Font Awesome icon name (optional)
-    this.textIcon = cfg.textIcon || null;   // 👈 NEW
+    this.textIcon = cfg.textIcon || null;
+    this.iconTitle = cfg.iconTitle || cfg.iconHoverText || null;
     this.jsonName = cfg.jsonName;
     this.attribute = cfg.attribute;
     this.selectedFilters = cfg.selected_filters || {};
@@ -82,6 +83,12 @@ class Measure {
     // Icon wrapper with fixed width
     const iconWrap = document.createElement('div');
     iconWrap.className = 'measure-icon';
+
+    if (this.iconTitle) {
+      iconWrap.title = this.iconTitle;
+      iconWrap.setAttribute('aria-label', this.iconTitle); // (nice for accessibility)
+    }
+
     const iconEl = this.renderIcon();
     if (iconEl) iconWrap.appendChild(iconEl);
     row.append(iconWrap);
