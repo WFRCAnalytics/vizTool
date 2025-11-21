@@ -294,43 +294,128 @@ class Measure {
       _textComp = compareMode === 'compare' ? formatNumber(_valueComp) : "";
     }
 
+    // --- Direction arrow badge ---
+    const arrowWrap = document.createElement("div");
+    arrowWrap.className = "measure-arrow";
+
+    let arrow = "";
+    let intensity = 0;
+
+    if (compareMode === "compare" && !Number.isNaN(_valueDisp)) {
+
+      // NORMAL ARROWS (NOT reversed)
+      if (_valueDisp > 0) arrow = "▲";
+      else if (_valueDisp < 0) arrow = "▼";
+      else arrow = "";
+
+      // --- INTENSITY CALC ---
+      // For diff: use absolute diff relative to main value
+      // For pctdiff: use absolute % difference directly
+      let base = compareType === "pctdiff"
+        ? Math.abs(_valueDisp)          // already normalized (0–1+)
+        : Math.abs(_valueDisp) / (_valueMain || 1);
+
+      // Clamp between 0 and 1
+      intensity = Math.min(base, 1);
+
+      // Convert intensity → 20–100% lightness
+      // Lower diff → light red/blue
+      // Higher diff → deep red/blue
+      let lightness = 80 - intensity * 50; // 80% → 30%
+
+      if (_valueDisp > 0) {
+        arrowWrap.style.backgroundColor = `hsl(0, 70%, ${lightness}%)`;   // red tones
+      } else if (_valueDisp < 0) {
+        arrowWrap.style.backgroundColor = `hsl(215, 70%, ${lightness}%)`; // blue tones
+      } else {
+        arrowWrap.style.backgroundColor = `hsl(0, 0%, 70%)`;              // neutral gray
+      }
+
+    } else {
+      // No compare
+      arrow = "";
+      arrowWrap.style.backgroundColor = `hsl(0, 0%, 70%)`;
+    }
+
+    arrowWrap.textContent = arrow;
+
+    // Only show arrow if compare is enabled AND comp scenario exists
+    if (compareMode === "compare" && !Number.isNaN(_valueDisp)) {
+      row.append(arrowWrap);
+    }
+
     // --- Middle: main / diff / pctdiff value ---
     const valueEl = document.createElement('span');
     valueEl.className = 'measure-value';
     valueEl.textContent = _textDisp;
 
-    // Color diff when comparing: red for positive (hot), blue for negative (cool)
-    if (compareMode === 'compare' && _valueDisp != null && !Number.isNaN(_valueDisp)) {
-      const isPct = compareType === 'pctdiff';
-      const epsilon = isPct ? 1e-6 : 1e-12; // tolerance for "zero"
-      if (Math.abs(_valueDisp) > epsilon) {
-        if (_valueDisp > 0) {
-          valueEl.classList.add('measure-diff-hot');  // red
-        } else if (_valueDisp < 0) {
-          valueEl.classList.add('measure-diff-cool'); // blue
-        }
+
+    // --- Apply intensity-based color to the main measure value ---
+    if (compareMode === "compare" && !Number.isNaN(_valueDisp)) {
+
+      // Use same intensity we computed earlier
+      let base = compareType === "pctdiff"
+        ? Math.abs(_valueDisp)
+        : Math.abs(_valueDisp) / (_valueComp || 1);
+
+      let intensity = Math.min(base, 1);       // clamp 0–1
+      let lightness = 80 - intensity * 50;     // 80% → 30%
+
+      if (_valueDisp > 0) {
+        valueEl.style.color = `hsl(0, 70%, ${lightness}%)`;      // red gradient
+      } else if (_valueDisp < 0) {
+        valueEl.style.color = `hsl(215, 70%, ${lightness}%)`;    // blue gradient
+      } else {
+        valueEl.style.color = `hsl(0, 0%, 35%)`;                 // neutral / gray
       }
     }
 
     row.append(valueEl);
 
-    // --- Right side: stacked main / comp values in compare mode ---
+    // --- Right side: table-style main / comp values in compare mode ---
     if (compareMode === 'compare') {
-      const stack = document.createElement('div');
-      stack.className = 'measure-compare-stack';
 
-      const mainEl = document.createElement('div');
-      mainEl.className = 'measure-main-value';
-      mainEl.textContent = _textMain;
+      // NEW container that pushes to far right
+      const rightWrap = document.createElement('div');
+      rightWrap.className = 'measure-compare-right';
 
-      const compEl = document.createElement('div');
-      compEl.className = 'measure-comp-value';
-      compEl.textContent = _textComp;
+      const table = document.createElement('div');
+      table.className = 'measure-compare-table';
 
-      stack.append(mainEl, compEl);
-      row.append(stack);
+      // BEFORE
+      const rowBefore = document.createElement('div');
+      rowBefore.className = 'measure-compare-row';
+
+      const labelBefore = document.createElement('div');
+      labelBefore.className = 'measure-compare-label';
+      labelBefore.textContent = "Before";
+
+      const valueBefore = document.createElement('div');
+      valueBefore.className = 'measure-comp-value';
+      valueBefore.textContent = _textComp;
+
+      rowBefore.append(labelBefore, valueBefore);
+
+      // AFTER
+      const rowAfter = document.createElement('div');
+      rowAfter.className = 'measure-compare-row';
+
+      const labelAfter = document.createElement('div');
+      labelAfter.className = 'measure-compare-label';
+      labelAfter.textContent = "After";
+
+      const valueAfter = document.createElement('div');
+      valueAfter.className = 'measure-main-value';
+      valueAfter.textContent = _textMain;
+
+      rowAfter.append(labelAfter, valueAfter);
+
+
+      table.append(rowBefore, rowAfter);
+      rightWrap.append(table);
+      row.append(rightWrap);
     }
-
+    
     return row;
   }
 

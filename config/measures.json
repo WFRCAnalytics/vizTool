@@ -2,7 +2,7 @@
   "mTotPop": {
     "faIcon": "fa-solid fa-users",
     "jsonName": "j-zone-se",
-    "displayDecimals": 1,
+    "displayDecimals": 0,
     "attribute": "aHP",
     "selected_filters" : {}
   },
