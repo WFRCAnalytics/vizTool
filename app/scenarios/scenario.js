@@ -14,18 +14,42 @@ class Scenario {
   // loadData has to be called after menuItems is loaded
   async loadData(dataMenu, updateProgress) {
     let jsonFileNames = new Set();
-    
+
     // Collect unique JSON file names
     dataMenu.forEach(menuItem => {
-      if (menuItem.modelEntities) {
-        menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
-            jsonFileNames.add(modelEntity.vizLayout.jsonName);
-          }
-        });
-      }
+      if (!menuItem.modelEntities) return;
+
+      menuItem.modelEntities.forEach(modelEntity => {
+        const vizLayout = modelEntity.vizLayout;
+        if (!vizLayout) return;
+
+        // 1) Direct jsonName on the vizLayout itself (non-dashboard or simple cases)
+        if (vizLayout.jsonName) {
+          jsonFileNames.add(vizLayout.jsonName);
+        }
+
+        // 2) If vizLayout is a vizDashboard instance, collect jsonNames from its cards' measures
+        const isVizDashboard = (typeof VizDashboard !== "undefined" && vizLayout instanceof VizDashboard)
+
+        if (isVizDashboard) {
+
+          vizLayout.cards.forEach(card => {
+            const cardConfig = configCards?.[card.cardId];
+            if (!cardConfig) return;
+
+            const measureIds = cardConfig.measures || []; // e.g. ["measurePopTotal","measurePopGrowth",...]
+            measureIds.forEach(measureId => {
+              const measureConfig = configMeasures?.[measureId];
+              if (measureConfig && measureConfig.jsonName) {
+                jsonFileNames.add(measureConfig.jsonName);
+              }
+            });
+          });
+        }
+      });
     });
-    
+
+    // Update total files
     totalFilesToLoad += jsonFileNames.size;
 
     // Fetch and store data, and update progress after each file is fetched
