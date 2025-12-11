@@ -2,6 +2,7 @@
 class VizDashboard {
   constructor(data, modelEntity) {
     console.log('vizdashboard:construct');
+    this.id = modelEntity.id + '-' + this.generateIdFromText(modelEntity.submenuText); // use provided id or generate one if not provided
     this.data = data;
     this.modelEntity = modelEntity;
 
@@ -11,12 +12,33 @@ class VizDashboard {
     // Create card objects (store them so we can render later)
     this.cards = (data.cards || []).map(cardData => {
       const cardId = typeof cardData === 'string' ? cardData : cardData.cardId;
-      return new Card(cardId, null); // parent will be attached in render()
+      return new Card(cardId, this, this);
     });
+    
+    this.geos = [];
+    
+    this.sidebar = new VizSidebar(data.attributes,
+                                  data.attributeSelected,
+                                  data.attributeTitle,
+                                  data.attributeInfoTextHtml,
+                                  data.filters,
+                                  data.aggregators,
+                                  data.aggregatorSelected,
+                                  data.aggregatorTitle,
+                                  data.dividers,
+                                  data.dividerSelected,
+                                  data.dividerTitle,
+                                  this)
+
+  }
+
+  generateIdFromText(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
   // Renders the cards into the dashboardContent div
   updateDisplay() {
+    
     // Clear existing content
     this.divDashboard.innerHTML = '';
 
@@ -32,5 +54,31 @@ class VizDashboard {
 
     // Finally, attach wrapper to the dashboardContent div
     this.divDashboard.appendChild(wrapper);
+  }
+
+  renderSidebar() {
+    this.sidebar.render();
+  }
+  
+  afterUpdateSidebar() {
+    console.log('vizdashboard:afterUpdateSidebar');
+    this.updateDisplay();
+  }
+
+  afterUpdateAggregator() {
+    console.log('vizdashboard:afterUpdateAggregator:' + this.id);
+    this.sidebar.render();
+    this.afterUpdateSidebar();
+  }
+
+  getSelectedAggregator() {
+    let aggr = null;
+
+    if (this.sidebar && typeof this.sidebar.getSelectedAggregator === "function") {
+      aggr = this.sidebar.getSelectedAggregator();
+    } else {
+      console.warn("getSelectedAggregator does NOT exist on sidebar");
+    }
+    return aggr;
   }
 }

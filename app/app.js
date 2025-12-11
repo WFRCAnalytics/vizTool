@@ -439,7 +439,7 @@ function(esriConfig, Map, MapView, Expand, BasemapToggle, Zoom) {
     }
     
     // After updating both Main and Comp sets:
-    const headerRoot = document.getElementById('scenarioSidebarContent')?.firstElementChild;
+    const headerRoot = document.getElementById('dashboardScenarioSelector')?.firstElementChild;
     if (headerRoot) {
       syncHeaderScenarioFromMap(headerRoot);
     }
@@ -944,7 +944,7 @@ async function attachScenarioSelectorHandlers(root) {
 
 
 async function mountScenarioSelectorInHeaderIfPresent() {
-  const mount = document.getElementById('scenarioSidebarContent');
+  const mount = document.getElementById('dashboardScenarioSelector');
   if (!mount) return; // header not on this page
 
   // Build a fresh header instance

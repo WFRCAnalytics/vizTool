@@ -1,6 +1,10 @@
 class VizSidebar {
   constructor(attributes, attributeSelected, attributeTitle, attributeInfoTextHtml, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
-    this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    if (attributeTitle) {
+      this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    } else {
+      this.id = "vizsidebar-" + Math.random().toString(36); // fallback id
+    }
 
     // link to parent
     this.vizLayout = vizLayout;
@@ -47,7 +51,7 @@ class VizSidebar {
                                             aggregatorSelected,
                                             aggregatorOptions,
                                             this);
-      if (vizLayout.modelEntity.template==='vizTrends') {
+      if (vizLayout.modelEntity.template==='vizTrends' || vizLayout.modelEntity.template==='vizDashboard') {
         this.aggregatorFilter = new Filter (null, this.vizLayout, currentAggregator.filterData, {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
       }
       
@@ -87,7 +91,7 @@ class VizSidebar {
     // Define the elements to process
     const elements = [
       { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
-      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render()) },
+      { name: "AttributeFilters", render: () => this.filters ? this.filters.map(filter => filter.render()) : null},
       { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
       { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
       { name: "Dividers", render: () => this.dividerSelect ? this.dividerSelect.render() : null },
@@ -283,7 +287,7 @@ class VizSidebar {
   }
 
   afterUpdateAggregator() {
-    if (this.vizLayout.modelEntity.template==='vizTrends') {
+    if (this.vizLayout.modelEntity.template!=='vizMap') {
       const selectedAggregator = this.getSelectedAggregator();
       this.aggregatorFilter = new Filter(
           null,

@@ -1,7 +1,8 @@
 class Card {
-  constructor(cardId, parentEl) {
+  constructor(cardId, parentEl, vizLayout) {
     this.cardId = cardId;
     this.parentEl = parentEl; // might be null at first
+    this.vizLayout = vizLayout;
     const cfg = configCards[cardId] || {};
     this.title = cfg.title || cardId;
     this.measures = (cfg.measures || []).map(mId => new Measure(mId, this));
@@ -23,9 +24,7 @@ class Card {
     this.measures.forEach(m => body.appendChild(m.renderMeasure()));
 
     el.append(header, body);
-    this.el = el;
 
-    if (this.parentEl) this.parentEl.appendChild(el);
     return el;
   }
 }

@@ -2,6 +2,8 @@
   "mTotPop": {
     "faIcon": "fa-solid fa-users",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aHP",
     "selected_filters" : {}
@@ -9,6 +11,8 @@
   "mHhSize": {
     "faIcon": "fa-solid fa-house-user",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 2,
     "attribute": "aHP",
     "selected_filters" : {},
@@ -19,7 +23,10 @@
   },
   "mHh": {
     "faIcon": "fa-solid fa-house",
+    "iconHoverText": "All Households",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aHV",
     "selected_filters" :{
@@ -30,6 +37,8 @@
     "faIcon": "fa-solid fa-person-walking",
     "iconHoverText": "Zero Car Households",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aHV",
     "selected_filters" :{
@@ -38,7 +47,10 @@
   },
   "mVmt": {
     "cmIcon": "driving-distance",
+    "iconHoverText": "Total Vehicle Miles Traveled",
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 0,
     "attribute": "aVmt",
     "selected_filters" : {
@@ -50,7 +62,10 @@
   },
   "mPersonalVmt": {
     "textIcon": "Pers VMT",
+    "iconHoverText": "Personal Vehicle Miles Traveled",
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 0,
     "attribute": "aVmt",
     "selected_filters" : {
@@ -62,7 +77,10 @@
   },
   "mHbwVmtProduced": {
     "textIcon": "Wrk VMT",
+    "iconHoverText": "Home Based Work Vehicle Miles Traveled",
     "jsonName": "j-zone-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aVMT",
     "selected_filters" : {
@@ -74,7 +92,10 @@
   },
   "mVmtPerHh": {
     "textIcon": "Pers VMT /HH",
+    "iconHoverText": "Personal Vehicle Miles Traveled per Household", 
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 2,
     "attribute": "aVmt",
     "selected_filters" : {
@@ -91,7 +112,10 @@
   },
   "mHbwVmtPerWorker": {
     "textIcon": "Avg Com",
+    "iconHoverText": "Personal Vehicle Miles Traveled per Worker",
     "jsonName": "j-zone-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 2,
     "attribute": "aVMT",
     "selected_filters" : {
@@ -106,7 +130,10 @@
   },
   "mVht": {
     "cmIcon": "driving-time",
+    "iconHoverText": "Total Vehicle Hours Traveled",
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 0,
     "attribute": "aVht",
     "selected_filters" : {
@@ -118,7 +145,10 @@
   },
   "mPersonalVht": {
     "textIcon": "Pers VHT",
+    "iconHoverText": "Personal Vehicle Hours Traveled",
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 0,
     "attribute": "aVht",
     "selected_filters" : {
@@ -130,7 +160,10 @@
   },
   "mHbwVhtProduced": {
     "textIcon": "Wrk VHT",
+    "iconHoverText": "Home Based Work Vehicle Hours Traveled",
     "jsonName": "j-zone-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aVHT",
     "selected_filters" : {
@@ -142,7 +175,10 @@
   },
   "mVhtPerHh": {
     "textIcon": "Pers VHT /HH",
+    "iconHoverText": "Personal Vehicle Hours Traveled per Household",
     "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
     "displayDecimals": 2,
     "attribute": "aVht",
     "selected_filters" : {
@@ -159,7 +195,10 @@
   },
   "mHbwVhtPerWorker": {
     "textIcon": "Avg Com",
+    "iconHoverText": "Personal Vehicle Hours Traveled per Worker",
     "jsonName": "j-zone-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 2,
     "attribute": "aVHT",
     "selected_filters" : {
@@ -174,16 +213,23 @@
   },
   "mWk": {
     "textIcon": "Workers",
+    "iconHoverText": "Workers",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aWk"
   },
   "mWkPerHh": {
     "textIcon": "Wrk/HH",
+    "iconHoverText": "Workers per Household",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 2,
     "attribute": "aWk",
     "divide_jsonName": "j-zone-se",
+    "divide_baseGeoJsonKey": "taz",
     "divide_attribute": "aHV",
     "divide_selected_filters": {
       "fVehNum": ["0","1","2","3p"]
@@ -191,7 +237,10 @@
   },
   "mTotEmp": {
     "faIcon": "fa-solid fa-user-tie",
+    "iconHoverText": "Total Employment",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aE3",
     "selected_filters" : {
@@ -200,7 +249,10 @@
   },
   "mOthEmp": {
     "faIcon": "fa-solid fa-building",
+    "iconHoverText": "Office Employment",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aE3",
     "selected_filters" : {
@@ -209,7 +261,10 @@
   },
   "mRetEmp": {
     "faIcon": "fa-solid fa-shopping-bag",
+    "iconHoverText": "Retail Employment",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aE3",
     "selected_filters" : {
@@ -218,11 +273,28 @@
   },
   "mIndEmp": {
     "faIcon": "fa-solid fa-industry",
+    "iconHoverText": "Industrial Employment",
     "jsonName": "j-zone-se",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayDecimals": 0,
     "attribute": "aE3",
     "selected_filters" : {
       "fEmp3Cat": ["Ind"]
+    }
+  },
+  "mTotTrips": {
+    "textIcon": "Tot Trips",
+    "iconHoverText": "Total Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayDecimals": 0,
+    "attribute": "a0",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
     }
   }
 }

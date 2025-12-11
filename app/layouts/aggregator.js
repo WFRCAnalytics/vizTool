@@ -12,11 +12,10 @@ class Aggregator {
     }
 
     this.agTitleText         = _configAggregator.agTitleText;
-    this.agCodeLabelField    = _configAggregator.agCodeLabelField;
     this.agOptions           = _configAggregator.agOptions;
     this.agGeoJsonKey        = _configAggregator.agGeoJsonKey;
     this.agCodeLabelField    = _configAggregator.agCodeLabelField,
-    this.selected            = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
+    this.defaultSelected     = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
 
     let _options      = [];
     let _optionsAg    = [];
@@ -236,7 +235,7 @@ class Aggregator {
       alias           : this.agTitleText                  ,
       fWidget         : "checkboxes"                      ,
       fOptions        : _options                          ,
-      fSelected       : this.selected                     ,
+      fSelected       : this.defaultSelected              ,
       subAgDisplayName: _configAggregator.subAgDisplayName,
       subAgSelected   : _configAggregator.subAgSelected   ,
       subAgOptions    : _optionsSubAg

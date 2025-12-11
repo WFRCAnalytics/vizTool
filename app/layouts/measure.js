@@ -14,7 +14,10 @@ class Measure {
     this.divideAttribute = cfg.divide_attribute || null;
     this.divideSelectedFilters = cfg.divide_selected_filters || {};
     this.agFilterOptionsMethod = cfg.agFilterOptionsMethod || "sum";
-    
+    this.baseGeoJsonKey = cfg.baseGeoJsonKey || null;
+    this.divideBaseGeoJsonKey = cfg.divide_baseGeoJsonKey || null; 
+    this.baseGeoJsonId = cfg.baseGeoJsonId || null;
+
     // optional different jsonName for denominator
     this.divideJsonName = cfg.divide_jsonName || null;
 
@@ -22,7 +25,6 @@ class Measure {
     const dec = cfg.displayDecimals;
     this.displayDecimals = Number.isFinite(dec) ? dec : 0;
   }
-
 
   toLabel(id) { return id.replace(/^m/, "").replace(/([A-Z])/g, " $1").trim(); }
 
@@ -77,6 +79,7 @@ class Measure {
 
   // --- Measure row renderer ---
   renderMeasure() {
+
     const row = document.createElement('div');
     row.className = 'measure-row';
 
@@ -103,7 +106,7 @@ class Measure {
       return row;
     }
 
-    // --- Helpers ---
+        // --- Helpers ---
     const safeSum = (obj) => {
       if (!obj || typeof obj !== "object") return 0;
       let sum = 0;
@@ -112,6 +115,45 @@ class Measure {
         const n = Number(obj[key]);
         if (!Number.isNaN(n)) sum += n;
       }
+      return sum;
+    };
+
+    // Build a lookup set: which TAZIDs have DISTLRG == 1?
+    const buildFilterSet = (lookupArray, field = "DISTLRG", matchValue = 1) => {
+      return new Set(
+        lookupArray
+          .filter(r => r[field] === matchValue)
+          .map(r => String(r.TAZID)) // make keys match object keys
+      );
+    };
+
+    function normalizeKey(k) {
+      // Convert numeric strings to numbers; leave others as strings
+      return (!isNaN(k) && k !== "" && k !== null) ? Number(k) : k;
+    }
+
+    // Filtered summation
+    const filteredSafeSum = (obj, allowedset) => {
+      if (!obj || typeof obj !== "object") return 0;
+
+      let sum = 0;
+
+      // Normalize allowedset once (convert all numeric strings → numbers)
+      const normalizedAllowed = new Set(
+        Array.from(allowedset, normalizeKey)
+      );
+
+      for (const key in obj) {
+        if (!Object.hasOwn(obj, key)) continue;
+
+        const normalizedKey = normalizeKey(key);
+
+        if (!normalizedAllowed.has(normalizedKey)) continue;
+
+        const n = Number(obj[key]);
+        if (!Number.isNaN(n)) sum += n;
+      }
+
       return sum;
     };
 
@@ -180,6 +222,50 @@ class Measure {
     let _textMain = '';
     let _textComp = '';
 
+    //agCodeLabelField : "PLANAREA"
+    //agGeoJsonKey : "planarea"
+    
+    // get summary geography
+
+    const _selectedAggregator = this.parentCard.vizLayout.getSelectedAggregator();
+
+    let _geos = [];
+
+    let aggregatorKeyFile;
+
+    function normalizeValue(v) {
+      // Convert numeric strings to numbers, otherwise return original
+      return (!isNaN(v) && v !== '' && v !== null) ? Number(v) : v;
+    }
+
+    if (_selectedAggregator) {
+      // Call this.getAggregatorKeyFile() once and store the result
+      aggregatorKeyFile = mainScenario.getAggregatorKeyFile(
+        _selectedAggregator,
+        this.baseGeoJsonKey
+      );
+
+      if (aggregatorKeyFile) {
+        // Normalize selected options
+        const selectedOptions = this.parentCard.vizLayout.sidebar
+          .aggregatorFilter
+          .getSelectedOptionsAsList()
+          .map(normalizeValue);
+
+        // Filter records using normalized comparison
+        const agRecords = aggregatorKeyFile.filter(record => {
+          const recVal = normalizeValue(record[_selectedAggregator.agCode]);
+          return selectedOptions.includes(recVal);
+        });
+
+        // Build geos
+        _geos = new Set(agRecords.map(r => r[this.baseGeoJsonId]));
+      } else {
+        _geos = [];
+      }
+    }
+
+
     // --- Numerator values (main / comp) ---
     const numCombos = this._getFilterCombinationsFor(this.selectedFilters);
 
@@ -191,7 +277,7 @@ class Measure {
         this.agFilterOptionsMethod,
         this.attribute
       );
-      const mainNum = safeSum(dataMainNum);
+      const mainNum = filteredSafeSum(dataMainNum, _geos);
 
       // Numerator: COMP
       let compNum = 0;
@@ -202,7 +288,7 @@ class Measure {
           this.agFilterOptionsMethod,
           this.attribute
         );
-        compNum = safeSum(dataCompNum);
+        compNum = filteredSafeSum(dataCompNum, _geos);
       }
 
       // --- Optional denominator (divide_attribute / divide_jsonName) ---
@@ -223,7 +309,7 @@ class Measure {
           this.agFilterOptionsMethod,
           this.divideAttribute
         );
-        const mainDen = safeSum(dataMainDen);
+        const mainDen = filteredSafeSum(dataMainDen, _geos);
 
         // Denominator: COMP
         let compDen = null;
@@ -234,7 +320,7 @@ class Measure {
             this.agFilterOptionsMethod,
             this.divideAttribute
           );
-          compDen = safeSum(dataCompDen);
+          compDen = filteredSafeSum(dataCompDen, _geos);
         }
 
         _valueMain = mainDen ? mainNum / mainDen : null;

@@ -3,10 +3,6 @@
     "title": "Average Commute Distance",
     "measures": ["mHbwVmtPerWorker"]
   },
-  "cardPopHhStats": {
-    "title": "Population & Household Stats",
-    "measures": ["mTotPop","mHh","mHhSize","mWk","mWkPerHh"]
-  },
   "cardPop": {
     "title": "Population",
     "measures": ["mTotPop"]
@@ -33,5 +29,9 @@
   "cardVht": {
     "title": "Vehicle Hours Traveled",
     "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mWk","mHbwVhtPerWorker"]
+  },
+  "cardTrips": {
+    "title": "Trips",
+    "measures": ["mTotTrips"]
   }
 }
