@@ -21,9 +21,12 @@ class Measure {
     // optional different jsonName for denominator
     this.divideJsonName = cfg.divide_jsonName || null;
 
-    // decimals from config, default 0
-    const dec = cfg.displayDecimals;
-    this.displayDecimals = Number.isFinite(dec) ? dec : 0;
+    //// decimals from config, default 0
+    //const dec = cfg.displayDecimals;
+    //this.displayDecimals = Number.isFinite(dec) ? dec : 0;
+
+    this.displayFormat = cfg.displayFormat || "#,##0.00";
+
   }
 
   toLabel(id) { return id.replace(/^m/, "").replace(/([A-Z])/g, " $1").trim(); }
@@ -157,26 +160,60 @@ class Measure {
       return sum;
     };
 
-    // Per-measure decimals (from config)
-    const decimals = Number.isFinite(this.displayDecimals)
-      ? this.displayDecimals
-      : 0;
+    // Arcade-style number formatter
+    const applyArcadeFormat = (value, format) => {
+      let num = Number(value);
+      if (!Number.isFinite(num)) return "–";
+
+      // Percent handling
+      const isPercent = format.includes("%");
+      if (isPercent) num *= 100;
+
+      // Decimal places from format (e.g. 0.00 → 2)
+      const decimalMatch = format.match(/\.(0+)/);
+      const decimals = decimalMatch ? decimalMatch[1].length : 0;
+
+      // Format base number
+      let formatted = num.toFixed(decimals);
+
+      // Thousands separator
+      if (format.includes(",")) {
+        formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      // Inject into format string
+      return format
+        .replace(/[#0,.]+/, formatted)
+        .replace("%", isPercent ? "%" : "");
+    };
 
     const formatNumber = (val) => {
       if (val == null || Number.isNaN(val)) return "–";
-      return Number(val)
-        .toFixed(decimals)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      const num = Number(val);
+
+      // If displayFormat is provided, use it
+      if (typeof this.displayFormat === "string" && this.displayFormat.length) {
+        return applyArcadeFormat(num, this.displayFormat);
+      }
+
     };
 
     const formatSignedNumber = (val) => {
       if (val == null || Number.isNaN(val)) return "–";
       const n = Number(val);
-      const absStr = Math.abs(n)
-        .toFixed(decimals)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      if (!Number.isFinite(n)) return "–";
+
       const sign = n > 0 ? "+" : (n < 0 ? "−" : "");
-      return sign ? `${sign}${absStr}` : absStr;
+      const abs = Math.abs(n);
+
+      // Use same displayFormat as everything else
+      const absText =
+        (typeof this.displayFormat === "string" && this.displayFormat.length)
+          ? applyArcadeFormat(abs, this.displayFormat)
+          : String(abs);
+
+      return sign ? `${sign}${absText}` : absText;
     };
 
     // Percent diff always with 1 decimal (independent of displayDecimals)

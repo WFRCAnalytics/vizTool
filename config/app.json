@@ -32,7 +32,7 @@
           "submenuIconStart": "desktop",
           "template": "vizDashboard",
           "templateSettings": {
-            "cards": ["cardPop","cardHh","cardHhSize","cardEmp","cardVmt","cardVht","cardTrips"],
+            "cards": ["cardPop","cardHh","cardHhSize","cardEmp","cardVmt","cardVht","cardTrips","cardModeSplit"],
             "aggregatorTitle": "Select Summary Geography",
             "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","MAGHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected" : "PLANAREA"

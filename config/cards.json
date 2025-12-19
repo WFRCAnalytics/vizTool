@@ -33,5 +33,9 @@
   "cardTrips": {
     "title": "Trips",
     "measures": ["mTotTrips"]
+  },
+  "cardModeSplit": {
+    "title": "Mode Split",
+    "measures": ["mAutoShare","mTransitShare","mBikeShare","mWalkShare"]
   }
 }

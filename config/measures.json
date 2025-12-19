@@ -4,7 +4,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aHP",
     "selected_filters" : {}
   },
@@ -13,7 +13,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aHP",
     "selected_filters" : {},
     "divide_attribute": "aHV",
@@ -27,7 +27,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aHV",
     "selected_filters" :{
       "fVehNum": ["0","1","2","3p"]
@@ -39,7 +39,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aHV",
     "selected_filters" :{
       "fVehNum": ["0"]
@@ -51,7 +51,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVmt",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -66,7 +66,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVmt",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -81,7 +81,7 @@
     "jsonName": "j-zone-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVMT",
     "selected_filters" : {
       "fTod4": ["AM","MD","PM","EV"],
@@ -96,7 +96,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aVmt",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -116,7 +116,7 @@
     "jsonName": "j-zone-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aVMT",
     "selected_filters" : {
       "fTod4": ["AM","MD","PM","EV"],
@@ -134,7 +134,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVht",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -149,7 +149,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVht",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -164,7 +164,7 @@
     "jsonName": "j-zone-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aVHT",
     "selected_filters" : {
       "fTod4": ["AM","MD","PM","EV"],
@@ -179,7 +179,7 @@
     "jsonName": "j-roadway-trends",
     "baseGeoJsonKey": "segment",
     "baseGeoJsonId": "SEGID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aVht",
     "selected_filters" : {
       "fRoadSegFuncGroup": ["Total"],
@@ -199,7 +199,7 @@
     "jsonName": "j-zone-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aVHT",
     "selected_filters" : {
       "fTod4": ["AM","MD","PM","EV"],
@@ -217,7 +217,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aWk"
   },
   "mWkPerHh": {
@@ -226,7 +226,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 2,
+    "displayFormat": "0.00",
     "attribute": "aWk",
     "divide_jsonName": "j-zone-se",
     "divide_baseGeoJsonKey": "taz",
@@ -241,7 +241,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aE3",
     "selected_filters" : {
       "fEmp3Cat": ["Ret","Ind","Oth"]
@@ -253,7 +253,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aE3",
     "selected_filters" : {
       "fEmp3Cat": ["Oth"]
@@ -265,7 +265,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aE3",
     "selected_filters" : {
       "fEmp3Cat": ["Ret"]
@@ -277,7 +277,7 @@
     "jsonName": "j-zone-se",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "aE3",
     "selected_filters" : {
       "fEmp3Cat": ["Ind"]
@@ -289,9 +289,100 @@
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
-    "displayDecimals": 0,
+    "displayFormat": "#,##0",
     "attribute": "a0",
     "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mAutoShare": {
+    "faIcon": "fa-solid fa-car-side",
+    "iconHoverText": "Auto Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aA",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "a0",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mTransitShare": {
+    "faIcon": "fa-solid fa-bus-side",
+    "iconHoverText": "Transit Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "a0",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mBikeShare": {
+    "faIcon": "fa-solid fa-bicycle",
+    "iconHoverText": "Bike Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aB",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "a0",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mWalkShare": {
+    "faIcon": "fa-solid fa-person-walking",
+    "iconHoverText": "Walk Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aW",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "a0",
+    "divide_selected_filters": {
       "fPurp5pAll": ["All"],
       "fTod2pDy":["Dy"],
       "fPA":["P"]
