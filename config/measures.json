@@ -387,5 +387,315 @@
       "fTod2pDy":["Dy"],
       "fPA":["P"]
     }
+  },
+  "mAutoTrips": {
+    "faIcon": "fa-solid fa-car-side",
+    "iconHoverText": "Auto Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aA",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  }, 
+  "mTransitTrips": {
+    "faIcon": "fa-solid fa-bus-side",
+    "iconHoverText": "Transit Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }  
+  },
+  "mBikeTrips": {
+    "faIcon": "fa-solid fa-bicycle",
+    "iconHoverText": "Bike Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aB",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mWalkTrips": {
+    "faIcon": "fa-solid fa-person-walking",
+    "iconHoverText": "Walk Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aW",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"]
+    }
+  },
+  "mCRTTrips": {
+    "faIcon": "fa-solid fa-train-subway",
+    "iconHoverText": "Commuter Rail Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["CRT"]
+    }  
+  },
+   "mCRTShare": {
+    "faIcon": "fa-solid fa-train-subway",
+    "iconHoverText": "Commuter Rail Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["CRT"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+  "mLRTTrips": {
+    "faIcon": "fa-solid fa-train-tram",
+    "iconHoverText": "Light Rail Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LRT"]
+    }  
+  },
+   "mLRTShare": {
+    "faIcon": "fa-solid fa-train-tram",
+    "iconHoverText": "Light Rail Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LRT"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+  "mBRTTrips": {
+    "textIcon": "BRT Trips",
+    "iconHoverText": "Bus Rapid Transit Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["BRT"]
+    }  
+  },
+   "mBRTShare": {
+    "textIcon": "BRT Shares",
+    "iconHoverText": "Bus Rapid Transit Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["BRT"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+  "mCORTrips": {
+    "textIcon": "Enhanced Bus Trips",
+    "iconHoverText": "Enhanced Bus Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["COR"]
+    }  
+  },
+   "mCORShare": {
+    "textIcon": "Enhanced Bus Share",
+    "iconHoverText": "Enhanced Bus Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["COR"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+"mEXPTrips": {
+    "textIcon": "Express Bus Trips",
+    "iconHoverText": "Express Bus Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["EXP"]
+    }  
+  },
+   "mEXPShare": {
+    "textIcon": "Express Bus Share",
+    "iconHoverText": "Express Bus Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["EXP"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+  "mLCLTrips": {
+    "textIcon": "Local Bus Trips",
+    "iconHoverText": "Local Bus Trips",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL"]
+    }  
+  },
+   "mLCLShare": {
+    "textIcon": "Local Bus Share",
+    "iconHoverText": "Local Bus Share",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0%",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL"]
+    },
+    "divide_jsonName": "j-zone-mode-trips",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_attribute": "aT",
+    "divide_selected_filters": {
+      "fPurp5pAll": ["All"],
+      "fTod2pDy":["Dy"],
+      "fPA":["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
   }
-}
+} 

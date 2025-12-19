@@ -36,6 +36,10 @@
   },
   "cardModeSplit": {
     "title": "Mode Split",
-    "measures": ["mAutoShare","mTransitShare","mBikeShare","mWalkShare"]
+    "measures": ["mAutoTrips","mAutoShare","mTransitTrips","mTransitShare","mBikeTrips","mBikeShare","mWalkTrips","mWalkShare"]
+  },
+  "cardTransitSplit": {
+    "title": "Transit Split",
+    "measures": ["mCRTTrips","mCRTShare","mLRTTrips","mLRTShare","mBRTTrips","mBRTShare","mCORTrips","mCORShare","mEXPTrips","mEXPShare","mLCLTrips","mLCLShare"]
   }
 }
