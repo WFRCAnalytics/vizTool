@@ -96,7 +96,7 @@ class VizSidebar {
     // Define the elements to process
     const elements = [
       { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
-      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render()) },
+      { name: "AttributeFilters", render: () => this.filters ? this.filters.map(filter => filter.render()) : null},
       { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
       { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
       { name: "Dividers", render: () => this.dividerSelect ? this.dividerSelect.render() : null },
@@ -354,7 +354,7 @@ class VizSidebar {
   // real map geometry (TAZ, district, etc.) - a Reference Map showing that geometry helps in
   // both. vizMap doesn't need it since it already IS the map.
   usesAggregatorFilter() {
-    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix';
+    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix' || this.vizLayout.modelEntity.template === 'vizDashboard';
   }
 
   // vizTrends uses the aggregatorFilter's checkbox list as a real series picker (which zones

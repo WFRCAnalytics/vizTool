@@ -1,0 +1,45 @@
+{
+  "cardVmtTest": {
+    "title": "Average Commute Distance",
+    "measures": ["mHbwVmtPerWorker"]
+  },
+  "cardPop": {
+    "title": "Population",
+    "measures": ["mTotPop"]
+  },
+  "cardHh": {
+    "title": "Households",
+    "measures": ["mHh","mHhZeroVeh"]
+  },
+  "cardHhSize": {
+    "title": "HH Size",
+    "measures": ["mHhSize"]
+  },
+  "cardHhInc": {
+    "title": "HH Income"
+  },
+  "cardEmp": {
+    "title": "Employment",
+    "measures": ["mTotEmp","mOthEmp","mRetEmp","mIndEmp"]
+  },
+  "cardVmt": {
+    "title": "Vehicle Miles Traveled",
+    "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mWk","mHbwVmtPerWorker"]
+  },
+  "cardVht": {
+    "title": "Vehicle Hours Traveled",
+    "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mWk","mHbwVhtPerWorker"]
+  },
+  "cardTrips": {
+    "title": "Trips",
+    "measures": ["mTotTrips"]
+  },
+  "cardModeSplit": {
+    "title": "Mode Split",
+    "measures": ["mAutoTrips","mAutoShare","mTransitTrips","mTransitShare","mBikeTrips","mBikeShare","mWalkTrips","mWalkShare"]
+  },
+  "cardTransitSplit": {
+    "title": "Transit Split",
+    "measures": ["mCRTTrips","mCRTShare","mLRTTrips","mLRTShare","mBRTTrips","mBRTShare","mCORTrips","mCORShare","mEXPTrips","mEXPShare","mLCLTrips","mLCLShare"]
+  }
+}

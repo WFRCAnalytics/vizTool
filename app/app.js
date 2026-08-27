@@ -21,6 +21,8 @@ let configAttributes;
 let configAggregators;
 let configDividers;
 let configFilters;
+let configCards;
+let configMeasures;
 let menuItems;
 let onOpenMenuItem;
 let onOpenModelEntity;
@@ -151,6 +153,20 @@ require([
     const response = await fetchWithTimeout("config/scenarios.json");
     const dataScenario = await response.json();
     return dataScenario;
+  }
+
+  async function fetchConfigCards() {
+    console.log('app:fetchConfigCards');
+    const response = await fetch('config/cards.json');
+    const dataConfigCards = await response.json();
+    return dataConfigCards;
+  }
+
+  async function fetchConfigMeasures() {
+    console.log('app:fetchConfigMeasures');
+    const response = await fetch('config/measures.json');
+    const dataConfigMeasures = await response.json();
+    return dataConfigMeasures;
   }
 
   async function loadScenarios() {
@@ -323,6 +339,8 @@ require([
     configAttributes = await fetchConfigAttributes();
     configFilters = await fetchConfigFilters();
     configDividers = await fetchConfigDividers();
+    configCards = await fetchConfigCards();
+    configMeasures = await fetchConfigMeasures();
 
     configApp = await fetchConfigApp();
     const calciteMenu = document.querySelector(
@@ -390,6 +408,7 @@ require([
       progressBar.value = 100;
       progressText.textContent = "100%";
     }
+    setupDashboardSidebar();
   }
 
   async function toggleCompare(element) {
@@ -560,6 +579,12 @@ require([
         selectedScenario_Comp = selectedScenario;
       }
     }
+    
+    // After updating both Main and Comp sets:
+    const headerRoot = document.getElementById('dashboardScenarioSelector')?.firstElementChild;
+    if (headerRoot) {
+      syncHeaderScenarioFromMap(headerRoot);
+    }
   }
 
   async function updateScenarioSelection(scenarioSelect) {
@@ -683,6 +708,7 @@ require([
     await loadScenarios();
     await loadMenuAndItems();
     await initVizMapListeners();
+    await mountScenarioSelectorInHeaderIfPresent();
   }
 
   async function loadAppConfig() {
@@ -1133,6 +1159,7 @@ require([
       const contentContainer = document.createElement("div");
       contentContainer.className = "scenario-selector-container";
 
+
       // Add some descriptive text
       const descriptionText = document.createElement("div");
       descriptionText.innerHTML = "<b>Scenario Selector<b>";
@@ -1400,4 +1427,207 @@ function checkAndHideProgressContainer() {
       }, 1000); // Adjust the time (in milliseconds) as needed
     }
   }
+}
+
+  // --- Sidebar integration script ---
+async function setupDashboardSidebar() {
+  const toggleBtn = document.getElementById('toggleSidebar');
+  const shellPanel = document.getElementById('sidebarPanel');
+
+  if (!toggleBtn || !shellPanel) {
+    console.warn('Sidebar elements not found in DOM');
+    return;
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    shellPanel.collapsed = !shellPanel.collapsed;
+  });
+
+  window.openDashboardSidebar = function(open = true) {
+    shellPanel.collapsed = !open;
+  };
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const fab = document.getElementById("toggleSidebar");
+    const panel = document.getElementById("sidebarPanel");
+    if (!fab || !panel) return;
+
+    fab.addEventListener("click", () => {
+      panel.collapsed = !panel.collapsed;
+    });
+  });
+}
+
+async function attachScenarioSelectorHandlers(root) {
+  // Example: delegate clicks inside the cloned selector
+  root.addEventListener('click', (e) => {
+    if (e.target.matches('[data-action="apply"]')) {
+      // ...apply action...
+    }
+  });
+  // Example: bind a specific control
+  const dd = root.querySelector('[data-role="scenario-dropdown"]');
+  dd?.addEventListener('change', (e) => { /* ... */ });
+}
+
+
+async function mountScenarioSelectorInHeaderIfPresent() {
+  const mount = document.getElementById('dashboardScenarioSelector');
+  if (!mount) return; // header not on this page
+
+  // Build a fresh header instance
+  const headerSelector = buildHeaderScenarioSelector();
+
+  // Initial sync from the canonical map controls (if they exist yet)
+  // If not yet, we will sync again after populateScenarioSelections runs.
+  syncHeaderScenarioFromMap(headerSelector);
+
+  // Event delegation: proxy header changes to canonical map selects
+  headerSelector.addEventListener('calciteSelectChange', proxyHeaderChangeToMap);
+
+  // Mount
+  mount.replaceChildren(headerSelector);
+
+  // Optional: re-sync when the comparison block toggles to ensure options are up-to-date
+  const compareBlock = headerSelector.querySelector('calcite-block');
+  compareBlock?.addEventListener('calciteBlockToggle', () => syncHeaderScenarioFromMap(headerSelector));
+}
+
+
+
+
+// -------- Scenario Selector (header) helpers --------
+
+const SCENARIO_ROLES_MAIN = ['modVersion_Main','scnGroup_Main','scnYear_Main'];
+const SCENARIO_ROLES_COMP = ['modVersion_Comp','scnGroup_Comp','scnYear_Comp'];
+const SCENARIO_ROLES_ALL  = [...SCENARIO_ROLES_MAIN, ...SCENARIO_ROLES_COMP, 'selectCompareType'];
+
+/** Build a header instance with unique IDs like "dashside-modVersion_Main" */
+function buildHeaderScenarioSelector() {
+  const idPrefix = 'dashside';
+
+  const container = document.createElement('div');
+  container.id = `${idPrefix}-selector-container`;
+  container.className = 'scenario-selector-container';
+
+  const description = document.createElement('div');
+  description.innerHTML = '<b>Scenario Selector</b>';
+  container.appendChild(description);
+
+  // main selects
+  SCENARIO_ROLES_MAIN.forEach(baseId => {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.alignItems = 'center';
+    wrap.style.width = '100%';
+
+    const sel = document.createElement('calcite-select');
+    sel.id = `${idPrefix}-${baseId}`;
+    sel.dataset.baseId = baseId; // link to canonical ID
+    sel.style.flexGrow = '1';
+    wrap.appendChild(sel);
+    container.appendChild(wrap);
+  });
+
+  // comparison block
+  const block = document.createElement('calcite-block');
+  block.id = `${idPrefix}-comparisonScenario`;
+  block.setAttribute('heading', 'Compare to:');
+  block.setAttribute('collapsible', true);
+
+  SCENARIO_ROLES_COMP.forEach(baseId => {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.alignItems = 'center';
+    wrap.style.width = '100%';
+
+    const sel = document.createElement('calcite-select');
+    sel.id = `${idPrefix}-${baseId}`;
+    sel.dataset.baseId = baseId;
+    sel.style.flexGrow = '1';
+    wrap.appendChild(sel);
+    block.appendChild(wrap);
+  });
+
+  const label = document.createElement('div');
+  label.innerHTML = '<br/>Compare Type';
+  label.id = `${idPrefix}-compare-type-label`;
+  block.appendChild(label);
+
+  // compare type select
+  const compareSel = document.createElement('calcite-select');
+  compareSel.id = `${idPrefix}-selectCompareType`;
+  compareSel.dataset.baseId = 'selectCompareType';
+
+  const optDiff = document.createElement('calcite-option');
+  optDiff.value = 'diff';
+  optDiff.textContent = 'Difference';
+
+  const optPct = document.createElement('calcite-option');
+  optPct.value = 'pctdiff';
+  optPct.textContent = 'Percent Difference';
+
+  compareSel.append(optDiff, optPct);
+
+  block.appendChild(compareSel);
+  container.appendChild(block);
+
+  return container;
+}
+
+/** Copy options + selection from a Calcite select to another */
+function mirrorCalciteSelect(fromSel, toSel) {
+  if (!fromSel || !toSel) return;
+  // Clear
+  toSel.innerHTML = '';
+  // Rebuild options
+  Array.from(fromSel.querySelectorAll('calcite-option')).forEach(srcOpt => {
+    const o = document.createElement('calcite-option');
+    o.value = srcOpt.value;
+    o.label = srcOpt.label;
+    // selected state
+    if (srcOpt.hasAttribute('selected')) o.setAttribute('selected', '');
+    toSel.appendChild(o);
+  });
+  // Ensure value mirrors if set
+  if (fromSel.value) {
+    toSel.value = fromSel.value;
+  }
+}
+
+/** Sync all header selects from canonical map controls */
+function syncHeaderScenarioFromMap(headerRoot) {
+  if (!headerRoot) return;
+  // map/canonical controls by baseId
+  SCENARIO_ROLES_ALL.forEach(baseId => {
+    const mapSel = document.getElementById(baseId);
+    const hdrSel = headerRoot.querySelector(`calcite-select[data-base-id="${baseId}"]`);
+    if (mapSel && hdrSel) mirrorCalciteSelect(mapSel, hdrSel);
+  });
+}
+
+/** When header select changes, update the canonical map select and fire the same event */
+function proxyHeaderChangeToMap(e) {
+  const hdrSel = e.target;
+  if (!(hdrSel && hdrSel.tagName === 'CALCITE-SELECT')) return;
+
+  const baseId = hdrSel.dataset.baseId;
+  const mapSel = document.getElementById(baseId);
+  if (!mapSel) return;
+
+  // Set the value on the canonical select by selecting matching option
+  const targetValue = hdrSel.value;
+
+  // Clear selection on map select
+  mapSel.querySelectorAll('calcite-option[selected]').forEach(o => o.removeAttribute('selected'));
+
+  const match = Array.from(mapSel.querySelectorAll('calcite-option')).find(o => o.value == targetValue);
+  if (match) match.setAttribute('selected', '');
+
+  // Update .value as well
+  mapSel.value = targetValue;
+
+  // Dispatch the same Calcite change event so existing listeners respond
+  const evt = new CustomEvent('calciteSelectChange', { bubbles: true });
+  mapSel.dispatchEvent(evt);
 }

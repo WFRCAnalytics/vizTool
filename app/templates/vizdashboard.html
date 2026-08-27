@@ -1,0 +1,34 @@
+<calcite-shell>
+
+  <!-- RIGHT SIDEBAR -->
+  <calcite-shell-panel slot="panel-end" id="sidebarPanel" position="end">
+    <calcite-panel id="dashboardSidebar">
+      <div id="dashboardScenarioSelector">
+        <!-- scenario selector -->
+      </div>
+      <div id="dashboardSidebar" class="sidebar">
+        <div class="colAttributes">
+          <div class="rowGeography" id="vizDashboardAggregator"></div>
+          <div class="rowGeography" id="vizDashboardAggregatorFilters"></div>
+        </div>
+      </div>
+    </calcite-panel>
+  </calcite-shell-panel>
+
+  <!-- MAIN CONTENT AREA -->
+  <div id="dashboardMainDisplay">
+    <div id="dashboardContent">
+      <div class="dashboard"><!-- cards go here --></div>
+    </div>
+  </div>
+
+  <!-- FLOATING BUTTON (no slot) -->
+  <calcite-fab
+    id="toggleSidebar"
+    icon="dock-right"
+    text="Scenario"
+    label="Scenario"
+    style="position: fixed; right: 16px; bottom: 16px; z-index: 10000;"
+  ></calcite-fab>
+
+</calcite-shell>

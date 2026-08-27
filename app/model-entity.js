@@ -38,6 +38,8 @@ class ModelEntity {
       this.vizLayout = new VizTrends(data.templateSettings, this);
     } else if (data.template=='vizMatrix') {
       this.vizLayout = new VizMatrix(data.templateSettings, this);
+    } else if (data.template=='vizDashboard') {
+      this.vizLayout = new VizDashboard(data.templateSettings, this);
     }
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
@@ -104,9 +106,9 @@ class ModelEntity {
 
       await ensureMainScenarioDataLoaded(activeLayout);
 
-      activeLayout.renderSidebar();  // Use the saved instance context here as well
-      activeLayout.updateScenarioSelector();  // Use the saved instance context here as well
-      activeLayout.updateDisplay();
+      activeLayout.renderSidebar?.();  // Use the saved instance context here as well
+      activeLayout.updateScenarioSelector?.();  // Use the saved instance context here as well
+      activeLayout.updateDisplay?.();
       //modelEntityInstance.displayJSONData();
     });
     return modelEntity;
@@ -212,9 +214,9 @@ class ModelEntity {
 
       await ensureMainScenarioDataLoaded(activeLayout);
 
-      this.vizLayout.renderSidebar();  // Use the saved instance context here as well
-      this.vizLayout.updateScenarioSelector();  // Must run before updateDisplay() - it initializes seriesSelect etc.
-      this.vizLayout.updateDisplay();
+      this.vizLayout.renderSidebar?.();  // Use the saved instance context here as well
+      this.vizLayout.updateScenarioSelector?.();  // Must run before updateDisplay() - it initializes seriesSelect etc.
+      this.vizLayout.updateDisplay?.();
     }
 
     //this.displayJSONData();

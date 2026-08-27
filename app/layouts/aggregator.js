@@ -12,11 +12,10 @@ class Aggregator {
     }
 
     this.agTitleText         = _configAggregator.agTitleText;
-    this.agCodeLabelField    = _configAggregator.agCodeLabelField;
     this.agOptions           = _configAggregator.agOptions;
     this.agGeoJsonKey        = _configAggregator.agGeoJsonKey;
     this.agCodeLabelField    = _configAggregator.agCodeLabelField,
-    this.selected            = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
+    this.defaultSelected     = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
 
     // The option lists below depend only on agCode plus already-loaded data, so they're
     // identical every time this agCode is requested. Without caching, every model entity
@@ -31,7 +30,7 @@ class Aggregator {
         alias           : this.agTitleText,
         fWidget         : "checkboxes",
         fOptions        : _cached.options,
-        fSelected       : this.selected,
+        fSelected       : this.defaultSelected,
         subAgDisplayName: _configAggregator.subAgDisplayName,
         subAgSelected   : _configAggregator.subAgSelected,
         subAgOptions    : _cached.optionsSubAg
@@ -266,7 +265,7 @@ class Aggregator {
       alias           : this.agTitleText                  ,
       fWidget         : "checkboxes"                      ,
       fOptions        : _options                          ,
-      fSelected       : this.selected                     ,
+      fSelected       : this.defaultSelected              ,
       subAgDisplayName: _configAggregator.subAgDisplayName,
       subAgSelected   : _configAggregator.subAgSelected   ,
       subAgOptions    : _optionsSubAg

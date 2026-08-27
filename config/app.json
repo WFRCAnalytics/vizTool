@@ -25,6 +25,21 @@
     "DISTSUPER": "6"
   },
   "menuItems": [
+    { "menuText": "Summary",
+      "menuIconStart": "chart-gear",
+      "modelEntities": [
+        { "submenuText": "Performance Measures",
+          "submenuIconStart": "desktop",
+          "template": "vizDashboard",
+          "templateSettings": {
+            "cards": ["cardPop","cardHh","cardHhSize","cardEmp","cardVmt","cardVht","cardTrips","cardModeSplit","cardTransitSplit"],
+            "aggregatorTitle": "Select Summary Geography",
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","MAGHIGHWAY_ID","FREIGHT_ID"],
+            "aggregatorSelected" : "PLANAREA"
+          }
+        }
+      ]
+    },
     { "menuText": "Roads and Transit",
       "menuIconStart": "driving-distance",
       "modelEntities": [

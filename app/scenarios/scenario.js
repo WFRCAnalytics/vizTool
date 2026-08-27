@@ -25,15 +25,39 @@ class Scenario {
 
     // Collect unique JSON file names
     dataMenu.forEach(menuItem => {
-      if (menuItem.modelEntities) {
-        menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
-            jsonFileNames.add(modelEntity.vizLayout.jsonName);
-          }
-        });
-      }
+      if (!menuItem.modelEntities) return;
+
+      menuItem.modelEntities.forEach(modelEntity => {
+        const vizLayout = modelEntity.vizLayout;
+        if (!vizLayout) return;
+
+        // 1) Direct jsonName on the vizLayout itself (non-dashboard or simple cases)
+        if (vizLayout.jsonName) {
+          jsonFileNames.add(vizLayout.jsonName);
+        }
+
+        // 2) If vizLayout is a vizDashboard instance, collect jsonNames from its cards' measures
+        const isVizDashboard = (typeof VizDashboard !== "undefined" && vizLayout instanceof VizDashboard)
+
+        if (isVizDashboard) {
+
+          vizLayout.cards.forEach(card => {
+            const cardConfig = configCards?.[card.cardId];
+            if (!cardConfig) return;
+
+            const measureIds = cardConfig.measures || []; // e.g. ["measurePopTotal","measurePopGrowth",...]
+            measureIds.forEach(measureId => {
+              const measureConfig = configMeasures?.[measureId];
+              if (measureConfig && measureConfig.jsonName) {
+                jsonFileNames.add(measureConfig.jsonName);
+              }
+            });
+          });
+        }
+      });
     });
 
+    // Update total files
     totalFilesToLoad += jsonFileNames.size;
 
     // Check availability, and update progress after each check completes
@@ -235,7 +259,10 @@ class Scenario {
     return attribute.filterGroup ?? "";
   }
   
-  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum") {
+  // a_attributeCode is OPTIONAL: when provided, only that attribute is aggregated and the
+  // result is flattened to { key: value } instead of { key: { attrCode: value, ... } } - used
+  // by measure.js's dashboard cards, which only ever want one attribute's value at a time.
+  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum", a_attributeCode = null) {
     let aggregatedData = {}, countData = {}, minData = {}, maxData = {};
     const _parent = this;
 
@@ -263,6 +290,7 @@ class Scenario {
 
         _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
           const attrCode = attr.attributeCode;
+          if (a_attributeCode && attrCode !== a_attributeCode) return;
           if (data[key].hasOwnProperty(attrCode)) {
             ensureAttributeInitialized(key, attrCode);
             const val = data[key][attrCode];
@@ -322,6 +350,16 @@ class Scenario {
       case "maximum":
         aggregatedData = maxData;
         break;
+    }
+
+    if (a_attributeCode) {
+      const flat = {};
+      Object.keys(aggregatedData).forEach(key => {
+        if (aggregatedData[key] && a_attributeCode in aggregatedData[key]) {
+          flat[key] = aggregatedData[key][a_attributeCode];
+        }
+      });
+      return flat;
     }
 
     return aggregatedData;
