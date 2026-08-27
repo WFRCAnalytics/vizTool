@@ -1,4 +1,63 @@
 {
+    "fTgPurp": {
+        "alias": "Trip Generation Purpose",
+        "fWidget": "checkboxes",
+        "fSelected": "TotPer",
+        "fOptions": 
+        [
+            {"value":"HBW"      , "label": "Home-Based Work"               },
+            {"value":"HBSHP"    , "label": "Home-Based Shopping"           },
+            {"value":"HBOTH"    , "label": "Home-Based Other"              },
+            {"value":"HBSCHPR"  , "label": "Home-Based School - Primary"   },
+            {"value":"HBSCHSC"  , "label": "Home-Based School - Secondary" },
+            {"value":"NHBW"     , "label": "Non-Home-Based Work"           },
+            {"value":"NHBNW"    , "label": "Non-Home-Based Non-Work"       },
+            {"value":"HBC"      , "label": "Home-Based College"            },
+            {"value":"TTUnique" , "label": "Special Trips"                 },
+            {"value":"IX"       , "label": "Internal-to-External"          },
+            {"value":"XI"       , "label": "External-to-Internal"          }
+        ]
+    },
+    "fTelPurp": {
+        "alias": "Telecommute Trip Purpose",
+        "fWidget": "radio",
+        "fSelected": "HBW",
+        "fOptions":[
+            {"value": "HBW"  , "label": "Home-Based Work"     },
+            {"value": "NHBW" , "label": "Non-Home-Based Work" }
+        ]
+    },
+    "fTelTime": {
+        "alias": "Telecommute Time Frame",
+        "fWidget": "select",
+        "fSelected": "FY",
+        "fOptions":[
+            {"value": "FY" , "label": "Forecast Year" },
+            {"value": "BY" , "label": "Base Year"     }
+        ]
+    },
+    "fCvXD": {
+        "alias": "External Directionality",
+        "fWidget": "checkboxes",
+        "fSelected": ["IX","XI"],
+        "fOptions":[
+            {"value": "IX" , "label": "Internal-to-External" },
+            {"value": "XI" , "label": "External-to-Internal" }
+        ]
+    },
+    "fCvVoc": {
+        "alias": "Truck Travel Pattern",
+        "fWidget": "checkboxes",
+        "fSelected": ["D2D","HNS","LHL","LCL","REG","UNK"],
+        "fOptions":[
+            {"value": "D2D", "label": "Door-to-Door"  },
+            {"value": "HNS", "label": "Hub-and-Spoke" },
+            {"value": "LHL", "label": "Long-Haul"     },
+            {"value": "LCL", "label": "Local"         },
+            {"value": "REG", "label": "Regional"      },
+            {"value": "UNK", "label": "Unclassified"  }
+        ]
+    },
     "fPurp12": {
         "alias": "Trip Purpose",
         "fWidget": "checkboxes",
@@ -15,7 +74,7 @@
             {"value": "MD"     , "label":"Medium Trucks"                },
             {"value": "HV"     , "label":"Heavy Trucks"                 },
             {"value": "IX"     , "label":"Internal-to-External"         },
-            {"value": "XI"     , "label":"External-to-Internal "        }
+            {"value": "XI"     , "label":"External-to-Internal"         }
         ]
     },
     "fPurp12NoTruckExternal": {
@@ -50,6 +109,16 @@
             {"value":"LT" , "label":"Light Trucks"  },
             {"value":"MD" , "label":"Medium Trucks" },
             {"value":"HV" , "label":"Heavy Trucks"  }
+        ]
+    },
+    "fCvType": {
+        "alias"    : "Commercial Vehicle Type",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["LT","MD","HV"],
+        "fOptions" : [
+            {"value":"LT" , "label":"Light Commercial Vehicles" },
+            {"value":"MD" , "label":"Medium Commercial Vehicles"},
+            {"value":"HV" , "label":"Heavy Commercial Vehicles" }
         ]
     },
     "fTrkTypeMdHv": {
@@ -149,6 +218,29 @@
         "fOptions" : [
             {"value":"D", "label":"Drive"},
             {"value":"W" , "label":"Walk" }
+        ]
+    },
+    "fModeAuto": {
+        "alias"    : "Auto Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["DA","SR2","SR3p","IMZD2DDA","IMZD2DSR2","IMZD2DSR3p"],
+        "fOptions": [
+           {"value":"DA"         , "label": "Drive-Alone"                                           },
+           {"value":"SR2"        , "label": "Shared Ride 2 Passengers"                              },
+           {"value":"SR3p"       , "label": "Shared Ride 3+ Passengers"                             },
+           {"value":"IMZD2DDA"   , "label": "Innovative Mobility Zones - Drive-Alone"               },
+           {"value":"IMZD2DSR2"  , "label": "Innovative Mobility Zones - Shared Ride 2 Passengers"  },
+           {"value":"IMZD2DSR3p" , "label": "Innovative Mobility Zones - Shared Ride 3+ Passengers" }
+        ]
+    },
+    "fDriveMode": {
+        "alias"    : "Drive Mode",
+        "fWidget"  : "checkboxes",
+        "fSelected": ["DA","SR2","SR3p"],
+        "fOptions" : [
+            { "value":"DA"  , "label":  "Drive Alone"   },
+            { "value":"SR2" , "label":  "Shared Ride"   },
+            { "value":"SR3p", "label":  "Shared Ride 3+"}
         ]
     },
     "fIbOb": {
@@ -279,23 +371,25 @@
             {"value":"High","label":"High School"      }
         ]
     },
-    "fModeAutoTransit": {
-        "alias"    : "Commute Mode",
+    "fAtoMode": {
+        "alias"    : "Travel Mode",
         "fWidget"  : "select",
         "fSelected": "A",
         "fOptions" : [
             {"value": "A", "label": "Auto"    },
-            {"value": "T", "label": "Transit" }
+            {"value": "T", "label": "Transit" },
+            {"value": "B", "label": "Bike"    },
+            {"value": "W", "label": "Walk"    }
         ]
     },
-    "fAtoCondition": {
-        "alias"    : "Condition",
+    "fAtoLossType": {
+        "alias"    : "Access To Opportunity Loss",
         "fWidget"  : "select",
         "fSelected": "C",
         "fOptions" : [
-            {"value": "C", "label": "Congested (Auto) and Transit"},
-            {"value": "F", "label": "Freeflow (Auto-Only)"        },
-            {"value": "S", "label": "Straight-line (Auto-Only)"   }
+            {"value": "C", "label": "Roadway Congestion"               },
+            {"value": "N", "label": "Network Inefficiencies"           },
+            {"value": "S", "label": "Total Loss (Congestion + Network)"}
         ]
     },
     "fPurp5": {
@@ -441,6 +535,149 @@
             { "value": "EXP"       , "label": "Express Bus"       },
             { "value": "LRT"       , "label": "Light Rail"        },
             { "value": "CRT"       , "label": "Commuter Rail"     }
+        ]
+    },
+    "fAtoRelGeo": {
+        "alias": "Relative Geography for Accessibility",
+        "fWidget": "select",
+        "fSelected": "Region",
+        "fOptions": [
+            { "value": "Region"                      , "label": "Region"                                 },
+            { "value": "MAG"                         , "label": "MAG Area"                               },
+            { "value": "WFRC"                        , "label": "WFRC Area"                              },
+            { "value": "BOX_ELDER"                   , "label": "Box Elder County (WFRC Portion)"        },
+            { "value": "WEBER"                       , "label": "Weber County (WFRC Portion)"            },
+            { "value": "DAVIS"                       , "label": "Davis County"                           },
+            { "value": "SALT_LAKE"                   , "label": "Salt Lake County"                       },
+            { "value": "UTAH"                        , "label": "Utah County"                            },
+            { "value": "Box_Elder_County"            , "label": "City Group: Box Elder County"           },
+            { "value": "Northern_Weber_County"       , "label": "City Group: Northern Weber County"      },
+            { "value": "Southern_Weber_County"       , "label": "City Group: Southern Weber County"      },
+            { "value": "Northern_Davis_County"       , "label": "City Group: Northern Davis County"      },
+            { "value": "Southern_Davis_County"       , "label": "City Group: Southern Davis County"      },
+            { "value": "Northern_Salt_Lake_County"   , "label": "City Group: Northern Salt Lake County"  },
+            { "value": "Southwest_Salt_Lake_County"  , "label": "City Group: Southwest Salt Lake County" },
+            { "value": "Southeast_Salt_Lake_County"  , "label": "City Group: Southeast Salt Lake County" },
+            { "value": "North_Utah_County"           , "label": "City Group: North Utah County"          },
+            { "value": "Central_Utah_County"         , "label": "City Group: Central Utah County"        },
+            { "value": "South_Utah_County"           , "label": "City Group: South Utah County"          },
+            { "value": "West_Utah_County"            , "label": "City Group: West Utah County"           }
+        ]
+    },
+    "fExogDistType": {
+        "alias": "Distribution Type",
+        "fWidget": "select",
+        "fSelected": "Final",
+        "fOptions": [
+            {"value":"Base"  , "label": "Base Year Distribution" },
+            {"value":"Model" , "label": "Modeled Distribution"   },
+            {"value":"Final" , "label": "Final Distribution"     }
+        ]
+    },
+    "fAirport": {
+        "alias": "Airports",
+        "fWidget": "checkboxes",
+        "fSelected": ["SLC"],
+        "fOptions": [
+            {"value":"SLC" , "label": "Salt Lake International Airport" },
+            {"value":"PVU" , "label": "Provo Airport"                   }
+        ]
+    },
+    "fCollege": {
+        "alias": "Colleges",
+        "fWidget": "checkboxes",
+        "fSelected": ["BYU"],
+        "fOptions": [
+            {"value":"Ensign"    , "label": "Ensign"                  },
+            {"value":"Westmin"   , "label": "Westmin"                 },
+            {"value":"UofU_Main" , "label": "UofU Main Campus"        },
+            {"value":"WSU_Main"  , "label": "WSU Main Campus"         },
+            {"value":"WSU_Davis" , "label": "WSU Davis Campus"        },
+            {"value":"SLCC_Main" , "label": "SLCC Main Campus"        },
+            {"value":"SLCC_SC"   , "label": "SLCC South City Campus"  },
+            {"value":"SLCC_JD"   , "label": "SLCC Jordan Campus"      },
+            {"value":"SLCC_ML"   , "label": "SLCC Miller Campus"      },
+            {"value":"SLCC_HM"   , "label": "SLCC Herriman Campus"    },
+            {"value":"BYU"       , "label": "BYU"                     },
+            {"value":"UVU_Main"  , "label": "UVU Main Campus"         },
+            {"value":"UVU_Geneva", "label": "UVU Geneva Campus"       },
+            {"value":"UVU_Lehi"  , "label": "UVU Lehi Campus"         },
+            {"value":"UVU_Vine"  , "label": "UVU Vineyard Campus"     },
+            {"value":"UVU_Payson", "label": "UVU Payson Campus"       }
+        ]
+    },
+    "fSazCompare": {
+        "alias": "Compare Mode",
+        "fWidget": "select",
+        "fSelected": ["Diff"],
+        "fOptions": [
+            {"value":"Diff", "label": "Difference" },
+            {"value":"Adj" , "label": "Adjusted"   },
+            {"value":"Orig", "label": "Original"   }
+        ]
+    },
+    "fSazPurp": {
+        "alias": "Trip Purpose",
+        "fWidget": "checkboxes",
+        "fSelected": ["HBW","HBSchPr","HBSchSc","HBShp","HBOth","NHBW","NHBNW","HBC","TTUnique"],
+        "fOptions": [
+            {"value":"HBW"     , "label":"HBW"     },
+            {"value":"HBSchPr" , "label":"HBSchPr" },
+            {"value":"HBSchSc" , "label":"HBSchSc" },
+            {"value":"HBShp"   , "label":"HBShp"   },
+            {"value":"HBOth"   , "label":"HBOth"   },
+            {"value":"NHBW"    , "label":"NHBW"    },
+            {"value":"NHBNW"   , "label":"NHBNW"   },
+            {"value":"HBC"     , "label":"HBC"     },
+            {"value":"TTUnique", "label":"TTUnique"}
+        ]
+    },
+    "fSazPurpRatio": {
+        "alias": "Trip Purpose",
+        "fWidget": "select",
+        "fSelected": "AllPersonal",
+        "fOptions": [
+            {"value":"AllPersonal", "label":"All Personal Purposes"},
+            {"value":"HBW"        , "label":"HBW"                  },
+            {"value":"HBSchPr"    , "label":"HBSchPr"              },
+            {"value":"HBSchSc"    , "label":"HBSchSc"              },
+            {"value":"HBShp"      , "label":"HBShp"                },
+            {"value":"HBOth"      , "label":"HBOth"                },
+            {"value":"NHBW"       , "label":"NHBW"                 },
+            {"value":"NHBNW"      , "label":"NHBNW"                },
+            {"value":"HBC"        , "label":"HBC"                  },
+            {"value":"TTUnique"   , "label":"TTUnique"             }
+        ]
+    },
+    "fSazAdjPurp": {
+        "alias": "Trip Purpose",
+        "fWidget": "checkboxes",
+        "fSelected": ["HBOth","NHBW","NHBNW"],
+        "fOptions": [
+            {"value":"HBOth"   , "label":"HBOth"   },
+            {"value":"NHBW"    , "label":"NHBW"    },
+            {"value":"NHBNW"   , "label":"NHBNW"   }
+        ]
+    },
+    "fColNonCol": {
+        "alias": "College/Non-College",
+        "fWidget": "checkboxes",
+        "fSelected": ["Col","NonCol"],
+        "fOptions": [
+            {"value":"Col"   , "label":"College"    },
+            {"value":"NonCol", "label":"Non-College"}
+        ]
+    },
+    "fSelectLinkGroup": {
+        "alias"    : "Select Link Group",
+        "fWidget"  : "select",
+        "fSelected": "Group 1",
+        "fOptions" : [
+            {"value":"Group 1"   , "label":"Group 1"           },
+            {"value":"Group 2"   , "label":"Group 2"           },
+            {"value":"Group 3"   , "label":"Group 3"           },
+            {"value":"Group 4"   , "label":"Group 4"           },
+            {"value":"All Groups", "label":"All Groups (Total)"}
         ]
     }
 }

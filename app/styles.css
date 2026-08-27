@@ -1,3 +1,52 @@
+/* Nav menu items and the logo paint their own opaque background/text from these CSS custom
+   properties (in their shadow DOM), so plain rules on the host elements get painted over -
+   overriding the variables is the only way to reach them, and (unlike normal properties)
+   custom properties do cross the shadow boundary, scoped to just the elements they're set on.
+   Set text-1/text-2 up here on the nav bars themselves (plain white bar) so both the logo
+   heading/description AND unselected menu item text inherit readable dark text. */
+#menu,
+#menu calcite-navigation[slot="navigation-secondary"] {
+    --calcite-navigation-background: #ffffff;
+    --calcite-ui-text-1: #202020;
+    --calcite-ui-text-2: #202020;
+}
+
+/* Match unselected items' own background to the bar so they blend in; -foreground-2 is a
+   light hover shade. */
+calcite-menu-item {
+    --calcite-ui-foreground-1: #ffffff;
+    --calcite-ui-foreground-2: #f0f0f0;
+}
+
+/* calcite-menu/calcite-navigation have no built-in overflow handling (unlike calcite-action-bar,
+   which auto-collapses into an ellipsis menu) - with enough submenu items the bar just runs past
+   the window edge with no way to reach the rest. Scroll it horizontally instead; flex-shrink:0
+   keeps items at their natural width so they overflow into the scroll area rather than squishing. */
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu {
+    overflow-x: auto;
+}
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu-item {
+    flex-shrink: 0;
+}
+
+/* Minimal highlight for the selected item: a light tint of WFRC's sky blue CTA color (from
+   wfrc.utah.gov), not the solid brand blue, so text-1 can stay dark or (#202020, matching
+   unselected items) and stay legible without needing white text. The shadow content's own
+   background is made transparent so the flat fill below - painted on the host element
+   itself, which sits behind the shadow content - shows through.
+   -foreground-2/-3 (hover/press backgrounds) are also made transparent here: they're opaque
+   by default (-2 is the light gray set above for unselected items' hover), and clicking a
+   menu item leaves it focused, so without this the fill got painted over by that gray the
+   moment the item had focus - it only reappeared once focus moved elsewhere. */
+calcite-menu-item.menu-item-selected {
+    --calcite-ui-foreground-1: transparent;
+    --calcite-ui-foreground-2: transparent;
+    --calcite-ui-foreground-3: transparent;
+    --calcite-ui-brand: #0093c5;
+    --calcite-ui-text-1: #202020;
+    background: #d6eef8;
+}
+
 /* Custom styles for disabled option elements */
 option:disabled {
     color: #ff0000 !important; /* Override the color with your custom color */
@@ -14,7 +63,7 @@ select{
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
@@ -24,10 +73,70 @@ select{
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 10vh auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 25%;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background-color: #C85327; /* WFRC's brand orange (from wfrc.utah.gov) */
+    color: #fefefe;
+    margin: -20px -20px 15px -20px;
+    padding: 12px 15px;
+    border-radius: 7px 7px 0 0;
+    cursor: move;
+    user-select: none;
+    touch-action: none;
+}
+
+.modal-titlebar h1 {
+    color: inherit;
+}
+
+.modal-close {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fefefe;
+    cursor: pointer;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: #ccc;
+}
+
+#dontShowAgainLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 12px 0;
+    font-size: 0.9em;
+    color: #555;
+    cursor: pointer;
 }
 
 #okButton {
@@ -127,11 +236,15 @@ th, td {
 .rowGeography {
     padding: 15px;
     background-color: #ADD8E6;
+    /* Deliberately left shrinkable (flex-shrink's default of 1): .rowAttributes is the one
+       row that must never shrink below its content, so on a short viewport this is the row
+       that should give a little rather than forcing .colAttributes itself to scroll. */
 }
 
 .rowAttributeSettings {
     padding: 15px;
     background-color: #E5F3FD;
+    /* same reasoning as .rowGeography above */
 }
 
 /* MAIN DISPLAYS */
@@ -219,7 +332,12 @@ th, td {
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     /* Style your columns */
-    background-color: #ADD8E6;
+    display: flex; /* .rowAttributes below grows to fill leftover space, which pushes every
+                       row after it (aggregator, dividers, ...) down toward the bottom instead
+                       of leaving a gap under a short attribute list - same effect across every
+                       left sidebar (vizMap/vizTrends/vizMatrix), since they all share this
+                       class structure. */
+    flex-direction: column;
 }
 
 .colFilters {
@@ -253,6 +371,12 @@ th, td {
 .rowAttributes {
     padding: 15px;
     background-color: #FFFFFF;
+    flex-grow: 1; /* fill whatever space the other rows in .colAttributes don't need */
+    flex-shrink: 0; /* ...but never shrink below its own content's natural height. If the
+                        rows below it (aggregator, dividers, ...) need more room than the
+                        column has, they've already been pinned via flex-shrink: 0 too, so
+                        .colAttributes's own overflow-y: auto scrolls the whole column instead
+                        of squeezing the attribute list into a tiny internal scrollbox. */
 }
 
 /*.rowChart {
@@ -341,16 +465,91 @@ th, td {
 }
 
 #mainMatrix {
-    /* Main content styles */
-    flex-grow: 1;
+    padding: 15px;
+    height: calc(100vh - 114px);
+    flex-grow: 1; /* Grow to fill available space */
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0; /* Without this, a flex column child can't shrink below its content's height,
+                      so the table would just grow the page instead of scrolling in place. */
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
-/* CSS code to add borders to the table and cells */
-#matrixTable {
-    border-collapse: collapse; /* Collapse borders */
-    width: 100%; /* Optional: Set the width of the table */
+#mainMatrix.collapsed {
+    margin-left: 0;
+}
+
+/* Right-hand scenario sidebar: narrower than the left one since it only holds one column
+   (Scenario + Compare to), and collapses the same way .sidebar.collapsed does elsewhere. */
+#matrixScenarioSidebar {
+    width: 250px;
+}
+
+#matrixScenarioSidebar.collapsed {
+    width: 0;
+}
+
+.openbtn.right {
+    left: auto;
+    right: 280px; /* just outside the 250px sidebar, mirroring the left button's offset */
+}
+
+.openbtn.right.collapsed {
+    right: 15px;
+}
+
+#matrixTableContainer {
+    flex-grow: 1;
+    min-height: 0; /* same flex-shrink fix as #mainMatrix, one level down */
+    overflow: auto; /* OD matrices can run to 100+ columns, so scroll instead of overflowing the page */
+    scrollbar-width: auto; /* Firefox: force a classic scrollbar instead of a barely-visible overlay one */
+}
+
+/* The default overlay scrollbar (Chrome/Edge/Windows) is nearly invisible until you're actively
+   scrolling, which makes a 100+-column table look like it has no way to see the rest of it.
+   These give it a real, always-visible track + thumb. */
+#matrixTableContainer::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+#matrixTableContainer::-webkit-scrollbar-track {
+    background: #eee;
+}
+
+#matrixTableContainer::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 7px;
+    border: 3px solid #eee;
+}
+
+#matrixTableContainer::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Freeze the row headers (first column) and column headers (header row) so only the
+   number grid scrolls underneath - the labels stay put for orientation, like a spreadsheet. */
+#matrixTableContainer .custom-chart-table th:first-child,
+#matrixTableContainer .custom-chart-table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: inherit;
+    z-index: 1;
+}
+
+#matrixTableContainer .custom-chart-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f4f4f4;
+}
+
+/* Top-left corner cell is sticky in both directions at once, so it needs to sit above
+   both the frozen header row and the frozen first column where they'd otherwise overlap. */
+#matrixTableContainer .custom-chart-table thead th:first-child {
+    left: 0;
+    z-index: 3;
 }
 
 #matrixTable th,

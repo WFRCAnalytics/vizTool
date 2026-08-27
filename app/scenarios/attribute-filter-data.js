@@ -3,7 +3,14 @@ class AttributeFilterData {
     constructor(data) {
         this.attributes = data.attributes.map(attr => new DataAttribute(attr));
         this.filters = data.filters.map(filter => new DataFilter(filter));
-        this.data = data.data;
+        // Filter-combo keys are built independently by the JS sidebar (from configured
+        // fOptions values) and by the Python export (from raw CSV values), so a value like
+        // fPurp5pAll's "All Purposes" can end up as "All" in one config and "ALL" in
+        // another. Lowercasing both sides at lookup time (see Scenario.getDataForFilter and
+        // getDataForFilterOptionsList) avoids silently returning no data on that mismatch.
+        this.data = Object.fromEntries(
+            Object.entries(data.data).map(([key, value]) => [key.toLowerCase(), value])
+        );
     }
 }
 

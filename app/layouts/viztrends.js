@@ -1,7 +1,13 @@
 
 class VizTrends {
   constructor(data, modelEntity) {
-    this.id = data.id || this.generateIdFromText(data.attributeTitle); // use provided id or generate one if not provided
+    // Several unrelated entities share the same attributeTitle (e.g. "Special Trips" and
+    // "Special Trip Trends" are both "Trip Gen Attribute"), so an id derived from it alone
+    // would collide across entities - Filter.id (filter.js) is built from this.id, so a
+    // collision means two different entities' filter checkboxes/selects end up with the same
+    // DOM id/name once both have rendered at least once. modelEntity.submenuText is
+    // guaranteed unique (it's what the menu and URL restore already key off of).
+    this.id = data.id || this.generateIdFromText(modelEntity.submenuText || data.attributeTitle); // use provided id or generate one if not provided
     console.log('viztrends:construct:' + this.id);
 
     this.baseGeoJsonKey = data.baseGeoJsonKey;
@@ -153,6 +159,16 @@ class VizTrends {
     this.counterColor = 0;
     this.currentChart = null;
 
+    // Bumped at the start of every updateAllChartData() call so an older, still-loading call
+    // can tell it's been superseded and bail out instead of clobbering a newer render.
+    this._renderGen = 0;
+
+  }
+
+  isSelectedAttributeStackable() {
+    const aCode = this.aCode;
+    const selectedAttribute = this.sidebar.attributes.find(attr => attr.attributeCode === aCode);
+    return selectedAttribute?.stackable === true;
   }
 
   generateIdFromText(text) {
@@ -254,8 +270,30 @@ class VizTrends {
     }
   }
 
-  getFilterGroup() {
-    const scenarioWithData = getFirstScenarioWithTrendData(this.jsonName);
+  // All scenarios (across every currently-checked trend group) this chart could pull data
+  // from. Shared by updateAllChartData() (to know what to lazy-load) and by
+  // getFilterGroupArray()'s no-scenario case (to know which scenarios' filter groups to union
+  // for the sidebar's filter-visibility check).
+  getNeededScenarios() {
+    if (typeof scenarioChecker === 'undefined' || !scenarioChecker || typeof dataScenarioTrends === 'undefined') return [];
+    const _trendsSelected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
+    const _neededScenarios = new Set();
+    _trendsSelected.forEach(trend => {
+      trend.modelruns.forEach(modelrun => {
+        const _scenario = this.getScenario(modelrun.modVersion, modelrun.scnGroup, modelrun.scnYear);
+        if (_scenario) _neededScenarios.add(_scenario);
+      });
+    });
+    return Array.from(_neededScenarios);
+  }
+
+  // a_scenario lets callers pin this to one specific scenario's schema instead of the
+  // arbitrary "first scenario with data" default - see getFilterGroupArray() and its use in
+  // updateAllChartData(), where a trend chart spans multiple model versions whose filter
+  // groups for the same attribute code can genuinely differ (e.g. a CVM refactor added/renamed
+  // a filter dimension), so resolving this once globally for the whole chart is wrong.
+  getFilterGroup(a_scenario) {
+    const scenarioWithData = a_scenario || getFirstScenarioWithTrendData(this.jsonName);
     if (scenarioWithData) {
       let _baseFilterGroup = scenarioWithData.getFilterGroupForAttribute(this.jsonName, this.aCode);
       let _selectedAttribute = this.sidebar.attributes.find(attribute =>
@@ -275,15 +313,48 @@ class VizTrends {
     }
   }
 
-  getFilterGroupArray() {
-    var _filterGroup = this.getFilterGroup();
-  
-    if (_filterGroup) {
-      // Split the _filterGroup by "_"
-      return _filterGroup.split("_");
+  // With a specific a_scenario (from updateAllChartData()'s per-scenario data lookup), this is
+  // just that scenario's own filter group.
+  //
+  // Without one - the sidebar's filter-visibility check, see vizsidebar.js
+  // updateFilterDisplay() - a single reference scenario can't represent every scenario the
+  // chart is showing: e.g. WFv10.0-beta.2 added a "fTelTime" dimension to telecommute
+  // attributes that WFv9.2/WFv10.0-beta.1 don't have. So a filter is shown if it belongs to
+  // ANY scenario currently feeding the chart (getNeededScenarios()), not just whichever one
+  // happened to be picked as "the" reference - otherwise a filter that only matters to one
+  // model version stays hidden (and stuck at whatever value it defaulted to) even while that
+  // version's data is on the chart.
+  getFilterGroupArray(a_scenario) {
+    if (a_scenario) {
+      const _filterGroup = this.getFilterGroup(a_scenario);
+      return _filterGroup ? _filterGroup.split("_") : undefined;
     }
+
+    // Only consult scenarios whose data has actually finished loading (see
+    // Scenario.ensureDataLoaded) - updateFilterDisplay() runs synchronously as part of
+    // sidebar.render(), which can happen before updateAllChartData()'s own await on this same
+    // scenario set resolves, so calling getFilterGroupForAttribute() on a not-yet-loaded
+    // scenario would just log a spurious "jsonData is undefined" error for nothing: its
+    // contribution to the union would come from console noise, not real data, and this whole
+    // chart takes another pass through here anyway once loading finishes and re-renders.
+    const _scenarios = this.getNeededScenarios().filter(s => s.jsonData?.[this.jsonName]);
+    if (!_scenarios.length) {
+      // Nothing loaded yet (e.g. very first render, or still awaiting ensureDataLoaded) -
+      // fall back to the old single-arbitrary-scenario behavior rather than showing no filters.
+      const _filterGroup = this.getFilterGroup();
+      return _filterGroup ? _filterGroup.split("_") : undefined;
+    }
+
+    const _union = new Set();
+    _scenarios.forEach(_scenario => {
+      const _filterGroup = this.getFilterGroup(_scenario);
+      if (_filterGroup) {
+        _filterGroup.split("_").forEach(fCode => { if (fCode) _union.add(fCode); });
+      }
+    });
+    return _union.size ? Array.from(_union) : undefined;
   }
-  
+
   afterUpdateTrendSelector() {
     this.buildChart();
   };
@@ -925,9 +996,9 @@ class VizTrends {
 
               if (dataPoints && dataPoints.length > 0 && !allValuesZero) {
                 return {
-                  label: series.alias, // Label for each scenario group
+                  label: series.alias, // Label for each scenario name
                   data: dataPoints, // Data points for each groupId for the selected year
-                  backgroundColor: _seriesValues.find(item=>item.code===code).color, // Random color for each scenario group
+                  backgroundColor: _seriesValues.find(item=>item.code===code).color, // Random color for each scenario name
                   borderColor: _seriesValues.find(item=>item.code===code).color, // Random border color
                   borderWidth: 3
                 };
@@ -986,17 +1057,18 @@ class VizTrends {
     }
   }
   
-  updateDisplay() {
+  async updateDisplay() {
     console.log('viztrends:updateDisplay:' + this.id);
+    if (typeof syncUrlState === 'function') syncUrlState();
     const trendSelectorDiv = document.getElementById("trendSelector");
     trendSelectorDiv.innerHTML = "";
 
-    this.updateAllChartData();
+    await this.updateAllChartData();
   }
-  
-  updateAllChartData() {
+
+  async updateAllChartData() {
     console.log('viztrends:updateAllChartData:' + this.id);
-    
+
     const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
 
     if (this.sidebar.dividers) {
@@ -1007,160 +1079,184 @@ class VizTrends {
     const _aggregatorOptionsSelected = this.recastArrayIfNumeric(this.sidebar.aggregatorFilter.getSelectedOptionsAsList());
     const _selectedAggregator = this.sidebar.getSelectedAggregator();
 
-    var _selectedFilterOptions = [];
-    var _lstOfSelectedFilterOptions = [];
+    // Some attributes (e.g. Area Type - a categorical zone code, not a continuous quantity)
+    // don't have a sensible blended value once you're summarizing across more than one zone -
+    // not weighted-average, not plain sum - so rather than chart a number that would
+    // misrepresent the data, produce no data points at all for them (see below).
+    const _selectedAttrConfig = this.sidebar.attributes.find(a => a.attributeCode === this.aCode);
+    const _isAggregatable = _selectedAttrConfig?.aggregatable !== false;
+
+    // Scenario data loads lazily (see Scenario.ensureDataLoaded) - a trend chart can span more
+    // scenarios than just main/comp (whichever modelruns belong to a checked trend group), so
+    // resolve+ensure all of them up front here instead of one at a time inside the loop below.
+    // _renderGen guards against a slower/older call finishing after a newer one already started
+    // (e.g. rapidly toggling trend-group checkboxes) and clobbering its result.
+    const _renderGen = ++this._renderGen;
+    const _neededScenarios = this.getNeededScenarios();
+    showDataLoadingIndicator();
+    try {
+      await Promise.all(_neededScenarios.map(s => s.ensureDataLoaded(this.jsonName)));
+    } finally {
+      hideDataLoadingIndicator();
+    }
+    if (_renderGen !== this._renderGen) return; // a newer updateAllChartData() call has since started
 
     this.allChartData = [];
 
-    if (seriesIsFilter) {
+    // Which filter codes actually make up this attribute's data key (e.g. "fTelPurp_fTelTime")
+    // can differ by model version - a CVM refactor can add, rename, or drop a filter dimension
+    // for the same attribute code - so this can't be resolved once globally for the whole
+    // chart like it used to be; it has to be resolved fresh per scenario, right before that
+    // scenario's data is looked up below (see getFilterGroupArray()'s a_scenario param).
+    const selectedFilterOptionsFor = (_scenario) => {
+      const _filterGroupArray = this.getFilterGroupArray(_scenario) || [];
+      let _options;
+      const _lst = [];
 
-      //seriesModeSelect.show();
+      if (seriesIsFilter) {
 
-      // get list
-      var _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
-      if (_filterForSeries.filterWij instanceof WijSelect) {
-        _selectedFilterOptions = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
-      } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
-        _selectedFilterOptions = _filterForSeries.filterWij.selected;
+        //seriesModeSelect.show();
+
+        // get list
+        const _filterForSeries = this.sidebar.filters.find(filter => filter.fCode === this.seriesSelect.selected);
+        if (_filterForSeries.filterWij instanceof WijSelect) {
+          _options = _filterForSeries.filterWij.getSelectedOptionsNotSubTotalsAsList();
+        } else if (_filterForSeries.filterWij instanceof WijCheckboxes) {
+          _options = _filterForSeries.filterWij.selected;
+        }
+
+        // Ensure _options is always an array
+        if (typeof _options === 'string') {
+          _options = [_options]; // Convert string to single-item list
+        } else if (!Array.isArray(_options)) {
+          _options = []; // If it's not an array and not a string, set it to an empty array
+        }
+
+        for (const _selectedFilter of _options) {
+          _lst[_selectedFilter] = this.sidebar.getListOfSelectedFilterOptionsWithLockForGroup(_filterGroupArray, this.seriesSelect.selected, _selectedFilter);
+        }
+
+      } else {
+        _options = [""];
+        _lst[""] = this.sidebar.getListOfSelectedFilterOptionsForGroup(_filterGroupArray);
       }
 
-      // Ensure _selectedFilterOptions is always an array
-      if (typeof _selectedFilterOptions === 'string') {
-        _selectedFilterOptions = [_selectedFilterOptions]; // Convert string to single-item list
-      } else if (!Array.isArray(_selectedFilterOptions)) {
-        _selectedFilterOptions = []; // If it's not an array and not a string, set it to an empty array
-      }
+      return { _selectedFilterOptions: _options, _lstOfSelectedFilterOptions: _lst };
+    };
 
-      for (const _selectedFilter of _selectedFilterOptions) {
-        _lstOfSelectedFilterOptions[_selectedFilter] = this.sidebar.getListOfSelectedFilterOptionsWithLock(this.seriesSelect.selected, _selectedFilter);
-      }
-
-    } else {
-      _selectedFilterOptions = [""];
-      _lstOfSelectedFilterOptions[""] = this.sidebar.getListOfSelectedFilterOptions();
-    }
-
-    // Loop through each trendCode and all scenarios
     _trendsSelected.forEach(trend => {
-
-      var _scnTrendCode = trend.scnTrendCode;
+      const _scnTrendCode = trend.scnTrendCode;
 
       trend.modelruns.forEach(modelrun => {
-        
-        var _bNoDivideData = false;
-        const _scnYear     = modelrun.scnYear;
-        const _scenario    = this.getScenario(modelrun.modVersion, modelrun.scnGroup, _scnYear);
-        
-        if (_scenario) {
+        const _scnYear = modelrun.scnYear;
+        const _scenario = this.getScenario(modelrun.modVersion, modelrun.scnGroup, _scnYear);
 
-          let aggregatorKeyFile;
-          let aggregatorKeyFile_divide;
+        if (!_scenario) return;
 
-          // Call this.getAggregatorKeyFile() once and store the result
-          aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
+        const { _selectedFilterOptions, _lstOfSelectedFilterOptions } = selectedFilterOptionsFor(_scenario);
 
-          if (this.dCode!="Nothing") {
-            // Call this.getAggregatorKeyFile() once and store the result
-            aggregatorKeyFile_divide = _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey);
-          }
+        const aggregatorKeyFile = _scenario.getAggregatorKeyFile(_selectedAggregator, this.baseGeoJsonKey);
+        const _useDivide = this.dCode !== "Nothing";
+        const aggregatorKeyFileDivide = _useDivide
+          ? _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey)
+          : null;
 
-          _selectedFilterOptions.forEach(_fCode => {
+        _selectedFilterOptions.forEach(_fCode => {
+          const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
+          const _wtCode = this.sidebar.getWeightCode() || "";
+          const _hasWeight = Array.isArray(_wtCode) ? _wtCode.length > 0 : _wtCode !== "";
+          const _dataForFilterOptionsWeight = _hasWeight
+            ? _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getWeightCodeFilter())
+            : null;
 
-            const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
+          _aggregatorOptionsSelected.forEach(_agId => {
+            if (!_isAggregatable) return; // no chart point for this attribute - see note above
 
-            _aggregatorOptionsSelected.forEach(_agId => {
-              
-              let _dataSum = 0;
-              var _data_divide = {};
-              var _sumDivide = 0;
+            let _dataSum = 0;
+            let _dataSumWeight = 0;
+            let _sumDivide = 0;
+            let _dataDivide = {};
 
-              if (aggregatorKeyFile) {
-
-                // Create a Set directly from the filtered aggregatorKeyFile
-                const geoJsonIdSet = new Set(
+            // ------- AGGREGATION -------
+            const geoJsonIdSet = aggregatorKeyFile
+              ? new Set(
                   aggregatorKeyFile
                     .filter(record => record[_selectedAggregator.agCode] === _agId)
                     .map(record => String(record[this.baseGeoJsonId]))
-                );
+                )
+              : null;
 
-                Object.keys(_dataForFilterOptions)
-                  .filter(key => geoJsonIdSet.has(String(key)))  // Filter based on set membership
-                  .forEach(key => {
-                    const selectedValue = _dataForFilterOptions[key][this.aCode];
-                    if (selectedValue !== null && selectedValue !== undefined) {
-                      _dataSum += selectedValue; // Sum directly if valid
-                    }
-                  });
-              } else if (_selectedAggregator.agCode == this.baseGeoJsonId) {
-                Object.keys(_dataForFilterOptions)
-                  .forEach(key => {
-                    const selectedValue = _dataForFilterOptions[key][this.aCode];
-                    if (selectedValue !== null && selectedValue !== undefined) {
-                      _dataSum += selectedValue; // Sum directly if valid
-                    }
-                  });
+            const relevantKeys = aggregatorKeyFile
+              ? Object.keys(_dataForFilterOptions).filter(k => geoJsonIdSet.has(String(k)))
+              : (_selectedAggregator.agCode === this.baseGeoJsonId ? Object.keys(_dataForFilterOptions) : []);
 
-              }
-            
-              if (this.dCode!="Nothing") {
-                  
-                if (_scenario.jsonData[_selectedDivider.jsonName]) {
-                  _data_divide = _scenario.jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
+            for (const key of relevantKeys) {
+              const row = _dataForFilterOptions[key];
+              const value = row?.[this.aCode];
+
+              if (value != null) {
+                if (_hasWeight) {
+                  const weight = getWeightValue(_dataForFilterOptionsWeight?.[key], _wtCode);
+                  if (weight != null) {
+                    _dataSum += value * weight;
+                    _dataSumWeight += weight;
+                  }
                 } else {
-                  _bNoDivideData = true;
+                  _dataSum += value;
                 }
+              }
+            }
 
-                if (aggregatorKeyFile_divide) {
+            // Compute weighted average if needed
+            if (_hasWeight && _dataSumWeight > 0) {
+              _dataSum /= _dataSumWeight;
+            } else if (_hasWeight && _dataSumWeight === 0) {
+              _dataSum = null;
+            }
 
-                    // Create a Set directly from the filtered aggregatorKeyFile
-                  const geoJsonIdSetDivide = new Set(
-                    aggregatorKeyFile_divide
+            // ------- DIVIDE LOGIC -------
+            if (_useDivide) {
+              const jsonDivider = _scenario.jsonData?.[_selectedDivider.jsonName];
+              if (!jsonDivider) return;  // skip this iteration if no divide data
+
+              _dataDivide = jsonDivider.data[_selectedDivider.filter];
+
+              const geoJsonIdSetDivide = aggregatorKeyFileDivide
+                ? new Set(
+                    aggregatorKeyFileDivide
                       .filter(record => record[_selectedAggregator.agCode] === _agId)
                       .map(record => String(record[_selectedDivider.baseGeoJsonId]))
-                  );
-  
-                  // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
-                  Object.keys(_data_divide)
-                  .filter(key => geoJsonIdSetDivide.has(String(key)))  // Filter based on set membership
-                  .forEach(key => {
-                    const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
-                    if (selectedValue !== null && selectedValue !== undefined) {
-                      _sumDivide += selectedValue; // Sum directly if valid
-                    }
-                  });
-                } else if (_selectedAggregator.agCode == this.baseGeoJsonId) {
-  
-                  // Filter the _data_divide object based on matching keys (assuming keys represent the this.baseGeoJsonId)
-                  Object.keys(_data_divide)
-                  .forEach(key => {
-                    const selectedValue = _data_divide[key][_selectedDivider.attributeCode];
-                    if (selectedValue !== null && selectedValue !== undefined) {
-                      _sumDivide += selectedValue; // Sum directly if valid
-                    }
-                  });
-                }
-                  
+                  )
+                : null;
+
+              const relevantDivideKeys = geoJsonIdSetDivide
+                ? Object.keys(_dataDivide).filter(k => geoJsonIdSetDivide.has(String(k)))
+                : (_selectedAggregator.agCode === this.baseGeoJsonId ? Object.keys(_dataDivide) : []);
+
+              for (const key of relevantDivideKeys) {
+                const val = _dataDivide[key]?.[_selectedDivider.attributeCode];
+                if (val != null) _sumDivide += val;
               }
 
-              if (this.dCode!="Nothing" & _sumDivide>0) {
+              if (_sumDivide > 0) {
                 _dataSum /= _sumDivide;
-              } else if (this.dCode!="Nothing" & _sumDivide==0) {
+              } else {
                 _dataSum = null;
               }
+            }
 
-              // Push the resulting data to allChartData as an object
-              if (_dataSum) {
-                this.allChartData.push({
-                  _scnTrendCode,
-                  _scnYear,
-                  _fCode,
-                  _agId,
-                  value: _dataSum
-                });
-              }
-            });
+            // ------- FINAL PUSH -------
+            if (_dataSum != null) {
+              this.allChartData.push({
+                _scnTrendCode,
+                _scnYear,
+                _fCode,
+                _agId,
+                value: _dataSum
+              });
+            }
           });
-        }
+        });
       });
     });
 
@@ -1242,11 +1338,21 @@ class VizTrends {
         this.wijRadioAgId = _radioAg
         this.wijRadioTrendCode = null;
       } else if (seriesIsAggregator) {
-        seriesModeSelect.show();
+        if (this.isSelectedAttributeStackable()) {
+          seriesModeSelect.show();
+        } else {
+          seriesModeSelect.hide();
+          seriesModeSelect.selected = 'scatter'; // Force fallback to valid mode
+        }
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = _radioTrend;
       } else if (seriesIsFilter) {
-        seriesModeSelect.show();
+        if (this.isSelectedAttributeStackable()) {
+          seriesModeSelect.show();
+        } else {
+          seriesModeSelect.hide();
+          seriesModeSelect.selected = 'scatter'; // Force fallback to valid mode
+        }
         this.wijRadioAgId = _radioAg
         this.wijRadioTrendCode = _radioTrend;
       }
@@ -1270,12 +1376,22 @@ class VizTrends {
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = null;
       } else if (seriesIsAggregator) {
-        seriesModeSelect.show();
+        if (this.isSelectedAttributeStackable()) {
+          seriesModeSelect.show();
+        } else {
+          seriesModeSelect.hide();
+          seriesModeSelect.selected = 'scatter'; // Force fallback to valid mode
+        }
         barGroupSelect.hide();
         this.wijRadioAgId = null;
         this.wijRadioTrendCode = null;
       } else if (seriesIsFilter) {
-        seriesModeSelect.show();
+        if (this.isSelectedAttributeStackable()) {
+          seriesModeSelect.show();
+        } else {
+          seriesModeSelect.hide();
+          seriesModeSelect.selected = 'scatter'; // Force fallback to valid mode
+        }
         barGroupSelect.show();
         if (barGroupSelect.selected=='trendGroup') {
           this.wijRadioAgId = _radioAg;

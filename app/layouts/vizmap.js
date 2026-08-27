@@ -14,7 +14,13 @@ require([
 
   class VizMap {
     constructor(data, layerTitle, modelEntity) {
-      this.id = data.id || this.generateIdFromText(data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
+      // Several unrelated entities share the same attributeTitle (e.g. "Special Trips" and
+      // "Special Trip Trends" are both "Trip Gen Attribute"), so an id derived from it alone
+      // would collide across entities - Filter.id (filter.js) is built from this.id, so a
+      // collision means two different entities' filter checkboxes/selects end up with the same
+      // DOM id/name once both have rendered at least once. modelEntity.submenuText is
+      // guaranteed unique (it's what the menu and URL restore already key off of).
+      this.id = data.id || this.generateIdFromText(modelEntity.submenuText || data.attributeTitle) + '-vizmap'; // use provided id or generate one if not provided
       console.log('vizmap:construct:' + this.id);
       
       // link to parent
@@ -34,8 +40,17 @@ require([
       this.mode = 'main'; //default is main  other option is compare
       this.modeCompare = 'diff' //default is abs  other option is pct
 
+      // Opt-in (see getPopupExtraAttributes()): shows every other same-filter-group attribute
+      // in the popup alongside the one currently selected, but only outside compare mode -
+      // there's no second scenario's value to show it next to, and mVal/cVal are single-valued.
+      this.popupShowRelatedAttributes = !!data.popupShowRelatedAttributes;
+
       // Global variable to store original label info
       this.originalLabelInfo = null;
+
+      // Bumped at the start of every updateDisplay() call so an older, still-loading call can
+      // tell it's been superseded and bail out instead of clobbering a newer render.
+      this._renderGen = 0;
 
       // sidebar
       this.sidebar = new VizSidebar(data.attributes,
@@ -59,35 +74,131 @@ require([
       });
       map.add(this.geojsonLayer);
       this.geojsonLayer.visible = false;
+
+      // Tracks which aggregator's geometry this.geojsonLayer currently holds, so
+      // updateDisplay() can tell if it's gone stale relative to sidebar.aggregatorSelect -
+      // see the note in updateDisplay() for why that can happen without this view's own
+      // afterUpdateAggregator() ever having run.
+      this._loadedAggregatorAgCode = data.aggregatorSelected;
+    }
+
+    // The GeoJSONLayer swap that afterUpdateAggregator() does, factored out so
+    // updateDisplay() can also call it defensively (see there) without duplicating it.
+    swapGeometryLayerForSelectedAggregator() {
+      if (this.geojsonLayer) {
+        map.remove(this.geojsonLayer);
+      }
+      const _selectedAggregator = this.getSelectedAggregator();
+      const _agGeoJsonKey = _selectedAggregator ? _selectedAggregator.agGeoJsonKey : this.baseGeoJsonKey;
+      this.geojsonLayer = new GeoJSONLayer({
+        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(_agGeoJsonKey),
+        title: "Aggregator Layer"
+      });
+      map.add(this.geojsonLayer);
+      this.geojsonLayer.visible = false;
+      this._loadedAggregatorAgCode = _selectedAggregator ? _selectedAggregator.agCode : this.baseGeoJsonId;
     }
     
     // Define reusable popup content and expression info
     get popupContent() {
-      const baseContent = [
-        {
+      const baseContent = [];
+
+      // When there's a static popupTitle (e.g. "Roadway Segments"), the feature id still
+      // needs its own line here. When popupTitle is "", initializeLayer() puts the feature
+      // id in the title bar instead (see getPopupTitle()), so repeating it here would just
+      // duplicate it under a blank header.
+      if (this.popupTitle) {
+        baseContent.push({
           type: "text",
-          text: `${this.getPopupLayerName()}: {expression/featureName}`
-        },
-        {
-          type: "text",
-          text: `${this.getLayerDisplayName()}: {expression/formatDisplayValue}`
-        }
-      ];
+          text: `<b>${this.getPopupLayerName()}:</b> {expression/featureName}`
+        });
+      }
+
+      baseContent.push({
+        type: "text",
+        text: `<b>${this.getLayerDisplayName()}:</b> {expression/formatDisplayValue}`
+      });
 
       if (this.mode === 'compare') {
-        baseContent.push(
-          {
+        baseContent.push({
+          type: "text",
+          text: `<hr/><b>${this.getMainScenarioDisplayName()}:</b> {expression/formatMainValue}<br/><b>${this.getCompScenarioDisplayName()}:</b> {expression/formatCompValue}`
+        });
+      } else if (this.popupShowRelatedAttributes) {
+        const _extraAttributes = this.getPopupExtraAttributes();
+        if (_extraAttributes.length > 0) {
+          const _extraLines = _extraAttributes.map(attr =>
+            `<b>${attr.rendererCollection.main.title}:</b> {expression/${this.getPopupExtraExpressionName(attr.attributeCode)}}`
+          ).join('<br/>');
+          baseContent.push({
             type: "text",
-            text: `${this.getMainScenarioDisplayName()}: {expression/formatMainValue}`
-          },
-          {
-            type: "text",
-            text: `${this.getCompScenarioDisplayName()}: {expression/formatCompValue}`
-          }
-        );
+            text: `<hr/>${_extraLines}`
+          });
+        }
       }
 
       return baseContent;
+    }
+
+    // Popup title: falls back to the feature id (e.g. "TAZ 1175") when no static
+    // popupTitle is configured, instead of leaving the popup header blank - see popupContent().
+    getPopupTitle() {
+      return this.popupTitle || `${this.getPopupLayerName()} {expression/featureName}`;
+    }
+
+    // Other attributes from this entity's own attribute list, excluding the one currently
+    // selected. Attributes with a filterOverride (e.g. Truck Percent) are excluded because they
+    // depend on a filter dimension (e.g. Truck Type) that isn't one of the filters currently
+    // shown/chosen by the user for the selected attribute - showing them would silently pull in
+    // a value filtered by whatever that hidden filter's default selection happens to be, not by
+    // what the user actually picked. Only meaningful outside compare mode - see
+    // popupShowRelatedAttributes above.
+    getPopupExtraAttributes() {
+      return this.sidebar.attributes.filter(attr =>
+        attr.attributeCode !== this.aCode && !attr.filterOverride
+      );
+    }
+
+    // Field name used to carry a related attribute's value on the display feature (updateDisplay())
+    getPopupExtraFieldName(attributeCode) {
+      return 'extra_' + attributeCode;
+    }
+
+    // Expression name used to format a related attribute's value in the popup (popupContent())
+    getPopupExtraExpressionName(attributeCode) {
+      return 'formatExtra_' + attributeCode;
+    }
+
+    // A related attribute isn't necessarily keyed by the same filter combination as the
+    // currently selected one - e.g. Lanes isn't time-of-day/vehicle-type dependent the way
+    // Volume is, so its value simply isn't present under Volume's filter key(s) in _dataMain.
+    // Resolve the attribute's own filter group/selected options (same machinery getFilterGroup()
+    // uses for the selected attribute) and fetch its data independently.
+    getPopupExtraAttributeData(attr) {
+      const _scenario = this.getScenarioMain();
+      if (!_scenario) return {};
+      const _filterGroup = this.getFilterGroupForAttributeCode(attr.attributeCode);
+      const _filterGroupArray = _filterGroup ? _filterGroup.split('_') : [];
+      const _filterOptions = this.sidebar.getListOfSelectedFilterOptionsForGroup(_filterGroupArray);
+      return _scenario.getDataForFilterOptionsList(this.jsonName, _filterOptions, attr.agFilterOptionsMethod) || {};
+    }
+
+    // FeatureLayer field declarations for the related attributes (initializeLayer())
+    getPopupExtraFieldDefs() {
+      return this.getPopupExtraAttributes().map(attr => ({
+        name: this.getPopupExtraFieldName(attr.attributeCode),
+        type: "double",
+        alias: attr.alias
+      }));
+    }
+
+    // Matching null defaults for the dummy feature initializeLayer() seeds the layer with
+    getPopupExtraFieldDefaults() {
+      const _defaults = {};
+      this.getPopupExtraAttributes().forEach(attr => {
+        _defaults[this.getPopupExtraFieldName(attr.attributeCode)] = null;
+      });
+      return _defaults;
     }
 
     get expressionInfos() {
@@ -109,19 +220,34 @@ require([
           {
             name: "formatMainValue",
             title: "Formatted Main Value",
-            expression: "$feature.mVal"
+            // Match the comma/trimmed-decimal style already used for the diff value
+            // (formatDisplayValue) so the two scenario rows don't show raw unformatted numbers.
+            expression: "IIF(IsEmpty($feature.mVal), '', Text(Round($feature.mVal, 2), '#,###.##'))"
           },
           {
             name: "formatCompValue",
             title: "Formatted Comp Value",
-            expression: "$feature.cVal"
+            expression: "IIF(IsEmpty($feature.cVal), '', Text(Round($feature.cVal, 2), '#,###.##'))"
           }
         );
+      } else if (this.popupShowRelatedAttributes) {
+        this.getPopupExtraAttributes().forEach(attr => {
+          const _fieldName = this.getPopupExtraFieldName(attr.attributeCode);
+          // Reuse that attribute's own "main" formatting (e.g. comma/decimal rules), just
+          // pointed at its extra_<code> field instead of dVal.
+          const _expression = (attr.rendererCollection.main.labelExpressionInfo || '$feature.dVal')
+                                 .split('$feature.dVal').join('$feature.' + _fieldName);
+          baseExpressions.push({
+            name: this.getPopupExtraExpressionName(attr.attributeCode),
+            title: 'Formatted ' + attr.rendererCollection.main.title,
+            expression: _expression
+          });
+        });
       }
 
       return baseExpressions;
     }
-    
+
     getPopupLayerName() {
       if (this.sidebar.aggregators.length>0) {
         return this.sidebar.getSelectedAggregator().agTitleText;
@@ -141,22 +267,7 @@ require([
 
     afterUpdateAggregator() {
       console.log('vizmap:afterUpdateAggregator');
-      
-      // remove aggregator geometry
-      if (this.geojsonLayer) {
-        map.remove(this.geojsonLayer);
-      }
-
-      // ADD GEOJSONS
-      // need to check geometry type before adding!!
-      this.geojsonLayer = new GeoJSONLayer({
-        url: 'geo-data/' + this.getScenarioMain().getGeoJsonFileNameFromKey(this.getSelectedAggregator().agGeoJsonKey),
-        title: "Aggregator Layer"
-      });
-
-      // add new geometry
-      map.add(this.geojsonLayer);
-      this.geojsonLayer.visible = false;
+      this.swapGeometryLayerForSelectedAggregator();
       this.afterUpdateSidebar();
     }
 
@@ -288,17 +399,25 @@ require([
     }
 
     getFilterGroup() {
+      return this.getFilterGroupForAttributeCode(this.aCode);
+    }
+
+    // Generalizes getFilterGroup() to an arbitrary attribute code - needed by
+    // getPopupExtraAttributeData() since a related attribute can depend on a different set of
+    // filter dimensions than the currently selected one (e.g. Lanes isn't time-of-day/vehicle-type
+    // dependent the way Volume is), so its filter group has to be resolved separately.
+    getFilterGroupForAttributeCode(attributeCode) {
       const _scenario = this.getScenarioMain();
       if (_scenario) {
-        let _baseFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, this.aCode);
-        let _selectedAttribute = this.sidebar.attributes.find(attribute =>
-          attribute.attributeCode == this.aCode
+        let _baseFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, attributeCode);
+        let _attribute = this.sidebar.attributes.find(attribute =>
+          attribute.attributeCode == attributeCode
         ) || null;
-        if (_selectedAttribute) {
-          if (_selectedAttribute.filterOverride) {
+        if (_attribute) {
+          if (_attribute.filterOverride) {
             console.log('There is a filter override');
             // Loop through the filterOverride and replace filterIn with filterOut in the string
-            _selectedAttribute.filterOverride.forEach(item => {
+            _attribute.filterOverride.forEach(item => {
               // Use a global replace for each filterOut to filterIn
               _baseFilterGroup = _baseFilterGroup.replace(item.filterOut, item.filterIn);
             });
@@ -407,11 +526,12 @@ require([
             // ... add other attribute fields if necessary
             dVal: null, // Assuming you want a displayValue, you can set any initial value
             mVal: null,
-            cVal: null
+            cVal: null,
+            ...this.getPopupExtraFieldDefaults()
           }
         };
 
-        
+
         this.layerDisplay = new FeatureLayer({
           source: [this.dummyFeature],
           //objectIdField: this.baseGeoJsonId,
@@ -421,11 +541,12 @@ require([
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
             { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
+            ...this.getPopupExtraFieldDefs()
 
           ],
           popupTemplate: {
-            title: this.popupTitle,
+            title: this.getPopupTitle(),
             content: this.popupContent,
             expressionInfos: this.expressionInfos
           },
@@ -473,7 +594,8 @@ require([
             idLabel: "",
             dVal: null,
             mVal: null,
-            cVal: null
+            cVal: null,
+            ...this.getPopupExtraFieldDefaults()
           }
         };
 
@@ -485,10 +607,11 @@ require([
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
             { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
+            ...this.getPopupExtraFieldDefs()
           ],
           popupTemplate: {
-            title: this.popupTitle,
+            title: this.getPopupTitle(),
             content: this.popupContent,
             expressionInfos: this.expressionInfos
           },
@@ -534,7 +657,8 @@ require([
             idLabel: "",
             dVal: null,
             mVal: null,
-            cVal: null
+            cVal: null,
+            ...this.getPopupExtraFieldDefaults()
           },
           reunderer: {
             "type": "simple-marker",
@@ -555,10 +679,11 @@ require([
             { name: "idLabel", type: "string"},
             { name: "dVal", type: dValFieldType, alias: this.aCode },
             { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()}
+            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
+            ...this.getPopupExtraFieldDefs()
           ],
           popupTemplate: {
-            title: this.popupTitle,
+            title: this.getPopupTitle(),
             content: this.popupContent,
             expressionInfos: this.expressionInfos
           },
@@ -620,8 +745,47 @@ require([
       }
     }
 
-    updateDisplay() {
+    async updateDisplay() {
       console.log('vizmap:updateDisplay');
+
+      // sidebar.aggregatorSelect.selected can change without this layout's own
+      // afterUpdateAggregator() ever running - e.g. syncSelectedZoneGeography() (app.js)
+      // mirrors another view's "Zone Geography" choice onto every OTHER view's sidebar too,
+      // including ones that aren't the active view and so never get their own geometry
+      // swapped for it. Detect that mismatch on every render and self-heal by swapping before
+      // reading this.geojsonLayer below - otherwise this view keeps whatever geometry it
+      // happened to load last (often still the base zone level) while the sidebar/rendering
+      // act like the new aggregator's, producing blank/grey polygons in the wrong shapes the
+      // next time this view becomes active.
+      if (this.sidebar.aggregators.length > 0) {
+        const _currentAgCode = this.getSelectedAggregator()?.agCode ?? this.baseGeoJsonId;
+        if (_currentAgCode !== this._loadedAggregatorAgCode) {
+          this.swapGeometryLayerForSelectedAggregator();
+        }
+      }
+
+      // Selections used to render are already final at this point, so URL sync doesn't need
+      // to wait for the (partly async) render below to finish.
+      if (typeof syncUrlState === 'function') syncUrlState();
+
+      // Scenario data loads lazily (see Scenario.ensureDataLoaded) - make sure whatever this
+      // render needs is cached before the rest of this method reads it synchronously below.
+      // _renderGen guards against a slower/older call finishing after a newer one already
+      // started (e.g. rapid scenario or filter changes) and clobbering its result.
+      const _renderGen = ++this._renderGen;
+      const _mainScenario = this.getMain();
+      const _compScenario = this.getComp();
+      const _compareRequested = !!(document.getElementById('comparisonScenario')?.open && _compScenario !== null);
+      showDataLoadingIndicator();
+      try {
+        await Promise.all([
+          _mainScenario ? _mainScenario.ensureDataLoaded(this.jsonName) : Promise.resolve(),
+          _compareRequested ? _compScenario.ensureDataLoaded(this.jsonName) : Promise.resolve()
+        ]);
+      } finally {
+        hideDataLoadingIndicator();
+      }
+      if (_renderGen !== this._renderGen) return; // a newer updateDisplay() call has since started
 
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
@@ -792,11 +956,29 @@ require([
               }
             }
 
+            // Only meaningful outside compare mode - see popupShowRelatedAttributes. Each related
+            // attribute's data is fetched separately (not sliced out of _dataMain) since it can
+            // depend on a different filter group than the selected attribute - see
+            // getPopupExtraAttributeData().
+            const _extraAttributes = (this.mode !== 'compare' && this.popupShowRelatedAttributes)
+              ? this.getPopupExtraAttributes() : [];
+            const _extraAttributeData = {};
+            _extraAttributes.forEach(attr => {
+              _extraAttributeData[attr.attributeCode] = this.getPopupExtraAttributeData(attr);
+            });
+
             result.features.forEach((feature) => {
 
               // Get ID from the feature's attributes
               const _id = feature.attributes[this.baseGeoJsonId];
-              
+
+              const _extraValues = {};
+              _extraAttributes.forEach(attr => {
+                const _attrData = _extraAttributeData[attr.attributeCode];
+                const _val = _attrData && _attrData[_id] ? _attrData[_id][attr.attributeCode] : undefined;
+                _extraValues[this.getPopupExtraFieldName(attr.attributeCode)] = (_val === undefined) ? null : _val;
+              });
+
               let _valueMain = 0;
               let _valueComp = 0;
               let _valueMainDivide = 0;
@@ -862,7 +1044,8 @@ require([
                   idLabel: _id,
                   dVal: _valueDisp, // Add the dVal to attributes
                   mVal: _valueMain,
-                  cVal: _valueComp
+                  cVal: _valueComp,
+                  ..._extraValues
                 };
               } else {
                 attributes = {
@@ -870,7 +1053,8 @@ require([
                   idLabel: _id,
                   dVal: null, // Add the dVal to attributes
                   mVal: null,
-                  cVal: null
+                  cVal: null,
+                  ..._extraValues
                 };
               }
 
@@ -897,7 +1081,15 @@ require([
 
               const _idAgFieldName = this.getSelectedAggregator().agCode;
               const _wtCode = this.sidebar.getWeightCode() || "";
-              
+
+              // Some attributes (e.g. Area Type - a categorical zone code, not a continuous
+              // quantity) don't have a sensible blended value at anything coarser than the base
+              // zone geometry - not weighted-average, not plain sum. Rather than compute a
+              // number that would misrepresent the data, show "no data" for every feature
+              // whenever a real aggregator is active (see the per-feature bypass below).
+              const _selectedAttrConfig = this.sidebar.attributes.find(a => a.attributeCode === this.aCode);
+              const _isAggregatable = _selectedAttrConfig?.aggregatable !== false;
+
               if (this.dCode!="Nothing") {
                 _data_divide_main = this.getMain().jsonData[_selectedDivider.jsonName].data[_selectedDivider.filter];
                 _geojsondata_divide_main = dataGeojsons[this.getMain().geojsons[_selectedDivider.baseGeoJsonKey]];
@@ -920,9 +1112,17 @@ require([
 
                 // Get ID from the feature's attributes
                 var _idAg = feature.attributes[_idAgFieldName];
-                
+
+                if (!_isAggregatable) {
+                  graphicsToAdd.push(new Graphic({
+                    geometry: feature.geometry,
+                    attributes: { ...feature.attributes, idLabel: _idAg, dVal: null, mVal: null, cVal: null }
+                  }));
+                  return;
+                }
+
                 // get associated json records for given aggregator
-                const agRecords = aggregatorKeyFile.filter(record => 
+                const agRecords = aggregatorKeyFile.filter(record =>
                   record[_idAgFieldName] === _idAg
                 );
 
@@ -939,7 +1139,7 @@ require([
                           _valueMain += _dataMain[_idFt][this.aCode];
                         } else {
                           try {
-                            var _wtMain = _dataWeightMain[_idFt][_wtCode];
+                            var _wtMain = getWeightValue(_dataWeightMain[_idFt], _wtCode);
                             if (_wtMain) {
                               _valueMainXWt += _dataMain[_idFt][this.aCode] * _wtMain;
                               _valueMainSumWt += _wtMain;
@@ -964,7 +1164,7 @@ require([
                           _valueComp += _dataComp[_idFt][this.aCode];
                         } else {
                           try {
-                            var _wtComp = _dataWeightComp[_idFt][_wtCode];
+                            var _wtComp = getWeightValue(_dataWeightComp[_idFt], _wtCode);
                             if (_wtComp) {
                               _valueCompXWt += _dataComp[_idFt][this.aCode] * _wtComp;
                               _valueCompSumWt += _wtComp;

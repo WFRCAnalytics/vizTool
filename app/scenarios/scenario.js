@@ -7,14 +7,22 @@ class Scenario {
     this.alias      = data.alias || null;
     this.scnFolder  = data.modVersion + '__' + data.scnGroup + '__' + String(data.scnYear);
     this.geojsons   = jsonScenario.models.find(entry => entry.modVersion === this.modVersion).geojsons;
-    this.jsonData   = {}; // Array to store the data
+    this.jsonData   = {}; // Loaded/parsed scenario data, keyed by jsonName - populated lazily via ensureDataLoaded()
+    this.dataAvailable = {}; // jsonName -> boolean, from the cheap startup HEAD-probe (see probeDataAvailability)
     this.keys       = jsonScenario.models.find(entry => entry.modVersion === this.modVersion).keys;
   }
 
-  // loadData has to be called after menuItems is loaded
-  async loadData(dataMenu, updateProgress) {
+  // probeDataAvailability has to be called after menuItems is loaded. It's a lightweight
+  // existence check (HEAD request, no body) for every jsonName this scenario might ever need -
+  // NOT a data load. Actual data is fetched lazily via ensureDataLoaded() the first time
+  // something needs it (see model-entity.js/vizmap.js/viztrends.js/vizmatrix.js). This still
+  // needs to run for every scenario up front so hasAvailableData()/getFirstScenarioWithTrendData()
+  // can keep hiding menu entries for datasets a given scenario genuinely doesn't have (real
+  // gaps exist - e.g. older scenarios built with a different export pipeline) without having
+  // to download the (large) file itself to find out.
+  async probeDataAvailability(dataMenu, updateProgress) {
     let jsonFileNames = new Set();
-    
+
     // Collect unique JSON file names
     dataMenu.forEach(menuItem => {
       if (menuItem.modelEntities) {
@@ -25,20 +33,44 @@ class Scenario {
         });
       }
     });
-    
+
     totalFilesToLoad += jsonFileNames.size;
 
-    // Fetch and store data, and update progress after each file is fetched
-    jsonFileNames.forEach(uniqueFileName => {
-      this.fetchAndStoreData(uniqueFileName).then(() => {
+    // Check availability, and update progress after each check completes
+    const checks = Array.from(jsonFileNames).map(uniqueFileName =>
+      this.checkDataAvailable(uniqueFileName).then(() => {
         totalLoadedFiles++;
-        updateProgress();  // Call the progress update function after each file is fetched
+        updateProgress();
       }).catch(error => {
-        console.error(`Error loading ${uniqueFileName}:`, error);  // Handle errors if necessary
-        totalLoadedFiles++;  // Still increment the loaded files counter
-        updateProgress();  // Call the progress update function even if file doesn't exist
-      });
-    });
+        console.error(`Error checking availability of ${uniqueFileName}:`, error);
+        this.dataAvailable[uniqueFileName] = false;
+        totalLoadedFiles++;
+        updateProgress();
+      })
+    );
+
+    await Promise.all(checks);
+  }
+
+  async checkDataAvailable(fileName) {
+    try {
+      const response = await fetchWithTimeout(`scenario-data/${this.scnFolder}/${fileName}.json`, { method: 'HEAD' });
+      this.dataAvailable[fileName] = response.ok;
+    } catch (error) {
+      console.log(`Error checking availability of ${fileName}:`, error);
+      this.dataAvailable[fileName] = false;
+    }
+  }
+
+  // Fetches and caches this scenario's data for jsonName the first time it's actually needed
+  // (e.g. opening a model entity, switching to this scenario, checking a trend group that
+  // references it) - safe to call repeatedly, later calls just return the cached value.
+  async ensureDataLoaded(jsonName) {
+    if (!jsonName) return null;
+    if (this.jsonData[jsonName]) return this.jsonData[jsonName];
+    if (this.dataAvailable[jsonName] === false) return null; // known-missing from the startup probe, skip the fetch
+    await this.fetchAndStoreData(jsonName);
+    return this.jsonData[jsonName];
   }
 
   getGeoJsonFileNameFromKey(key) {
@@ -73,7 +105,7 @@ class Scenario {
   // Function to fetch and store data
   async fetchAndStoreData(fileName) {
     try {
-        const response = await fetch(`scenario-data/${this.scnFolder}/${fileName}.json`);
+        const response = await fetchWithTimeout(`scenario-data/${this.scnFolder}/${fileName}.json`);
 
         if (!response.ok) {
             // If the response is not OK (e.g., 404), log an error and return
@@ -87,12 +119,16 @@ class Scenario {
     } catch (error) {
         // Log any other errors (e.g., network issues)
         console.log(`Error fetching data from ${fileName}:`, error);
+    } finally {
+        // Give the browser a chance to process queued input between files, since parsing
+        // these can block the main thread while it runs.
+        await yieldToMainThread();
     }
   }
 
   getDataForFilter(a_jsonDataKey, a_filter) {
     console.log('getDataForFilter');
-    return this.jsonData[a_jsonDataKey].data[a_filter];
+    return this.jsonData[a_jsonDataKey].data[String(a_filter).toLowerCase()];
   }
   
   getDataForFilterOptionsListByAggregator(data_jsonDataKey   , data_lstFilters   , data_aCode   , data_geojsonsKey = '', baseGeoJsonId='',
@@ -200,15 +236,22 @@ class Scenario {
   }
   
   getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum") {
-    // Initialize objects to hold the aggregated sums, counts, and minimums
-    let aggregatedData = {};
-    let countData = {}; // To keep track of counts for averaging
-    let minData = {}; // To track minimum values
-    let maxData = {}; // To track minimum values
-  
+    let aggregatedData = {}, countData = {}, minData = {}, maxData = {};
     const _parent = this;
-  
-    // Modified function to handle the summing, averaging, and minimum of specific attributes for each key
+
+    if (typeof a_lstFilters === "string") {
+      a_lstFilters = a_lstFilters ? [a_lstFilters] : [""];
+    }
+
+    function ensureAttributeInitialized(key, attrCode) {
+      if (!aggregatedData[key][attrCode]) {
+        aggregatedData[key][attrCode] = 0;
+        countData[key][attrCode] = 0;
+        minData[key][attrCode] = Number.POSITIVE_INFINITY;
+        maxData[key][attrCode] = Number.NEGATIVE_INFINITY;
+      }
+    }
+
     function aggregateFields(data, method) {
       Object.keys(data).forEach(key => {
         if (!aggregatedData[key]) {
@@ -217,62 +260,134 @@ class Scenario {
           minData[key] = {};
           maxData[key] = {};
         }
-  
+
         _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
-          if (data[key].hasOwnProperty(attr.attributeCode)) {
-            if (!aggregatedData[key][attr.attributeCode]) {
-              aggregatedData[key][attr.attributeCode] = 0;
-              countData[key][attr.attributeCode] = 0;
-              minData[key][attr.attributeCode] = Number.POSITIVE_INFINITY; // Initialize minimum with a large value
-              maxData[key][attr.attributeCode] = 0;
-            }
-            aggregatedData[key][attr.attributeCode] += data[key][attr.attributeCode];
-            countData[key][attr.attributeCode] += 1;
-            if (data[key][attr.attributeCode] < minData[key][attr.attributeCode]) {
-              minData[key][attr.attributeCode] = data[key][attr.attributeCode];
-            }
-            if (data[key][attr.attributeCode] > maxData[key][attr.attributeCode]) {
-              maxData[key][attr.attributeCode] = data[key][attr.attributeCode];
+          const attrCode = attr.attributeCode;
+          if (data[key].hasOwnProperty(attrCode)) {
+            ensureAttributeInitialized(key, attrCode);
+            const val = data[key][attrCode];
+            aggregatedData[key][attrCode] += val;
+
+            switch(method) {
+              case "average":
+                countData[key][attrCode]++;
+                break;
+              case "minimum":
+                if (val < minData[key][attrCode]) minData[key][attrCode] = val;
+                break;
+              case "maximum":
+                if (val > maxData[key][attrCode]) maxData[key][attrCode] = val;
+                break;
             }
           }
         });
       });
     }
-  
-    // Loop through each combination of filters
-    a_lstFilters.forEach(function(filter) {
-      let _data = [];
-      if (_parent.jsonData[a_jsonDataKey]) {
-        _data = _parent.jsonData[a_jsonDataKey].data[filter];
-      }
 
-      // Aggregate the fields in the data object
-      if (_data) {
-        aggregateFields(_data, a_agFilterOptionsMethod);
+    // Build a lookup from normalized key -> actual data key, so filter segment order doesn't matter
+    const dataObj = _parent.jsonData[a_jsonDataKey]?.data ?? {};
+
+    const normalizedKeyMap = Object.keys(dataObj).reduce((acc, key) => {
+      const normalized = key.toLowerCase().split("_").sort().join("_");
+      acc[normalized] = key;
+      return acc;
+    }, {});
+
+    a_lstFilters.forEach(filter => {
+      const normalizedFilter = String(filter).toLowerCase().split("_").sort().join("_");
+      // Use hasOwnProperty rather than a truthiness check on matchingKey - unfiltered
+      // attributes (e.g. Population) store their totals under the empty-string key, which
+      // is a valid match but is falsy, so `if (matchingKey)` alone would wrongly skip it.
+      if (Object.prototype.hasOwnProperty.call(normalizedKeyMap, normalizedFilter)) {
+        const matchingKey = normalizedKeyMap[normalizedFilter];
+        const _data = dataObj[matchingKey];
+
+        if (_data) {
+          aggregateFields(_data, a_agFilterOptionsMethod);
+        }
       }
     });
 
-    // If the method is "average", divide the aggregated sums by the counts
-    if (a_agFilterOptionsMethod === "average") {
-      Object.keys(aggregatedData).forEach(key => {
-        Object.keys(aggregatedData[key]).forEach(attributeCode => {
-          aggregatedData[key][attributeCode] /= countData[key][attributeCode];
+    switch (a_agFilterOptionsMethod) {
+      case "average":
+        Object.keys(aggregatedData).forEach(key => {
+          Object.keys(aggregatedData[key]).forEach(attrCode => {
+            aggregatedData[key][attrCode] /= countData[key][attrCode];
+          });
         });
-      });
+        break;
+      case "minimum":
+        aggregatedData = minData;
+        break;
+      case "maximum":
+        aggregatedData = maxData;
+        break;
     }
 
-    // If the method is "minimum", replace the aggregated data with the minimum data
-    if (a_agFilterOptionsMethod === "minimum") {
-      aggregatedData = minData;
-    }
-
-    // If the method is "minimum", replace the aggregated data with the minimum data
-    if (a_agFilterOptionsMethod === "maximum") {
-      aggregatedData = maxData;
-    }
-  
     return aggregatedData;
   }
-  
-  
+
+  // OD-style matrix datasets (e.g. j-distsml-od) nest their "long" location filter (the
+  // opposite-end zone) as the leading segment of each top-level data key, e.g. data["3_ALL"]
+  // is origin zone 3, purpose ALL, holding {destinationId: {attrCode: value}}. This walks
+  // every origin found in the data, reuses getDataForFilterOptionsList to resolve the
+  // destination-keyed values for that origin, and optionally re-aggregates both the origin
+  // and destination axes through an aggregatorKeyFile (same lookup vizmap/viztrends use).
+  getMatrixDataForFilteredOptionListWithAggregator(a_jsonDataKey, a_lstFilters, a_attributeCode, a_selectedAggregator, a_baseGeoJsonKey, a_baseGeoJsonId, a_agFilterOptionsMethod = "sum") {
+    const originIds = new Set();
+
+    Object.keys(this.jsonData[a_jsonDataKey].data).forEach(key => {
+      const match = key.match(/^(\d+)_/);
+      if (match) {
+        originIds.add(match[1]);
+      }
+    });
+
+    const sortedOriginIds = Array.from(originIds).sort((a, b) => a - b);
+
+    const combinedData = {};
+    sortedOriginIds.forEach(originId => {
+      const modifiedFilters = a_lstFilters.map(filter => `${originId}_${filter}`);
+      const originData = this.getDataForFilterOptionsList(a_jsonDataKey, modifiedFilters, a_agFilterOptionsMethod);
+      combinedData[originId] = this.extractAttribute(originData, a_attributeCode);
+    });
+
+    if (!a_selectedAggregator || a_selectedAggregator.agCode === a_baseGeoJsonId) {
+      return combinedData;
+    }
+
+    const aggregatorKeyFile = this.getAggregatorKeyFile(a_selectedAggregator, a_baseGeoJsonKey);
+    if (!aggregatorKeyFile) {
+      return combinedData;
+    }
+
+    const agCode = a_selectedAggregator.agCode;
+    const idToAggCode = new Map(
+      aggregatorKeyFile.map(record => [String(record[a_baseGeoJsonId]), record[agCode]])
+    );
+
+    const aggregatedData = {};
+    Object.keys(combinedData).forEach(originId => {
+      const mappedOrigin = idToAggCode.get(originId) ?? originId;
+      aggregatedData[mappedOrigin] = aggregatedData[mappedOrigin] || {};
+
+      Object.keys(combinedData[originId]).forEach(destId => {
+        const mappedDest = idToAggCode.get(destId) ?? destId;
+        aggregatedData[mappedOrigin][mappedDest] = (aggregatedData[mappedOrigin][mappedDest] || 0) + combinedData[originId][destId];
+      });
+    });
+
+    return aggregatedData;
+  }
+
+  extractAttribute(data, a_attributeCode) {
+    const result = {};
+    Object.keys(data).forEach(key => {
+      if (Object.prototype.hasOwnProperty.call(data[key], a_attributeCode)) {
+        result[key] = data[key][a_attributeCode];
+      }
+    });
+    return result;
+  }
+
 }

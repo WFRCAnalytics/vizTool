@@ -1,6 +1,15 @@
 class VizSidebar {
   constructor(attributes, attributeSelected, attributeTitle, attributeInfoTextHtml, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
-    this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    // Several unrelated model entities happen to share the same attributeTitle (e.g. "Special
+    // Trips" and "Special Trip Trends" are both "Trip Gen Attribute"), so an id derived from
+    // attributeTitle alone collides across entities - every widget built off this.id (the
+    // attribute radio group, filter checkboxes/selects, etc.) then shares a DOM id/name with
+    // the other entity's equivalent widget, and calcite's native-radio-style "one checked per
+    // name" exclusivity fights across the two once both have rendered at least once. Prefer the
+    // owning model entity's submenuText instead - that's guaranteed unique (it's what the menu
+    // and URL restore already key off of) - falling back to attributeTitle only if it's ever
+    // unavailable.
+    this.id = this.generateIdFromText(vizLayout?.modelEntity?.submenuText || attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
 
     // link to parent
     this.vizLayout = vizLayout;
@@ -47,10 +56,10 @@ class VizSidebar {
                                             aggregatorSelected,
                                             aggregatorOptions,
                                             this);
-      if (vizLayout.modelEntity.template==='vizTrends') {
-        this.aggregatorFilter = new Filter (null, this.vizLayout, currentAggregator.filterData, {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
+      if (this.usesAggregatorFilter()) {
+        this.aggregatorFilter = new Filter (null, this.vizLayout, this.buildAggregatorFilterData(currentAggregator.filterData), {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
       }
-      
+
     }
 
     if (this.dividers.length>0) {
@@ -199,6 +208,43 @@ class VizSidebar {
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
+  // Same as getListOfSelectedFilterOptions(), but membership is decided by an explicit
+  // filterGroupArray (the real filter codes behind the current attribute's data key for one
+  // specific scenario) instead of filter.isVisible(). Needed by vizTrends: a chart can span
+  // scenarios from different model versions whose filter groups for the same attribute code
+  // differ (e.g. a CVM refactor added/renamed a filter dimension), so which filters belong in
+  // the lookup key can't be decided once globally off whichever filters happen to be shown.
+  getListOfSelectedFilterOptionsForGroup(filterGroupArray) {
+    const _fGroup = filterGroupArray || [];
+    const _listsOfEachFilter = this.filters
+                                   .filter(filter => _fGroup.includes(filter.fCode))
+                                   .map(filter => filter.getSelectedOptionsAsList())
+    return this.findAllCombinationsOfLists(_listsOfEachFilter);
+  }
+
+  // Same as getListOfSelectedFilterOptionsWithLock(), but membership is decided by an explicit
+  // filterGroupArray instead of filter.isVisible() - see getListOfSelectedFilterOptionsForGroup().
+  getListOfSelectedFilterOptionsWithLockForGroup(filterGroupArray, lockedFCode, lockedValue) {
+    const _fGroup = filterGroupArray || [];
+
+    const _fCodeList = this.filters
+                                   .filter(filter => _fGroup.includes(filter.fCode))
+                                   .map(filter => filter.fCode)
+
+    const _lockedFCodeIndex = _fCodeList.indexOf(lockedFCode);
+
+    const _listsOfEachFilter = this.filters
+                                     .filter(filter => _fGroup.includes(filter.fCode) && filter.fCode !== lockedFCode)
+                                     .map(filter => filter.getSelectedOptionsAsList());
+
+    // Insert the locked filter's value as a single-item list at the locked filter's index
+    if (_lockedFCodeIndex !== -1) {
+      _listsOfEachFilter.splice(_lockedFCodeIndex, 0, [lockedValue]); // Insert as a single item list
+    }
+
+    return this.findAllCombinationsOfLists(_listsOfEachFilter);
+  }
+
   getSelectedOptionsAsLongText() {
     return this.filters.filter(filter => filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
   }
@@ -283,12 +329,12 @@ class VizSidebar {
   }
 
   afterUpdateAggregator() {
-    if (this.vizLayout.modelEntity.template==='vizTrends') {
+    if (this.usesAggregatorFilter()) {
       const selectedAggregator = this.getSelectedAggregator();
       this.aggregatorFilter = new Filter(
           null,
           this.vizLayout,
-          (this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData,
+          this.buildAggregatorFilterData((this.aggregators.find(item => item.agCode === this.aggregatorSelect.selected) || []).filterData),
           {
               agGeoJsonKey: selectedAggregator.agGeoJsonKey,
               agCode: selectedAggregator.agCode,
@@ -298,7 +344,28 @@ class VizSidebar {
       const mapPopup = document.getElementById("mapPopup");
       mapPopup.style.display = "none";
     }
+    // "Select Zone Geography" should be the same no matter which view you're on - push this
+    // choice out to every other view's aggregator picker too (where it's a valid option).
+    syncSelectedZoneGeography(this.aggregatorSelect.selected, this);
     this.vizLayout.afterUpdateAggregator();
+  }
+
+  // vizTrends and vizMatrix both offer a "Select Zone Geography" aggregator whose options are
+  // real map geometry (TAZ, district, etc.) - a Reference Map showing that geometry helps in
+  // both. vizMap doesn't need it since it already IS the map.
+  usesAggregatorFilter() {
+    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix';
+  }
+
+  // vizTrends uses the aggregatorFilter's checkbox list as a real series picker (which zones
+  // to plot - see VizTrends.buildChart()/updateAllChartData()). vizMatrix has no such use for
+  // it - the OD table already shows every zone the data has - so it only wants the Reference
+  // Map button bundled onto the same widget, not a second (potentially huge) zone checklist.
+  buildAggregatorFilterData(filterData) {
+    if (this.vizLayout.modelEntity.template === 'vizMatrix' && filterData) {
+      return { ...filterData, userModifiable: false };
+    }
+    return filterData;
   }
 
   updateFilterDisplay() {

@@ -1,0 +1,57 @@
+<div id="matrixMainDisplay">
+  <div id="matrixSidebar" class="sidebar">
+    <div class="colAttributes">
+      <div class="rowAttributes" id="vizMatrixAttributes"></div>
+      <div class="rowGeography" id="vizMatrixAggregator"></div>
+      <div class="rowGeography" id="vizMatrixAggregatorFilters"></div>
+    </div>
+    <div class="colFilters">
+      <div class="rowFilters" id="vizMatrixAttributeFilters"></div>
+    </div>
+  </div>
+  <!-- Collapse button (left sidebar) -->
+  <button id="openbtnmatrix" class="openbtn bottom"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
+  <div id="mainMatrix">
+    <div id="matrixHeader"></div>
+    <div id="matrixTableContainer"></div>
+    <div style="height: 25px; margin-left: 40px;">
+      <calcite-button id="copyTableBtnMatrix" appearance="solid" color="blue" scale="s">
+        Copy Table to Clipboard
+      </calcite-button>
+    </div>
+  </div>
+  <!-- Collapse button (right scenario sidebar) -->
+  <button id="openbtnmatrixscenario" class="openbtn right"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span></button>
+  <div id="matrixScenarioSidebar" class="sidebar">
+    <div class="colAttributes">
+      <div class="rowGeography" id="vizMatrixScenarioSelector">
+        <div><b>Scenario</b></div>
+        <div style="display: flex; align-items: center; width: 100%;">
+          <calcite-select id="modVersion_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Main"></calcite-select>
+        </div>
+        <div style="display: flex; align-items: center; width: 100%;">
+          <calcite-select id="scnGroup_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Main"></calcite-select>
+        </div>
+        <div style="display: flex; align-items: center; width: 100%;">
+          <calcite-select id="scnYear_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Main"></calcite-select>
+        </div>
+        <calcite-block id="comparisonScenarioMatrix" heading="Compare to:" collapsible>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="modVersion_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Comp"></calcite-select>
+          </div>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="scnGroup_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Comp"></calcite-select>
+          </div>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="scnYear_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Comp"></calcite-select>
+          </div>
+          <div><br/>Compare Type</div>
+          <calcite-select id="selectCompareTypeMatrix" scale="m" width="auto">
+            <calcite-option value="diff">Difference</calcite-option>
+            <calcite-option value="pctdiff">Percent Difference</calcite-option>
+          </calcite-select>
+        </calcite-block>
+      </div>
+    </div>
+  </div>
+</div>

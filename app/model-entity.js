@@ -1,3 +1,30 @@
+// Resolves a {modVersion, scnGroup, scnYear} reference (selectedScenario_Main/_Comp's shape)
+// to its actual Scenario instance in dataScenarios - same lookup every layout's own
+// getScenario()/getMain() already does, duplicated here since ModelEntity needs it before a
+// layout instance is necessarily the active one.
+function resolveScenario(scenarioRef) {
+  if (!scenarioRef) return null;
+  return dataScenarios.find(s =>
+    s.modVersion === scenarioRef.modVersion &&
+    s.scnGroup === scenarioRef.scnGroup &&
+    s.scnYear === parseInt(scenarioRef.scnYear, 10)
+  ) || null;
+}
+
+// VizSidebar.render() (called from renderSidebar() below) synchronously reads the main
+// scenario's data (via getFilterGroup/getFilterGroupArray), so it must already be cached
+// before renderSidebar() runs, not just before updateDisplay().
+async function ensureMainScenarioDataLoaded(vizLayout) {
+  const mainScenario = resolveScenario(selectedScenario_Main);
+  if (!mainScenario) return;
+  showDataLoadingIndicator();
+  try {
+    await mainScenario.ensureDataLoaded(vizLayout.jsonName);
+  } finally {
+    hideDataLoadingIndicator();
+  }
+}
+
 class ModelEntity {
   constructor(data, menuItem) {
     console.log('modelentity-construct:' + data.submenuText)
@@ -9,6 +36,8 @@ class ModelEntity {
       this.vizLayout = new VizMap(data.templateSettings, data.submenuText, this);
     } else if (data.template=='vizTrends') {
       this.vizLayout = new VizTrends(data.templateSettings, this);
+    } else if (data.template=='vizMatrix') {
+      this.vizLayout = new VizMatrix(data.templateSettings, this);
     }
     this.textFile = data.textFile;
     this.pngFile = data.pngFile;
@@ -17,6 +46,14 @@ class ModelEntity {
   
   generateIdFromText(text) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  // Only show this item if it has no data-driven layout, or at least one scenario has data for it
+  hasAvailableData() {
+    if (!this.vizLayout || !this.vizLayout.jsonName) {
+      return true;
+    }
+    return !!getFirstScenarioWithTrendData(this.vizLayout.jsonName);
   }
 
   createModelEntityElement() {
@@ -35,13 +72,15 @@ class ModelEntity {
     
     const modelEntityInstance = this;
 
-    modelEntity.addEventListener('click', function() {
+    modelEntity.addEventListener('click', async function() {
       let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
       mainSidebarItems.forEach(item => {
         if(item.text === modelEntityInstance.submenuText || item.text === modelEntityInstance.menuItem.menuText) {  // Use the saved instance context here
           item.active = true;
+          item.classList.add('menu-item-selected');
         } else {
           item.active = false;
+          item.classList.remove('menu-item-selected');
         }
       });
       // Show corresponding template
@@ -57,10 +96,13 @@ class ModelEntity {
 
       // set app global model entity to keep track of what is actively being used
       activeModelEntity= modelEntityInstance;
-      
+      modelEntityInstance.menuItem.lastSelectedModelEntityText = modelEntityInstance.submenuText;
+
       modelEntityInstance.menuItem.hideAllLayoutLayers()
 
       activeLayout = modelEntityInstance.vizLayout;
+
+      await ensureMainScenarioDataLoaded(activeLayout);
 
       activeLayout.renderSidebar();  // Use the saved instance context here as well
       activeLayout.updateScenarioSelector();  // Use the saved instance context here as well
@@ -137,13 +179,15 @@ class ModelEntity {
     }
   }
 
-  loadModelEntity() {
+  async loadModelEntity() {
     let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
     mainSidebarItems.forEach(item => {
       if(item.text === this.submenuText || item.text === this.menuItem.menuText) {  // Use the saved instance context here
         item.active = true;
+        item.classList.add('menu-item-selected');
       } else {
         item.active = false;
+        item.classList.remove('menu-item-selected');
       }
     });
     // Show corresponding template
@@ -159,12 +203,17 @@ class ModelEntity {
 
     // set app global model entity to keep track of what is actively being used
     activeModelEntity= this;
-    
+    this.menuItem.lastSelectedModelEntityText = this.submenuText;
+
     this.menuItem.hideAllLayoutLayers()
-    
+
     if (activeModelEntity.vizLayout) {
       activeLayout = this.vizLayout;
+
+      await ensureMainScenarioDataLoaded(activeLayout);
+
       this.vizLayout.renderSidebar();  // Use the saved instance context here as well
+      this.vizLayout.updateScenarioSelector();  // Must run before updateDisplay() - it initializes seriesSelect etc.
       this.vizLayout.updateDisplay();
     }
 

@@ -18,6 +18,29 @@ class Aggregator {
     this.agCodeLabelField    = _configAggregator.agCodeLabelField,
     this.selected            = _configAggregator.agDefaultSelected ? _configAggregator.agDefaultSelected : [];
 
+    // The option lists below depend only on agCode plus already-loaded data, so they're
+    // identical every time this agCode is requested. Without caching, every model entity
+    // that lists this aggregator (often a dozen+) recomputes it from scratch - and the
+    // base/sub-aggregator match below is an O(n*m) cross-product over every TAZ, which
+    // was blocking the main thread for 10+ seconds during startup.
+    Aggregator._optionsCache = Aggregator._optionsCache || {};
+    const _cached = Aggregator._optionsCache[agCode];
+    if (_cached) {
+      this.filterData = {
+        fCode           : this.agCode,
+        alias           : this.agTitleText,
+        fWidget         : "checkboxes",
+        fOptions        : _cached.options,
+        fSelected       : this.selected,
+        subAgDisplayName: _configAggregator.subAgDisplayName,
+        subAgSelected   : _configAggregator.subAgSelected,
+        subAgOptions    : _cached.optionsSubAg
+      };
+      if (_cached.baseAgCode !== undefined) this.baseAgCode = _cached.baseAgCode;
+      if (_cached.subAgCode !== undefined) this.subAgCode = _cached.subAgCode;
+      return;
+    }
+
     let _options      = [];
     let _optionsAg    = [];
     let _optionsSubAg = [];
@@ -230,6 +253,13 @@ class Aggregator {
     } else {
       _options = this.agOptions;
     }
+
+    Aggregator._optionsCache[agCode] = {
+      options     : _options,
+      optionsSubAg: _optionsSubAg,
+      baseAgCode  : this.baseAgCode,
+      subAgCode   : this.subAgCode
+    };
 
     this.filterData = {
       fCode           : this.agCode                       ,

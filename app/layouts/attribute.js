@@ -21,6 +21,8 @@ class Attribute {
         this.agWeightCodeFilter       = _configAttribute.agWeightCodeFilter || null;
         this.rendererCollection       = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection) : null;
         this.agFilterOptionsMethod    = _configAttribute.agFilterOptionsMethod || "sum";
+        this.stackable                = _configAttribute.hasOwnProperty('stackable') ? _configAttribute.stackable : true;
+        this.aggregatable             = _configAttribute.hasOwnProperty('aggregatable') ? _configAttribute.aggregatable : true;
 
         this.filterOverride           = _configAttribute.filterOverride || null;
     }

@@ -1,9 +1,9 @@
 {
-  "title": "vizTool for wf-tdm v9.1",
-  "subtitle": "v25.1.13 beta",
+  "title": "vizTool for wf-tdm v10.0",
+  "subtitle": "v26.08.26",
   "splash": {
-    "title": "IMPORTANT: BETA VERSION",
-    "textHtml": "<p>You are using the beta version of vizTool, which is still undergoing testing and has not yet been validated outside of the development environment.</p><p>User guides, a data dictionary, and additional resources will be available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For urgent assistance or troubleshooting, please reach out to <a href=\"mailto:bhereth@wfrc.org\">Bill Hereth</a>.</p>\n<button id=\"okButton\">Continue</button>",
+    "title": "Welcome to the vizTool!",
+    "textHtml": "<p>The vizTool is a visualization companion for the Wasatch Front Travel Demand Model (WF-TDM).</p><p>User guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For assistance or troubleshooting, please reach out to <a href=\"mailto:bill.hereth@wfrc.utah.gov\">Bill Hereth</a>.</p><button id=\"okButton\">Continue</button>",
     "on": true
   },
   "checkboxesSelector": {
@@ -37,11 +37,12 @@
             "baseGeoJsonId": "SEGID",
             "geometryType": "polyline",
             "popupTitle": "Roadway Segments",
+            "popupShowRelatedAttributes": true,
             "attributeTitle": "Roadway Segment Attributes",
-            "attributeInfoTextHtml": "<b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Lane Hourly Capacity</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Volume</b> is the total number of vehicles using the segment.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period volume to daily volume.<br/><b>Functional Group Share</b> is the ratio of volume for functional group lanes to volume for all lanes.",
-            "attributeSelected": "aLn",
-            "attributes": ["aLn","aAT","aFt","aCp","aCT","aFS","aVl","aTP","aRS","aXVc","aDF","aPF","aFGs"],
-            "filters" : ["fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTod4pDy","fTod4","fTod4Pm","fVehTypePcLiMdHv","fTrkTypeMdHv"]
+            "attributeInfoTextHtml": "<b>Volume</b> is the total number of vehicles using the segment.<br/><b>Lanes</b> is the number of cross-section lanes.<br/><b>Area Type</b> represents the relative density of surrounding development for on which freeflow speeds are based.<br/><b>Functional Type</b> is the type of roadway on which capacity is based.<br/><b>Lane Hourly Capacity</b> is the maximum number of vehicles that can pass through a single lane per hour.<br/><b>Total Capacity</b> is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.<br/><b>Free-flow Speed</b> is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.<br/><b>Truck Percent</b> is the percent of total volume that is trucks.<br/><b>Congested Speed</b> is the modeled travel speed accounting for traffic conditions.<br/><b>Maximum V/C Ratio</b> is the highest volume-to-capacity ratio modeled for the segment considering all functional groups, directions, and time periods.<br/><b>Directional Factor</b> is the portion of total segment volume that is traveling in a specified direction.<br/><b>Period Factor</b> is the ratio of period volume to daily volume.<br/><b>Functional Group Share</b> is the ratio of volume for functional group lanes to volume for all lanes.",
+            "attributeSelected": "aVl",
+            "attributes": ["aVl","aLn","aAT","aFt","aCp","aCT","aFS","aTP","aRS","aXVc","aDF","aPF","aFGs"],
+            "filters" : ["fTod4pDy","fTod4","fTod4Pm","fVehTypePcLiMdHv","fDirName4pAll","fDirNameNoAllSelect","fRoadSegFuncGroup","fRoadSegFuncGroupNoTotal","fTrkTypeMdHv"]
           }
         },
         { "submenuText": "Road Segment Trends",
@@ -62,7 +63,23 @@
             "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","MAGHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["aVmt","aVht","aVhd","aDis","aLMl"],
-            "filters" : ["fRoadSegFuncGroup","fAreaType","fTod4pDy","fVehTypePcLiMdHv"]
+            "filters" : ["fTod4pDy","fVehTypePcLiMdHv","fRoadSegFuncGroup","fAreaType"]
+          }
+        },
+        { "submenuText": "Select Link Segments",
+          "submenuIconStart": "line-straight",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-selectlink-segments",
+            "baseGeoJsonKey": "segment",
+            "baseGeoJsonId": "SEGID",
+            "geometryType": "polyline",
+            "popupTitle": "Select Link Segments",
+            "attributeTitle": "Select Link Attributes",
+            "attributeInfoTextHtml": "<b>Select Link Volume</b> is the daily volume of trips whose path uses at least one link tagged with the chosen select-link group. Use the <b>Select Link Group</b> filter to switch between groups 1-4 or view all groups combined.",
+            "attributeSelected": "aSLVol",
+            "attributes": ["aSLVol"],
+            "filters" : ["fDirName4pAll","fSelectLinkGroup","fTod4pDy"]
           }
         },
         { "submenuText": "Transit Segments",
@@ -75,9 +92,9 @@
             "geometryType": "polyline",
             "popupTitle": "Transit Segments",
             "attributeTitle": "Transit Segment Attributes",
-            "attributeInfoTextHtml": "<b>Maximum Mode</b> is the maximum heirarchacal mode with commuter rail being the highest and local bus being the lowest.<br/><b>Riders</b> is the total number of passengers traveling on the transit segment across all routes using that segment.<br/><b>Frequency</b> is the number of buses or trains passing through the segment per hour.<br/><b>Minimum Headway</b> is the shortest time between vehicles of all routes on a segment.<br/><b>Average Travel Speed</b> is the average speed in mph of transit vehicles traveling on a segment.",
-            "attributes": ["aDM","aR","aFq","aHd","aTS"],
-            "attributeSelected": "aDM",
+            "attributeInfoTextHtml": "<b>Riders</b> is the total number of passengers traveling on the transit segment across all routes using that segment.<br/><b>Maximum Mode</b> is the maximum heirarchacal mode with commuter rail being the highest and local bus being the lowest.<br/><b>Frequency</b> is the number of buses or trains passing through the segment per hour.<br/><b>Minimum Headway</b> is the shortest time between vehicles of all routes on a segment.<br/><b>Average Travel Speed</b> is the average speed in mph of transit vehicles traveling on a segment.",
+            "attributes": ["aR","aDM","aFq","aHd","aTS"],
+            "attributeSelected": "aR",
             "filters" : ["fPurpOnlyAll","fTod2","fTod2Select","fModeAccess","fDirNameNoAll","fModeRoute","fRouteName","fModeHier"]
           }
         },
@@ -144,7 +161,7 @@
     { "menuText": "Trips",
       "menuIconStart": "tour",
       "modelEntities": [
-        { "submenuText": "Trip Trends",
+        { "submenuText": "Total Trips Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -162,7 +179,7 @@
             "aggregatorSelected" : "SUBAREAID"
           }
         },
-        { "submenuText": "Zone Trip Ends by Mode",
+        { "submenuText": "Trip Ends by Mode",
           "submenuIconStart": "arrow-double-diagonal-1",
           "template": "vizMap",
           "templateSettings": {
@@ -172,7 +189,7 @@
             "geometryType": "polygon",
             "popupTitle": "Zone Mode Share",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["TAZID","SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
             "dividerTitle": "Divide By",
             "dividerSelected": "",
@@ -181,10 +198,10 @@
             "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/><b>Walk Trips</b> is specifically the number of trips made entirely on foot.<br/><b>Bike Trips</b> refers to trips made using only a bicycle.",
             "attributeSelected": "a0",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAuto","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Trip Ends by Mode Trends",
+        { "submenuText": "Trip Ends by Mode Trends",
           "submenuIconStart": "graph-line-series",
           "template": "vizTrends",
           "templateSettings": {
@@ -202,12 +219,145 @@
             "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "PLANAREA",
             "attributes": ["a0","aM","aA","aT","aN","aW","aB"],
-            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAccessSingleLetter","fModeRouteCode3"]
+            "filters" : ["fPurp5pAll","fTod2pDy","fPA","fModeAuto","fModeAccessSingleLetter","fModeRouteCode3"]
           }
         },
-        { "submenuText": "Zone Origin-Destination Trips",
+        { "submenuText": "OD Trips",
           "submenuIconStart": "2d-explore",
-          "template": "vizComingSoon"
+          "template": "vizMatrix",
+          "templateSettings": {
+            "jsonName": "j-distsml-od",
+            "baseGeoJsonKey": "distSml",
+            "baseGeoJsonId": "DISTSML",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["DISTSML","SUBAREAID","PLANAREA","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "DISTLRG",
+            "attributeTitle": "Trip Mode",
+            "attributeInfoTextHtml": "<b>All Trips</b> represents the total number of trips starting from (production) or ending at (attraction) a zone, across all transportation modes.<br/><b>Motorized Trips</b> includes all trips made using motorized transport, including cars, motorcycles, and public transit.<br/><b>Auto Trips</b> specifically refers to trips made using personal automobiles.<br/><b>Transit Trips</b> is the number of trips made using public transportation services, such as buses or trains.<br/><b>Non-Motorized Trips</b> encompasses trips made without the use of motorized vehicles, namely walking and bicycling.<br/>",
+            "attributeSelected": "a0",
+            "attributes": ["a0","aM","aA","aT","aNM"],
+            "filters" : ["fPurp5pAll","fModeRouteCode3","fModeAccessSingleLetter","fModeAuto"]
+          }
+        },
+        { "submenuText": "Trip Gen",
+          "submenuIconStart": "arrow-double-diagonal-1",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-trip-gen",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "geometryType": "polygon",
+            "popupTitle": "",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregatorSelected" : "TAZID",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+            "attributeTitle": "Trip Gen Attribute",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aTrP",
+            "attributes": ["aTrP","aTrCv","aTrCvX","aTel","aTelPct","aTelFac","aAtTaz"],
+            "filters" : ["fPA","fTgPurp","fTelPurp","fTelTime","fCvType","fCvVoc","fCvXD","fTrkTypeMdHv"]
+          }
+        },
+        { "submenuText": "Trip Gen Trends",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-trip-gen",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Trip Gen Attribute",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aTrP",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aTrP","aTrCv","aTrCvX","aTel","aTelPct","aTelFac"],
+            "filters" : ["fPA","fTgPurp","fTelPurp","fTelTime","fCvType","fCvVoc","fCvXD","fTrkTypeMdHv"]
+          }
+        },
+        { "submenuText": "Spec Attraction Zones (SAZ)",
+          "submenuIconStart": "ribbon-rosette",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-trip-gen",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "geometryType": "polygon",
+            "popupTitle": "",
+            "attributeTitle": "Zone Attributes",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aSazTrip",
+            "attributes": ["aSazTrip","aSazAdjRatio","aColEnrolPhysical","aColEmpToEnrolFactor","aColEmpEnrolEstimated","aColEmpToTotempRatio","aSAZCalibrationFactor","aColNonColAtt"],
+            "filters" : ["fSazCompare","fSazAdjPurp","fSazPurp","fSazPurpRatio","fColNonCol"]
+          }
+        },
+        { "submenuText": "SAZ Trends",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-trip-gen",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Special Attraction Zone Attribute",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aSazTrip",
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aSazTrip","aSazAdjRatio","aColEnrolPhysical","aColEmpToEnrolFactor","aColEmpEnrolEstimated","aColEmpToTotempRatio","aSAZCalibrationFactor","aColNonColAtt"],
+            "filters" : ["fSazCompare","fSazAdjPurp","fSazPurp","fSazPurpRatio","fColNonCol"]
+          }
+        },
+        { "submenuText": "Spec Gen",
+          "submenuIconStart": "arrow-double-diagonal-1",
+          "template": "vizMap",
+          "templateSettings": {
+            "jsonName": "j-zone-special-trips",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "geometryType": "polygon",
+            "popupTitle": "",
+            "aggregatorTitle": "Select Zone Geography",
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregatorSelected" : "TAZID",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+            "attributeTitle": "Trip Gen Attribute",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aTgT",
+            "attributes": ["aAirTrips","aAirDist","aColTrips","aColDist"],
+            "filters" : ["fAirport","fCollege","fExogDistType"]
+          }
+        },
+        { "submenuText": "Spec Gen Trends",
+          "submenuIconStart": "graph-line-series",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-zone-special-trips",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Trip Gen Attribute",
+            "attributeInfoTextHtml": "",
+            "attributeSelected": "aTgT",
+            "dividerTitle": "Divide By",
+            "dividerSelected": "",
+            "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+            "aggregators": ["SUBAREAID","PLANAREA","CITYGRP","CITY_NAME","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aAirTrips","aAirDist","aColTrips","aColDist"],
+            "filters" : ["fAirport","fCollege","fExogDistType"]
+          }
         }
       ]
     },
@@ -299,7 +449,7 @@
             "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"]
           }
         },
-        { "submenuText": "Access to Opportunities",
+        { "submenuText": "Access to Opportunities (ATO)",
           "submenuIconStart": "desktop",
           "template": "vizMap",
           "templateSettings": {
@@ -308,13 +458,31 @@
             "baseGeoJsonId": "TAZID",
             "geometryType": "polygon",
             "attributeTitle": "Access to Opportunities",
-            "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a typical commute utilizing Wasatch Front factoring.<br/><b>Access to Jobs+Households</b> is the weighted combination of Access to Jobs and Access to Households.<br/><b>Job Locations</b> shows where jobs are located.<br/><b>Household Locations</b> shows where households are located.",
+            "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a typical commute.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a typical commute.<br/><b>Access to Jobs Relative to Geography Average</b> is the average number of jobs that are reachable to a resident within a typical commute divided by the average for the selected geography filter.<br/><b>Access to Households Relative to Geography Average</b> is the average number of households that are reachable to a business within a typical commute divided by the average for the selected geography filter.<br/><b>Loss in Auto Access to Jobs</b> shows a comparison between congested auto access to jobs compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency). <br/><b>Loss in Auto Access to Households</b> shows a comparison between congested auto access to households compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency). <br/><b>Household Locations</b> shows where households are located.",
             "attributeSelected": "aJA",
             "aggregatorTitle": "Select Zone Geography",
             "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
             "aggregatorSelected" : "TAZID",
-            "attributes": ["aJA","aHA","aCA","aJ","aH"],
-            "filters" : ["fModeAutoTransit","fAtoCondition"]
+            "attributes": ["aJA","aHA","aJAr","aHAr","aJL","aHL","aJ","aH"],
+            "filters" : ["fAtoMode","fAtoLossType","fAtoRelGeo"]
+          }
+        },
+        { "submenuText": "ATO Trends",
+          "submenuIconStart": "desktop",
+          "template": "vizTrends",
+          "templateSettings": {
+            "jsonName": "j-zone-ato",
+            "baseGeoJsonKey": "taz",
+            "baseGeoJsonId": "TAZID",
+            "aggregatorTitle": "Select Summary Geography",
+            "comboSelected": "",
+            "attributeTitle": "Access to Opportunities",
+            "attributeInfoTextHtml": "<b>Access to Jobs</b> is the average number of jobs that are reachable to a resident within a typical commute.<br/><b>Access to Households</b> is the average number of households that are reachable to a business within a typical commute.<br/><b>Loss in Auto Access to Jobs</b> shows a comparison between congested auto access to jobs compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency). <br/><b>Loss in Auto Access to Households</b> shows a comparison between congested auto access to households compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency). <br/><b>Household Locations</b> shows where households are located.",
+            "attributeSelected": "aJA",
+            "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+            "aggregatorSelected" : "PLANAREA",
+            "attributes": ["aJA","aHA","aJAr","aHAr","aJL","aHL","aJ","aH"],
+            "filters" : ["fAtoMode","fAtoLossType","fAtoRelGeo"]
           }
         }
       ]
