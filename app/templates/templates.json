@@ -9,6 +9,10 @@
       "layoutHtml": "app/templates/viztrends.html"
   },
   {
+      "templateType": "vizDashboard",
+      "layoutHtml": "app/templates/vizdashboard.html"
+  },
+  {
       "templateType": "vizComingSoon",
       "layoutDivs": "<div><br/><h1>&nbsp;&nbsp;&nbsp;&nbsp;Coming soon!</h1></div>"
   },

@@ -25,15 +25,39 @@ class Scenario {
 
     // Collect unique JSON file names
     dataMenu.forEach(menuItem => {
-      if (menuItem.modelEntities) {
-        menuItem.modelEntities.forEach(modelEntity => {
-          if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
-            jsonFileNames.add(modelEntity.vizLayout.jsonName);
-          }
-        });
-      }
+      if (!menuItem.modelEntities) return;
+
+      menuItem.modelEntities.forEach(modelEntity => {
+        const vizLayout = modelEntity.vizLayout;
+        if (!vizLayout) return;
+
+        // 1) Direct jsonName on the vizLayout itself (non-dashboard or simple cases)
+        if (vizLayout.jsonName) {
+          jsonFileNames.add(vizLayout.jsonName);
+        }
+
+        // 2) If vizLayout is a vizDashboard instance, collect jsonNames from its cards' measures
+        const isVizDashboard = (typeof VizDashboard !== "undefined" && vizLayout instanceof VizDashboard)
+
+        if (isVizDashboard) {
+
+          vizLayout.cards.forEach(card => {
+            const cardConfig = configCards?.[card.cardId];
+            if (!cardConfig) return;
+
+            const measureIds = cardConfig.measures || []; // e.g. ["measurePopTotal","measurePopGrowth",...]
+            measureIds.forEach(measureId => {
+              const measureConfig = configMeasures?.[measureId];
+              if (measureConfig && measureConfig.jsonName) {
+                jsonFileNames.add(measureConfig.jsonName);
+              }
+            });
+          });
+        }
+      });
     });
 
+    // Update total files
     totalFilesToLoad += jsonFileNames.size;
 
     // Check availability, and update progress after each check completes
@@ -235,159 +259,104 @@ class Scenario {
     return attribute.filterGroup ?? "";
   }
   
-  getDataForFilterOptionsList(a_jsonDataKey, a_lstFilters, a_agFilterOptionsMethod = "sum") {
-    let aggregatedData = {}, countData = {}, minData = {}, maxData = {};
-    const _parent = this;
+/**
+ * Aggregate data for a list of filters.
+ * @param {string} a_jsonDataKey  - which jsonData bucket to read from
+ * @param {string[]} a_lstFilters - list of filter keys to aggregate (e.g., ["0_Urban", "1_Urban"])
+ * @param {"sum"|"average"|"minimum"|"maximum"} a_agFilterOptionsMethod - aggregation method
+ * @param {string|null} a_attributeCode - OPTIONAL: if provided, return only this attribute per key
+ * @returns {Object} If a_attributeCode is null: { key: {attrCode: value, ...}, ... }
+ *                   If a_attributeCode is set:  { key: value, ... }
+ */
+getDataForFilterOptionsList(
+  a_jsonDataKey,
+  a_lstFilters,
+  a_agFilterOptionsMethod = "sum",
+  a_attributeCode = null
+) {
+  // Aggregation stores
+  let aggregatedData = {};
+  let countData = {};
+  let minData = {};
+  let maxData = {};
 
-    if (typeof a_lstFilters === "string") {
-      a_lstFilters = a_lstFilters ? [a_lstFilters] : [""];
+  const _parent = this;
+
+  // Utility: ensure nested objects exist
+  function ensureStores(key, attrCode) {
+    if (!aggregatedData[key]) {
+      aggregatedData[key] = {};
+      countData[key] = {};
+      minData[key] = {};
+      maxData[key] = {};
     }
-
-    function ensureAttributeInitialized(key, attrCode) {
-      if (!aggregatedData[key][attrCode]) {
-        aggregatedData[key][attrCode] = 0;
-        countData[key][attrCode] = 0;
-        minData[key][attrCode] = Number.POSITIVE_INFINITY;
-        maxData[key][attrCode] = Number.NEGATIVE_INFINITY;
-      }
+    if (aggregatedData[key][attrCode] == null) {
+      aggregatedData[key][attrCode] = 0;
+      countData[key][attrCode] = 0;
+      minData[key][attrCode] = Number.POSITIVE_INFINITY;
+      maxData[key][attrCode] = Number.NEGATIVE_INFINITY;
     }
-
-    function aggregateFields(data, method) {
-      Object.keys(data).forEach(key => {
-        if (!aggregatedData[key]) {
-          aggregatedData[key] = {};
-          countData[key] = {};
-          minData[key] = {};
-          maxData[key] = {};
-        }
-
-        _parent.jsonData[a_jsonDataKey].attributes.forEach(attr => {
-          const attrCode = attr.attributeCode;
-          if (data[key].hasOwnProperty(attrCode)) {
-            ensureAttributeInitialized(key, attrCode);
-            const val = data[key][attrCode];
-            aggregatedData[key][attrCode] += val;
-
-            switch(method) {
-              case "average":
-                countData[key][attrCode]++;
-                break;
-              case "minimum":
-                if (val < minData[key][attrCode]) minData[key][attrCode] = val;
-                break;
-              case "maximum":
-                if (val > maxData[key][attrCode]) maxData[key][attrCode] = val;
-                break;
-            }
-          }
-        });
-      });
-    }
-
-    // Build a lookup from normalized key -> actual data key, so filter segment order doesn't matter
-    const dataObj = _parent.jsonData[a_jsonDataKey]?.data ?? {};
-
-    const normalizedKeyMap = Object.keys(dataObj).reduce((acc, key) => {
-      const normalized = key.toLowerCase().split("_").sort().join("_");
-      acc[normalized] = key;
-      return acc;
-    }, {});
-
-    a_lstFilters.forEach(filter => {
-      const normalizedFilter = String(filter).toLowerCase().split("_").sort().join("_");
-      // Use hasOwnProperty rather than a truthiness check on matchingKey - unfiltered
-      // attributes (e.g. Population) store their totals under the empty-string key, which
-      // is a valid match but is falsy, so `if (matchingKey)` alone would wrongly skip it.
-      if (Object.prototype.hasOwnProperty.call(normalizedKeyMap, normalizedFilter)) {
-        const matchingKey = normalizedKeyMap[normalizedFilter];
-        const _data = dataObj[matchingKey];
-
-        if (_data) {
-          aggregateFields(_data, a_agFilterOptionsMethod);
-        }
-      }
-    });
-
-    switch (a_agFilterOptionsMethod) {
-      case "average":
-        Object.keys(aggregatedData).forEach(key => {
-          Object.keys(aggregatedData[key]).forEach(attrCode => {
-            aggregatedData[key][attrCode] /= countData[key][attrCode];
-          });
-        });
-        break;
-      case "minimum":
-        aggregatedData = minData;
-        break;
-      case "maximum":
-        aggregatedData = maxData;
-        break;
-    }
-
-    return aggregatedData;
   }
 
-  // OD-style matrix datasets (e.g. j-distsml-od) nest their "long" location filter (the
-  // opposite-end zone) as the leading segment of each top-level data key, e.g. data["3_ALL"]
-  // is origin zone 3, purpose ALL, holding {destinationId: {attrCode: value}}. This walks
-  // every origin found in the data, reuses getDataForFilterOptionsList to resolve the
-  // destination-keyed values for that origin, and optionally re-aggregates both the origin
-  // and destination axes through an aggregatorKeyFile (same lookup vizmap/viztrends use).
-  getMatrixDataForFilteredOptionListWithAggregator(a_jsonDataKey, a_lstFilters, a_attributeCode, a_selectedAggregator, a_baseGeoJsonKey, a_baseGeoJsonId, a_agFilterOptionsMethod = "sum") {
-    const originIds = new Set();
-
-    Object.keys(this.jsonData[a_jsonDataKey].data).forEach(key => {
-      const match = key.match(/^(\d+)_/);
-      if (match) {
-        originIds.add(match[1]);
-      }
-    });
-
-    const sortedOriginIds = Array.from(originIds).sort((a, b) => a - b);
-
-    const combinedData = {};
-    sortedOriginIds.forEach(originId => {
-      const modifiedFilters = a_lstFilters.map(filter => `${originId}_${filter}`);
-      const originData = this.getDataForFilterOptionsList(a_jsonDataKey, modifiedFilters, a_agFilterOptionsMethod);
-      combinedData[originId] = this.extractAttribute(originData, a_attributeCode);
-    });
-
-    if (!a_selectedAggregator || a_selectedAggregator.agCode === a_baseGeoJsonId) {
-      return combinedData;
-    }
-
-    const aggregatorKeyFile = this.getAggregatorKeyFile(a_selectedAggregator, a_baseGeoJsonKey);
-    if (!aggregatorKeyFile) {
-      return combinedData;
-    }
-
-    const agCode = a_selectedAggregator.agCode;
-    const idToAggCode = new Map(
-      aggregatorKeyFile.map(record => [String(record[a_baseGeoJsonId]), record[agCode]])
-    );
-
-    const aggregatedData = {};
-    Object.keys(combinedData).forEach(originId => {
-      const mappedOrigin = idToAggCode.get(originId) ?? originId;
-      aggregatedData[mappedOrigin] = aggregatedData[mappedOrigin] || {};
-
-      Object.keys(combinedData[originId]).forEach(destId => {
-        const mappedDest = idToAggCode.get(destId) ?? destId;
-        aggregatedData[mappedOrigin][mappedDest] = (aggregatedData[mappedOrigin][mappedDest] || 0) + combinedData[originId][destId];
-      });
-    });
-
-    return aggregatedData;
-  }
-
-  extractAttribute(data, a_attributeCode) {
-    const result = {};
+  // Aggregate fields for one data object
+  function aggregateFields(data) {
     Object.keys(data).forEach(key => {
-      if (Object.prototype.hasOwnProperty.call(data[key], a_attributeCode)) {
-        result[key] = data[key][a_attributeCode];
-      }
+      const attrs = _parent?.jsonData?.[a_jsonDataKey]?.attributes || [];
+      attrs.forEach(attr => {
+        const code = attr.attributeCode;
+
+        // If caller asked for a specific attribute, skip others
+        if (a_attributeCode && code !== a_attributeCode) return;
+
+        if (Object.prototype.hasOwnProperty.call(data[key], code)) {
+          const val = data[key][code];
+          if (val == null || isNaN(val)) return;
+
+          ensureStores(key, code);
+          aggregatedData[key][code] += val;
+          countData[key][code] += 1;
+          if (val < minData[key][code]) minData[key][code] = val;
+          if (val > maxData[key][code]) maxData[key][code] = val;
+        }
+      });
     });
-    return result;
   }
 
+  // Loop through each filter and aggregate
+  (a_lstFilters || []).forEach(filterKey => {
+    const bucket = _parent?.jsonData?.[a_jsonDataKey]?.data?.[filterKey];
+    if (bucket) aggregateFields(bucket);
+  });
+
+  // Compute post-aggregation transforms
+  if (a_agFilterOptionsMethod === "average") {
+    Object.keys(aggregatedData).forEach(key => {
+      Object.keys(aggregatedData[key]).forEach(code => {
+        const denom = countData[key][code] || 1; // avoid /0
+        aggregatedData[key][code] = aggregatedData[key][code] / denom;
+      });
+    });
+  } else if (a_agFilterOptionsMethod === "minimum") {
+    aggregatedData = minData;
+  } else if (a_agFilterOptionsMethod === "maximum") {
+    aggregatedData = maxData;
+  }
+  
+  // If a specific attribute was requested, flatten to { key: value }
+  if (a_attributeCode) {
+    const flat = {};
+    Object.keys(aggregatedData).forEach(key => {
+      // If attribute missing for a key, leave undefined or set null (choose your policy)
+      if (aggregatedData[key] && a_attributeCode in aggregatedData[key]) {
+        flat[key] = aggregatedData[key][a_attributeCode];
+      }
+    });
+    return flat;
+  }
+
+  // Otherwise, return full { key: { attrCode: value, ... } }
+  return aggregatedData;
+}
+  
+  
 }

@@ -1,15 +1,10 @@
 class VizSidebar {
   constructor(attributes, attributeSelected, attributeTitle, attributeInfoTextHtml, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
-    // Several unrelated model entities happen to share the same attributeTitle (e.g. "Special
-    // Trips" and "Special Trip Trends" are both "Trip Gen Attribute"), so an id derived from
-    // attributeTitle alone collides across entities - every widget built off this.id (the
-    // attribute radio group, filter checkboxes/selects, etc.) then shares a DOM id/name with
-    // the other entity's equivalent widget, and calcite's native-radio-style "one checked per
-    // name" exclusivity fights across the two once both have rendered at least once. Prefer the
-    // owning model entity's submenuText instead - that's guaranteed unique (it's what the menu
-    // and URL restore already key off of) - falling back to attributeTitle only if it's ever
-    // unavailable.
-    this.id = this.generateIdFromText(vizLayout?.modelEntity?.submenuText || attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    if (attributeTitle) {
+      this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    } else {
+      this.id = "vizsidebar-" + Math.random().toString(36); // fallback id
+    }
 
     // link to parent
     this.vizLayout = vizLayout;
@@ -56,8 +51,8 @@ class VizSidebar {
                                             aggregatorSelected,
                                             aggregatorOptions,
                                             this);
-      if (this.usesAggregatorFilter()) {
-        this.aggregatorFilter = new Filter (null, this.vizLayout, this.buildAggregatorFilterData(currentAggregator.filterData), {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
+      if (vizLayout.modelEntity.template==='vizTrends' || vizLayout.modelEntity.template==='vizDashboard') {
+        this.aggregatorFilter = new Filter (null, this.vizLayout, currentAggregator.filterData, {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
       }
 
     }
@@ -96,7 +91,7 @@ class VizSidebar {
     // Define the elements to process
     const elements = [
       { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
-      { name: "AttributeFilters", render: () => this.filters.map(filter => filter.render()) },
+      { name: "AttributeFilters", render: () => this.filters ? this.filters.map(filter => filter.render()) : null},
       { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
       { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
       { name: "Dividers", render: () => this.dividerSelect ? this.dividerSelect.render() : null },
@@ -329,7 +324,7 @@ class VizSidebar {
   }
 
   afterUpdateAggregator() {
-    if (this.usesAggregatorFilter()) {
+    if (this.vizLayout.modelEntity.template!=='vizMap') {
       const selectedAggregator = this.getSelectedAggregator();
       this.aggregatorFilter = new Filter(
           null,
