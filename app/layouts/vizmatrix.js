@@ -18,7 +18,6 @@ class VizMatrix {
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
                                   data.attributeTitle,
-                                  data.attributeInfoTextHtml,
                                   data.filters,
                                   data.aggregators,
                                   data.aggregatorSelected,
@@ -187,29 +186,53 @@ class VizMatrix {
   getMatrixData() {
     const _scenario = this.getScenarioMain();
     if (_scenario) {
-      return _scenario.getMatrixDataForFilteredOptionListWithAggregator(
+      return this.filterMatrixDataByAggregatorFilter(_scenario.getMatrixDataForFilteredOptionListWithAggregator(
         this.jsonName,
         this.sidebar.getListOfSelectedFilterOptions(),
         this.aCode,
         this.getSelectedAggregator(),
         this.baseGeoJsonKey,
         this.baseGeoJsonId
-      );
+      ));
     }
   }
 
   getMatrixDataComp() {
     const _scenario = this.getScenarioComp();
     if (_scenario) {
-      return _scenario.getMatrixDataForFilteredOptionListWithAggregator(
+      return this.filterMatrixDataByAggregatorFilter(_scenario.getMatrixDataForFilteredOptionListWithAggregator(
         this.jsonName,
         this.sidebar.getListOfSelectedFilterOptions(),
         this.aCode,
         this.getSelectedAggregator(),
         this.baseGeoJsonKey,
         this.baseGeoJsonId
-      );
+      ));
     }
+  }
+
+  // Select Zone Geography's own checkbox sub-filter (the "Reference Map"-paired list, e.g.
+  // which Plan Areas to include) scopes the PA table to just the checked origin zones - every
+  // destination those origins reach still shows, so "select a region" reads as "show me where
+  // this region's trips go" rather than a same-zones-only sub-matrix. Strictly follows the
+  // checkboxes: nothing checked means nothing shown (the aggregator's own default here is
+  // empty, not all-checked - see Aggregator.defaultSelected in aggregator.js - so the table
+  // starts blank until at least one zone is checked, same as the checklist itself starts
+  // blank). Only bypassed once every option is checked, since "all selected" and "unfiltered"
+  // are the same result anyway.
+  filterMatrixDataByAggregatorFilter(data) {
+    const filter = this.sidebar.aggregatorFilter;
+    if (!data || !filter || !filter.userModifiable) return data;
+
+    const allOptionValues = (filter.options || []).map(option => String(option.value));
+    const selected = new Set((filter.getSelectedOptionsAsList() || []).map(String));
+    if (selected.size >= allOptionValues.length) return data;
+
+    const filtered = {};
+    Object.keys(data).forEach(origin => {
+      if (selected.has(String(origin))) filtered[origin] = data[origin];
+    });
+    return filtered;
   }
 
   // Cell-by-cell main-vs-comp difference over the union of origins/destinations either
@@ -295,7 +318,7 @@ class VizMatrix {
     // lookup miss and every origin come back with zero destinations - rather than a
     // confusing table of row labels with no columns, say why there's nothing to show.
     if (!this.matrixDataHasAnyValues(mainData) && container) {
-      container.innerHTML = '<p>No Origin-Destination data found for ' +
+      container.innerHTML = '<p>No Production-Attraction data found for ' +
         this.getMainScenarioDisplayName() + '. This usually means it was built with an ' +
         'older or different data pipeline than the current one expects.</p>';
       return;
@@ -305,7 +328,7 @@ class VizMatrix {
       const compData = this.getMatrixDataComp();
 
       if (!this.matrixDataHasAnyValues(compData) && container) {
-        container.innerHTML = '<p>No comparable Origin-Destination data found for ' +
+        container.innerHTML = '<p>No comparable Production-Attraction data found for ' +
           this.getCompScenarioDisplayName() + '. This usually means it was built with an ' +
           'older or different data pipeline than ' + this.getMainScenarioDisplayName() +
           ', so the two can\'t be compared cell-by-cell.</p>';
@@ -342,7 +365,7 @@ class VizMatrix {
     ).sort((a, b) => a - b);
 
     let tableHTML = '<table class="custom-chart-table"><thead><tr>';
-    tableHTML += `<th>Origin \\ Destination (${aggTitle})</th>`;
+    tableHTML += `<th>Production \\ Attraction (${aggTitle})</th>`;
     destinations.forEach(dest => {
       tableHTML += `<th>${getLabel(dest)}</th>`;
     });

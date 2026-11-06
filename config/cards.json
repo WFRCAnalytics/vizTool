@@ -3,20 +3,9 @@
     "title": "Average Commute Distance",
     "measures": ["mHbwVmtPerWorker"]
   },
-  "cardPop": {
-    "title": "Population",
-    "measures": ["mTotPop"]
-  },
-  "cardHh": {
-    "title": "Households",
-    "measures": ["mHh","mHhZeroVeh"]
-  },
-  "cardHhSize": {
-    "title": "HH Size",
-    "measures": ["mHhSize"]
-  },
-  "cardHhInc": {
-    "title": "HH Income"
+  "cardPopHh": {
+    "title": "Population and Households",
+    "measures": ["mTotPop","mHh","mHhSize","mHhZeroVeh","mWk"]
   },
   "cardEmp": {
     "title": "Employment",
@@ -24,22 +13,42 @@
   },
   "cardVmt": {
     "title": "Vehicle Miles Traveled",
-    "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mWk","mHbwVmtPerWorker"]
+    "measures": ["mVmt","mPersonalVmt","mCvVmt","mHbwVmtProduced","mVmtPerHh","mVmtPerCapita","mHbwVmtPerWorker"]
   },
   "cardVht": {
     "title": "Vehicle Hours Traveled",
-    "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mWk","mHbwVhtPerWorker"]
+    "measures": ["mVht","mPersonalVht","mCvVht","mHbwVhtProduced","mVhtPerHh","mVhtPerCapita","mHbwVhtPerWorker"]
+  },
+  "cardVhd": {
+    "title": "Vehicle Hours of Delay",
+    "measures": ["mVhd","mPersonalVhd","mCvVhd"]
   },
   "cardTrips": {
-    "title": "Trips",
+    "title": "Personal Trips",
     "measures": ["mTotTrips"]
+  },
+  "cardModeTrips": {
+    "title": "Mode Trips",
+    "measures": ["mAutoTrips","mTransitTrips","mBikeTrips","mWalkTrips"]
+  },
+  "cardTransitTrips": {
+    "title": "Transit Trips",
+    "measures": ["mCRTTrips","mLRTTrips","mBRTTrips","mCORTrips","mEXPTrips","mLCLTrips"]
   },
   "cardModeSplit": {
     "title": "Mode Split",
-    "measures": ["mAutoTrips","mAutoShare","mTransitTrips","mTransitShare","mBikeTrips","mBikeShare","mWalkTrips","mWalkShare"]
+    "measures": ["mAutoShare","mTransitShare","mBikeShare","mWalkShare"]
   },
   "cardTransitSplit": {
     "title": "Transit Split",
-    "measures": ["mCRTTrips","mCRTShare","mLRTTrips","mLRTShare","mBRTTrips","mBRTShare","mCORTrips","mCORShare","mEXPTrips","mEXPShare","mLCLTrips","mLCLShare"]
+    "measures": ["mCRTShare","mLRTShare","mBRTShare","mCORShare","mEXPShare","mLCLShare"]
+  },
+  "cardATO": {
+    "title": "Access to Opportunities",
+    "measures": ["mAccessToJobsAuto","mAccessToJobsTransit","mAccessToJobsAutoTransitRatio"]
+  },
+  "cardHbwModeSplit": {
+    "title": "HBW Mode Split",
+    "measures": ["mHbwDaShare","mHbwSrShare","mHbwTransitShare","mHbwBikeShare","mHbwWalkShare"]
   }
 }

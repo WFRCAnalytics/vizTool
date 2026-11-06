@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
         <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.8.0/calcite.css" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.1.0/css/all.css">
-        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -18,6 +17,7 @@
         <script src="app/app.js"></script>
         <script src="app/model-entity.js"></script>
         <script src="app/menu-item.js"></script>
+        <script src="app/url-state.js"></script>
 
         <script src="app/layouts/attribute.js"></script>
         <script src="app/layouts/card.js"></script>
@@ -29,6 +29,7 @@
         <script src="app/layouts/vizmap.js"></script>
         <script src="app/layouts/vizsidebar.js"></script>
         <script src="app/layouts/viztrends.js"></script>
+        <script src="app/layouts/vizmatrix.js"></script>
         <script src="app/layouts/vizdashboard.js"></script>
 
         <script src="app/scenarios/attribute-filter-data.js"></script>
@@ -46,10 +47,23 @@
             <calcite-navigation slot="header" id="menu" style="display:none;">
                 <calcite-navigation-logo slot="logo"></calcite-navigation-logo>
                 <calcite-menu slot="content-start"></calcite-menu>
+                <button slot="content-end" id="infoButton" type="button" title="About vizTool" aria-label="About vizTool"><i class="fa-solid fa-circle-info"></i></button>
                 <calcite-navigation slot="navigation-secondary">
                     <calcite-menu slot="content-start"></calcite-menu>
                 </calcite-navigation>
             </calcite-navigation>
+            <!-- Reference-counted lazy-load spinner (see showDataLoadingIndicator/
+                 hideDataLoadingIndicator in app.js) - every view's on-demand scenario data
+                 fetch already toggles this, it just needed the actual element to show/hide. -->
+            <div id="lazy-load-indicator" style="display:none;">
+                <span class="lazy-load-label">Loading</span><span class="lazy-load-dot">.</span><span class="lazy-load-dot">.</span><span class="lazy-load-dot">.</span>
+            </div>
+            <!-- Shown by showNoDataIndicator/hideNoDataIndicator (app.js) when a view finishes
+                 loading but the current scenario/attribute/filter combination has nothing to
+                 show - stays up until the layout finds data or the user navigates away. -->
+            <div id="no-data-indicator" style="display:none;">
+                <span id="no-data-message"></span>
+            </div>
             <!-- Progress container centered -->
             <div id="load-screen" style="display:none;">
                 <div id="progress-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
@@ -74,8 +88,21 @@
                             </td>
                         </tr>
                     </table>
-                    
-                </div>    
+                    <!-- Neither progress bar above moves while loadMenuAndItems() (app.js) is
+                         synchronously constructing every menu item/model entity/sidebar - that
+                         can take a couple of seconds on its own, between the geo bar finishing
+                         and the scenario bar starting, with nothing on screen to show the app
+                         is still doing something. #load-status-spinner is a transform-based CSS
+                         animation (styles.css), which the browser's compositor thread keeps
+                         running even while that synchronous block occupies the main thread, so
+                         it visibly keeps moving through the gap instead of appearing frozen.
+                         #load-status-text (set via setLoadStatus() in app.js) names the current
+                         phase for the same reason. -->
+                    <div id="load-status" style="display:flex; align-items:center; gap:8px; margin-top:12px;">
+                        <div id="load-status-spinner"></div>
+                        <span id="load-status-text"></span>
+                    </div>
+                </div>
             </div>
             <div id="main"></div>
         </calcite-shell>
@@ -83,6 +110,18 @@
         <div id="infoModal" class="modal">
             <div id="info-modal-content" class="modal-content" style="display:none;"></div>
         </div>
+        <!-- Reference Map popup - a page-level singleton like #infoModal above. Filter.js's
+             openMapPopup()/closeMapPopup() (the "Reference Map" button on any aggregator that
+             usesAggregatorFilter() - vizTrends/vizMatrix/vizDashboard) assume this already
+             exists in the DOM and just toggle/populate it; #mapPopup's full styling (fixed
+             position, size, display:none default) already lived in styles.css with nothing
+             ever actually creating the element itself. -->
+        <div id="mapPopup"></div>
+        <!-- Definitions popup - a page-level singleton like #mapPopup above. VizSidebar's
+             openDefinitionsPopup()/closeDefinitionsPopup() (the "Definitions" button under any
+             attribute list that has at least one attribute with a config/attributes.json
+             "definition") assume this already exists in the DOM and just populate/toggle it. -->
+        <div id="definitionsPopup"></div>
         <script>
             // Simple script to show the modal
             document.addEventListener('DOMContentLoaded', function() {

@@ -1,0 +1,293 @@
+{
+  "compare_pct_default_symbol": {
+    "pctDefSymB": {
+      "type": "simple-marker",
+      "color": "#EEEEEE",
+      "size": 4,
+      "outline": {
+        "color": "#CCCCCC",
+        "width": 0.2
+      }
+    },
+    "pctDefSymA": {
+      "type": "simple-line",
+      "color": "#EEEEEE",
+      "width": 0.5
+    },
+    "pctDefSymC": {
+      "type": "simple-fill",
+      "color": [
+        238,
+        238,
+        238,
+        0.35
+      ],
+      "outline": {
+        "color": "#EEEEEE",
+        "width": 0.5
+      }
+    },
+    "pctDefSymD": {
+      "type": "simple-fill",
+      "color": [
+        221,
+        221,
+        221,
+        0.75
+      ],
+      "outline": {
+        "type": "simple-line",
+        "color": "#FFFFFF",
+        "width": 1
+      }
+    }
+  },
+  "main_style": {
+    "mainStyleD": [
+      {"type": "simple-marker", "color": "#31398a", "size": 4, "outline": {"color": "#31398a", "width": 0.5}},
+      {"type": "simple-marker", "color": "#1ba9e6", "size": 6, "outline": {"color": "#1ba9e6", "width": 0.5}},
+      {"type": "simple-marker", "color": "#00a74e", "size": 8, "outline": {"color": "#00a74e", "width": 0.5}},
+      {"type": "simple-marker", "color": "#6cb74a", "size": 10, "outline": {"color": "#6cb74a", "width": 0.5}},
+      {"type": "simple-marker", "color": "#8dc348", "size": 12, "outline": {"color": "#8dc348", "width": 0.5}},
+      {"type": "simple-marker", "color": "#E09d2e", "size": 14, "outline": {"color": "#E09d2e", "width": 0.5}},
+      {"type": "simple-marker", "color": "#Eb672d", "size": 16, "outline": {"color": "#Eb672d", "width": 0.5}},
+      {"type": "simple-marker", "color": "#E5272d", "size": 18, "outline": {"color": "#E5272d", "width": 0.5}},
+      {"type": "simple-marker", "color": "#Af2944", "size": 20, "outline": {"color": "#Af2944", "width": 0.5}}
+    ],
+    "mainStyleE": [
+      {"type": "simple-line", "color": [49, 57, 138], "width": 0.25},
+      {"type": "simple-line", "color": [27, 169, 230], "width": 1.1},
+      {"type": "simple-line", "color": [0, 167, 78], "width": 1.7},
+      {"type": "simple-line", "color": [108, 183, 74], "width": 2.3},
+      {"type": "simple-line", "color": [141, 195, 72], "width": 3.9},
+      {"type": "simple-line", "color": [224, 157, 46], "width": 3.5},
+      {"type": "simple-line", "color": [235, 103, 45], "width": 4.1},
+      {"type": "simple-line", "color": [229, 39, 45], "width": 4.7},
+      {"type": "simple-line", "color": [175, 41, 68], "width": 5.3}
+    ],
+    "mainStyleB": [
+      {"type": "simple-line", "color": "#31398a", "width": 0.25},
+      {"type": "simple-line", "color": "#1ba9e6", "width": 0.5},
+      {"type": "simple-line", "color": "#00a74e", "width": 1.0},
+      {"type": "simple-line", "color": "#6cb74a", "width": 1.5},
+      {"type": "simple-line", "color": "#8dc348", "width": 2.0},
+      {"type": "simple-line", "color": "#E09d2e", "width": 3.0},
+      {"type": "simple-line", "color": "#Eb672d", "width": 4.0},
+      {"type": "simple-line", "color": "#E5272d", "width": 5.0},
+      {"type": "simple-line", "color": "#Af2944", "width": 6.0}
+    ],
+    "mainStyleG": [
+      {"type": "simple-line", "color": "#31398a", "width": 0.5},
+      {"type": "simple-line", "color": "#1ba9e6", "width": 1.1},
+      {"type": "simple-line", "color": "#00a74e", "width": 1.7},
+      {"type": "simple-line", "color": "#6cb74a", "width": 2.3},
+      {"type": "simple-line", "color": "#8dc348", "width": 3.9},
+      {"type": "simple-line", "color": "#E09d2e", "width": 3.5},
+      {"type": "simple-line", "color": "#Eb672d", "width": 4.1},
+      {"type": "simple-line", "color": "#E5272d", "width": 4.7},
+      {"type": "simple-line", "color": "#Af2944", "width": 5.3}
+    ],
+    "mainStyleH": [
+      {"type": "simple-fill", "style": "solid", "color": "#31398a", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#00a74e", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#8dc348", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#Eb672d", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#Af2944", "outline": {"color": "#dddddd", "width": 0.5}}
+    ],
+    "mainStyleI": [
+      {"type": "simple-line", "color": "#31398a", "width": 0.25},
+      {"type": "simple-line", "color": "#00a74e", "width": 1.0},
+      {"type": "simple-line", "color": "#8dc348", "width": 2.0},
+      {"type": "simple-line", "color": "#Eb672d", "width": 4.0},
+      {"type": "simple-line", "color": "#Af2944", "width": 6.0}
+    ],
+    "mainStyleC": [
+      {"type": "simple-fill", "color": [49, 57, 138, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [27, 169, 230, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [0, 167, 78, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [108, 183, 74, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [141, 195, 72, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [224, 157, 46, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [235, 103, 45, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [229, 39, 45, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [175, 41, 68, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}}
+    ],
+    "mainStyleF": [
+      {"type": "simple-fill", "color": [49, 57, 138, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [27, 169, 230, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [0, 167, 78, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [108, 183, 74, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [141, 195, 72, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [224, 157, 46, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [235, 103, 45, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [229, 39, 45, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [175, 41, 68, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 0.5}}
+    ],
+    "mainStyleA": [
+      {"type": "simple-line", "color": "#31398a", "width": 0.5},
+      {"type": "simple-line", "color": "#1ba9e6", "width": 1.1},
+      {"type": "simple-line", "color": "#00a74e", "width": 1.7},
+      {"type": "simple-line", "color": "#6cb74a", "width": 2.3},
+      {"type": "simple-line", "color": "#E09d2e", "width": 3.5},
+      {"type": "simple-line", "color": "#Eb672d", "width": 4.1},
+      {"type": "simple-line", "color": "#Af2944", "width": 5.3}
+    ]
+  },
+  "compare_pct": {
+    "pctA": [
+      {"minValue": -999999, "maxValue": -5.0, "symbol": {"type": "simple-line", "color": "#005CC4", "width": 10, "cap": "butt"}, "label": "-500% or More"},
+      {"minValue": -5.0, "maxValue": -0.5, "symbol": {"type": "simple-line", "color": "#0070FF", "width": 6, "cap": "butt"}, "label": "-50% to -500%"},
+      {"minValue": -0.5, "maxValue": -0.1, "symbol": {"type": "simple-line", "color": "#BED2FF", "width": 2, "cap": "butt"}, "label": "-10% to -50%"},
+      {"minValue": -0.1, "maxValue": 0.1, "symbol": {"type": "simple-line", "color": "#AAAAAA", "width": 0.5, "cap": "butt"}, "label": "-10% to +10%"},
+      {"minValue": 0.1, "maxValue": 0.5, "symbol": {"type": "simple-line", "color": "#FFBEBE", "width": 2, "cap": "butt"}, "label": "+10% to +50%"},
+      {"minValue": 0.5, "maxValue": 5.0, "symbol": {"type": "simple-line", "color": "#E60000", "width": 6, "cap": "butt"}, "label": "+50% to +500%"},
+      {"minValue": 5.0, "maxValue": 999999, "symbol": {"type": "simple-line", "color": "#510000", "width": 10, "cap": "butt"}, "label": "+500% or More"}
+    ],
+    "pctC": [
+      {"minValue": -999999, "maxValue": -5.0, "symbol": {"type": "simple-marker", "color": "#005CC4", "size": 16, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "-500% or More"},
+      {"minValue": -5.0, "maxValue": -0.5, "symbol": {"type": "simple-marker", "color": "#0070FF", "size": 10, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "-50% to -500%"},
+      {"minValue": -0.5, "maxValue": -0.1, "symbol": {"type": "simple-marker", "color": "#BED2FF", "size": 4, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "-10% to -50%"},
+      {"minValue": -0.1, "maxValue": 0.1, "symbol": {"type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "-10% to +10%"},
+      {"minValue": 0.1, "maxValue": 0.5, "symbol": {"type": "simple-marker", "color": "#FFBEBE", "size": 4, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "+10% to +50%"},
+      {"minValue": 0.5, "maxValue": 5.0, "symbol": {"type": "simple-marker", "color": "#E60000", "size": 10, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "+50% to +500%"},
+      {"minValue": 5.0, "maxValue": 999999, "symbol": {"type": "simple-marker", "color": "#510000", "size": 16, "outline": {"color": "#EEEEEE", "width": 0.5}}, "label": "+500% or More"}
+    ],
+    "pctE": [
+      {"minValue": -999999, "maxValue": -5.0, "symbol": {"type": "simple-fill", "color": [0, 92, 196, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "-500% or More"},
+      {"minValue": -5.0, "maxValue": -0.5, "symbol": {"type": "simple-fill", "color": [0, 112, 255, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "-50% to -500%"},
+      {"minValue": -0.5, "maxValue": -0.1, "symbol": {"type": "simple-fill", "color": [190, 210, 255, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "-10% to -50%"},
+      {"minValue": -0.1, "maxValue": 0.1, "symbol": {"type": "simple-fill", "color": [170, 170, 170, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "-10% to +10%"},
+      {"minValue": 0.1, "maxValue": 0.5, "symbol": {"type": "simple-fill", "color": [255, 190, 190, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "+10% to +50%"},
+      {"minValue": 0.5, "maxValue": 5.0, "symbol": {"type": "simple-fill", "color": [230, 0, 0, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "+50% to +500%"},
+      {"minValue": 5.0, "maxValue": 999999, "symbol": {"type": "simple-fill", "color": [81, 0, 0, 0.35], "outline": {"color": "#dddddd", "width": 0.2}}, "label": "+500% or More"}
+    ],
+    "pctB": [
+      {"minValue": -999999, "maxValue": -5.0, "symbol": {"type": "simple-fill", "color": "#005CC4", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "-500% or More"},
+      {"minValue": -5.0, "maxValue": -0.5, "symbol": {"type": "simple-fill", "color": "#0070FF", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "-50% to -500%"},
+      {"minValue": -0.5, "maxValue": -0.1, "symbol": {"type": "simple-fill", "color": "#BED2FF", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "-10% to -50%"},
+      {"minValue": -0.1, "maxValue": 0.1, "symbol": {"type": "simple-fill", "color": "#AAAAAA", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "-10% to +10%"},
+      {"minValue": 0.1, "maxValue": 0.5, "symbol": {"type": "simple-fill", "color": "#FFBEBE", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "+10% to +50%"},
+      {"minValue": 0.5, "maxValue": 5.0, "symbol": {"type": "simple-fill", "color": "#E60000", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "+50% to +500%"},
+      {"minValue": 5.0, "maxValue": 999999, "symbol": {"type": "simple-fill", "color": "#510000", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}, "label": "+500% or More"}
+    ],
+    "pctD": [
+      {"minValue": -999999, "maxValue": -5.0, "symbol": {"type": "simple-fill", "color": "#005CC4", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "-500% or More"},
+      {"minValue": -5.0, "maxValue": -0.5, "symbol": {"type": "simple-fill", "color": "#0070FF", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "-50% to -500%"},
+      {"minValue": -0.5, "maxValue": -0.1, "symbol": {"type": "simple-fill", "color": "#BED2FF", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "-10% to -50%"},
+      {"minValue": -0.1, "maxValue": 0.1, "symbol": {"type": "simple-fill", "color": "#AAAAAA", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "-10% to +10%"},
+      {"minValue": 0.1, "maxValue": 0.5, "symbol": {"type": "simple-fill", "color": "#FFBEBE", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "+10% to +50%"},
+      {"minValue": 0.5, "maxValue": 5.0, "symbol": {"type": "simple-fill", "color": "#E60000", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "+50% to +500%"},
+      {"minValue": 5.0, "maxValue": 999999, "symbol": {"type": "simple-fill", "color": "#510000", "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}, "label": "+500% or More"}
+    ]
+  },
+  "compare_abs_style": {
+    "absStyleK": [
+      {"type": "simple-marker", "color": "#005CC4", "size": 20, "outline": {"color": "#005CC4", "width": 0.5}},
+      {"type": "simple-marker", "color": "#0070FF", "size": 15, "outline": {"color": "#0070FF", "width": 0.5}},
+      {"type": "simple-marker", "color": "#BED2FF", "size": 5, "outline": {"color": "#BED2FF", "width": 0.5}},
+      {"type": "simple-marker", "color": "#AAAAAA", "size": 1, "outline": {"color": "#AAAAAA", "width": 0.5}},
+      {"type": "simple-marker", "color": "#FFBEBE", "size": 5, "outline": {"color": "#FFBEBE", "width": 0.5}},
+      {"type": "simple-marker", "color": "#E60000", "size": 15, "outline": {"color": "#E60000", "width": 0.5}},
+      {"type": "simple-marker", "color": "#510000", "size": 20, "outline": {"color": "#510000", "width": 0.5}}
+    ],
+    "absStyleJ": [
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0},
+      {"type": "simple-line", "color": "#0070FF", "width": 3.75},
+      {"type": "simple-line", "color": "#BED2FF", "width": 1.25},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.25},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 1.25},
+      {"type": "simple-line", "color": "#E60000", "width": 3.75},
+      {"type": "simple-line", "color": "#510000", "width": 5.0}
+    ],
+    "absStyleA": [
+      {"type": "simple-fill", "color": [0, 92, 196, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [0, 112, 255, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [190, 210, 255, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [170, 170, 170, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [255, 190, 190, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [230, 0, 0, 0.65], "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "color": [81, 0, 0, 0.65], "outline": {"color": "#dddddd", "width": 0.5}}
+    ],
+    "absStyleI": [
+      {"type": "simple-line", "color": "#510000", "width": 5.0},
+      {"type": "simple-line", "color": "#E60000", "width": 2.5},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 0.625},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.3125},
+      {"type": "simple-line", "color": "#BED2FF", "width": 0.625},
+      {"type": "simple-line", "color": "#0070FF", "width": 2.5},
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0}
+    ],
+    "absStyleB": [
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0},
+      {"type": "simple-line", "color": "#0070FF", "width": 2.5},
+      {"type": "simple-line", "color": "#BED2FF", "width": 0.625},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.3125},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 0.625},
+      {"type": "simple-line", "color": "#E60000", "width": 2.5},
+      {"type": "simple-line", "color": "#510000", "width": 5.0}
+    ],
+    "absStyleC": [
+      {"type": "simple-fill", "style": "solid", "color": "#005CC4", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#0070FF", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#BED2FF", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#AAAAAA", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#FFBEBE", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#E60000", "outline": {"color": "#dddddd", "width": 0.5}},
+      {"type": "simple-fill", "style": "solid", "color": "#510000", "outline": {"color": "#dddddd", "width": 0.5}}
+    ],
+    "absStyleG": [
+      {"type": "simple-fill", "color": [0, 92, 196, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [0, 112, 255, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [190, 210, 255, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [170, 170, 170, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [255, 190, 190, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [230, 0, 0, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}},
+      {"type": "simple-fill", "color": [81, 0, 0, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 1}}
+    ],
+    "absStyleH": [
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0},
+      {"type": "simple-line", "color": "#0070FF", "width": 3.5},
+      {"type": "simple-line", "color": "#BED2FF", "width": 1.5},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.3125},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 1.5},
+      {"type": "simple-line", "color": "#E60000", "width": 3.5},
+      {"type": "simple-line", "color": "#510000", "width": 5.0}
+    ],
+    "absStyleF": [
+      {"type": "simple-line", "color": "#510000", "width": 5.0},
+      {"type": "simple-line", "color": "#E60000", "width": 3.0},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 1.0},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.3125},
+      {"type": "simple-line", "color": "#BED2FF", "width": 1.0},
+      {"type": "simple-line", "color": "#0070FF", "width": 3.0},
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0}
+    ],
+    "absStyleD": [
+      {"type": "simple-line", "color": "#005CC4", "width": 5.0},
+      {"type": "simple-line", "color": "#0070FF", "width": 3.0},
+      {"type": "simple-line", "color": "#BED2FF", "width": 1.0},
+      {"type": "simple-line", "color": "#AAAAAA", "width": 0.3125},
+      {"type": "simple-line", "color": "#FFBEBE", "width": 1.0},
+      {"type": "simple-line", "color": "#E60000", "width": 3.0},
+      {"type": "simple-line", "color": "#510000", "width": 5.0}
+    ],
+    "absStyleE": [
+      {"type": "simple-fill", "color": [0, 92, 196, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [0, 112, 255, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [190, 210, 255, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [170, 170, 170, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [255, 190, 190, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [230, 0, 0, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}},
+      {"type": "simple-fill", "color": [81, 0, 0, 0.75], "outline": {"type": "simple-line", "color": "FFFFFF", "width": 0.5}}
+    ]
+  },
+  "compare_abs_lei": {
+    "absLeiD": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#,###')))",
+    "absLeiE": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text(($feature.dVal * 100), '#.0') + '%'))",
+    "absLeiF": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#.0') + '%'))",
+    "absLeiC": "IIF(IsEmpty($feature.dVal), '', IIF(Abs($feature.dVal)<0.5, '', Text($feature.dVal, '#,##0')))",
+    "absLeiB": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '#,##0'))",
+    "absLeiA": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal==0, '', Text($feature.dVal, '#0.0')))",
+    "absLeiG": "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal, '0.00'))"
+  }
+}

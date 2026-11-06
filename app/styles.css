@@ -1,8 +1,141 @@
-/* =========================
-   SELECT / OPTION STYLES
-   ========================= */
-select {
-  color: red;
+/* Nav menu items and the logo paint their own opaque background/text from these CSS custom
+   properties (in their shadow DOM), so plain rules on the host elements get painted over -
+   overriding the variables is the only way to reach them, and (unlike normal properties)
+   custom properties do cross the shadow boundary, scoped to just the elements they're set on.
+   Set text-1/text-2 up here on the nav bars themselves so both the logo heading/description
+   AND unselected menu item text inherit readable text. Top bar is dark navy with white text;
+   the secondary (submenu) bar underneath is a light gray bar with dark text. */
+#menu {
+    --calcite-navigation-background: #0b2c4d;
+    --calcite-ui-text-1: #ffffff;
+    --calcite-ui-text-2: #ffffff;
+}
+
+#menu calcite-navigation[slot="navigation-secondary"] {
+    --calcite-navigation-background: #f4f6f8;
+    --calcite-ui-text-1: #202020;
+    --calcite-ui-text-2: #202020;
+}
+
+/* Match unselected items' own background to the bar they're on so they blend in;
+   -foreground-2 is a light hover shade. Default (used by the secondary/submenu bar). */
+calcite-menu-item {
+    --calcite-ui-foreground-1: #f4f6f8;
+    --calcite-ui-foreground-2: #e8ebee;
+}
+
+/* Top-level menu items sit directly on the dark navy bar - match that instead of the
+   secondary bar's white, with white text. Specificity has to beat the plain rule above
+   (a bare-ID + attribute + two type selectors) but stay lower than .menu-item-selected
+   below, or a selected top-level item's transparent-foreground trick stops working. */
+#menu > calcite-menu[slot="content-start"] > calcite-menu-item {
+    --calcite-ui-foreground-1: #0b2c4d;
+    --calcite-ui-foreground-2: #173f66;
+    /* -3 is the mouse-down/press background - left unset it falls back to Calcite's default
+       light gray, which blended into the old white bar but stands out badly on navy. */
+    --calcite-ui-foreground-3: #092238;
+    --calcite-ui-text-1: #ffffff;
+    --calcite-ui-text-2: #ffffff;
+}
+
+/* The logo/title is a real link in its own shadow DOM too - its resting state doesn't paint
+   a background at all (so foreground-1 doesn't matter here), but hovering/pressing it does,
+   via the same foreground-2/-3 tokens as the menu items - same navy shades so it doesn't
+   flash Calcite's default light gray against the navy bar either. */
+#menu calcite-navigation-logo {
+    --calcite-ui-foreground-2: #173f66;
+    --calcite-ui-foreground-3: #092238;
+}
+
+/* The info button is a plain <button> (not a calcite-action) specifically to avoid Calcite's
+   shadow-DOM styling entirely: reaching calcite-action's icon required a transform: scale() on
+   the whole host element (there's no reachable ::part for just the icon in this Calcite
+   version, and the scale="l" attribute only grew the button's padding, not the icon itself) -
+   which scaled the button's opaque hover/press background right along with it, spilling past
+   the bar's own height. A real button+<i> icon needs none of that: font-size controls the
+   icon directly, and a fixed-size box means there's nothing to overflow in the first place. */
+#menu #infoButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    width: 64px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0;
+}
+
+#menu #infoButton:hover,
+#menu #infoButton:focus,
+#menu #infoButton:active {
+    background: #173f66;
+    outline: none;
+}
+
+/* calcite-menu/calcite-navigation have no built-in overflow handling (unlike calcite-action-bar,
+   which auto-collapses into an ellipsis menu) - with enough submenu items the bar just runs past
+   the window edge with no way to reach the rest. Scroll it horizontally instead; flex-shrink:0
+   keeps items at their natural width so they overflow into the scroll area rather than squishing.
+   The scrollbar itself is hidden (scroll still works via wheel/drag/keyboard) - calcite-menu's
+   flex row lives inside its shadow DOM ul with no exposed ::part, so a real wrap/collapse layout
+   isn't reachable from here without piercing the shadow root. */
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu {
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* old Edge/IE */
+}
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Edge */
+}
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu-item {
+    flex-shrink: 0;
+}
+
+/* Highlight for the selected item - different color per bar, each painted the same way:
+   the shadow content's own background is made transparent so the flat fill below - painted
+   on the host element itself, which sits behind the shadow content - shows through.
+   -foreground-2/-3 (hover/press backgrounds) are also made transparent here: they're opaque
+   by default (-2 is the light gray/navy hover set above), and clicking a menu item leaves it
+   focused, so without this the fill got painted over by that hover shade the moment the item
+   had focus - it only reappeared once focus moved elsewhere.
+   Each selector has to out-specificity that bar's own bare-item rule above (id + attribute +
+   two type selectors) so this wins there instead. */
+
+/* Top-level (primary) bar: dark blue at top fading to WFRC's brand orange (#C85327, same
+   one used on the modal titlebar) at the bottom, paired with near-white text there too.
+   This `background` is a plain property on the host (not a --calcite-* token like the bar's
+   own background above), so it takes a gradient directly with no extra tricks needed.
+   --calcite-ui-brand tints the item's icon when selected - it has to stay white (matching
+   the text), not the orange end of the gradient, or the icon disappears into it. */
+#menu > calcite-menu[slot="content-start"] > calcite-menu-item.menu-item-selected {
+    --calcite-ui-foreground-1: transparent;
+    --calcite-ui-foreground-2: transparent;
+    --calcite-ui-foreground-3: transparent;
+    --calcite-ui-brand: #ffffff;
+    --calcite-ui-text-1: #ffffff;
+    --calcite-ui-text-2: #ffffff;
+    background: linear-gradient(180deg, #0b2c4d 0%, #C85327 100%);
+}
+
+/* Secondary (submenu) bar: a light tint of WFRC's sky blue CTA color (from wfrc.utah.gov),
+   not the solid brand blue, so text-1 can stay dark (#202020, matching unselected items)
+   and stay legible without needing white text. */
+#menu calcite-navigation[slot="navigation-secondary"] calcite-menu-item.menu-item-selected {
+    --calcite-ui-foreground-1: transparent;
+    --calcite-ui-foreground-2: transparent;
+    --calcite-ui-foreground-3: transparent;
+    --calcite-ui-brand: #0093c5;
+    --calcite-ui-text-1: #202020;
+    background: #d6eef8;
+}
+
+/* Custom styles for disabled option elements */
+option:disabled {
+    color: #ff0000 !important; /* Override the color with your custom color */
+    background-color: #f0f0f0; /* Optional: Set a background color if needed */
 }
 
 option {
@@ -20,19 +153,29 @@ option:disabled {
    MODAL
    ========================= */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 25%;
+    background-color: #fefefe;
+    margin: 10vh auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 6px; /* same radius used app-wide for cards/panels now (see .card, .filter-card) */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalFadeIn 0.2s ease-out;
 }
 
 @keyframes modalFadeIn {
@@ -55,7 +198,7 @@ option:disabled {
     color: #fefefe;
     margin: -20px -20px 15px -20px;
     padding: 12px 15px;
-    border-radius: 7px 7px 0 0;
+    border-radius: 6px 6px 0 0;
     cursor: move;
     user-select: none;
     touch-action: none;
@@ -110,33 +253,70 @@ h1 {
 
 
 /* =========================
+   LOADING PROGRESS BARS
+   ========================= */
+/* <progress> has no single cross-browser color property - accent-color covers modern
+   Firefox/Chromium, the ::-webkit-progress-value/::-moz-progress-bar pseudo-elements cover
+   the rest, so all three are needed together. */
+progress {
+  accent-color: #C85327;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #f0f0f0;
+}
+
+progress::-webkit-progress-value {
+  background-color: #C85327;
+}
+
+progress::-moz-progress-bar {
+  background-color: #C85327;
+}
+
+
+/* =========================
    SMALL BUTTONS
    ========================= */
-.check-all-toggle-button,
-.reference-map-button {
-  height: 20px;
-  font-size: 10px;
-  padding: 0 5px;
-  float: right;
+/* Both buttons below share the same full-width, pill-shaped, pastel-blue look (round=true
+   is set on each in JS). An explicit height is required on both - a bare calcite-button with
+   no height set balloons to ~viewport height in this app (pre-existing Calcite/global-CSS
+   quirk, same reason the old inline versions forced height:20px). */
+.reference-map-button,
+.check-all-toggle-button {
+  display: block;
+  width: 100%;
+  height: 27px; /* 85% of the original 32px */
+  margin-top: 8px;
+  --calcite-ui-brand: #5B9BD5; /* softer pastel blue instead of Calcite's saturated default -
+                                   crosses the shadow boundary onto the button's own background */
 }
 
 
 /* =========================
    SCENARIO / LABEL / CHECKBOX CONTAINERS
    ========================= */
-.scenario-selector-container,
-.label-toggle-container {
+.scenario-selector-container {
   width: 295px;
-  background-color: rgba(185, 185, 255, 0.95);
+  background-color: #ffffff; /* white + blue border, same pattern as .filter-card's white+orange -
+                                 a solid blue fill here blended into the now-also-blue card headers */
+  border: 1px solid #5B9BD5;
+  border-radius: 6px; /* same radius used app-wide for cards/panels (see .card, .filter-card) */
   padding: 10px;
 }
 
 .checkbox-container {
-  max-height: 325px;
+  max-height: 250px;
   overflow-y: auto;
+  overflow-x: hidden; /* setting overflow-y alone makes the browser compute overflow-x to
+                          "auto" too (a CSS overflow-interaction quirk), which can show a
+                          horizontal scrollbar for a long label (e.g. Route Name's "SLC-Foothill
+                          Drive-Wasatch Blvd Corridor") instead of just wrapping it - there's
+                          nothing here that should ever need to scroll sideways. */
   width: 100%;
   padding-left: 5px;
   padding-top: 5px;
+  box-sizing: border-box;
 }
 
 
@@ -184,14 +364,109 @@ td {
 }
 
 .rowGeography {
-  padding: 15px;
-  background-color: #add8e6;
+    padding: 15px;
+    background-color: #ffffff; /* white + blue border, same pattern as .scenario-selector-container -
+                                   a solid blue fill blended into the now-also-blue card headers */
+    border: 1px solid #5B9BD5;
+    border-radius: 6px; /* same radius used app-wide for cards/panels (see .card, .filter-card) */
+    /* Deliberately left shrinkable (flex-shrink's default of 1): .rowAttributes is the one
+       row that must never shrink below its content, so on a short viewport this is the row
+       that should give a little rather than forcing .colAttributes itself to scroll. */
 }
 
-.rowAttributeSettings,
-.rowAttributes {
-  padding: 15px;
-  background-color: #ffffff;
+/* "Select Summary Geography" (#...Aggregator) and its associated filter (#...AggregatorFilters,
+   e.g. Plan Area) are two separately-populated .rowGeography boxes that sit directly adjacent
+   with no gap - visually merge them into one bordered box instead of two touching boxes with a
+   double-border seam, since the filter is just showing options scoped to the aggregator above
+   it. Only applies when the filters box actually has content - JS leaves it empty/hidden
+   (.rowGeography:empty) otherwise, in which case the aggregator box keeps its own full border.
+   vizTrends and vizMatrix are excluded here - neither has a border left to merge (see the
+   "AGGREGATION" heading override below), so this seam-squaring is moot for both. */
+#vizDashboardAggregator:has(+ #vizDashboardAggregatorFilters:not(:empty)) {
+  border-bottom: none;
+  border-bottom-left-radius: 0; /* squares off the seam where it meets ...Filters below;
+                                    top corners stay rounded */
+  border-bottom-right-radius: 0;
+  padding-bottom: 8px;
+}
+
+#vizDashboardAggregator + #vizDashboardAggregatorFilters:not(:empty) {
+  border-top: none;
+  border-top-left-radius: 0; /* squares off the seam where it meets ...Aggregator above;
+                                 bottom corners stay rounded */
+  border-top-right-radius: 0;
+  padding-top: 8px;
+  margin-top: -10px; /* cancels out .colAttributes' gap between rows - this pair should stay
+                         touching (one merged box), unlike every other pair of rows */
+}
+
+.rowAttributeSettings {
+    padding: 15px;
+    background-color: #ffffff; /* white, no border - same "section label instead of a box"
+                                   treatment as .rowAttributes (see ::before rules below) */
+}
+
+/* vizTrends/vizMap "Divide By" boxes: dropped the blue-bordered-box look in favor of the same
+   small grey section-label convention as .rowAttributes::before / #trendSelector::before, so
+   the sidebar reads as one continuous list of labeled sections rather than stacked cards. Only
+   the first box in the group (Dividers) gets the label - DividerFilters (vizMap's Plan-Area-
+   style sub-filter) sits directly under it via .colAttributes' own gap, same group. */
+#vizTrendsDividers::before,
+#vizMapDividers::before {
+  content: "\2014 NORMALIZATION \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* vizTrends/vizMap/vizMatrix "Select Summary/Zone Geography" boxes: same treatment, labeled
+   "AGGREGATION". vizDashboard's Aggregator box (and the Scenario Selector boxes, which also use
+   .rowGeography) keeps its original blue-bordered-card look - only these three are in scope. */
+#vizTrendsAggregator,
+#vizTrendsAggregatorFilters,
+#vizMapAggregator,
+#vizMatrixAggregator,
+#vizMatrixAggregatorFilters {
+  border: none;
+  border-radius: 0;
+}
+#vizTrendsAggregator::before,
+#vizMapAggregator::before,
+#vizMatrixAggregator::before {
+  content: "\2014 AGGREGATION \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Tightens the gap between the "Select Summary Geography" dropdown and its own sub-filter
+   (e.g. Plan Area) right below it - the old blue-bordered-box merge trick used to pull these
+   two flush together, but that was removed along with the border itself (see above), leaving
+   .rowGeography's own 15px bottom/top padding plus .colAttributes' 10px row gap (40px total) -
+   more than makes sense for what's really one control and its own scoped sub-filter. */
+#vizTrendsAggregator,
+#vizMatrixAggregator {
+  padding-bottom: 6px;
+}
+#vizTrendsAggregator + #vizTrendsAggregatorFilters,
+#vizMatrixAggregator + #vizMatrixAggregatorFilters {
+  padding-top: 0;
+  margin-top: -4px;
+}
+
+/* .rowAttributes' flex-grow (below) pushes every row after it toward the bottom of a short
+   sidebar - the Normalization/Aggregation sections should sit directly under the attribute
+   list instead of dropping to the bottom of the page. */
+#vizTrendsAttributes,
+#vizMapAttributes,
+#vizMatrixAttributes {
+  flex-grow: 0;
 }
 
 
@@ -212,11 +487,42 @@ td {
 /* =========================
    TREND PANELS
    ========================= */
+#charttitle h1 {
+  margin-bottom: 10px; /* more room before the subtitle line below it */
+  color: #12222f; /* calcite-shell sets its own inherited text color (~#4a4a4a, a washed
+                      medium grey) on everything inside it that doesn't set its own - this
+                      plain h1 was inheriting that instead of reading as crisp near-black. */
+}
+
+#chartsubtitle {
+  margin-top: 6px;
+  margin-bottom: 8px; /* space below the title/filter-summary text before the chart toggle/
+                          chart start - trimmed down now that #trendChartToggle sits right
+                          after it too (its own small top margin adds a bit more on top) */
+}
+
 #trendSettings {
-  width: 180px;
-  background-color: #add8e6;
+  width: 280px; /* Fixed rather than max-content - max-content let a "Select Trend Groups"
+                    checkbox list set the panel's width, but collapsing it swaps in a one-line
+                    .filter-selected-summary (e.g. "WFv9.2, WFv10.0-beta.1, WFv10.0-beta.2")
+                    that's often wider than the checkbox list itself. That summary already has
+                    text-overflow: ellipsis, but ellipsis only kicks in once its container has a
+                    real width to truncate against - inside a max-content ancestor there's
+                    nothing to truncate against, so the panel just grew to fit the untruncated
+                    text instead, resizing everything below it (Trend/Table Display Settings,
+                    the collapse button) each time the filter toggled. 280px matches the panel's
+                    own natural width before that bug (see #trendOptions et al, all width:100%
+                    of this). */
+  /* No background of its own - it's the outer wrapper around #trendScenarios and
+     #trendOptions, both of which already have their own white/bordered treatment (same
+     reasoning as .colAttributes losing its background above). */
   height: calc(100vh - 134px);
   overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* buffer between the "Select Trend Groups" and "Trend Options" boxes */
+  padding: 15px; /* buffer around the whole group, from the panel's own edges */
 }
 
 #trendSelector {
@@ -228,21 +534,121 @@ td {
 }
 
 #trendScenarios {
-  padding: 15px;
-  background-color: rgba(185, 185, 255, 0.95);
+  /* No border/background of its own - its only content is the "Select Trend Groups"
+     .filter-card, which already has its own orange border. A wrapper border here would
+     just be a redundant box-within-a-box (unlike .rowGeography, which legitimately groups
+     multiple distinct pieces of content and so keeps its own border). */
+}
+
+#trendScenarios .filter-card {
+  width: 100%; /* stretches to #trendSettings' max-content width (set by whichever of this or
+                  #trendOptions is naturally wider), so both boxes' borders line up */
+  box-sizing: border-box;
 }
 
 #trendOptions {
   padding: 15px;
-  background-color: #add8e6;
+  background-color: #ffffff; /* white + blue border, matching .rowGeography - groups several
+                                 distinct plain controls (Year/Chart Series/Chart Mode) the
+                                 same way Select Summary Geography groups its own controls */
+  border: 1px solid #5B9BD5;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Same small grey section-label convention as .rowAttributes::before / #trendSelector::before,
+   just sitting inside #trendOptions' own bordered card instead of a plain box (the card's
+   border already groups Year/Chart Series/Chart Mode, so the label reads as its title). */
+#trendOptions::before {
+  content: "\2014 CHART DISPLAY SETTINGS \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Compare To Year's own card, same treatment as #trendOptions - sits right below it in
+   #trendSettings' own 15px gap. Its only content (#trendCompareYear) never leaves the DOM even
+   when the widget itself is hidden, so VizTrends.setCompareYearVisible() shows/hides this whole
+   card alongside compareYearSelect rather than relying on a CSS :empty rule here. */
+#trendTableOptions {
+  padding: 15px;
+  background-color: #ffffff;
+  border: 1px solid #5B9BD5;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#trendTableOptions::before {
+  content: "\2014 TABLE DISPLAY SETTINGS \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 #trendMain {
   padding: 15px;
-  height: calc(100vh - 144px);
+  height: calc(100vh - 134px); /* matches #trendSettings' own height formula - was -144px, 10px
+                                   shorter than its sibling for no functional reason */
   flex-grow: 1;
   box-sizing: border-box;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* nothing scrolls at this level - #trendTableScroll below is the one
+                        scrolling region, so title/toggle/chart stay put while only the table
+                        area scrolls. The two stale #trendMain{width:100px;overflow-y:auto}
+                        rules further down (a duplicated leftover, not unique to this change)
+                        are neutralized to stop their overflow-y:auto from re-enabling
+                        whole-panel scrolling - see the notes at each. */
+}
+
+/* Title and the chart toggle/chart itself keep their natural height always - only the table
+   area below grows/shrinks and scrolls independently (see #trendTableScroll). */
+#trendHeader,
+#trendChartToggle,
+#trendContent {
+  flex-shrink: 0;
+}
+
+#trendChartToggle {
+  flex-grow: 0; /* .filter-toggle-row (shared with the collapsible sidebar filter cards) sets
+                   flex-grow:1 for its own context - as a direct child of #trendMain's flex
+                   column that instead let this one-line toggle balloon to fill any free
+                   vertical space (114px+ tall for a ~20px line), which is exactly the "too
+                   much white space" bug: collapsing the chart freed up even more space for it
+                   to grow into. */
+  margin: 2px 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8695a0;
+}
+
+/* The one scrolling region in #trendMain - grows to fill whatever space the title/toggle/chart
+   above it don't need, and scrolls its own content (table + Copy button) once that runs out,
+   instead of the old behavior where the whole #trendMain panel (title through button) scrolled
+   as one unit. min-height:0 is required here - a flex child sized by flex-grow still defaults
+   to its content's height for min-height purposes, which would let a tall table push this
+   taller than #trendMain instead of respecting the space actually available to it. */
+#trendTableScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 15px; /* breathing room below the chart, before the table's sticky header row */
+  background-color: #ffffff; /* fills the rest of #trendMain's height as a solid panel instead
+                                 of leaving blank page background under a short table - matches
+                                 #trendSelector's grey column filling its own full height */
+  border-radius: 6px; /* same radius used app-wide for cards/panels */
+  padding: 0 15px 15px;
 }
 
 
@@ -259,8 +665,124 @@ td {
 
 /* Collapsed sidebar */
 .sidebar.collapsed {
-  width: 0;
-  overflow: hidden;
+    width: 0;
+    overflow: hidden;
+}
+
+#trendMain{
+    width: 100px; /* or any other value - overflow-y:auto removed here, see the primary
+                      #trendMain rule above for why (only #trendTableScroll scrolls now) */
+}
+
+.rowAttributes {
+    background-color: #FFFFFF;
+}
+
+.colAttributes {
+    width: 250px; /* or any other value */
+    height: calc(100vh - 114px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+    /* Style your columns */
+    display: flex; /* .rowAttributes below grows to fill leftover space, which pushes every
+                       row after it (aggregator, dividers, ...) down toward the bottom instead
+                       of leaving a gap under a short attribute list - same effect across every
+                       left sidebar (vizMap/vizTrends/vizMatrix), since they all share this
+                       class structure. */
+    flex-direction: column;
+}
+
+.colFilters {
+    width: 250px; /* or any other value */
+    height: calc(100vh - 114px);
+    overflow-y: auto; /* Enable vertical scrollbar */
+    background-color: #DDDDDD; /* Optional: Add a background color */
+}
+
+.rowFilters{
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.filterTitle {
+    display: flex; /* This will enable flexbox for the container */
+    justify-content: space-between; /* This will space out the child elements */
+    align-items: center; /* This will vertically center the child elements */
+}
+
+.filterName {
+    /* Additional styling for the name */
+    flex-grow: 1; /* This will allow the name to take up any available space */
+}
+  
+.filterButton {
+    padding: 0px; /* Add padding around the button */
+}
+
+.rowAttributes {
+    padding: 15px;
+    margin-top: -10px; /* cancels .colAttributes' own 10px top padding, so this first row's
+                           15px padding is the ONLY top inset - matching .rowFilters' 15px
+                           exactly instead of stacking on top of it (was 25px total before). */
+    background-color: #FFFFFF;
+    flex-grow: 1; /* fill whatever space the other rows in .colAttributes don't need */
+    flex-shrink: 0; /* ...but never shrink below its own content's natural height. If the
+                        rows below it (aggregator, dividers, ...) need more room than the
+                        column has, they've already been pinned via flex-shrink: 0 too, so
+                        .colAttributes's own overflow-y: auto scrolls the whole column instead
+                        of squeezing the attribute list into a tiny internal scrollbox. */
+}
+
+/*.rowChart {
+    height: 30%;
+    /*background-color: #FF0000; *//* Optional: Add a background color */
+/*}*/
+
+/* MAIN CONTENT */
+#mainMap {
+    display: flex; /* Use flex layout */
+    flex-direction: column; /* Stack children vertically */
+    padding: 15px;
+    height: calc(100vh - 114px); /* Adjust height as needed */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    width: 100%; /* Ensure it fills the width of its parent */
+}
+
+#mainMap.collapsed {
+    margin-left: 0;
+}
+
+.openbtn {
+    font-size: 16px;
+    padding: 8px 8px;
+    cursor: pointer;
+    background-color: #666666;
+    color: white;
+    border: none;
+    position: fixed;
+    left: 530px; /* Adjusted to match the sidebar's width */
+    top: 144px;
+    z-index: 2;
+    transition: left 0.3s ease, transform 0.3s ease;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add simple drop shadow */
+}
+
+.openbtn.bottom {
+    left: 515px; /* Adjusted to match the sidebar's width */
+    top: calc(100vh - 50px);
+}
+
+.openbtn.bottom.collapsed {
+    left: 15px;
+}
+
+.openbtn.collapsed {
+    left: 30px;
+}
+
+.openbtn:hover {
+    background-color: #116ce4;
+    color: #FFFFFF;
 }
 
 .sidebar .colAttributes,
@@ -275,15 +797,21 @@ td {
 }
 
 #trendMain {
-  width: 100px;
-  overflow-y: auto;
+  width: 100px; /* overflow-y:auto removed here too - same reason as the other stale
+                   #trendMain{width:100px} rule above */
 }
 
 .colAttributes {
   width: 250px;
   height: calc(100vh - 114px);
   overflow-y: auto;
-  background-color: #add8e6;
+  /* No background here - was the same light blue as the .rowGeography rows it wraps, which
+     blended together before those rows became white+bordered boxes; now it just needs to
+     stay neutral so the white/bordered rows read as distinct boxes against it. */
+  padding: 10px; /* breathing room between the bordered rows and the sidebar's own edge */
+  gap: 10px; /* the rows themselves have no margin, so without this they'd sit flush against
+                each other despite each having its own border */
+  box-sizing: border-box;
 }
 
 .colFilters {
@@ -295,6 +823,70 @@ td {
 
 .rowFilters {
   padding: 15px;
+}
+
+.no-filters-message {
+  padding: 15px;
+  color: #999999;
+  font-style: italic;
+  text-align: center;
+}
+
+/* "Scenario" is hand-written markup in the template (app/templates/vizdashboard.html,
+   vizmatrix.html), not built through WijSelect/WijRadio like "Select Summary Geography" -
+   its plain <b> has no calcite-label ancestor to inherit calcite's near-black slotted-text
+   color from, so it fell back to the page's lighter ambient grey instead (same root cause as
+   the .title fix above). */
+#vizDashboardScenarioSelector > div:first-child b,
+#vizMatrixScenarioSelector > div:first-child b,
+.scenario-selector-container > div:first-child b {
+  color: #151515; /* vizMap's floating Scenario Selector box (.scenario-selector-container)
+                      otherwise inherits Esri's own ~#323232 widget text color, one more shade
+                      of grey among several that had crept in across the app - standardized
+                      to the same near-black used everywhere else. */
+}
+
+/* Small grey section labels above each sidebar column - .rowAttributes/.colFilters are
+   static wrappers that survive re-render (only their children get rebuilt), so a CSS
+   ::before here doesn't need to be re-injected on every updateDisplay(). */
+.rowAttributes::before {
+  content: "\2014 ATTRIBUTES \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px; /* .rowFilters (the FILTERS-side equivalent of the attribute list) has
+                           its own 15px top padding below the "— FILTERS —" label, so match it
+                           here to line up the top of the attribute list with the filter tiles */
+}
+
+.colFilters::before {
+  content: "\2014 FILTERS \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  padding-top: 15px; /* matches .rowAttributes' 15px top padding so both labels line up */
+}
+
+#trendSelector::before {
+  content: "\2014 TREND SELECTOR \2014";
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-bottom: 15px; /* same spacing as under "— ATTRIBUTES —" */
+}
+
+/* When a filter is the chart series, both a "Summary Geography" and a "Trend Group" radio
+   group render here together (see viztrends.js buildChart()) - space them apart so they read
+   as two separate pinned choices instead of one continuous list. Only kicks in with a second
+   group present; a single group needs no extra gap below the column label above. */
+#trendSelector > div + div {
+  margin-top: 20px;
 }
 
 
@@ -313,6 +905,48 @@ td {
 
 .filterButton {
   padding: 0;
+}
+
+/* Collapsible filter sections: chevron+name row is the click target, summary is a
+   truncated one-line readout of the current selection shown only while collapsed. */
+.filter-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.filter-selected-summary {
+  font-size: 90%;
+  color: #6a6a6a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 0 6px 0;
+}
+
+/* Card treatment for each collapsible filter section - breaks the sidebar's flat list
+   of look-alike headers into distinct scannable blocks. Flat 1px WFRC-orange border on
+   all sides, no shadow/fill accent - a plain grouped box rather than a floating card.
+   Orange (not the blue used by headers/buttons) gives the filter sidebar its own color
+   identity, two-tone with the rest of the app. Checkboxes/radio lists get the full card;
+   single-line select filters get a lighter, tighter variant so the padding doesn't dwarf
+   a one-row dropdown. */
+.filter-card {
+  background: #ffffff;
+  border-radius: 6px; /* same radius used app-wide for cards/panels (see .card) */
+  border: 1px solid #C85327;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.filter-card-compact {
+  background: #ffffff;
+  border-radius: 6px; /* same radius used app-wide for cards/panels (see .card) */
+  border: 1px solid #C85327;
+  padding: 6px 10px;
+  margin-bottom: 8px;
 }
 
 
@@ -343,55 +977,96 @@ td {
 }
 
 #mainMatrix {
-  flex-grow: 1;
-  display: flex;
-  flex-wrap: wrap;
+    padding: 15px;
+    height: calc(100vh - 114px);
+    flex-grow: 1; /* Grow to fill available space */
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0; /* Without this, a flex column child can't shrink below its content's height,
+                      so the table would just grow the page instead of scrolling in place. */
+    display: flex;
+    flex-direction: column;
 }
 
-
-/* =========================
-   SIDEBAR TOGGLE BUTTON
-   ========================= */
-.openbtn {
-  font-size: 16px;
-  padding: 8px;
-  cursor: pointer;
-  background-color: #666666;
-  color: white;
-  border: none;
-  position: fixed;
-  left: 530px;
-  top: 144px;
-  z-index: 2;
-  transition: left 0.3s ease, transform 0.3s ease;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+#mainMatrix.collapsed {
+    margin-left: 0;
 }
 
-.openbtn.bottom {
-  left: 515px;
-  top: calc(100vh - 50px);
+/* Right-hand scenario sidebar: narrower than the left one since it only holds one column
+   (Scenario + Compare to), and collapses the same way .sidebar.collapsed does elsewhere. */
+#matrixScenarioSidebar {
+    width: 250px;
 }
 
-.openbtn.bottom.collapsed {
-  left: 15px;
+#matrixScenarioSidebar.collapsed {
+    width: 0;
 }
 
-.openbtn.collapsed {
-  left: 30px;
+.openbtn.right {
+    left: auto;
+    right: 280px; /* just outside the 250px sidebar, mirroring the left button's offset */
 }
 
-.openbtn:hover {
-  background-color: #116ce4;
-  color: #ffffff;
+.openbtn.right.collapsed {
+    right: 15px;
 }
 
+#matrixTableContainer {
+    flex-grow: 1;
+    min-height: 0; /* same flex-shrink fix as #mainMatrix, one level down */
+    overflow: auto; /* OD matrices can run to 100+ columns, so scroll instead of overflowing the page */
+    scrollbar-width: auto; /* Firefox: force a classic scrollbar instead of a barely-visible overlay one */
+}
 
-/* =========================
-   MATRIX TABLE
-   ========================= */
+/* The default overlay scrollbar (Chrome/Edge/Windows) is nearly invisible until you're actively
+   scrolling, which makes a 100+-column table look like it has no way to see the rest of it.
+   These give it a real, always-visible track + thumb. */
+#matrixTableContainer::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+#matrixTableContainer::-webkit-scrollbar-track {
+    background: #eee;
+}
+
+#matrixTableContainer::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 7px;
+    border: 3px solid #eee;
+}
+
+#matrixTableContainer::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Freeze the row headers (first column) and column headers (header row) so only the
+   number grid scrolls underneath - the labels stay put for orientation, like a spreadsheet. */
+#matrixTableContainer .custom-chart-table th:first-child,
+#matrixTableContainer .custom-chart-table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: inherit;
+    z-index: 1;
+}
+
+#matrixTableContainer .custom-chart-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f4f4f4;
+}
+
+/* Top-left corner cell is sticky in both directions at once, so it needs to sit above
+   both the frozen header row and the frozen first column where they'd otherwise overlap. */
+#matrixTableContainer .custom-chart-table thead th:first-child {
+    left: 0;
+    z-index: 3;
+}
+
 #matrixTable {
-  border-collapse: collapse;
-  width: 100%;
+    border-collapse: collapse;
+    width: 100%;
 }
 
 #matrixTable th,
@@ -436,6 +1111,11 @@ td {
   display: inline-block;
   margin-bottom: 10px;
   font-size: 105%;
+  color: #151515; /* matches calcite-label's own slotted-text color (--calcite-ui-text-1) -
+                      without this, a bare .title span (WijRadio's title isn't wrapped in a
+                      calcite-label like WijSelect/WijCheckboxes' titles are) falls back to the
+                      page's ambient text color instead, rendering noticeably lighter grey next
+                      to filter names/other titles right beside it. */
 }
 
 .info-icon {
@@ -523,6 +1203,86 @@ td {
   text-align: right;
 }
 
+/* vizTrends' results table only ("Ledger" treatment) - hairline rows and tabular figures
+   instead of the zebra-striped/box-shadowed card look .custom-chart-table uses everywhere
+   else (vizMatrix's #matrixTableContainer keeps that original look untouched below). */
+#trendTable .custom-chart-table {
+  width: 100%;
+  margin: 12px 0 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  box-shadow: none;
+}
+
+#trendTable .custom-chart-table th {
+  position: sticky; /* pinned to the top of #trendTableScroll (the actual scrolling
+                        ancestor) - only the data rows scroll underneath it */
+  top: 0;
+  z-index: 2;
+  background: #ffffff; /* opaque - a sticky header needs its own solid background, or
+                           scrolled-past rows show through underneath it */
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8695a0;
+  padding: 0 10px 10px;
+  border-bottom: 1px solid #12222f;
+}
+
+#trendTable .custom-chart-table th:first-child,
+#trendTable .custom-chart-table th:nth-child(2) {
+  text-align: left;
+}
+
+#trendTable .custom-chart-table tr:nth-child(even),
+#trendTable .custom-chart-table tr:nth-child(odd) {
+  background: none; /* overrides the zebra striping above - every row reads the same,
+                        separated only by the hairline border below */
+}
+
+#trendTable .custom-chart-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #e8edf0;
+  font-variant-numeric: tabular-nums;
+}
+
+#trendTable .custom-chart-table tr:last-child td {
+  border-bottom: none;
+}
+
+#trendTable .custom-chart-table td:nth-child(2) {
+  font-weight: 600;
+}
+
+/* The series color square (an inline-styled div JS emits inside the first td) reads
+   as a small dot instead of a flat square, matching the swatch treatment used
+   elsewhere (e.g. the trend-group legend under the chart). */
+#trendTable .custom-chart-table td:first-child div {
+  border-radius: 50%;
+}
+
+/* vs.-baseline delta badge (generateTableFromChart()) - red for an increase, blue for a
+   decrease. Deliberately not green/red good-bad: an increase in VHT/VMT is usually the
+   opposite of good, so this only ever means "went up" / "went down" (same red/blue pairing
+   measure.js's own compare-mode arrows already use, for the same reason). */
+#trendTable .custom-chart-table .ledger-delta {
+  display: block; /* drops to its own line under the value instead of trailing it inline */
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#trendTable .custom-chart-table .ledger-delta.up {
+  color: #c23a2e;
+}
+
+#trendTable .custom-chart-table .ledger-delta.down {
+  color: #2265c3;
+}
+
+
 
 /* =========================
    MAP POPUP
@@ -537,12 +1297,85 @@ td {
   transform: translate(-50%, -10%);
   z-index: 1000;
   border: 1px solid #ddd;
+  border-radius: 6px; /* matches .definitions-popup-header's own top corners */
+  overflow: hidden;
   background-color: white;
+}
+
+/* Filter.openMapPopup() (app/layouts/filter.js) picks one of these based on which view's
+   "Reference Map" button was clicked - vizTrends' controls live in its left sidebar, so open
+   toward the left there; vizDashboard's live in its right sidebar, so open toward the right.
+   Anything else (vizMatrix) keeps the roughly-centered default position above. */
+#mapPopup.align-left {
+  left: 2%;
+  transform: translateY(-10%);
+}
+
+#mapPopup.align-right {
+  left: auto;
+  right: 2%;
+  transform: translateY(-10%);
 }
 
 #mapDiv {
   width: 100%;
   height: 100%;
+}
+
+/* Definitions popup (VizSidebar.openDefinitionsPopup()) - same floating/draggable/resizable
+   pattern as #mapPopup above, sized for reading text rather than viewing a map. */
+#definitionsPopup {
+  display: none;
+  flex-direction: column; /* header stays put, .definitions-popup-body scrolls independently -
+                              so the scrollbar shows up next to the body, not spanning the
+                              header too */
+  position: fixed;
+  top: 15%;
+  left: calc(50% - 210px); /* centers a 420px-wide box without transform - makeDraggable()
+                               (app.js) repositions via plain left/top on drag, which a
+                               transform-based centering would silently double up with, jumping
+                               the popup sideways on the very first click */
+  width: 420px;
+  height: 60%;
+  min-width: 280px;
+  min-height: 200px;
+  z-index: 1000;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  overflow: hidden; /* resize below needs overflow != visible; actual scrolling happens in
+                        .definitions-popup-body instead */
+  resize: both;
+}
+
+.definitions-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  background-color: #C85327; /* WFRC's brand orange - same as .modal-titlebar */
+  color: #fefefe;
+  padding: 12px 15px;
+  border-radius: 6px 6px 0 0;
+  cursor: move;
+  flex-shrink: 0;
+}
+
+.definitions-popup-header h1 {
+  color: inherit;
+  margin: 0;
+}
+
+.definitions-popup-body {
+  padding: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.definitions-popup-body p {
+  margin: 0 0 12px 0;
 }
 
 #closePopup {
@@ -567,11 +1400,27 @@ td {
 /* =========================
    DASHBOARD LAYOUT
    ========================= */
+/* Full-width and colored edge-to-edge - #dashboardContent (its child) is what actually caps
+   the card grid's reading width and centers it, so the color isn't confined to that centered
+   column with white gutters showing on either side on a wide screen.
+   calcite-shell stretches this to a fixed height (like it does #mainMap/#mainMatrix/
+   .colAttributes elsewhere), so min-height here doesn't actually let it grow past that to fit
+   taller card content - it needs its own overflow-y: auto, the same way those other
+   fixed-height panels scroll their own content internally, or the overflow just spills out
+   past the colored box (and past the bottom of the viewport) with no way to scroll to it. */
 #dashboardMainDisplay {
   width: 100%;
-  margin: 0 auto;
+  min-height: calc(100vh - 114px);
+  overflow-y: auto;
+  /* No font-family override - inherit the same stack as everything else (vizTrends' title
+     included), rather than forcing the browser's plain generic sans-serif over it. */
+  background-color: #F2F3F4; /* neutral - was a pink tint (#F1E4EA) that fought with the
+                                 measure icons' own category colors and the green card headers */
+}
+
+#dashboardContent {
   max-width: 1200px;
-  font-family: sans-serif;
+  margin: 0 auto;
 }
 
 /* Header */
@@ -580,31 +1429,108 @@ td {
   border-bottom: 1px solid #ddd;
 }
 
-#dashboardSummaryGeography {
-  margin-top: 20px;
-  padding: 12px;
+#dashboardHeader h1 {
+  font-size: 1.61rem; /* 2.1rem * 0.9 * 0.85 */
+  display: flex;
+  align-items: center; /* not baseline - the pill badge has no text baseline to line up
+                           against the title's, so it sat low instead of level with the text */
+  gap: 10px;
+}
+
+/* "Under Development" flag on the Performance Measures dashboard (see vizdashboard.js
+   updateHeader()) - the app's brand orange, not the neutral grey used for section labels like
+   "— ATTRIBUTES —" elsewhere, since this one specifically needs to catch the eye rather than
+   blend in. */
+.dashboard-under-dev-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  background-color: #C85327;
+}
+
+/* "NEW" tag directly on the secondary-nav tab for each newly-added entity - a small overlay
+   badge on calcite-menu-item's own light-DOM host element (::after generated content renders
+   outside its shadow tree, on top of it, since calcite-menu-item has no slot for arbitrary
+   child content - a plain appendChild()'d element goes nowhere visible). Selects by the same
+   `text` attribute the tab is built from (model-entity.js's createModelEntityElement()), so no
+   JS/CSS class needs adding per page - this lives entirely in one place regardless of how many
+   different templates (vizMap/vizTrends/vizMatrix) the flagged entities use. */
+calcite-menu-item[text="Summary"],
+calcite-menu-item[text="PA Trips"],
+calcite-menu-item[text="Trip Gen"],
+calcite-menu-item[text="Trip Gen Trends"],
+calcite-menu-item[text="Spec Attraction Zones (SAZ)"],
+calcite-menu-item[text="SAZ Trends"],
+calcite-menu-item[text="Spec Gen"],
+calcite-menu-item[text="Spec Gen Trends"] {
+  position: relative;
+}
+calcite-menu-item[text="Summary"]::after,
+calcite-menu-item[text="PA Trips"]::after,
+calcite-menu-item[text="Trip Gen"]::after,
+calcite-menu-item[text="Trip Gen Trends"]::after,
+calcite-menu-item[text="Spec Attraction Zones (SAZ)"]::after,
+calcite-menu-item[text="SAZ Trends"]::after,
+calcite-menu-item[text="Spec Gen"]::after,
+calcite-menu-item[text="Spec Gen Trends"]::after {
+  content: "NEW";
+  position: absolute;
+  top: 2px; /* was -6px - the nav bar clips anything that pokes up past its own top edge, so a
+               negative offset got the top of the tag chopped off instead of overlapping it */
+  right: 2px; /* was -6px - same clipping issue on the right edge, worst on the last tab in the
+                 row (nothing past it to overlap onto instead) */
+  background-color: #1B9E8E;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 100px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  pointer-events: none; /* the tag sits on top of the clickable tab - never intercept its click */
+  z-index: 3;
+}
+
+.dashboard-subtitle {
+  color: #666;
+  font-size: 1.09rem; /* 1.425rem * 0.9 * 0.85 */
+  margin-top: 2px;
+}
+
+.dashboard-subtitle-geo {
+  color: #888;
+  font-size: 0.98rem; /* 1.275rem * 0.9 * 0.85 */
+  margin-top: 2px;
 }
 
 /* Dashboard grid */
+/* Multi-column layout instead of grid: cards flow top-to-bottom within a column and the
+   next one starts immediately below, regardless of how tall its neighbor in an adjacent
+   column is. Grid's row tracks size to the tallest item in each conceptual row, which -
+   even with align-items:start keeping cards their natural height - still leaves a dead gap
+   between rows sized by whatever the tallest card in the row above was (e.g. Vehicle Miles
+   Traveled's 4 measures). Columns don't have that row concept at all. */
 .dashboard {
-  display: grid;
-  gap: 12px;
+  column-gap: 12px;
   padding: 12px;
 }
 
-/* Responsive grid: 1 col on mobile, auto-fill on desktop */
-@media (min-width: 700px) {
-  .dashboard {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
+.dashboard .card {
+  break-inside: avoid; /* keep each card as one unbroken block instead of splitting across columns */
+  margin-bottom: 12px; /* column layout has no row-gap equivalent - this replaces grid's gap for vertical spacing */
 }
 
-/* FAB above content */
-calcite-fab {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 1000;
+/* Responsive columns: 1 on mobile, up to 4 on desktop - narrower cards than before so 4
+   actually fit instead of capping out at 3. */
+@media (min-width: 700px) {
+  .dashboard {
+    columns: 4 260px;
+  }
 }
 
 /* Sidebar width (Calcite shell-panel token) */
@@ -612,9 +1538,34 @@ calcite-fab {
   --calcite-shell-panel-width: 316px;
 }
 
-/* Panel background */
-#dashboardSidebar {
-  background-color: rgba(185, 185, 255, 0.95);
+/* Collapse button for the dashboard's right sidebar - same .openbtn.right base as
+   vizMatrix's openbtnmatrixscenario, but overriding the right offset since this panel is
+   316px wide (a calcite-shell-panel, via the token above) rather than matrix's 250px plain
+   div, so matrix's own right:280px/15px would sit at the wrong edge here. */
+#openbtndashboard {
+  /* 316px clears the sidebar panel itself, but #dashboardMainDisplay's own scrollbar (see
+     its overflow-y: auto above) renders right at that same boundary when the cards overflow
+     vertically - the extra ~17px pushes the button clear of it instead of sitting on top. */
+  right: 333px;
+}
+
+#openbtndashboard.collapsed {
+  right: 15px;
+}
+
+/* .openbtn's shared top:144px (base rule above) assumes the secondary submenu bar (49px) is
+   always present under the primary nav (65px) - on Summary, where menu-item.js hides that bar
+   for having only one model entity, that leaves a bare 144-65=79px gap above the button. Pull
+   it up to sit the same ~30px below the primary bar alone: 65 + 30 = 95px. */
+body.secondary-nav-hidden #openbtndashboard {
+  top: 95px;
+}
+
+/* Panel background - the Calcite shell-panel provides its own chrome/width, so the
+   Scenario/Summary Geography column just needs to fill it edge-to-edge instead of the
+   fixed 250px width .colAttributes uses elsewhere alongside a .colFilters sibling. */
+#dashboardSidebar .colAttributes {
+  width: 100%;
 }
 
 
@@ -626,20 +1577,22 @@ calcite-card {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: 6px; /* same radius used app-wide for cards/panels now (see .filter-card etc.) */
   overflow: hidden;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .card-header {
-  background-color: #2b2b2b;
+  background-color: #5B9BD5; /* pastel blue - same as the buttons/scenario selectors */
   color: #ffffff;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.15rem; /* 1rem * 1.15 */
   padding: 10px 14px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-left-radius: 6px; /* matches .card's own 6px - a larger radius here left a sliver
+                                   of the card's white background visible at the corner instead
+                                   of nesting flush against it */
+  border-top-right-radius: 6px;
 }
 
 .card-body {
@@ -655,17 +1608,20 @@ calcite-card {
 .measure-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.2rem;
 }
 
 .measure-row:not(:last-child) {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-/* Main displayed value (middle) */
+/* Main displayed value (middle) - sized well above the icon/label so the numbers themselves
+   scan at a glance (a KPI dashboard's numbers should dominate, not read at the same weight
+   as their labels). */
 .measure-value {
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: 700;
+  font-size: 0.85rem; /* shrunk further for density - more cards/measures fit on screen at once */
+  color: #1a1a1a;
 }
 
 /* Fixed-width icon column */
@@ -674,6 +1630,44 @@ calcite-card {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* 1.25x larger - a transform (not a font-size bump) so it applies uniformly across all three
+   icon kinds renderIcon() can produce (Font Awesome <i>, calcite-icon, plain text/emoji span)
+   without touching each one's own sizing mechanism separately. Doesn't affect .measure-icon's
+   own layout box (flex: 0 0 1.6rem stays put), just how the icon paints inside it. */
+.measure-icon > * {
+  transform: scale(0.85); /* shrunk back down closer to natural size - more cards/measures
+                              fit on screen at once */
+}
+
+/* BRT/Enhanced/Express/Local Bus all share the same generic fa-bus icon (Font Awesome has
+   no distinct glyph per bus submode) - a small overlaid text badge tells them apart without
+   falling back to a bespoke per-submode icon or text-only label. */
+.measure-icon-badge-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.measure-icon-badge {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0; /* stretches to the full width of .measure-icon-badge-wrap (i.e. the icon itself)
+               instead of shrink-wrapping the text - left/right:0 on an absolutely positioned
+               element sizes it to its containing block's width */
+  text-align: center;
+  font-size: 6px;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  background: #000000;
+  padding: 1px 0;
+  border-radius: 2px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 /* Text icon that wraps within icon column */
@@ -765,4 +1759,96 @@ calcite-card {
   font-size: 0.7rem;
   opacity: 0.75;
   text-align: right;
+}
+
+
+/* =========================
+   LAZY-LOAD INDICATOR
+   ========================= */
+/* Reference-counted (see showDataLoadingIndicator/hideDataLoadingIndicator in app.js) - shown
+   whenever any view is fetching a scenario's on-demand data. Centered over the whole viewport
+   so it reads as "the app is working" regardless of which view/sidebar is open underneath it. */
+#lazy-load-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4000;
+  background: #C85327; /* WFRC's brand orange (from wfrc.utah.gov) */
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.lazy-load-dot {
+  display: inline-block;
+  animation: lazy-load-blink 1.4s infinite both;
+}
+
+.lazy-load-dot:nth-of-type(2) { animation-delay: 0.2s; }
+.lazy-load-dot:nth-of-type(3) { animation-delay: 0.4s; }
+
+@keyframes lazy-load-blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+/* =========================
+   INITIAL LOAD STATUS
+   ========================= */
+/* Named phase text + spinner shown below the two startup progress bars (index.html) - see the
+   comment there for why: loadMenuAndItems() (app.js) spends a couple of synchronous seconds
+   building the whole menu/entity tree between the geo bar finishing and the scenario bar
+   starting, during which neither bar moves. The spinner animates `transform` only (never
+   `top`/`left`/layout properties), which Chrome/Firefox/Safari all hand off to the compositor
+   thread once the animation starts - that keeps it visibly spinning through the main-thread
+   block instead of freezing along with everything else, which is the whole point of it existing
+   here rather than just relying on the progress bars.  */
+#load-status-spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid #E8F4F8; /* WFRC light teal */
+  border-top-color: #1A8FAA; /* WFRC teal */
+  border-radius: 50%;
+  animation: load-status-spin 0.8s linear infinite;
+}
+
+@keyframes load-status-spin {
+  to { transform: rotate(360deg); }
+}
+
+#load-status-text {
+  font-size: 0.95rem;
+  color: #1B3A5C; /* WFRC navy */
+}
+
+/* =========================
+   NO-DATA INDICATOR
+   ========================= */
+/* Shown by showNoDataIndicator/hideNoDataIndicator (app.js). Deliberately not styled like the
+   lazy-load indicator above - that one is a transient "working" toast, this one is a persistent
+   state that stays up until the user changes selections, so it reads as neutral/informational
+   rather than an alert. Centered over the whole viewport for the same reason lazy-load is: it
+   needs to read correctly regardless of which view/sidebar is open underneath it. */
+#no-data-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4000;
+  background: #ffffff;
+  color: #333333;
+  border: 1px solid #cccccc;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  max-width: 360px;
+  text-align: center;
 }

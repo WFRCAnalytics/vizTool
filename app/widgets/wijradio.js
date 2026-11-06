@@ -1,11 +1,13 @@
 class WijRadio {
-  constructor(parentid, title, selected, options, vizLayout, infoTextHtml="", spaceafter=false) {
+  constructor(parentid, title, selected, options, vizLayout, infoTextHtml="", spaceafter=false, collapsible=false, showTitle=true) {
     this.id = parentid + '-wij';
     this.title = title;
     this.options = options;
     this.vizLayout = vizLayout;
     this.infoTextHtml = infoTextHtml;
     this.spaceafter = spaceafter;
+    this.collapsible = collapsible;
+    this.showTitle = showTitle;
     this.containerId = this.id + "-container"
     // Check if the selected value is part of options
     if (selected && options.some(option => option.value === selected)) {
@@ -46,9 +48,47 @@ class WijRadio {
       titleContainer.appendChild(popupDescription);  
     }
 
-    // Finally, append the titleContainer to the container, not the title directly
-    container.appendChild(titleContainer);
-    
+    const radioBody = document.createElement('div');
+
+    let filterSummary = null;
+    if (this.collapsible) {
+      // Same collapse+summary pattern as WijCheckboxes: clicking the chevron+title
+      // toggles radioBody, collapsed state shows the current selection's label instead.
+      const toggleRow = document.createElement('div');
+      toggleRow.className = 'filter-toggle-row';
+
+      const chevron = document.createElement('calcite-icon');
+      chevron.icon = 'chevron-down';
+      chevron.scale = 's';
+
+      toggleRow.appendChild(chevron);
+      toggleRow.appendChild(titleContainer);
+      container.appendChild(toggleRow);
+
+      filterSummary = document.createElement('div');
+      filterSummary.className = 'filter-selected-summary';
+      filterSummary.style.display = 'none';
+      container.appendChild(filterSummary);
+
+      toggleRow.addEventListener('click', () => {
+        const collapsed = radioBody.style.display === 'none';
+        if (collapsed) {
+          radioBody.style.display = 'block';
+          filterSummary.style.display = 'none';
+          chevron.icon = 'chevron-down';
+        } else {
+          filterSummary.textContent = wijRadioInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
+          radioBody.style.display = 'none';
+          filterSummary.style.display = 'block';
+          chevron.icon = 'chevron-right';
+        }
+      });
+    } else if (this.showTitle) {
+      // Finally, append the titleContainer to the container, not the title directly
+      container.appendChild(titleContainer);
+    }
+    container.appendChild(radioBody);
+
     // Call a type-specific rendering method
     this.options.forEach((option) => {
       // Create radio buttons
@@ -85,7 +125,7 @@ class WijRadio {
       radioButtonLabel.appendChild(radioButton);
       radioButtonLabel.appendChild(document.createTextNode(option.label));
 
-      container.appendChild(radioButtonLabel);
+      radioBody.appendChild(radioButtonLabel);
     });
 
     if (this.spaceafter) {

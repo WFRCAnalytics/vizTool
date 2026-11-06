@@ -16,10 +16,11 @@ class Attribute {
 
         this.attributeCode            = attributeCode;
         this.alias                    = _configAttribute.alias || null;
+        this.definition                = _configAttribute.definition || null;
         this.agWeightCode             = _configAttribute.agWeightCode || null;
         this.labelsOn                 = _configAttribute.hasOwnProperty('labelsOn') ? _configAttribute.labelsOn : true;
         this.agWeightCodeFilter       = _configAttribute.agWeightCodeFilter || null;
-        this.rendererCollection       = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection) : null;
+        this.rendererCollection       = _configAttribute.rendererCollection ? new RendererCollection(_configAttribute.rendererCollection, this.alias) : null;
         this.agFilterOptionsMethod    = _configAttribute.agFilterOptionsMethod || "sum";
         this.stackable                = _configAttribute.hasOwnProperty('stackable') ? _configAttribute.stackable : true;
         this.aggregatable             = _configAttribute.hasOwnProperty('aggregatable') ? _configAttribute.aggregatable : true;

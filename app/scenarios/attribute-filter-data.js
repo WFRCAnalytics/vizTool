@@ -39,8 +39,20 @@ class DataFilter {
             this.alias = data.dName;
             this.fWidget = data.dWidget;
             this.fOptions = data.dOptions;
+        } else if (data.filterCode && data.fOptions) {
+            // Scenario data files (j-*.json) embed their own filter metadata under this
+            // shape - filterCode/filterDescription/fOptions - a different schema than the
+            // sidebar's configured filters.json widgets above, but the only one actually
+            // present in real scenario data. Without this branch every entry fell through
+            // to the empty case below, so this.filters was always an array of {} - callers
+            // relying on it (e.g. Measure._buildFilterGroupCombos looking up a filter
+            // dimension's full option list) silently got nothing back.
+            this.fCode = data.filterCode;
+            this.alias = data.filterDescription || data.filterCode;
+            this.fWidget = data.fWidget || null;
+            this.fOptions = data.fOptions;
         } else {
-            // Handle the case where neither 'f' nor 'd' keys are present in data
+            // Handle the case where none of the known shapes match
         }
     }
 }

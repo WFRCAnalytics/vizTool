@@ -1,18 +1,20 @@
 class WijCheckboxes {
-  constructor(parentid, title, selected, options, vizLayout, spaceafter=false) {
+  constructor(parentid, title, selected, options, vizLayout, spaceafter=false, collapsible=false) {
     this.id = parentid + '-wij';
     this.title = title;
     this.options = options;
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
+    this.collapsible = collapsible;
 
-    // Check if the selected value is part of options
+    // No selection given at all (as opposed to an explicit, possibly empty, array from a
+    // caller) - default to every option checked, not just the first. Mirrors
+    // Filter.initializeFilter()'s own fallback for the common case (a filter with no
+    // fSelected in config), and closes the gap for a caller that skips that wrapper entirely.
     if (selected) {
       this.selected = selected;
     } else {
-      if (options.length>0) {
-        this.selected = [options[0].value]; // Default to the first option
-      }
+      this.selected = options.map(option => option.value);
     }
 
     this.containerId = this.id + "-container";
@@ -37,44 +39,65 @@ class WijCheckboxes {
     // define filter title divs
     const _filterTitle = document.createElement('div');
     const _filterName = document.createElement('div');
-    const _filterButton = document.createElement('div');
 
     // set properties and styles
     _filterTitle.className = 'filterTitle';
     _filterName.className = 'filterName';
-    _filterButton.className = 'filterButton';
     _filterName.textContent = 'Name of the Filter'; // Set the name
 
     // set name
     _filterName.innerHTML = "<b>" + this.title + "</b>";
-    _filterTitle.appendChild(_filterName); // Add the name to the title container
 
-    // set button if 5+ options
-    if (this.options.length>=this.numOptionsForCheckAllButton) {
-      let buttonCheckToggle = document.createElement("calcite-button");
-      buttonCheckToggle.setAttribute('id', this.id + '-check-all-toggle');
-      buttonCheckToggle.classList.add('check-all-toggle-button');
-      if (this.selected.length>0) {
-        buttonCheckToggle.innerHTML = this.textUncheckAll;
-      } else {
-        buttonCheckToggle.innerHTML = this.textCheckAll;
-      }
-      
-  
-      buttonCheckToggle.addEventListener('click', () => {
-          // This is where you define what happens when the button is clicked.
-          // For example, to uncheck all checkboxes:
-        this.checkAllToggle();
+    let _filterSummary = null;
+    let _checkAllButton = null; // assigned below; toggle handler only reads it at click time
+    if (this.collapsible) {
+      // Clicking the chevron+name toggles the option list; collapsed state shows a
+      // truncated summary of the current selection in its place (computed fresh at
+      // collapse time, so it always reflects whatever was last checked).
+      const _filterToggleRow = document.createElement('div');
+      _filterToggleRow.className = 'filter-toggle-row';
+
+      const _filterChevron = document.createElement('calcite-icon');
+      _filterChevron.icon = 'chevron-down';
+      _filterChevron.scale = 's';
+
+      _filterToggleRow.appendChild(_filterChevron);
+      _filterToggleRow.appendChild(_filterName);
+      _filterTitle.appendChild(_filterToggleRow);
+
+      _filterSummary = document.createElement('div');
+      _filterSummary.className = 'filter-selected-summary';
+      _filterSummary.style.display = 'none';
+
+      _filterToggleRow.addEventListener('click', () => {
+        const collapsed = checkboxContainer.style.display === 'none';
+        // Looked up at click time (not captured earlier) since filter.js inserts this - a
+        // subAg picker like fRouteName's "List Route Names for" mode dropdown - as a sibling
+        // of checkboxContainer only after this widget has already rendered.
+        const _subAgSlot = mainContainer.querySelector(':scope > .filter-subag-slot');
+        if (collapsed) {
+          checkboxContainer.style.display = 'block';
+          if (_checkAllButton) _checkAllButton.style.display = '';
+          if (_subAgSlot) _subAgSlot.style.display = '';
+          _filterSummary.style.display = 'none';
+          _filterChevron.icon = 'chevron-down';
+        } else {
+          _filterSummary.textContent = _thisInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
+          checkboxContainer.style.display = 'none';
+          if (_checkAllButton) _checkAllButton.style.display = 'none';
+          if (_subAgSlot) _subAgSlot.style.display = 'none';
+          _filterSummary.style.display = 'block';
+          _filterChevron.icon = 'chevron-right';
+        }
       });
-  
-      _filterButton.appendChild(buttonCheckToggle); // Append the _filterLabel to the main container
+    } else {
+      _filterTitle.appendChild(_filterName); // Add the name to the title container
     }
-
-    _filterTitle.appendChild(_filterButton); // Add the button container to the title container
 
     _filterLabel.appendChild(_filterTitle);
 
     mainContainer.appendChild(_filterLabel); // Append the _filterLabel to the main container
+    if (_filterSummary) mainContainer.appendChild(_filterSummary);
 
     this.options.forEach((option, index) => {
       // create checkboxes
@@ -147,12 +170,33 @@ class WijCheckboxes {
     }
 
     mainContainer.appendChild(checkboxContainer); // Append the checkbox container to the main container
-    
+
+    // Check-all/uncheck-all sits below the option list (not in the title row) so it
+    // reads as acting on the list right above it, rather than floating up by the name.
+    if (this.options.length>=this.numOptionsForCheckAllButton) {
+      let buttonCheckToggle = document.createElement("calcite-button");
+      buttonCheckToggle.setAttribute('id', this.id + '-check-all-toggle');
+      buttonCheckToggle.classList.add('check-all-toggle-button');
+      buttonCheckToggle.round = true;
+      if (this.selected.length>0) {
+        buttonCheckToggle.innerHTML = this.textUncheckAll;
+      } else {
+        buttonCheckToggle.innerHTML = this.textCheckAll;
+      }
+
+      buttonCheckToggle.addEventListener('click', () => {
+        this.checkAllToggle();
+      });
+
+      _checkAllButton = buttonCheckToggle;
+      mainContainer.appendChild(buttonCheckToggle);
+    }
+
     if (this.spaceafter) {
       const lineBreak = document.createElement('br');
       mainContainer.appendChild(lineBreak); // Append a line break after the checkbox container
     }
-    
+
     return mainContainer;
   }
 
@@ -212,6 +256,27 @@ class WijCheckboxes {
         return false;
       }
     }
+  }
+
+  // Deterministically unchecks every visible option, regardless of the check-all/uncheck-all
+  // button's current label (checkAllToggle() below branches on that label, which can go stale
+  // in a partially-checked state - this always ends up fully unchecked). Used by the Reference
+  // Map's "Clear All" button.
+  clearAll() {
+    this.options.forEach((option) => {
+      const checkbox = document.getElementById(this.id + '-chk-' + option.value);
+      const checkboxLabel = document.getElementById(this.id + '-chklabel-' + option.value);
+      if (checkbox && checkboxLabel && checkboxLabel.style.display === 'block') {
+        checkbox.checked = false;
+        const lstIndex = this.selected.indexOf(option.value);
+        if (lstIndex > -1) {
+          this.selected.splice(lstIndex, 1);
+        }
+      }
+    });
+    const uncheckall = document.getElementById(this.id + '-check-all-toggle');
+    if (uncheckall) uncheckall.innerHTML = this.textCheckAll;
+    this.vizLayout.updateDisplay();
   }
 
   checkAllToggle() {

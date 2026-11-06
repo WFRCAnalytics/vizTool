@@ -52,5 +52,15 @@
         "alias": "Household+Job Intensity",
         "legendSuffix": " per Household+Job",
         "filter": ""
+    },
+    "TRANSIT_RM": {
+        "jsonName": "j-transit-segment-trends",
+        "baseGeoJsonKey": "segment",
+        "baseGeoJsonId": "SEGID",
+        "attributeCode": "aRM",
+        "alias": "Total Route Miles",
+        "legendSuffix": " per Route-Mile",
+        "divideResultBy": 2,
+        "divideResultByUnlessFilterNarrowed": "fDirNameNoAll"
     }
 }

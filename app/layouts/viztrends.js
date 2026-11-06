@@ -21,7 +21,6 @@ class VizTrends {
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,
                                   data.attributeTitle,
-                                  data.attributeInfoTextHtml,
                                   data.filters,
                                   data.aggregators,
                                   data.aggregatorSelected,
@@ -36,13 +35,15 @@ class VizTrends {
 
     // Check if the innerHTML is empty and then initialize if it is, otherwise set equal to original
     if (_scenariochooserdiv.innerHTML.trim() === '') {
-      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Trend Groups', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this);
-      _scenariochooserdiv.appendChild(scenarioChecker.render());
+      scenarioChecker = new WijCheckboxes('scenario-checker', 'Select Trend Groups', dataScenarioTrends.filter(a=>a.displayByDefault==true).map(item => item.scnTrendCode), dataScenarioTrends.map(item => ({ value: item.scnTrendCode, label: item.alias })), this, false, true);
+      const scenarioCheckerEl = scenarioChecker.render();
+      scenarioCheckerEl.classList.add('filter-card'); // white card + collapsible, matching the sidebar filters
+      _scenariochooserdiv.appendChild(scenarioCheckerEl);
     }
 
-    this.modeOptions = [{ value: 'regular'   , label: 'Values'                 , title:''                           },
-                        { value: 'change'    , label: 'Change from Base Year'  , title:' - Change from Base Year'   },
-                        { value: 'pct_change', label: '% Change from Base Year', title:' - % Change from Base Year' }];
+    this.modeOptions = [{ value: 'regular'   , label: 'Values'                        , title:''                              },
+                        { value: 'change'    , label: 'Compare to Selected Year'      , title:' - Compare to Selected Year'      },
+                        { value: 'pct_change', label: 'Compare to Selected Year (%)'  , title:' - Compare to Selected Year (%)'  }];
 
     // add settings in header
     const _trendChange = document.getElementById('trendChange');
@@ -111,21 +112,60 @@ class VizTrends {
       // add settings in header
       const _trendYears = document.getElementById('trendYears');
       if (_trendYears.innerHTML.trim() === '') {
+        // With only one actual year of data, "All Years" would just show that single point on
+        // an otherwise-empty trend line - default straight to that year instead so the chart
+        // opens showing something useful.
+        const _distinctYears = _yearList.slice(1); // exclude the "All Years" entry itself
+        const _defaultYearSelected = _distinctYears.length === 1 ? _distinctYears[0].value : "allYears";
         yearSelect  = new WijSelect("trends-year-select",
                                         "Select Year",
-                                        "allYears",
+                                        _defaultYearSelected,
                                         _yearList,
                                         this);
         _trendYears.appendChild(yearSelect.render());
       }
     }
 
+    if (Object.keys(compareYearSelect).length === 0 && compareYearSelect.constructor === Object) {
+      // Same distinct-year list as Select Year, minus "All Years" - the baseline for Change/%
+      // Change from Base Year has to be one real year. Only shown once Select Chart Mode picks
+      // one of those two modes (see updateAllChartData()'s modeSelect show/hide block) -
+      // defaults to the earliest year so it matches the old hardcoded-to-first-year behavior
+      // until someone actually changes it.
+      const _compareYearOptions = dataScenarios
+        .map(item => ({ value: String(item.scnYear), label: String(item.scnYear) }))
+        .sort((a, b) => a.value - b.value)
+        .filter((item, index, self) => index === self.findIndex((t) => t.value === item.value));
+
+      const _trendCompareYear = document.getElementById('trendCompareYear');
+      if (_trendCompareYear.innerHTML.trim() === '') {
+        compareYearSelect = new WijSelect(this.id + "-compare-year-select",
+                                          "Compare To Year",
+                                          _compareYearOptions.length ? _compareYearOptions[0].value : '',
+                                          _compareYearOptions,
+                                          this);
+        _trendCompareYear.appendChild(compareYearSelect.render());
+      }
+    }
+    this.setCompareYearVisible(false);
+
     this.defaultSeries = 'trendGroup'; // default selection
 
-    // Function to copy the trendHeader and table content to the clipboard 
+    // Function to copy the trendHeader and table content to the clipboard
     function copyTableToClipboard() {
       const trendHeader = document.getElementById('trendHeader').innerHTML; // Get trendHeader content
-      const table = document.getElementById('trendTable').innerHTML; // Get table content
+
+      // Copy a clone of the table with the vs.-baseline delta badges (.ledger-delta) and the
+      // "(vs. XXXX)" fallback-baseline notes (.ledger-baseline-note) stripped out - they're
+      // useful on screen, but as plain copied text they'd land as extra noise glued onto the
+      // cell/label text (e.g. "9,673,000▲ 34.1%") rather than a clean number.
+      const tableEl = document.getElementById('trendTable').querySelector('table');
+      let table = '';
+      if (tableEl) {
+        const tableClone = tableEl.cloneNode(true);
+        tableClone.querySelectorAll('.ledger-delta, .ledger-baseline-note').forEach(el => el.remove());
+        table = tableClone.outerHTML;
+      }
 
       // Combine trendHeader and table content
       const combinedContent = trendHeader + '\n\n' + table;
@@ -153,6 +193,33 @@ class VizTrends {
     // Add event listener to the copy button
     document.getElementById('copyTableBtn').addEventListener('click', copyTableToClipboard);
 
+    // Collapse/expand the chart (not the table) - same chevron-swap pattern WijSelect's
+    // collapsible filter cards use (see wijselect.js render()). #trendContent gets its
+    // innerHTML wiped and rebuilt on every buildChart() call, but this toggle lives outside
+    // it (a static element in viztrends.html) and only ever sets style.display on the existing
+    // #trendContent node, so the collapsed/expanded state survives every chart rebuild without
+    // needing to be re-applied.
+    const chartToggle = document.getElementById('trendChartToggle');
+    if (chartToggle && !chartToggle.dataset.wired) {
+      chartToggle.dataset.wired = 'true'; // guards against re-adding this listener if a
+                                           // VizTrends entity gets constructed more than once
+      chartToggle.addEventListener('click', () => {
+        const content = document.getElementById('trendContent');
+        const icon = chartToggle.querySelector('calcite-icon');
+        const collapsed = content.style.display === 'none';
+        content.style.display = collapsed ? '' : 'none';
+        if (icon) icon.icon = collapsed ? 'chevron-down' : 'chevron-right';
+        // Chart.js's own ResizeObserver reads a 0-size canvas while its ancestor is
+        // display:none, so re-expanding needs an explicit resize() rather than trusting it to
+        // pick the correct size back up on its own. activeLayout (not `this`, which is
+        // whichever VizTrends entity happened to construct first and wire this listener) is
+        // whichever trend entity is actually on screen right now.
+        if (collapsed && activeLayout && activeLayout.currentChart) {
+          activeLayout.currentChart.resize();
+        }
+      });
+    }
+
     this.wijRadioAgId = null;
     this.wijRadioTrendCode = null;
 
@@ -179,6 +246,7 @@ class VizTrends {
     // since shared scenario checker, have to make sure vizLayout is set correctly in checkboxes
     scenarioChecker.vizLayout = this;
     modeSelect.vizLayout = this;
+    compareYearSelect.vizLayout = this;
     this.sidebar.render();
   }
   
@@ -640,6 +708,37 @@ class VizTrends {
       }
     }
 
+    if (!allChartDataFiltered || allChartDataFiltered.length === 0) {
+      // Nothing matches this specific combination (pinned geography/trend group, filters,
+      // series selection...) - hide the chart area the same way as no trend group being
+      // selected at all, instead of drawing empty axes with nothing in them.
+      if (this.currentChart) {
+        this.currentChart.destroy();
+        this.currentChart = null;
+      }
+      document.getElementById('trendHeader').innerHTML = '';
+      document.getElementById('trendContent').innerHTML = '';
+      document.getElementById('trendTable').innerHTML = '';
+      document.getElementById('copyTableBtn').parentElement.style.display = 'none';
+      // #trendChartToggle is the "> Chart" collapse header - it lives outside #trendContent
+      // (see the click-listener setup above) so wiping trendContent's innerHTML doesn't touch
+      // it. Left alone it kept showing a clickable "Chart" row that expanded to nothing, the
+      // only sidebar element still implying there was something to look at.
+      document.getElementById('trendChartToggle').style.display = 'none';
+      // #trendSelector was already populated by updateAllChartData() (it builds/appends the
+      // geography/trend-group pin radios before calling buildChart()) - with nothing to chart,
+      // its "— TREND SELECTOR —" label and any radio group titles have nothing left to pin, so
+      // hide the whole column instead of leaving orphaned labels with no controls under them.
+      // visibility (not display) - #trendSelector is a flex-row sibling of #trendMain/
+      // #trendSettings, and display:none would pull it out of flow and shift them over, same
+      // as the #trendMain collapse bug fixed earlier.
+      document.getElementById('trendSelector').style.visibility = 'hidden';
+      return;
+    }
+    document.getElementById('copyTableBtn').parentElement.style.display = '';
+    document.getElementById('trendChartToggle').style.display = '';
+    document.getElementById('trendSelector').style.visibility = '';
+
     if (seriesModeSelect.selected === 'stacked100') {
       if (isAllYears) {
         // Case when isAllYears = true, simple structure chartData[currentSeries][year]
@@ -715,13 +814,25 @@ class VizTrends {
       const selectedAg = this.wijRadioAgId.options.find(item => item.value === this.wijRadioAgId.selected);
       selectedAgTitle = selectedAg ? selectedAg.label + ' ' : ''
     }
+
+    // Same wording as this.modeOptions' static titles, but naming the actual baseline year
+    // (Compare To Year) instead of a generic placeholder - regular Values mode stays blank.
+    // Falls back to a generic label rather than an empty/undefined baseline if Compare To
+    // Year somehow has no selection yet.
+    var _compareYearLabel = compareYearSelect.selected || 'Selected Year';
+    var _modeTitleSuffix = "";
+    if (mode === 'change') {
+      _modeTitleSuffix = ' - Compare to ' + _compareYearLabel;
+    } else if (mode === 'pct_change') {
+      _modeTitleSuffix = ' - Compare to ' + _compareYearLabel + ' (%)';
+    }
     
     if (seriesIsAggregator) {
-      _title = selectedTrendTitle + _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
+      _title = selectedTrendTitle + _agg.agTitleText + ' ' + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + _modeTitleSuffix;
     } else if (seriesIsTrend) {
-      _title = selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
+      _title = selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + _modeTitleSuffix;
     } else {
-      _title = selectedTrendTitle + selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + this.modeOptions.find(option => option.value===mode).title;
+      _title = selectedTrendTitle + selectedAgTitle + this.sidebar.getADisplayName().replace(/[ ]+/g, '').replace(/(^-|-$)/g, '') + selectedYearTitle + _modeTitleSuffix;
     }
 
     const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
@@ -735,7 +846,7 @@ class VizTrends {
       }
     }
 
-    _yaxisTitle += this.modeOptions.find(option => option.value===mode).title;
+    _yaxisTitle += _modeTitleSuffix;
 
     const containerHeaderElement = document.getElementById('trendHeader');
     containerHeaderElement.innerHTML = '';
@@ -762,13 +873,30 @@ class VizTrends {
     chartContainer.appendChild(canvas);
   
     const ctx = canvas.getContext('2d');
-    
+
+    // Chart.js's own defaults are a washed-out grey (#666 tick/label text, rgba(0,0,0,0.1)
+    // gridlines/axis borders) - nothing here overrode them before, so the whole chart read as
+    // grey rather than crisp. Chart.js is only ever used here (nowhere else in the app), so
+    // this is safe to set globally rather than repeating it in every scale config below.
+    // A dark color alone wasn't enough at the default 1px width - a hairline still reads as
+    // faint - so the axis border width is bumped to 2px below (border.width) alongside this.
+    Chart.defaults.color = '#1a1a1a';
+    Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.18)';
+
     const calculatePercentChange = (currentValue, initialValue) => ((currentValue - initialValue) / initialValue) * 100;
-  
+
     const calculateChange = (currentValue, initialValue) => currentValue - initialValue;
-  
+
+    // See resolveBaselineYear() below - same fallback rule, exposed as a method too since
+    // generateTableFromChart() needs it outside this closure.
+    const resolveBaselineYear = (values) => this.resolveBaselineYear(values);
+
     const modifyDataForChange = (values, changeType) => {
-      const initialValue = values[Object.keys(values)[0]]; // Assuming the first value is the baseline
+      const _baselineYear = resolveBaselineYear(values);
+      if (_baselineYear === null) return []; // no data for the selected Compare To Year -
+                                              // leave this series out of the chart entirely
+                                              // rather than compute against a substitute year
+      const initialValue = values[_baselineYear];
       return Object.keys(values).map(year => {
         const currentValue = +values[year];
         let change;
@@ -786,7 +914,11 @@ class VizTrends {
     
   
     const modifyDataForChangeForSingleYear = (values, changeType, year) => {
-      const initialValue = values[Object.keys(values)[0]]; // Assuming the first value is the baseline
+      const _baselineYear = resolveBaselineYear(values);
+      if (_baselineYear === null) return NaN; // no data for the selected Compare To Year -
+                                               // caller's isNaN check already treats this as
+                                               // "skip this bar" (see its else branch)
+      const initialValue = values[_baselineYear];
       const currentValue = values[year]; // Find value for the given year
       let change;
       if (changeType === 'pct_change') {
@@ -813,6 +945,23 @@ class VizTrends {
       // Destroy existing Chart instance
       this.currentChart.destroy();
     }
+
+    // Earliest year actually present in the data being charted, rather than a hardcoded base
+    // year - used as the x-axis min below so the "All Years" line/scatter chart starts exactly
+    // where the data starts instead of assuming every scenario has a 2019 data point.
+    const _yearsInChartData = _seriesValues
+      .flatMap(series => Object.keys(chartData[series.code] || {}))
+      .map(Number)
+      .filter(year => !isNaN(year));
+    const minChartYear = _yearsInChartData.length > 0 ? Math.min(..._yearsInChartData) : undefined;
+
+    // With only a single year of data, min===max would collapse the x-axis to one point with
+    // no sense of scale - give it a future span instead (+30 years, rounded up to the next 5)
+    // so a lone point still reads as a point in time on a real timeline.
+    const _distinctChartYears = new Set(_yearsInChartData);
+    const maxChartYear = _distinctChartYears.size === 1
+      ? Math.ceil((minChartYear + 30) / 5) * 5
+      : undefined;
 
     const createChart=()=>{
 
@@ -870,10 +1019,17 @@ class VizTrends {
                   borderColor: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'rgba(255,255,255,1)' : _seriesValues.find(item=>item.code===code).color,
                   backgroundColor: _seriesValues.find(item=>item.code===code).color,
                   borderWidth: 3,
-                  showLine: true, 
-                  pointRadius: seriesModeSelect.selected === 'scatter' ? 8 : 5,
+                  showLine: true,
+                  pointRadius: seriesModeSelect.selected === 'scatter' ? 9 : 6,
+                  pointBorderColor: '#ffffff', // thin white ring so a dot still reads as its
+                                                // own point instead of blending into the line
+                                                // (its own or an overlapping series') under it
+                  pointBorderWidth: 2,
                   fill: seriesModeSelect.selected === 'stacked100' || seriesModeSelect.selected === 'stacked' ? true : false,
                   stack: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100' ? 'stack1' : undefined,
+                  clip: 10, // lets point markers draw fully instead of getting half-clipped at
+                            // the chart area edge when a data point sits right on x-axis min
+                            // (the earliest year in the data) or the plot's other boundaries
                 };
               }
               return null;
@@ -881,12 +1037,24 @@ class VizTrends {
           },
           options: {
             animation: false,  // Disable animation
+            // A CSS border on a real DOM element gets pixel-snapped by the browser's layout
+            // engine, so it always lands crisply on one device pixel row. A <canvas> has no such
+            // snapping - Chart.js draws the axis at whatever fractional x/y the computed layout
+            // lands on (e.g. chartArea.left has landed on values like 96.4586px here), so a 1px
+            // line straddles two pixel columns and gets anti-aliased into a soft grey band
+            // instead of one solid line. Rendering the canvas backing store at a higher
+            // resolution than the display needs (supersampling) shrinks that blur band relative
+            // to what's visible, without changing the line's apparent CSS width the way
+            // bumping border.width would.
+            devicePixelRatio: Math.max(2, window.devicePixelRatio || 1),
             responsive: true,
             scales: {
               x: {
                 type: 'linear',
                 position: 'bottom',
-                min: 2019,
+                min: minChartYear,
+                max: maxChartYear,
+                border: { color: '#1a1a1a' }, // crisp axis line, distinct from the lighter gridlines
                 ticks: {
                   callback: function(value) {
                     return value.toString().replace(/,/g, '');
@@ -895,6 +1063,7 @@ class VizTrends {
               },
               y: {
                 beginAtZero: mode !== 'pct_change' && mode !== 'change',
+                border: { color: '#1a1a1a' },
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 ticks: {
                   callback: (value) => {
@@ -1008,9 +1177,20 @@ class VizTrends {
           },
           options: {
             animation: false,  // Disable animation
+            // A CSS border on a real DOM element gets pixel-snapped by the browser's layout
+            // engine, so it always lands crisply on one device pixel row. A <canvas> has no such
+            // snapping - Chart.js draws the axis at whatever fractional x/y the computed layout
+            // lands on (e.g. chartArea.left has landed on values like 96.4586px here), so a 1px
+            // line straddles two pixel columns and gets anti-aliased into a soft grey band
+            // instead of one solid line. Rendering the canvas backing store at a higher
+            // resolution than the display needs (supersampling) shrinks that blur band relative
+            // to what's visible, without changing the line's apparent CSS width the way
+            // bumping border.width would.
+            devicePixelRatio: Math.max(2, window.devicePixelRatio || 1),
             scales: {
               x: {
                 beginAtZero: true,
+                border: { color: '#1a1a1a' },
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100', // Ensure x-axis is also stacked
               },
               y: {
@@ -1019,6 +1199,7 @@ class VizTrends {
                   text: seriesModeSelect.selected === 'stacked100' ? 'Percent Share' : _yaxisTitle // Set y-axis label dynamically
                 },
                 beginAtZero: true,
+                border: { color: '#1a1a1a' },
                 stacked: seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100',
                 max: seriesModeSelect.selected === 'stacked100' ? 100 : undefined, // Set max to 100 for stacked100 mode
                 ticks: {
@@ -1069,10 +1250,47 @@ class VizTrends {
   async updateAllChartData() {
     console.log('viztrends:updateAllChartData:' + this.id);
 
+    if (!scenarioChecker.selected || scenarioChecker.selected.length === 0) {
+      // No trend group checked - there's nothing to chart, so leave the chart area blank
+      // instead of building an empty axes-only chart with no data in it. #trendMain itself
+      // stays in the layout (not display:none) - it sits between #trendSelector and
+      // #trendSettings, so collapsing it out of flow would shift #trendSettings left into
+      // its place instead of leaving an empty middle area.
+      if (this.currentChart) {
+        this.currentChart.destroy();
+        this.currentChart = null;
+      }
+      this.allChartData = [];
+      document.getElementById('trendHeader').innerHTML = '';
+      document.getElementById('trendContent').innerHTML = '';
+      document.getElementById('trendTable').innerHTML = '';
+      document.getElementById('copyTableBtn').parentElement.style.display = 'none';
+      // See the matching comment in buildChart()'s no-data branch - #trendChartToggle lives
+      // outside #trendContent, so clearing it above doesn't hide this too.
+      document.getElementById('trendChartToggle').style.display = 'none';
+      return;
+    } else {
+      document.getElementById('copyTableBtn').parentElement.style.display = '';
+      document.getElementById('trendChartToggle').style.display = '';
+    }
+
     const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
 
     if (this.sidebar.dividers) {
       var _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
+    }
+
+    // Some dividers only convert their attribute's units correctly when a particular filter
+    // is at its full/default selection - e.g. TRANSIT_RM's aRM is Route-Direction-Miles, so
+    // halving it only yields true Route-Miles when every direction is included. Narrow the
+    // Direction filter to fewer than all its options and the sum is no longer doubled, so
+    // halving it again would undercount instead of correct it.
+    let _applyDividerScaling = !!(_selectedDivider && _selectedDivider.divideResultBy);
+    if (_applyDividerScaling && _selectedDivider.divideResultByUnlessFilterNarrowed) {
+      const _scalingFilter = this.sidebar.filters.find(f => f.fCode === _selectedDivider.divideResultByUnlessFilterNarrowed);
+      if (_scalingFilter) {
+        _applyDividerScaling = _scalingFilter.getSelectedOptionsAsList().length === _scalingFilter.options.length;
+      }
     }
 
     const _trendsSelected = dataScenarioTrends.filter(a => scenarioChecker.selected.includes(a.scnTrendCode));
@@ -1095,7 +1313,16 @@ class VizTrends {
     const _neededScenarios = this.getNeededScenarios();
     showDataLoadingIndicator();
     try {
-      await Promise.all(_neededScenarios.map(s => s.ensureDataLoaded(this.jsonName)));
+      // A divider can point at a jsonName this chart wouldn't otherwise load (e.g. TRANSIT_RM
+      // pulls from j-transit-segment-trends while this view's own data is j-transit-stops) - it
+      // only worked for the existing TAZ_* dividers by coincidence, since j-zone-se happens to
+      // already be loaded by the default landing dashboard. Load it explicitly so any divider
+      // works regardless of what the user visited first; ensureDataLoaded is cached, so this is
+      // a no-op for a jsonName that's already loaded.
+      await Promise.all(_neededScenarios.flatMap(s => [
+        s.ensureDataLoaded(this.jsonName),
+        _selectedDivider ? s.ensureDataLoaded(_selectedDivider.jsonName) : Promise.resolve()
+      ]));
     } finally {
       hideDataLoadingIndicator();
     }
@@ -1144,6 +1371,20 @@ class VizTrends {
       return { _selectedFilterOptions: _options, _lstOfSelectedFilterOptions: _lst };
     };
 
+    // A divider's data can be split across filter dimensions this view also filters on (e.g.
+    // TRANSIT_RM's route-miles share Route Name/Direction/Mode with this view's own boardings
+    // data) - resolve which combos are currently selected for whichever of the divider's own
+    // filter dimensions this sidebar actually has, so narrowing those filters shrinks the
+    // divider's sum the same way it already shrinks the main attribute's. A divider whose
+    // source has no filter dimensions at all (e.g. TAZ_HH, filterGroup "") resolves to the
+    // single unfiltered "" combo, same as before.
+    const selectedDividerFilterOptionsFor = (_scenario) => {
+      if (!_selectedDivider) return [""];
+      const _dividerFilterGroup = _scenario.getFilterGroupForAttribute(_selectedDivider.jsonName, _selectedDivider.attributeCode);
+      const _dividerFilterGroupArray = _dividerFilterGroup ? _dividerFilterGroup.split("_") : [];
+      return this.sidebar.getListOfSelectedFilterOptionsForGroup(_dividerFilterGroupArray);
+    };
+
     _trendsSelected.forEach(trend => {
       const _scnTrendCode = trend.scnTrendCode;
 
@@ -1160,6 +1401,7 @@ class VizTrends {
         const aggregatorKeyFileDivide = _useDivide
           ? _scenario.getAggregatorKeyFile(_selectedAggregator, _selectedDivider.baseGeoJsonKey)
           : null;
+        const _dividerFilterCombos = _useDivide ? selectedDividerFilterOptionsFor(_scenario) : null;
 
         _selectedFilterOptions.forEach(_fCode => {
           const _dataForFilterOptions = _scenario.getDataForFilterOptionsList(this.jsonName, _lstOfSelectedFilterOptions[_fCode]);
@@ -1207,6 +1449,15 @@ class VizTrends {
               }
             }
 
+            // No rows at all matched this geography+filter combination - as opposed to
+            // matching rows whose values legitimately sum to zero - e.g. a filter selection
+            // (restored from a URL, or otherwise) that doesn't correspond to any real data for
+            // this attribute/scenario. Treat as "no data" (null, skipped below) instead of
+            // charting a false zero-value point.
+            if (relevantKeys.length === 0) {
+              _dataSum = null;
+            }
+
             // Compute weighted average if needed
             if (_hasWeight && _dataSumWeight > 0) {
               _dataSum /= _dataSumWeight;
@@ -1219,8 +1470,6 @@ class VizTrends {
               const jsonDivider = _scenario.jsonData?.[_selectedDivider.jsonName];
               if (!jsonDivider) return;  // skip this iteration if no divide data
 
-              _dataDivide = jsonDivider.data[_selectedDivider.filter];
-
               const geoJsonIdSetDivide = aggregatorKeyFileDivide
                 ? new Set(
                     aggregatorKeyFileDivide
@@ -1229,14 +1478,28 @@ class VizTrends {
                   )
                 : null;
 
+              // Merge across only the filter combos currently selected for this divider's own
+              // filter dimensions (see selectedDividerFilterOptionsFor above) - e.g. narrowing
+              // Route Name/Direction/Mode shrinks the route-miles denominator the same way it
+              // already shrinks the boardings numerator, instead of always summing every route
+              // in the system regardless of what's filtered.
+              _dataDivide = _scenario.getDataForFilterOptionsList(
+                _selectedDivider.jsonName,
+                _dividerFilterCombos,
+                "sum",
+                _selectedDivider.attributeCode
+              );
+
               const relevantDivideKeys = geoJsonIdSetDivide
                 ? Object.keys(_dataDivide).filter(k => geoJsonIdSetDivide.has(String(k)))
                 : (_selectedAggregator.agCode === this.baseGeoJsonId ? Object.keys(_dataDivide) : []);
 
               for (const key of relevantDivideKeys) {
-                const val = _dataDivide[key]?.[_selectedDivider.attributeCode];
+                const val = _dataDivide[key];
                 if (val != null) _sumDivide += val;
               }
+
+              if (_applyDividerScaling) _sumDivide /= _selectedDivider.divideResultBy;
 
               if (_sumDivide > 0) {
                 _dataSum /= _sumDivide;
@@ -1304,6 +1567,11 @@ class VizTrends {
       }
     }
 
+    // #trendSelector shows a static "— TREND SELECTOR —" label above these (see styles.css),
+    // but each radio still needs its own title: when a filter is the chart series, BOTH
+    // wijRadioAgId and wijRadioTrendCode render together to pin one geography and one trend
+    // group (so the filter's own values can be plotted unambiguously) - with no label at all
+    // that read as a single flat list of options instead of two separate pinned choices.
     const createRadioFilter = (id, label, options, selected) =>
       new WijRadio(id, label, selected, options, this);
     
@@ -1412,8 +1680,16 @@ class VizTrends {
     if (seriesModeSelect.selected === 'stacked' || seriesModeSelect.selected === 'stacked100') {
       modeSelect.selected = 'regular';
       modeSelect.hide();
+      this.setCompareYearVisible(false);
     } else {
       modeSelect.show();
+      // Meaningful whenever there's a baseline to compare against: explicitly in Change/%
+      // Change from Base Year mode, or implicitly in regular Values mode's All Years table,
+      // which now annotates each value with its own vs.-baseline delta (see
+      // generateTableFromChart()). Single-year mode has no year axis to compare across, so it
+      // stays hidden there regardless of chart mode.
+      const modeNeedsBaseline = modeSelect.selected === 'change' || modeSelect.selected === 'pct_change';
+      this.setCompareYearVisible(modeNeedsBaseline || (modeSelect.selected === 'regular' && isAllYears));
     }
 
     // Step 3: Update DOM elements with the rendered filters
@@ -1458,6 +1734,36 @@ class VizTrends {
   }
 
   // Function to generate an HTML table from chart data (regular or grouped bar)
+  // Same baseline-resolution rule as buildChart()'s own resolveBaselineYear() (a series without
+  // data for the globally-selected Compare To Year falls back to its own earliest year) - kept
+  // as a standalone method since generateTableFromChart() needs it too and isn't nested inside
+  // buildChart()'s closure.
+  // Compare To Year lives in its own "— TABLE DISPLAY SETTINGS —" card (#trendTableOptions,
+  // see viztrends.html) below the "— CHART DISPLAY SETTINGS —" card - unlike the other
+  // Wij-widgets, hiding just compareYearSelect's own container would leave that whole card
+  // visibly empty (its own child mount div, #trendCompareYear, is never itself removed from
+  // the DOM), so its card wrapper needs its own show/hide alongside the widget's.
+  setCompareYearVisible(visible) {
+    if (visible) {
+      compareYearSelect.show();
+    } else {
+      compareYearSelect.hide();
+    }
+  }
+
+  // Only ever the exact Compare To Year - no more falling back to a series' own earliest year
+  // when that year isn't there. A silently-substituted baseline read as the series comparing
+  // to a *different* year than every other row without saying so; null here means "nothing to
+  // compare" and every caller now leaves that series/cell blank instead of computing against a
+  // baseline nobody chose.
+  resolveBaselineYear(values) {
+    const _compareYear = (typeof compareYearSelect !== 'undefined' && compareYearSelect && compareYearSelect.selected) || '';
+    if (_compareYear && Object.prototype.hasOwnProperty.call(values, _compareYear)) {
+      return _compareYear;
+    }
+    return null;
+  }
+
   generateTableFromChart(chartInstance, _seriesValues, isGroupedBar = false) {
 
     const seriesIsFilter     = this.seriesSelect.selected[0] === 'f'; // Check if the first character is 'f'
@@ -1500,6 +1806,14 @@ class VizTrends {
     });
     tableHTML += '</tr></thead><tbody>';
 
+    // In plain Values mode (not already charting Change/% Change, and not the single-year
+    // grouped-bar table, which has no year axis to compare across) each cell also gets a small
+    // vs.-baseline delta - red/up for an increase, blue/down for a decrease, the same
+    // non-judgmental color pairing measure.js's dashboard cards use (an increase isn't
+    // automatically "good" for a metric like VHT/VMT, so no green/red good-bad coding here).
+    const mode = (typeof modeSelect !== 'undefined' && modeSelect) ? modeSelect.selected : 'regular';
+    const showDelta = !isGroupedBar && mode === 'regular';
+
     // Add rows for each dataset (series)
     datasets.forEach(dataset => {
       let _colorRGBA;
@@ -1508,6 +1822,18 @@ class VizTrends {
         _colorRGBA = _seriesValues.find(item => item.alias === dataset.label).color;
       } else {
         _colorRGBA = undefined;
+      }
+
+      // This row's own baseline - null (see resolveBaselineYear()) when this series has no
+      // data for the globally-selected Compare To Year, in which case every cell below simply
+      // shows its plain value with no delta rather than comparing against a substitute year.
+      let _baselineYear = null;
+      let _baselineValue = null;
+      if (showDelta) {
+        const _valuesByYear = {};
+        dataset.data.forEach(point => { _valuesByYear[point.x] = point.y; });
+        _baselineYear = this.resolveBaselineYear(_valuesByYear);
+        if (_baselineYear !== null) _baselineValue = _valuesByYear[_baselineYear];
       }
 
       // First column: Color square, no header
@@ -1519,15 +1845,27 @@ class VizTrends {
       // Add y-values for each label (year or group), formatted and right-aligned
       labels.forEach((label, index) => {
         let yValue;
+        let dataPoint;
         if (isGroupedBar) {
           // Handle grouped bar chart data
           yValue = dataset.data[index] !== undefined ? this.formatYValue(dataset.data[index]) : ''; // Use the index for grouped bar
         } else {
           // Handle regular chart data
-          const dataPoint = dataset.data.find(point => point.x === label); // Match year with x-value
+          dataPoint = dataset.data.find(point => point.x === label); // Match year with x-value
           yValue = dataPoint ? this.formatYValue(dataPoint.y) : ''; // If no y-value, leave blank
         }
-        tableHTML += `<td style="text-align: right;">${yValue}</td>`;
+
+        let _delta = '';
+        if (showDelta && dataPoint && _baselineValue && String(label) !== String(_baselineYear)) {
+          const _pctChange = ((dataPoint.y - _baselineValue) / _baselineValue) * 100;
+          if (_pctChange > 0) {
+            _delta = ` <span class="ledger-delta up">&#9650; ${Math.abs(_pctChange).toFixed(1)}%</span>`;
+          } else if (_pctChange < 0) {
+            _delta = ` <span class="ledger-delta down">&#9660; ${Math.abs(_pctChange).toFixed(1)}%</span>`;
+          }
+        }
+
+        tableHTML += `<td style="text-align: right;">${yValue}${_delta}</td>`;
       });
 
       tableHTML += '</tr>';

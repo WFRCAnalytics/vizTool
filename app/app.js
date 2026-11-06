@@ -29,6 +29,7 @@ let onOpenModelEntity;
 let centerMap = [-111.891, 40.7608]; // default value replaced programatically from json value
 let zoom = 10; // default value replaced programatically from json value
 let yearSelect = {};
+let compareYearSelect = {}; // vizTrends global item - baseline year for Change/% Change from Selected Year
 let activeLayout = {};
 let seriesModeSelect;
 let barGroupSelect;
@@ -83,6 +84,43 @@ function hideDataLoadingIndicator() {
   }
 }
 
+// A view can finish loading and still have nothing to show - e.g. a scenario built with an
+// older export pipeline that's simply missing the JSON this attribute needs. Left unannounced,
+// that reads as a broken view (map/chart area stays exactly as blank as it was before anything
+// loaded). Unlike the lazy-load indicator this isn't reference-counted or transient - it stays
+// up until the layout that showed it either finds data or explicitly hides it.
+function showNoDataIndicator(message) {
+  const el = document.getElementById('no-data-indicator');
+  if (!el) return;
+  document.getElementById('no-data-message').textContent = message;
+  el.style.display = 'block';
+}
+
+function hideNoDataIndicator() {
+  const el = document.getElementById('no-data-indicator');
+  if (el) el.style.display = 'none';
+}
+
+// Names the current phase under the two startup progress bars (index.html) - most useful during
+// loadMenuAndItems()'s synchronous menu/entity-construction stretch, which is real work (dozens
+// of model entities, each building its own sidebar/filters) but moves neither bar, so without
+// this the load screen looks stalled for a couple of seconds even though it isn't. See the
+// #load-status-spinner comment in styles.css for why the spinner keeps animating through that
+// same stretch.
+function setLoadStatus(text) {
+  const el = document.getElementById('load-status-text');
+  if (el) el.textContent = text;
+}
+
+// The label toggle button's tooltip reflects the action a click would perform next
+// (not the current state), so it reads "Hide Labels" while labels are on. Called from
+// vizmap.js too (loaded after this file, same global scope) wherever btn.active changes.
+function updateLabelToggleTooltip(btn) {
+  const text = btn.active ? 'Hide Labels' : 'Show Labels';
+  btn.text = text;
+  btn.title = text;
+}
+
 require([
   "esri/Map",
   "esri/Basemap",
@@ -120,11 +158,179 @@ require([
     return dataConfigApp;
   }
 
+  // attributes.json stores each attribute's compare_pct/main as a reference to one of a small
+  // set of shared templates in the separate config/attribute-templates.json (the color ramps
+  // and percent-diff thresholds are identical across dozens of attributes - only the legend
+  // text and, for compare_abs/main, the breakpoints actually vary), instead of a fully spelled
+  // out classBreakInfos array per attribute - that repetition used to account for two-thirds of
+  // attributes.json's size. This expands the references back into the exact classBreakInfos
+  // shape RendererCollection already expects, so nothing downstream (attribute.js,
+  // renderer-collection.js) needs to know the compact format exists.
+  const COMPARE_ABS_SENTINEL = 1e15;
+
+  function formatBreakpointNumber(v, numberFormat) {
+    if (numberFormat === 'comma') {
+      return Math.round(v).toLocaleString('en-US');
+    }
+    if (numberFormat === 'plain') {
+      return String(Math.round(v));
+    }
+    if (numberFormat === 'dollar') {
+      return '$' + Math.round(v).toLocaleString('en-US');
+    }
+    const decimals = parseInt(numberFormat.split(':')[1], 10) || 0;
+    let s = v.toFixed(decimals);
+    if (s.indexOf('.') !== -1) {
+      s = s.replace(/0+$/, '').replace(/\.$/, '');
+    }
+    return s;
+  }
+
+  // Symmetric magnitude bands around zero, e.g. Access to Jobs' breakpoints [5000, 50000,
+  // 500000] become "-5,000 to +5,000", "+5,000 to +50,000", "+50,000 to +500,000",
+  // "More than +500,000" (mirrored negative too - 2*N+1 bands total for N breakpoints).
+  // Boundaries touch (each bucket's max equals the next one's min) rather than using a manual
+  // +/-1 offset - ArcGIS's ClassBreaksRenderer resolves a value sitting exactly on a shared
+  // boundary to the lower bucket, so this is unambiguous and matches how most of this file's
+  // attributes were already authored.
+  function buildAbsScaleBounds(breakpoints, unit, numberFormat) {
+    const fmt = (v) => formatBreakpointNumber(v, numberFormat);
+    const suffix = unit ? ` ${unit}` : '';
+    const b0 = breakpoints[0];
+    const bounds = [{ minValue: -COMPARE_ABS_SENTINEL, maxValue: -breakpoints[breakpoints.length - 1], label: `More than -${fmt(breakpoints[breakpoints.length - 1])}${suffix}` }];
+    for (let i = breakpoints.length - 1; i >= 1; i--) {
+      bounds.push({ minValue: -breakpoints[i], maxValue: -breakpoints[i - 1], label: `-${fmt(breakpoints[i])} to -${fmt(breakpoints[i - 1])}${suffix}` });
+    }
+    bounds.push({ minValue: -b0, maxValue: b0, label: `-${fmt(b0)} to +${fmt(b0)}${suffix}` });
+    for (let i = 0; i < breakpoints.length - 1; i++) {
+      bounds.push({ minValue: breakpoints[i], maxValue: breakpoints[i + 1], label: `+${fmt(breakpoints[i])} to +${fmt(breakpoints[i + 1])}${suffix}` });
+    }
+    bounds.push({ minValue: breakpoints[breakpoints.length - 1], maxValue: COMPARE_ABS_SENTINEL, label: `More than +${fmt(breakpoints[breakpoints.length - 1])}${suffix}` });
+    return bounds;
+  }
+
+  // Discrete integer classes (e.g. a difference of exactly +1 lane, not a range) - used for the
+  // handful of attributes whose difference is itself a small whole-number count rather than a
+  // continuous magnitude, where a "range" bucket wouldn't mean anything.
+  function buildAbsCountBounds(breakpoints, unit, numberFormat) {
+    const n = breakpoints[0];
+    const fmt = (v) => formatBreakpointNumber(v, numberFormat);
+    const suffix = unit ? ` ${unit}` : '';
+    const bounds = [{ minValue: -COMPARE_ABS_SENTINEL, maxValue: -n, label: `More than -${fmt(n)}${suffix}` }];
+    for (let k = n - 1; k >= 1; k--) {
+      bounds.push({ minValue: -k, maxValue: -k, label: `-${fmt(k)}${suffix}` });
+    }
+    bounds.push({ minValue: 0, maxValue: 0, label: `No Change${suffix}` });
+    for (let k = 1; k <= n - 1; k++) {
+      bounds.push({ minValue: k, maxValue: k, label: `+${fmt(k)}${suffix}` });
+    }
+    bounds.push({ minValue: n, maxValue: COMPARE_ABS_SENTINEL, label: `More than +${fmt(n)}${suffix}` });
+    return bounds;
+  }
+
+  function generateAbsClassBreakInfos(ca, symbols) {
+    const bounds = ca.mode === 'count'
+      ? buildAbsCountBounds(ca.breakpoints, ca.unit, ca.numberFormat)
+      : buildAbsScaleBounds(ca.breakpoints, ca.unit, ca.numberFormat);
+    return bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
+  }
+
+  // Single-sided ascending scale (the main, non-compare renderer), e.g. Access to Jobs'
+  // breakpoints [5000, 25000, ..., 500000] become "Less than 5,000", "5,000 to 25,000", ...,
+  // "More than 500,000" (N breakpoints -> N+1 bands, vs compare_abs's mirrored 2*N+1). A tiny
+  // epsilon above zero keeps a literal 0 routed to defaultSymbol instead of the first visible
+  // band, matching how these attributes were already authored. displayScale handles the
+  // attributes that store a raw 0-1 fraction but show it as a 0-100 percent (see aTelPct).
+  const MAIN_ASCENDING_EPS = 0.000001;
+
+  // compare_pct's labelExpressionInfo is identical across every attribute that uses the
+  // shared classBreakInfos templates, so it's a constant here rather than stored per-attribute.
+  const PCT_LABEL_EXPRESSION_INFO = "IIF(IsEmpty($feature.dVal), '', Text($feature.dVal * 100, '#.0') + '%')";
+  const TRAILING_PAREN_RE = /\s*\([^)]*\)\s*$/;
+
+  function deriveAbsLegendTitle(mainTitle) {
+    return `Difference in ${mainTitle}`;
+  }
+
+  function derivePctLegendTitle(mainTitle) {
+    return `Percent Difference in ${mainTitle.replace(TRAILING_PAREN_RE, '')}`;
+  }
+
+  function buildMainAscendingBounds(breakpoints, unit, numberFormat, displayScale) {
+    const scale = displayScale || 1;
+    const fmt = (v) => formatBreakpointNumber(v * scale, numberFormat);
+    const suffix = unit === '%' ? unit : (unit ? ` ${unit}` : '');
+    const bounds = [{ minValue: MAIN_ASCENDING_EPS, maxValue: breakpoints[0], label: `Less than ${fmt(breakpoints[0])}${suffix}` }];
+    for (let i = 0; i < breakpoints.length - 1; i++) {
+      bounds.push({ minValue: breakpoints[i], maxValue: breakpoints[i + 1], label: `${fmt(breakpoints[i])} to ${fmt(breakpoints[i + 1])}${suffix}` });
+    }
+    bounds.push({ minValue: breakpoints[breakpoints.length - 1], maxValue: COMPARE_ABS_SENTINEL, label: `More than ${fmt(breakpoints[breakpoints.length - 1])}${suffix}` });
+    return bounds;
+  }
+
+  function generateMainClassBreakInfos(main, symbols) {
+    const bounds = buildMainAscendingBounds(main.breakpoints, main.unit, main.numberFormat, main.displayScale);
+    return bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
+  }
+
+  function expandAttributesConfig(dataConfigAttributes, templates) {
+    if (!templates) return dataConfigAttributes; // no templates file / already-expanded shape
+
+    Object.keys(dataConfigAttributes).forEach((code) => {
+      const rc = dataConfigAttributes[code].rendererCollection;
+      if (!rc) return;
+
+      const mainR = rc.main;
+      if (mainR && mainR.style && templates.main_style) {
+        const symbols = templates.main_style[mainR.style];
+        mainR.classBreakInfos = generateMainClassBreakInfos(mainR, symbols);
+        delete mainR.style;
+        delete mainR.breakpoints;
+        delete mainR.unit;
+        delete mainR.numberFormat;
+        delete mainR.displayScale;
+      }
+
+      const cp = rc.compare_pct;
+      if (cp && cp.template) {
+        cp.classBreakInfos = templates.compare_pct[cp.template];
+        delete cp.template;
+        cp.labelExpressionInfo = PCT_LABEL_EXPRESSION_INFO;
+        if (!cp.legendTitle && mainR) cp.legendTitle = derivePctLegendTitle(mainR.legendTitle);
+      }
+      if (cp && typeof cp.defaultSymbol === 'string' && templates.compare_pct_default_symbol) {
+        cp.defaultSymbol = templates.compare_pct_default_symbol[cp.defaultSymbol];
+      }
+
+      const ca = rc.compare_abs;
+      if (ca && ca.style) {
+        const symbols = templates.compare_abs_style[ca.style];
+        ca.classBreakInfos = generateAbsClassBreakInfos(ca, symbols);
+        delete ca.style;
+        delete ca.mode;
+        delete ca.breakpoints;
+        delete ca.unit;
+        delete ca.numberFormat;
+        if (templates.compare_abs_lei) ca.labelExpressionInfo = templates.compare_abs_lei[ca.labelExpressionInfo];
+      }
+      if (ca && !ca.legendTitle && mainR) ca.legendTitle = deriveAbsLegendTitle(mainR.legendTitle);
+    });
+
+    return dataConfigAttributes;
+  }
+
+  async function fetchConfigAttributeTemplates() {
+    console.log("app:fetchConfigAttributeTemplates");
+    const response = await fetchWithTimeout("config/attribute-templates.json");
+    return await response.json();
+  }
+
   async function fetchConfigAttributes() {
     console.log("app:fetchConfigAttributes");
     const response = await fetchWithTimeout("config/attributes.json");
     const dataConfigAttributes = await response.json();
-    return dataConfigAttributes;
+    const templates = await fetchConfigAttributeTemplates();
+    return expandAttributesConfig(dataConfigAttributes, templates);
   }
 
   async function fetchConfigAggregators() {
@@ -171,6 +377,7 @@ require([
 
   async function loadScenarios() {
     console.log("app:loadScenarios");
+    setLoadStatus("Loading scenario list and geo data...");
 
     // load scenario data
     jsonScenario = await fetchScenarioData();
@@ -334,21 +541,34 @@ require([
 
   async function loadMenuAndItems() {
     console.log("app:loadMenuAndItems");
+    setLoadStatus("Loading configuration...");
 
     configAggregators = await fetchConfigAggregators();
-    configAttributes  = await fetchConfigAttributes ();
-    configFilters     = await fetchConfigFilters();
-    configDividers    = await fetchConfigDividers();
-    configCards       = await fetchConfigCards();
-    configMeasures    = await fetchConfigMeasures();
+    configAttributes = await fetchConfigAttributes();
+    configFilters = await fetchConfigFilters();
+    configDividers = await fetchConfigDividers();
+    configCards = await fetchConfigCards();
+    configMeasures = await fetchConfigMeasures();
 
     configApp = await fetchConfigApp();
+
+    const infoButton = document.getElementById("infoButton");
+    if (infoButton) {
+      infoButton.onclick = openSplashOnDemand;
+    }
+
     const calciteMenu = document.querySelector(
       'calcite-menu[slot="content-start"]'
     );
 
     // Clear existing menu items
     calciteMenu.innerHTML = "";
+
+    // The gap this is meant to fill: everything from here through the probeDataAvailability
+    // loop below is synchronous construction of every menu item/model entity/sidebar in the
+    // app (dozens of them) - real work, but neither progress bar moves during it, and it can
+    // take a couple of seconds on its own.
+    setLoadStatus("Building menu...");
 
     menuItems = configApp.menuItems.map(
       (menuItem) => new MenuItem(menuItem, hideAllLayoutLayers)
@@ -399,6 +619,7 @@ require([
     // passing the updateProgress function to be called when each check completes. Actual
     // scenario data is fetched lazily via Scenario.ensureDataLoaded() the first time it's
     // needed, instead of eagerly pulling every scenario's full dataset here.
+    setLoadStatus("Checking scenario data availability...");
     for (let scenario of dataScenarios) {
       scenario.probeDataAvailability(dataMenu, updateProgress);
     }
@@ -483,6 +704,20 @@ require([
         mod: "modVersion_MatrixComp",
         grp: "scnGroup_MatrixComp",
         year: "scnYear_MatrixComp",
+        scenario: "selectedScenario_Comp",
+      },
+      {
+        // vizDashboard has no map either - same reasoning as vizMatrix above, its own
+        // selects in the sidebar kept in sync with the same selectedScenario_Main.
+        mod: "modVersion_DashMain",
+        grp: "scnGroup_DashMain",
+        year: "scnYear_DashMain",
+        scenario: "selectedScenario_Main",
+      },
+      {
+        mod: "modVersion_DashComp",
+        grp: "scnGroup_DashComp",
+        year: "scnYear_DashComp",
         scenario: "selectedScenario_Comp",
       },
     ];
@@ -579,12 +814,6 @@ require([
         selectedScenario_Comp = selectedScenario;
       }
     }
-    
-    // After updating both Main and Comp sets:
-    const headerRoot = document.getElementById('dashboardScenarioSelector')?.firstElementChild;
-    if (headerRoot) {
-      syncHeaderScenarioFromMap(headerRoot);
-    }
   }
 
   async function updateScenarioSelection(scenarioSelect) {
@@ -621,12 +850,13 @@ require([
   }
 
   // Pairs of controls that exist once per view (vizMap's live in the map's UI widget,
-  // vizMatrix's are its own sidebar copies) but represent the same single piece of app-wide
-  // "what am I comparing against, and how" state, so a change on either side should show up
-  // on the other immediately - not just next time that view happens to re-render.
+  // vizMatrix's and vizDashboard's are each their own sidebar copies) but represent the
+  // same single piece of app-wide "what am I comparing against, and how" state, so a change
+  // on either side should show up on the other immediately - not just next time that view
+  // happens to re-render.
   const syncedComparePairs = [
-    { ids: ["comparisonScenario", "comparisonScenarioMatrix"], prop: "open", event: "calciteBlockToggle" },
-    { ids: ["selectCompareType", "selectCompareTypeMatrix"], prop: "value", event: "calciteSelectChange" },
+    { ids: ["comparisonScenario", "comparisonScenarioMatrix", "comparisonScenarioDash"], prop: "open", event: "calciteBlockToggle" },
+    { ids: ["selectCompareType", "selectCompareTypeMatrix", "selectCompareTypeDash"], prop: "value", event: "calciteSelectChange" },
   ];
 
   function setupSyncedCompareControls() {
@@ -657,8 +887,15 @@ require([
   function syncSelectedZoneGeography(newAgCode, sourceSidebar) {
     selectedAggregatorCode = newAgCode;
 
+    // Sync only within the same template (vizMap views sync with each other, vizTrends with
+    // each other, etc.) rather than across all of them - lets e.g. vizTrends sit on one
+    // geography while vizMap sits on another, instead of every view being forced to match.
+    const sourceTemplate = sourceSidebar?.vizLayout?.modelEntity?.template;
+
     dataMenu.forEach((menuItem) => {
       menuItem.modelEntities.forEach((modelEntity) => {
+        if (modelEntity.template !== sourceTemplate) return;
+
         const sidebar = modelEntity.vizLayout?.sidebar;
         if (!sidebar || sidebar === sourceSidebar || !sidebar.aggregatorSelect) return;
 
@@ -708,7 +945,6 @@ require([
     await loadScenarios();
     await loadMenuAndItems();
     await initVizMapListeners();
-    await mountScenarioSelectorInHeaderIfPresent();
   }
 
   async function loadAppConfig() {
@@ -791,6 +1027,9 @@ require([
       event.preventDefault();
     });
   }
+  // Exposed globally so other files loaded outside this require() callback (e.g.
+  // VizSidebar.openDefinitionsPopup() in vizsidebar.js) can reuse it too.
+  window.makeDraggable = makeDraggable;
 
   async function loadAndDisplaySplash(disclaimer) {
     const modal = document.getElementById("infoModal");
@@ -823,6 +1062,30 @@ require([
       return;
     }
 
+    displaySplashModal(disclaimer, splashStorageKey, splashHash, showLoadScreen);
+  }
+
+  // Reopens the same splash content on demand (e.g. the header's info button) - unlike
+  // loadAndDisplaySplash() above, this always shows it regardless of the "don't show again"
+  // dismissal state, and closing it just hides the modal instead of revealing #load-screen
+  // (that's only meaningful during the real startup sequence, where the app hasn't finished
+  // loading yet - reusing it here would incorrectly show a stale "Loading..." progress screen
+  // over an already-loaded app).
+  function openSplashOnDemand() {
+    if (!configApp || !configApp.splash || !configApp.splash.on) return;
+    const disclaimer = configApp.splash;
+    const splashStorageKey = "vizToolSplashDismissed";
+    const splashHash = hashSplashContent(disclaimer.title + disclaimer.textHtml);
+    const modal = document.getElementById("infoModal");
+    displaySplashModal(disclaimer, splashStorageKey, splashHash, () => {
+      modal.style.display = "none";
+    });
+  }
+
+  // Shared modal-building logic between the startup splash and the on-demand reopen -
+  // onClose is what differs between them (see openSplashOnDemand() above).
+  function displaySplashModal(disclaimer, splashStorageKey, splashHash, onClose) {
+    const modal = document.getElementById("infoModal");
     const modalContent = document.querySelector("#infoModal .modal-content");
 
     // Reset any position left over from a previous drag
@@ -844,6 +1107,21 @@ require([
     dontShowAgainLabel.innerHTML =
       '<input type="checkbox" id="dontShowAgainCheckbox"> Don\'t show this again';
 
+    // Reflect whether this exact disclaimer content was previously dismissed - otherwise the
+    // checkbox always starts unchecked even for a user who already opted out, which reads as
+    // if their preference wasn't remembered (most visibly on the on-demand reopen, where
+    // loadAndDisplaySplash() skipping the modal entirely means this is the only place that
+    // preference is ever shown back to them).
+    let previouslyDismissed = false;
+    try {
+      previouslyDismissed = localStorage.getItem(splashStorageKey) === splashHash;
+    } catch (error) {
+      console.warn("Unable to read splash dismissal state:", error);
+    }
+    if (previouslyDismissed) {
+      dontShowAgainLabel.querySelector("#dontShowAgainCheckbox").checked = true;
+    }
+
     const okButton = document.getElementById("okButton");
     if (okButton) {
       okButton.parentNode.insertBefore(dontShowAgainLabel, okButton);
@@ -857,14 +1135,22 @@ require([
 
     const closeModal = function () {
       const dontShowAgainCheckbox = document.getElementById("dontShowAgainCheckbox");
-      if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
+      if (dontShowAgainCheckbox) {
         try {
-          localStorage.setItem(splashStorageKey, splashHash);
+          if (dontShowAgainCheckbox.checked) {
+            localStorage.setItem(splashStorageKey, splashHash);
+          } else {
+            // Unchecking (e.g. on a reopen where it started pre-checked) should actually
+            // clear the stored preference, not just leave the previous dismissal in place -
+            // otherwise the checkbox would show unchecked while the splash still silently
+            // skips itself next time.
+            localStorage.removeItem(splashStorageKey);
+          }
         } catch (error) {
           console.warn("Unable to save splash dismissal state:", error);
         }
       }
-      showLoadScreen();
+      onClose();
       document.removeEventListener("keydown", closeOnEscape);
     };
 
@@ -888,7 +1174,7 @@ require([
       menuItem.modelEntities.forEach((modelEntity) => {
         if (
           (modelEntity.id == activeModelEntity.id) &
-          (modelEntity.template == "vizMap" || modelEntity.template == "vizMatrix")
+          (modelEntity.template == "vizMap" || modelEntity.template == "vizMatrix" || modelEntity.template == "vizDashboard")
         ) {
           console.log(
             "app:initVizMapListeners:updateActiveVizMap:" + modelEntity.id
@@ -974,18 +1260,56 @@ require([
         "calciteSelectChange",
         updateScenarioSelection.bind(this)
       );
+    document
+      .getElementById("modVersion_DashMain")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
+    document
+      .getElementById("scnGroup_DashMain")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
+    document
+      .getElementById("scnYear_DashMain")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
+    document
+      .getElementById("modVersion_DashComp")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
+    document
+      .getElementById("scnGroup_DashComp")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
+    document
+      .getElementById("scnYear_DashComp")
+      ?.addEventListener(
+        "calciteSelectChange",
+        updateScenarioSelection.bind(this)
+      );
     // "Compare to:" is more than just a scenario pick - whether the panel is open (compare
     // mode on/off at all) and which compare type is chosen live on separate DOM elements per
-    // view (vizMap's live inside the map's UI widget, vizMatrix's are its own sidebar
-    // controls), same reason the Main/Comp scenario selects needed their own MatrixMain/
-    // MatrixComp copies. Syncing the scenario value alone isn't enough - keep these two
-    // pieces of state mirrored across every view that has them too.
+    // view (vizMap's live inside the map's UI widget, vizMatrix's and vizDashboard's are each
+    // their own sidebar controls), same reason the Main/Comp scenario selects needed their own
+    // MatrixMain/MatrixComp and DashMain/DashComp copies. Syncing the scenario value alone
+    // isn't enough - keep these two pieces of state mirrored across every view that has them too.
     setupSyncedCompareControls();
 
     document
       .getElementById("vizMapLabelToggle")
-      .addEventListener("calciteCheckboxChange", (event) => {
-        // Arrow function here
+      .addEventListener("click", (event) => {
+        const btn = event.currentTarget;
+        btn.active = !btn.active;
+        updateLabelToggleTooltip(btn);
         console.log(dataMenu);
         dataMenu.forEach((menuItem) => {
           menuItem.modelEntities.forEach((modelEntity) => {
@@ -1036,6 +1360,17 @@ require([
         } else {
           this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
         }
+
+        // #trendMain (Chart.js's canvas parent) genuinely does grow/shrink via flex once the
+        // sidebar's width transition finishes - confirmed live - but Chart.js's own
+        // responsive:true resize observer doesn't pick that up on its own here, leaving the
+        // canvas stuck at its old pixel size. Nudge it once the 0.3s CSS transition (see
+        // .sidebar's transition: width) has actually finished.
+        setTimeout(() => {
+          if (activeLayout && activeLayout.currentChart) {
+            activeLayout.currentChart.resize();
+          }
+        }, 350);
       });
 
     document
@@ -1156,13 +1491,13 @@ require([
       // CREATE SCENARIO SELECTOR
 
       // Create a container for the widget content
-      const contentContainer = document.createElement('div');
-      contentContainer.id = 'scenario-selector-container-id';
-      contentContainer.className = 'scenario-selector-container';
-      
+      const contentContainer = document.createElement("div");
+      contentContainer.className = "scenario-selector-container";
+
+
       // Add some descriptive text
       const descriptionText = document.createElement("div");
-      descriptionText.innerHTML = "<b>Scenario Selector<b>";
+      descriptionText.innerHTML = "<b>Scenario Selector</b>";
       contentContainer.appendChild(descriptionText);
 
       const lstSelectIds = ["modVersion_Main", "scnGroup_Main", "scnYear_Main"];
@@ -1258,37 +1593,17 @@ require([
       // Add the Expand widget to the view
       mapView.ui.add(expandScenario, "top-right");
 
-      // ADD LABEL TOGGLE
+      // ADD LABEL TOGGLE - a single-click icon button (no expand panel): clicking it
+      // directly toggles labels on/off, "active" state showing whether labels are on.
+      // Same top-right slot the old Expand+checkbox combo used.
+      const labelToggleAction = document.createElement("calcite-action");
+      labelToggleAction.id = "vizMapLabelToggle";
+      labelToggleAction.icon = "label";
+      labelToggleAction.scale = "s"; // match the 32x32 size of the adjacent Expand/Zoom buttons
+      labelToggleAction.active = true; // labels are on by default
+      updateLabelToggleTooltip(labelToggleAction);
 
-      // Create a container for the widget content
-      const contentContainerLabelToggle = document.createElement("div");
-      contentContainerLabelToggle.className = "label-toggle-container";
-
-      var checkboxLabel = document.createElement("calcite-label");
-      checkboxLabel.setAttribute("layout", "inline");
-      checkboxLabel.classList.add("pointer-cursor");
-
-      var calciteCheckbox = document.createElement("calcite-checkbox");
-      calciteCheckbox.id = "vizMapLabelToggle"; // Set an ID for the checkbox
-      calciteCheckbox.checked = true;
-
-      checkboxLabel.appendChild(calciteCheckbox);
-      checkboxLabel.appendChild(document.createTextNode("Show Labels"));
-
-      // Append the calcite-checkbox and the label to a container element in your DOM
-      contentContainerLabelToggle.appendChild(checkboxLabel);
-
-      // Create the Expand widget
-      const expandLabelToggle = new Expand({
-        view: mapView,
-        content: contentContainerLabelToggle,
-        expandIcon: "label",
-        expandTooltip: "Labels",
-        group: "top-right",
-      });
-
-      // Add the Expand widget to the view
-      mapView.ui.add(expandLabelToggle, "top-right");
+      mapView.ui.add(labelToggleAction, "top-right");
 
       // Remove default zoom controls
       mapView.ui.remove("zoom");
@@ -1318,6 +1633,7 @@ require([
     });
 
   function hideAllLayoutLayers() {
+    hideNoDataIndicator();
     menuItems.forEach((menuItem) => {
       menuItem.hideAllMenuItemLayers();
     });
@@ -1431,7 +1747,7 @@ function checkAndHideProgressContainer() {
 
   // --- Sidebar integration script ---
 async function setupDashboardSidebar() {
-  const toggleBtn = document.getElementById('toggleSidebar');
+  const toggleBtn = document.getElementById('openbtndashboard');
   const shellPanel = document.getElementById('sidebarPanel');
 
   if (!toggleBtn || !shellPanel) {
@@ -1441,193 +1757,19 @@ async function setupDashboardSidebar() {
 
   toggleBtn.addEventListener('click', () => {
     shellPanel.collapsed = !shellPanel.collapsed;
+    toggleBtn.classList.toggle('collapsed', shellPanel.collapsed);
+    // Starts expanded (icon starts as "collapse"), same convention as vizMatrix's
+    // openbtnmatrixscenario.
+    toggleBtn.innerHTML = shellPanel.collapsed
+      ? `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`
+      : `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
   });
 
   window.openDashboardSidebar = function(open = true) {
     shellPanel.collapsed = !open;
+    toggleBtn.classList.toggle('collapsed', shellPanel.collapsed);
+    toggleBtn.innerHTML = shellPanel.collapsed
+      ? `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`
+      : `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
   };
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const fab = document.getElementById("toggleSidebar");
-    const panel = document.getElementById("sidebarPanel");
-    if (!fab || !panel) return;
-
-    fab.addEventListener("click", () => {
-      panel.collapsed = !panel.collapsed;
-    });
-  });
-}
-
-async function attachScenarioSelectorHandlers(root) {
-  // Example: delegate clicks inside the cloned selector
-  root.addEventListener('click', (e) => {
-    if (e.target.matches('[data-action="apply"]')) {
-      // ...apply action...
-    }
-  });
-  // Example: bind a specific control
-  const dd = root.querySelector('[data-role="scenario-dropdown"]');
-  dd?.addEventListener('change', (e) => { /* ... */ });
-}
-
-
-async function mountScenarioSelectorInHeaderIfPresent() {
-  const mount = document.getElementById('dashboardScenarioSelector');
-  if (!mount) return; // header not on this page
-
-  // Build a fresh header instance
-  const headerSelector = buildHeaderScenarioSelector();
-
-  // Initial sync from the canonical map controls (if they exist yet)
-  // If not yet, we will sync again after populateScenarioSelections runs.
-  syncHeaderScenarioFromMap(headerSelector);
-
-  // Event delegation: proxy header changes to canonical map selects
-  headerSelector.addEventListener('calciteSelectChange', proxyHeaderChangeToMap);
-
-  // Mount
-  mount.replaceChildren(headerSelector);
-
-  // Optional: re-sync when the comparison block toggles to ensure options are up-to-date
-  const compareBlock = headerSelector.querySelector('calcite-block');
-  compareBlock?.addEventListener('calciteBlockToggle', () => syncHeaderScenarioFromMap(headerSelector));
-}
-
-
-
-
-// -------- Scenario Selector (header) helpers --------
-
-const SCENARIO_ROLES_MAIN = ['modVersion_Main','scnGroup_Main','scnYear_Main'];
-const SCENARIO_ROLES_COMP = ['modVersion_Comp','scnGroup_Comp','scnYear_Comp'];
-const SCENARIO_ROLES_ALL  = [...SCENARIO_ROLES_MAIN, ...SCENARIO_ROLES_COMP, 'selectCompareType'];
-
-/** Build a header instance with unique IDs like "dashside-modVersion_Main" */
-function buildHeaderScenarioSelector() {
-  const idPrefix = 'dashside';
-
-  const container = document.createElement('div');
-  container.id = `${idPrefix}-selector-container`;
-  container.className = 'scenario-selector-container';
-
-  const description = document.createElement('div');
-  description.innerHTML = '<b>Scenario Selector</b>';
-  container.appendChild(description);
-
-  // main selects
-  SCENARIO_ROLES_MAIN.forEach(baseId => {
-    const wrap = document.createElement('div');
-    wrap.style.display = 'flex';
-    wrap.style.alignItems = 'center';
-    wrap.style.width = '100%';
-
-    const sel = document.createElement('calcite-select');
-    sel.id = `${idPrefix}-${baseId}`;
-    sel.dataset.baseId = baseId; // link to canonical ID
-    sel.style.flexGrow = '1';
-    wrap.appendChild(sel);
-    container.appendChild(wrap);
-  });
-
-  // comparison block
-  const block = document.createElement('calcite-block');
-  block.id = `${idPrefix}-comparisonScenario`;
-  block.setAttribute('heading', 'Compare to:');
-  block.setAttribute('collapsible', true);
-
-  SCENARIO_ROLES_COMP.forEach(baseId => {
-    const wrap = document.createElement('div');
-    wrap.style.display = 'flex';
-    wrap.style.alignItems = 'center';
-    wrap.style.width = '100%';
-
-    const sel = document.createElement('calcite-select');
-    sel.id = `${idPrefix}-${baseId}`;
-    sel.dataset.baseId = baseId;
-    sel.style.flexGrow = '1';
-    wrap.appendChild(sel);
-    block.appendChild(wrap);
-  });
-
-  const label = document.createElement('div');
-  label.innerHTML = '<br/>Compare Type';
-  label.id = `${idPrefix}-compare-type-label`;
-  block.appendChild(label);
-
-  // compare type select
-  const compareSel = document.createElement('calcite-select');
-  compareSel.id = `${idPrefix}-selectCompareType`;
-  compareSel.dataset.baseId = 'selectCompareType';
-
-  const optDiff = document.createElement('calcite-option');
-  optDiff.value = 'diff';
-  optDiff.textContent = 'Difference';
-
-  const optPct = document.createElement('calcite-option');
-  optPct.value = 'pctdiff';
-  optPct.textContent = 'Percent Difference';
-
-  compareSel.append(optDiff, optPct);
-
-  block.appendChild(compareSel);
-  container.appendChild(block);
-
-  return container;
-}
-
-/** Copy options + selection from a Calcite select to another */
-function mirrorCalciteSelect(fromSel, toSel) {
-  if (!fromSel || !toSel) return;
-  // Clear
-  toSel.innerHTML = '';
-  // Rebuild options
-  Array.from(fromSel.querySelectorAll('calcite-option')).forEach(srcOpt => {
-    const o = document.createElement('calcite-option');
-    o.value = srcOpt.value;
-    o.label = srcOpt.label;
-    // selected state
-    if (srcOpt.hasAttribute('selected')) o.setAttribute('selected', '');
-    toSel.appendChild(o);
-  });
-  // Ensure value mirrors if set
-  if (fromSel.value) {
-    toSel.value = fromSel.value;
-  }
-}
-
-/** Sync all header selects from canonical map controls */
-function syncHeaderScenarioFromMap(headerRoot) {
-  if (!headerRoot) return;
-  // map/canonical controls by baseId
-  SCENARIO_ROLES_ALL.forEach(baseId => {
-    const mapSel = document.getElementById(baseId);
-    const hdrSel = headerRoot.querySelector(`calcite-select[data-base-id="${baseId}"]`);
-    if (mapSel && hdrSel) mirrorCalciteSelect(mapSel, hdrSel);
-  });
-}
-
-/** When header select changes, update the canonical map select and fire the same event */
-function proxyHeaderChangeToMap(e) {
-  const hdrSel = e.target;
-  if (!(hdrSel && hdrSel.tagName === 'CALCITE-SELECT')) return;
-
-  const baseId = hdrSel.dataset.baseId;
-  const mapSel = document.getElementById(baseId);
-  if (!mapSel) return;
-
-  // Set the value on the canonical select by selecting matching option
-  const targetValue = hdrSel.value;
-
-  // Clear selection on map select
-  mapSel.querySelectorAll('calcite-option[selected]').forEach(o => o.removeAttribute('selected'));
-
-  const match = Array.from(mapSel.querySelectorAll('calcite-option')).find(o => o.value == targetValue);
-  if (match) match.setAttribute('selected', '');
-
-  // Update .value as well
-  mapSel.value = targetValue;
-
-  // Dispatch the same Calcite change event so existing listeners respond
-  const evt = new CustomEvent('calciteSelectChange', { bubbles: true });
-  mapSel.dispatchEvent(evt);
 }

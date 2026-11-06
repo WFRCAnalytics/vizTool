@@ -30,7 +30,7 @@ class Aggregator {
         alias           : this.agTitleText,
         fWidget         : "checkboxes",
         fOptions        : _cached.options,
-        fSelected       : this.selected,
+        fSelected       : this.defaultSelected,
         subAgDisplayName: _configAggregator.subAgDisplayName,
         subAgSelected   : _configAggregator.subAgSelected,
         subAgOptions    : _cached.optionsSubAg

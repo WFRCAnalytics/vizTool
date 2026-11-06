@@ -7,25 +7,29 @@ require([
 ], function (ClassBreaksRenderer, UniqueValueRenderer, SimpleRenderer, SimpleLineSymbol, Color) {
   
   class RendererCollection {
-    constructor(data) {
+    // alias: the owning attribute's plain name (config/attributes.json "alias") - used as the
+    // legend heading for every renderer variant (main/compare_abs/compare_pct/main_divide_by)
+    // instead of each variant's own hand-written "legendTitle", so the legend always just says
+    // e.g. "Volume" rather than a longer custom phrase that can drift from the attribute list.
+    constructor(data, alias) {
       this.main        = {
-        "name": data.main.legendTitle,
-        "renderer": createRenderer(data.main),
+        "name": alias,
+        "renderer": createRenderer(data.main, alias),
         "labelExpressionInfo": data.main.labelExpressionInfo,
-        "title": data.main.legendTitle
+        "title": alias
       };
       this.compare_abs = {
-        "name": data.compare_abs.legendTitle,
-        "renderer": createRenderer(data.compare_abs) ,
+        "name": alias,
+        "renderer": createRenderer(data.compare_abs, alias) ,
         "labelExpressionInfo": data.compare_abs.labelExpressionInfo,
-        "title": data.compare_abs.legendTitle
+        "title": alias
       };
       if (data.compare_pct) {
         this.compare_pct = {
-            "name": data.compare_pct.legendTitle, 
-            "renderer": createRenderer(data.compare_pct), 
+            "name": alias,
+            "renderer": createRenderer(data.compare_pct, alias),
             "labelExpressionInfo": data.compare_pct.labelExpressionInfo,
-            "title": data.compare_pct.legendTitle
+            "title": alias
         };
       } else {
         console.warn("data.compare_pct is undefined or null");
@@ -37,10 +41,10 @@ require([
         if (Array.isArray(data.main_divide_by)) {
           data.main_divide_by.forEach((main_divide_by) => {
             this.main_divide_by[main_divide_by.divider] = {
-              name: main_divide_by.legendTitle,
-              renderer: createRenderer(main_divide_by),
+              name: alias,
+              renderer: createRenderer(main_divide_by, alias),
               labelExpressionInfo: main_divide_by.labelExpressionInfo,
-              title: main_divide_by.legendTitle
+              title: alias
             };
           });
         } else {
@@ -50,7 +54,7 @@ require([
     }
   }
 
-  function createRenderer(data) {
+  function createRenderer(data, alias) {
     if (data.classBreakInfos) {
       const renderer = new ClassBreaksRenderer();
       renderer.field = "dVal";
@@ -61,11 +65,11 @@ require([
       if (data.defaultLabel !== undefined) {
         renderer.defaultLabel = data.defaultLabel;
       }
-          
+
       // Add legend options
       if (data.legendTitle) {
         renderer.legendOptions = {
-          title: data.legendTitle
+          title: alias
         };
       }
       return renderer;
@@ -84,7 +88,7 @@ require([
       // Add legend options
       if (data.legendTitle) {
         renderer.legendOptions = {
-          title: data.legendTitle
+          title: alias
         };
       }
       return renderer;
@@ -97,7 +101,7 @@ require([
           visualVariable.field = "dVal";
           if (visualVariable.legendTitle) {
             visualVariable.legendOptions = {
-              title: visualVariable.legendTitle,
+              title: alias,
             };
           }
         });
@@ -105,9 +109,9 @@ require([
         if (data.legendTitle) {
           renderer.field = "dVal";
           renderer.legendOptions = {
-            title: data.legendTitle
+            title: alias
           };
-        } 
+        }
       }
       return renderer;
     }

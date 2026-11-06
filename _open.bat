@@ -1,7 +1,7 @@
 @echo off
 
 rem Set the name of the Python script
-set script=_start-server.py
+set script=_start-server-static.py
 
 rem Find the Python executable in the PATH
 for /f %%i in ('where python') do set python_exec=%%i

@@ -56,7 +56,6 @@ require([
       this.sidebar = new VizSidebar(data.attributes,
                                     data.attributeSelected,
                                     data.attributeTitle,
-                                    data.attributeInfoTextHtml,
                                     data.filters,
                                     data.aggregators,
                                     data.aggregatorSelected,
@@ -719,13 +718,13 @@ require([
       }
     }
 
-    // Function to be called when checkbox status changes
+    // Function to be called when the label toggle button's active state changes
     toggleLabels() {
       console.log('vizmap:toggleLabels')
-      var labelCheckbox = document.getElementById('vizMapLabelToggle');
+      var labelToggle = document.getElementById('vizMapLabelToggle');
       if (this.layerDisplay) {
-        this.sidebar.setAttributeLabelStatus(labelCheckbox.checked);
-        if (labelCheckbox.checked) {
+        this.sidebar.setAttributeLabelStatus(labelToggle.active);
+        if (labelToggle.active) {
           // Checkbox is checked, show labels
           // Restore labels if originalLabelInfo has been stored
           if (!this.originalLabelInfo) {
@@ -787,6 +786,34 @@ require([
       }
       if (_renderGen !== this._renderGen) return; // a newer updateDisplay() call has since started
 
+      // _renderGen alone only catches a slower/older call on THIS SAME instance (e.g. rapid
+      // filter changes within one view) - it says nothing about whether the user has since
+      // switched to a completely different model entity while this await was in flight. That
+      // switch already ran hideAllLayoutLayers()/hideLayers() against whatever this.layerDisplay
+      // was AT THAT MOMENT, but this call is about to build and show a BRAND NEW layer below
+      // (initializeLayer()/setRendererAndLegend() replace this.layerDisplay entirely) - without
+      // this check that new layer still gets added and made visible, landing on top of whatever
+      // the user actually switched to (reported as "both layers rendered" when clicking fast
+      // between vizMap views).
+      if (activeLayout !== this) return;
+
+      // getFilterGroupForAttribute (scenario.js) needs this.jsonData[this.jsonName] loaded to
+      // know which filters this attribute actually uses - before ensureDataLoaded() resolves it
+      // returns "" (logged as an error), and updateFilterDisplay()'s fallback for a falsy
+      // filterGroup is to hide EVERY filter (vizsidebar.js), not show them. That first-ever
+      // sidebar render always runs before any scenario's data has had a chance to load, so on
+      // a fresh view every filter starts hidden - getListOfSelectedFilterOptions() then finds no
+      // visible filters to combine into a lookup key, and getDataMain()/getDataComp() below
+      // always come back empty regardless of whether the scenario genuinely has data. This used
+      // to self-correct by accident: the FeatureLayer's applyEdits().then() callback further
+      // down calls updateFilterDisplay() again once graphics exist, fixing visibility for the
+      // *next* render - but that callback never runs when there's no data to add, so scenarios
+      // with real data got stuck showing "no data" forever once the no-data indicator (above)
+      // started returning early here instead of rendering an empty-but-recoverable layer.
+      // Recomputing filter visibility here - now that ensureDataLoaded() above is guaranteed
+      // done - fixes it at the source instead of relying on that side effect.
+      this.sidebar.updateFilterDisplay();
+
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
 
@@ -814,11 +841,24 @@ require([
       if (this.isScenarioCompIncomplete()) {
         return;
       }
-      
-      // return if no data!
-      if (!_dataMain & !_dataComp) {
+
+      // No data for this scenario/attribute/filter combination - a real, not-just-theoretical
+      // gap (some scenarios were built with an older or different export pipeline and are
+      // simply missing a given JSON). getDataForFilterOptionsList (scenario.js) always returns
+      // an object, even when the underlying JSON never loaded - {} in that case, which is
+      // truthy - so a plain !_dataMain check never actually catches this; it has to look at
+      // whether anything actually aggregated into it. Previously that meant this case fell
+      // through to initializeLayer()/setRendererAndLegend() below and rendered a map with every
+      // segment in its "no value" default symbol - visually indistinguishable from broken.
+      const _hasMainData = _dataMain && Object.keys(_dataMain).length > 0;
+      const _hasCompData = _dataComp && Object.keys(_dataComp).length > 0;
+      if (!_hasMainData && !_hasCompData) {
+        const _scenarioLabel = _mainScenario ? (_mainScenario.alias || _mainScenario.scnFolder) : 'the selected scenario';
+        const _entityLabel = this.modelEntity?.submenuText || 'data';
+        showNoDataIndicator(`No ${_entityLabel} data available for ${_scenarioLabel}.`);
         return;
       }
+      hideNoDataIndicator();
 
       this.initializeLayer();
 
@@ -887,11 +927,12 @@ require([
         // Add the Expand widget to the view
         mapView.ui.add(this.expandLengend, "bottom-right");
 
-        // toggle labels based on checkbox
+        // toggle labels based on persisted per-attribute status
         this.originalLabelInfo = this.layerDisplay.labelingInfo;
 
-        var labelCheckbox = document.getElementById('vizMapLabelToggle');
-        labelCheckbox.checked = this.sidebar.getAttributeLabelStatus();
+        var labelToggle = document.getElementById('vizMapLabelToggle');
+        labelToggle.active = this.sidebar.getAttributeLabelStatus();
+        updateLabelToggleTooltip(labelToggle);
         this.toggleLabels();
 
       };

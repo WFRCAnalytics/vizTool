@@ -21,12 +21,13 @@
   </div>
   <div id="trendMain">
     <div id="trendHeader"></div>
+    <div id="trendChartToggle" class="filter-toggle-row">
+      <calcite-icon icon="chevron-down" scale="s"></calcite-icon>
+      <span>Chart</span>
+    </div>
     <div id="trendContent"></div>
-    <div id="trendTable"></div>
-    <div style="height: 25px;">
-      <calcite-button id="copyTableBtn" appearance="solid" color="blue" scale="s">
-        Copy Table to Clipboard
-      </calcite-button>
+    <div id="trendTableScroll">
+      <div id="trendTable"></div>
     </div>
       </div>
   <div id="trendSettings">
@@ -36,7 +37,11 @@
       <div id="trendSeries"></div>
       <div id="trendSeriesMode"></div>
       <div id="trendChange"></div>
+      <div id="trendCompareYear"></div>
       <div id="trendBarGroups"></div>
     </div>
+    <calcite-button id="copyTableBtn" class="reference-map-button" round>
+      Copy Table to Clipboard
+    </calcite-button>
   </div>
 </div>

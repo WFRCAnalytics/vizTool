@@ -150,15 +150,28 @@ class Filter {
     this.userModifiable = _configFilter.userModifiable === undefined ? true : _configFilter.userModifiable; // set to true if undefined
 
     if (_configFilter.subAgDisplayName) {
-      this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, true, _configFilter.subTotals);
+      // spaceafter=false: no trailing <br> needed, it renders directly under filterWij's own
+      // title (see render() below) inside their shared card. showTitle=false: its own label
+      // (e.g. "List Route Names for") is dropped too - the bare dropdown under "Route Name"
+      // reads clearly enough on its own without a second caption.
+      this.filterSubAgWij = new WijSelect(this.id + '-subag', _configFilter.subAgDisplayName, _configFilter.subAgSelected, _configFilter.subAgOptions, this.vizLayout, false, _configFilter.subTotals, false, false);
     }
-  
+
+    // spaceafter=false throughout: each filter now gets its own card (see cardClass below)
+    // whose margin-bottom already spaces it from the next filter, so the widgets' own
+    // trailing <br> would just pad extra empty space at the bottom of the card.
     if (_configFilter.fWidget === 'select') {
-      this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, true, _configFilter.subTotals);
+      this.filterWij = new WijSelect(this.id, this.name, _selected, this.options, this.vizLayout, false, _configFilter.subTotals, true);
+      // A lone select is a single compact row; once a subAg select is stacked above it
+      // (e.g. fRouteName's "List Route Names for" mode picker) the pair needs the same
+      // roomier card as checkboxes/radio so both controls read as one grouped unit.
+      this.cardClass = this.filterSubAgWij ? 'filter-card' : 'filter-card-compact';
     } else if (_configFilter.fWidget === 'radio') {
-      this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, "", true);
+      this.filterWij = new WijRadio(this.id, this.name, _selected, this.options, this.vizLayout, "", false, true);
+      this.cardClass = 'filter-card';
     } else if (_configFilter.fWidget === 'checkboxes') {
-      this.filterWij = new WijCheckboxes(this.id, this.name, _selected, this.options, this.vizLayout, true);
+      this.filterWij = new WijCheckboxes(this.id, this.name, _selected, this.options, this.vizLayout, false, true);
+      this.cardClass = 'filter-card';
     } else if (_configFilter.fWidget === 'combobox') {
       this.filterWij = new WijCombobox(this.id, this.name, _selected, this.options, this.vizLayout, true);
     }
@@ -169,20 +182,37 @@ class Filter {
 
     const filterContainer = document.createElement('div');
     filterContainer.id = this.id;
-
-    if (this.geoJsonInfo && Object.keys(this.geoJsonInfo).length > 0) {
-      // Add the map popup button
-      filterContainer.appendChild(this.renderMapPopupButton());
-    }
+    if (this.cardClass) filterContainer.classList.add(this.cardClass);
 
     // only render if the user can modify widget... otherwise needed settings are all preserved in object
     if (this.userModifiable) {
-      // append sub aggregation widget if exists
+      const filterWijEl = this.filterWij.render();
+
+      // Sub aggregation widget, if any (e.g. fRouteName's mode picker) - nested directly
+      // under filterWij's own title, above its option list, rather than as a separate
+      // captioned block stacked above the whole card. Both share this filter's one card so
+      // the pair reads as "Route Name, scoped by this dropdown" instead of two things.
       if (typeof this.filterSubAgWij!='undefined') {
-        filterContainer.appendChild(this.filterSubAgWij.render());
+        const subAgEl = this.filterSubAgWij.render();
+        // Marks this as the thing to hide/show alongside the option list when the card
+        // collapses (see WijCheckboxes/WijSelect's own collapsible toggle handlers) - it's a
+        // plain sibling of the option list, not inside it, so collapsing the list otherwise
+        // left it sitting there on its own with nothing left to scope.
+        subAgEl.classList.add('filter-subag-slot');
+        const body = filterWijEl.querySelector('.checkbox-container');
+        if (body) {
+          body.parentElement.insertBefore(subAgEl, body);
+        } else {
+          filterWijEl.appendChild(subAgEl); // fallback for widget types without a known body element
+        }
       }
-      
-      filterContainer.appendChild(this.filterWij.render());
+
+      filterContainer.appendChild(filterWijEl);
+    }
+
+    if (this.geoJsonInfo && Object.keys(this.geoJsonInfo).length > 0) {
+      // Add the map popup button - at the bottom of the card, below the options it applies to.
+      filterContainer.appendChild(this.renderMapPopupButton());
     }
     return filterContainer;
   }
@@ -191,57 +221,97 @@ class Filter {
     const mapButton = document.createElement('calcite-button');
     mapButton.innerText = "Reference Map";
     mapButton.classList.add('reference-map-button');
+    mapButton.round = true; // match .check-all-toggle-button's pill shape
     mapButton.onclick = () => this.openMapPopup();
-  
-    // Create a line break element
-    const lineBreak = document.createElement('br');
-  
+
     // Create a container div if needed
     const container = document.createElement('div');
     container.appendChild(mapButton);
-    container.appendChild(lineBreak);
-    container.appendChild(lineBreak);
     return container;
   }
 
   openMapPopup() {
     const mapPopup = document.getElementById("mapPopup");
+
+    // #mapPopup is a single page-level singleton shared by every view that has a "Reference
+    // Map" button (vizTrends/vizMatrix/vizDashboard - see VizSidebar.usesAggregatorFilter()),
+    // so where it should open depends on which view's button was just clicked: vizDashboard's
+    // controls live in its right sidebar, so open toward the right there; vizTrends' controls
+    // live on the left, so open toward the left there. Anything else keeps the roughly
+    // centered default position.
+    mapPopup.classList.remove('align-left', 'align-right');
+    const template = this.vizLayout?.modelEntity?.template;
+    if (template === 'vizDashboard') {
+      mapPopup.classList.add('align-right');
+    } else if (template === 'vizTrends') {
+      mapPopup.classList.add('align-left');
+    }
+
     mapPopup.style.display = "block";
-    
+
     if (!this.isMapInitialized) {
       mapPopup.innerHTML = "";
       mapPopup.style.boxSizing = "border-box";
       mapPopup.style.position = "fixed";
       mapPopup.style.padding = "0"; // Remove padding to avoid overflow issues
-  
-      // Close button
-      const closePopup = document.createElement("div");
-      closePopup.innerText = "Close";
-      closePopup.style.position = "absolute";
-      closePopup.style.top = "10px";
-      closePopup.style.right = "10px";
-      closePopup.style.zIndex = "3000";
-      closePopup.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-      closePopup.style.padding = "5px 10px";
-      closePopup.style.cursor = "pointer";
-      closePopup.onclick = () => this.closeMapPopup();
-      mapPopup.appendChild(closePopup);
-  
-      // Header (for dragging)
+
+      // Header - same look as the Definitions popup's header (.definitions-popup-header:
+      // orange titlebar, white "x" close) instead of a semi-transparent overlay with its own
+      // ad-hoc floating "Close"/"Clear All" divs, so both popups (and the splash modal's
+      // .modal-titlebar) read as the same kind of thing. Kept absolutely positioned (not
+      // flex, like #definitionsPopup) since mapDiv's own "top: 60px" below still depends on a
+      // fixed-height header sitting above it.
       const header = document.createElement("div");
+      header.className = "definitions-popup-header";
       header.style.position = "absolute";
       header.style.top = "0";
       header.style.left = "0";
       header.style.width = "100%";
-      header.style.height = "60px"; // Adjusted height of the header
-      header.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
-      header.style.cursor = "move";
-      header.style.padding = "10px"; // Padding for content within header
-      header.style.boxSizing = "border-box"; // Ensures padding doesn't increase header width
-      header.style.zIndex = "1000"; // Ensures header is above the map
-      header.innerHTML = "<h1>Reference Map</h1>";
+      header.style.height = "60px";
+      header.style.boxSizing = "border-box";
+      header.style.zIndex = "1000";
+      header.style.borderRadius = "6px 6px 0 0";
+
+      const heading = document.createElement("h1");
+      heading.innerText = "Reference Map";
+      header.appendChild(heading);
+
+      // Grouped together so header's flex space-between treats "title" and "actions" as the
+      // two things it's spacing apart, instead of spacing three items apart individually
+      // (which would float Clear All in the dead center of the header, away from Close).
+      const actions = document.createElement("div");
+      actions.style.display = "flex";
+      actions.style.alignItems = "center";
+      actions.style.gap = "10px";
+
+      // Clicking a polygon always toggles that value in/out of the associated checkbox
+      // filter (Select Summary Geography), same as clicking the checkbox itself - no mode
+      // toggle needed. "Clear All" resets that filter's selection from here directly.
+      const clearAllBtn = document.createElement("calcite-button");
+      clearAllBtn.innerText = "Clear All";
+      clearAllBtn.classList.add('reference-map-button'); // same pill styling as elsewhere
+      clearAllBtn.round = true;
+      clearAllBtn.style.width = "auto"; // this one sits inline in the header, not full-width
+      clearAllBtn.style.margin = "0";
+      clearAllBtn.onclick = (event) => {
+        event.stopPropagation(); // don't start a header drag
+        if (this.filterWij && this.filterWij.clearAll) this.filterWij.clearAll();
+        if (this.refreshReferenceMapHighlight) this.refreshReferenceMapHighlight();
+      };
+      actions.appendChild(clearAllBtn);
+
+      const closePopup = document.createElement("span");
+      closePopup.className = "modal-close";
+      closePopup.innerHTML = "&times;";
+      closePopup.onclick = (event) => {
+        event.stopPropagation();
+        this.closeMapPopup();
+      };
+      actions.appendChild(closePopup);
+
+      header.appendChild(actions);
       mapPopup.appendChild(header);
-  
+
       // Map container
       const mapDiv = document.createElement("div");
       mapDiv.id = "mapDiv";
@@ -251,16 +321,20 @@ class Filter {
       mapDiv.style.height = "calc(100% - 70px)"; // Leaves space for header and padding
       mapDiv.style.padding = "10px"; // Padding for content within mapDiv
       mapDiv.style.boxSizing = "border-box"; // Ensures padding doesn't increase mapDiv width
-      mapPopup.appendChild(mapDiv);  
-  
+      mapPopup.appendChild(mapDiv);
+
       // Initialize the map
       this.initializeMap(mapDiv);
       this.isMapInitialized = true;
-  
+
       // Make the popup draggable via the header only
       this.makePopupDraggable(mapPopup, header);
       // Make the popup resizable
       this.makePopupResizable(mapPopup);
+    } else {
+      // Reopening an already-built map - the sidebar checkboxes may have changed since it was
+      // last open (independently of a map click), so refresh which polygons show as selected.
+      if (this.refreshReferenceMapHighlight) this.refreshReferenceMapHighlight();
     }
   }
   
@@ -361,65 +435,58 @@ class Filter {
         url = scenarioWithData.getGeoJsonFileNameFromKey(this.geoJsonInfo.agGeoJsonKey);
       }
       
-      // Initialize counter for color cycling
-      let counterColor = 0;
-
-      // Function to get the next color in the sequence
-      const getColor = (() => {
-        const colors = [
-          'rgba( 75, 210, 192, 0.75)', // Teal
-          'rgba( 54, 162, 225, 0.75)', // Blue
-          'rgba(255,  99, 132, 0.75)', // Pink/Red
-          'rgba(255, 216,  96, 0.75)', // Yellow
-          'rgba(153, 102, 255, 0.75)', // Purple
-          'rgba(255, 159,  64, 0.75)', // Orange
-          'rgba(  0, 128, 128, 0.75)', // Dark Teal
-          'rgba(128,   0, 128, 0.75)', // Dark Purple
-          'rgba(255,  69,   0, 0.75)', // Red-Orange
-          'rgba(  0, 128,   0, 0.75)', // Green
-          'rgba(  0,   0, 128, 0.75)', // Navy Blue
-          'rgba(128, 128,   0, 0.75)', // Olive
-          'rgba(128,   0,   0, 0.75)', // Maroon
-          'rgba(  0, 255, 127, 0.75)', // Spring Green
-          'rgba( 70, 130, 180, 0.75)', // Steel Blue
-          'rgba(255, 215,   0, 0.75)', // Gold
-          'rgba(255, 140,   0, 0.75)', // Dark Orange
-          'rgba(123, 104, 238, 0.75)', // Medium Slate Blue
-          'rgba( 34, 139,  34, 0.75)', // Forest Green
-          'rgba(220,  20,  60, 0.75)'  // Crimson
-        ];
-
-        return () => {
-          const color = colors[counterColor % colors.length];
-          counterColor++;
-          return color;
-        };
-      })();
+      // Every feature is the same pastel blue with a white border - color here is only ever
+      // used to show selection state (selected -> orange), not to distinguish one zone from
+      // another, so a uniform fill reads more clearly than the old per-feature rainbow once
+      // the selected/unselected distinction (below) needs to be the thing that stands out.
+      // Fills keep some transparency so the basemap's own street names stay legible underneath.
+      const COLOR_UNSELECTED = 'rgba(91, 155, 213, 0.55)';  // #5B9BD5
+      const COLOR_SELECTED = 'rgba(200, 83, 39, 0.65)';     // #C85327, a touch more opaque so it stands out
+      const COLOR_BORDER = 'rgba(255, 255, 255, 0.9)';
 
       // Fetch the GeoJSON data first to check its geometry type
       fetch('geo-data/' + url)
         .then(response => response.json())
         .then(data => {
           const geoType = data.features && data.features[0] && data.features[0].geometry.type;
+          const isLine = geoType === "LineString" || geoType === "MultiLineString";
+          const labelField = this.geoJsonInfo.agCodeLabelField;
+          // agCode is the field that actually matches the checkbox filter's own option values
+          // (e.g. DISTSML's checkboxes use "1","2",... - agCodeLabelField there is "DSML_NAME",
+          // a separate pretty-display field like "Small District 001" that never matches those
+          // codes). For most aggregators agCodeLabelField already equals agCode (PLANAREA,
+          // CITY_NAME, TAZID, ...), so this only changes behavior for the district aggregators
+          // where they differ - previously every click silently found no matching checkbox
+          // (toggleFilterOptionByValue()'s "no matching checkbox" warning) and selection
+          // highlighting could never match either.
+          const valueField = this.geoJsonInfo.agCode;
 
-          // Use UniqueValueRenderer to assign a random color to each feature
-          const uniqueValueInfos = data.features.map((feature, index) => ({
-            value: feature.properties[this.geoJsonInfo.agCodeLabelField] || index,
-            symbol: geoType === "LineString" || geoType === "MultiLineString" 
-              ? {
-                  type: "simple-line", // For polyline
-                  color: getColor(), // Random color for each line
-                  width: 2
-                }
-              : {
-                  type: "simple-fill", // For polygon fill
-                  color: getColor(), // Random color fill
-                  outline: {
-                    color: [255, 255, 255, 1], // White outline
-                    width: 1
+          // Selected features (per the checkbox filter this map is paired with) turn orange
+          // instead of the default blue, so the current filter state is visible on the map
+          // itself - both right when it's opened and after any click toggle.
+          const buildUniqueValueInfos = () => data.features.map((feature, index) => {
+            const rawVal = feature.properties[valueField];
+            const val = rawVal != null ? String(rawVal) : String(index);
+            const isSelected = !!(this.filterWij && this.filterWij.selected && this.filterWij.selected.includes(val));
+            const color = isSelected ? COLOR_SELECTED : COLOR_UNSELECTED;
+            return {
+              value: val,
+              symbol: isLine
+                ? {
+                    type: "simple-line", // For polyline
+                    color: color,
+                    width: 2
                   }
-                }
-          }));
+                : {
+                    type: "simple-fill", // For polygon fill
+                    color: color,
+                    outline: {
+                      color: COLOR_BORDER,
+                      width: 0.75
+                    }
+                  }
+            };
+          });
 
           // Define the GeoJSONLayer with UniqueValueRenderer
           const geojsonLayer = new GeoJSONLayer({
@@ -427,8 +494,9 @@ class Filter {
             title: "My GeoJSON Layer",
             renderer: {
               type: "unique-value", // Unique renderer for individual colors
-              field: this.geoJsonInfo.agCodeLabelField, // Field to distinguish features
-              uniqueValueInfos: uniqueValueInfos
+              field: valueField, // Field to distinguish features - matches the checkbox filter's
+                                  // own option values, not the separate display-label field
+              uniqueValueInfos: buildUniqueValueInfos()
             },
             labelingInfo: [
               {
@@ -444,15 +512,26 @@ class Filter {
                 },
                 labelPlacement: "always-horizontal", // Ensures the label is placed within the polygon
                 labelExpressionInfo: {
-                  expression: "$feature." + this.geoJsonInfo.agCodeLabelField
+                  expression: "$feature." + labelField
                 }
               }
             ]
           });
 
+          // Re-applies the renderer so selected/unselected outlines match this.filterWij's
+          // current selection - called after a select-mode click, and whenever the popup is
+          // reopened in case the sidebar checkboxes changed while it was closed.
+          this.refreshReferenceMapHighlight = () => {
+            geojsonLayer.renderer = {
+              type: "unique-value",
+              field: valueField,
+              uniqueValueInfos: buildUniqueValueInfos()
+            };
+          };
+
           // Add the layer to the map (assuming you have a map instance)
           map.add(geojsonLayer);
-          
+
           // Once the layer is loaded, zoom to its full extent
           geojsonLayer.when(() => {
             if (geojsonLayer.fullExtent) {
@@ -461,10 +540,37 @@ class Filter {
               });
             }
           });
+
+          // Filter-by-select: clicking a polygon toggles that value in/out of the paired
+          // checkbox filter, same as clicking the checkbox - always on, no mode toggle.
+          this.mapView.container.style.cursor = "pointer";
+          this.mapView.on("click", (event) => {
+            this.mapView.hitTest(event, { include: geojsonLayer }).then((response) => {
+              const result = response.results && response.results[0];
+              if (!result || !result.graphic) return;
+              const rawVal = result.graphic.attributes[valueField];
+              const val = rawVal != null ? String(rawVal) : null;
+              if (val != null) this.toggleFilterOptionByValue(val);
+            });
+          });
         })
         .catch(error => console.error('Error loading GeoJSON:', error));
-  
+
     });
+  }
+
+  // Toggles one option's checkbox in this filter's own checkbox widget (mirroring a real
+  // click on it) and refreshes the reference map's highlight to match the new selection.
+  toggleFilterOptionByValue(value) {
+    if (!this.filterWij) return;
+    const checkbox = document.getElementById(this.filterWij.id + '-chk-' + value);
+    if (!checkbox) {
+      console.warn('toggleFilterOptionByValue: no matching checkbox for value', value);
+      return;
+    }
+    checkbox.checked = !checkbox.checked;
+    checkbox.dispatchEvent(new Event('calciteCheckboxChange', { bubbles: true }));
+    if (this.refreshReferenceMapHighlight) this.refreshReferenceMapHighlight();
   }
 
   afterUpdateSubAg() {
@@ -505,8 +611,13 @@ class Filter {
   hide() {
     if (this.userModifiable) {
       console.log('hide: ' + this.filterWij.id);
+      // Hide the outer card too, not just the inner widget - now that the card chrome
+      // (background/border/shadow) lives on filterContainer (this.id), hiding only the
+      // widget inside it left an empty, still-visible card shell.
+      const outer = document.getElementById(this.id);
+      if (outer) outer.style.display = 'none';
       document.getElementById(this.filterWij.containerId).style.display = 'none';
-  
+
       // append sub aggregation widget if exists
       if (typeof this.filterSubAgWij!='undefined') {
         document.getElementById(this.filterSubAgWij.containerId).style.display = 'none';
@@ -517,8 +628,10 @@ class Filter {
   show() {
     if (this.userModifiable) {
       console.log('show: ' + this.filterWij.id);
+      const outer = document.getElementById(this.id);
+      if (outer) outer.style.display = 'block';
       document.getElementById(this.filterWij.containerId).style.display = 'block';
-      
+
       // append sub aggregation widget if exists
       if (typeof this.filterSubAgWij!='undefined') {
         document.getElementById(this.filterSubAgWij.containerId).style.display = 'block';

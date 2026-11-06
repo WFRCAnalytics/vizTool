@@ -5,7 +5,7 @@ import traceback
 import os
 
 # Ensure correct directory
-base_directory = os.path.join(os.getcwd(), r"Scenarios\\.vizTool\\")
+base_directory = os.path.join(os.getcwd())
 os.chdir(base_directory)
 
 # Function to open the site in the default browser

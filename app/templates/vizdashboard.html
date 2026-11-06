@@ -3,14 +3,37 @@
   <!-- RIGHT SIDEBAR -->
   <calcite-shell-panel slot="panel-end" id="sidebarPanel" position="end">
     <calcite-panel id="dashboardSidebar">
-      <div id="dashboardScenarioSelector">
-        <!-- scenario selector -->
-      </div>
-      <div id="dashboardSidebar" class="sidebar">
-        <div class="colAttributes">
-          <div class="rowGeography" id="vizDashboardAggregator"></div>
-          <div class="rowGeography" id="vizDashboardAggregatorFilters"></div>
+      <div class="colAttributes">
+        <div class="rowGeography" id="vizDashboardScenarioSelector">
+          <div><b>Scenario Selector</b></div>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="modVersion_DashMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Main"></calcite-select>
+          </div>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="scnGroup_DashMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Main"></calcite-select>
+          </div>
+          <div style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="scnYear_DashMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Main"></calcite-select>
+          </div>
+          <calcite-block id="comparisonScenarioDash" heading="Compare to:" collapsible>
+            <div style="display: flex; align-items: center; width: 100%;">
+              <calcite-select id="modVersion_DashComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Comp"></calcite-select>
+            </div>
+            <div style="display: flex; align-items: center; width: 100%;">
+              <calcite-select id="scnGroup_DashComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Comp"></calcite-select>
+            </div>
+            <div style="display: flex; align-items: center; width: 100%;">
+              <calcite-select id="scnYear_DashComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Comp"></calcite-select>
+            </div>
+            <div><br/>Compare Type</div>
+            <calcite-select id="selectCompareTypeDash" scale="m" width="auto">
+              <calcite-option value="diff">Difference</calcite-option>
+              <calcite-option value="pctdiff">Percent Difference</calcite-option>
+            </calcite-select>
+          </calcite-block>
         </div>
+        <div class="rowGeography" id="vizDashboardAggregator"></div>
+        <div class="rowGeography" id="vizDashboardAggregatorFilters"></div>
       </div>
     </calcite-panel>
   </calcite-shell-panel>
@@ -18,17 +41,13 @@
   <!-- MAIN CONTENT AREA -->
   <div id="dashboardMainDisplay">
     <div id="dashboardContent">
+      <div id="dashboardHeader"></div>
       <div class="dashboard"><!-- cards go here --></div>
     </div>
   </div>
 
-  <!-- FLOATING BUTTON (no slot) -->
-  <calcite-fab
-    id="toggleSidebar"
-    icon="dock-right"
-    text="Scenario"
-    label="Scenario"
-    style="position: fixed; right: 16px; bottom: 16px; z-index: 10000;"
-  ></calcite-fab>
+  <!-- Collapse button (right sidebar) - starts expanded, so its icon starts as "collapse",
+       same convention as vizMatrix's openbtnmatrixscenario. -->
+  <button id="openbtndashboard" class="openbtn right"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span></button>
 
 </calcite-shell>

@@ -1,10 +1,15 @@
 class VizSidebar {
-  constructor(attributes, attributeSelected, attributeTitle, attributeInfoTextHtml, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
-    if (attributeTitle) {
-      this.id = this.generateIdFromText(attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
-    } else {
-      this.id = "vizsidebar-" + Math.random().toString(36); // fallback id
-    }
+  constructor(attributes, attributeSelected, attributeTitle, filters, aggregators, aggregatorSelected, aggregatorTitle, dividers, dividerSelected, dividerTitle, vizLayout) {
+    // Several unrelated model entities happen to share the same attributeTitle (e.g. "Special
+    // Trips" and "Special Trip Trends" are both "Trip Gen Attribute"), so an id derived from
+    // attributeTitle alone collides across entities - every widget built off this.id (the
+    // attribute radio group, filter checkboxes/selects, etc.) then shares a DOM id/name with
+    // the other entity's equivalent widget, and calcite's native-radio-style "one checked per
+    // name" exclusivity fights across the two once both have rendered at least once. Prefer the
+    // owning model entity's submenuText instead - that's guaranteed unique (it's what the menu
+    // and URL restore already key off of) - falling back to attributeTitle only if it's ever
+    // unavailable.
+    this.id = this.generateIdFromText(vizLayout?.modelEntity?.submenuText || attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
 
     // link to parent
     this.vizLayout = vizLayout;
@@ -24,12 +29,21 @@ class VizSidebar {
         return { value: attributeCode, label: configAt.alias };
       });
 
+      // The attribute list's own title/info-icon is dropped now that the "— ATTRIBUTES —"
+      // section label sits above the whole column - a "Definitions" button (see
+      // renderDefinitionsButton()/openDefinitionsPopup() below) replaces the old inline
+      // title+hover, built from each Attribute's own alias/definition (config/attributes.json)
+      // rather than a single hand-written HTML blob per model entity.
+      this.attributeTitle = attributeTitle;
       this.attributeSelect   = new WijRadio(this.id + "-attribute-selector",
                                             attributeTitle,
                                             attributeSelected,
                                             attributeOptions,
                                             this,
-                                            attributeInfoTextHtml);
+                                            "",
+                                            false,
+                                            false,
+                                            false);
       this.filters = (filters || []).map(item => new Filter (item, this.vizLayout));
     }
 
@@ -51,8 +65,8 @@ class VizSidebar {
                                             aggregatorSelected,
                                             aggregatorOptions,
                                             this);
-      if (vizLayout.modelEntity.template==='vizTrends' || vizLayout.modelEntity.template==='vizDashboard') {
-        this.aggregatorFilter = new Filter (null, this.vizLayout, currentAggregator.filterData, {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
+      if (this.usesAggregatorFilter()) {
+        this.aggregatorFilter = new Filter (null, this.vizLayout, this.buildAggregatorFilterData(currentAggregator.filterData), {agGeoJsonKey: currentAggregator.agGeoJsonKey, agCode: currentAggregator.agCode, agCodeLabelField: currentAggregator.agCodeLabelField});
       }
 
     }
@@ -90,10 +104,19 @@ class VizSidebar {
   
     // Define the elements to process
     const elements = [
-      { name: "Attributes", render: () => this.attributeSelect ? this.attributeSelect.render() : null },
+      { name: "Attributes", render: () => {
+          if (!this.attributeSelect) return null;
+          const parts = [this.attributeSelect.render()];
+          if (this.attributes.some(item => item.definition)) parts.push(this.renderDefinitionsButton());
+          return parts;
+        }
+      },
       { name: "AttributeFilters", render: () => this.filters ? this.filters.map(filter => filter.render()) : null},
-      { name: "Aggregator", render: () => this.aggregatorSelect ? this.aggregatorSelect.render() : null },
-      { name: "AggregatorFilters", render: () => this.aggregatorFilter ? this.aggregatorFilter.render() : null },
+      // With only one possible aggregator (e.g. Total Trips Trends' aggregators:["SUBAREAID"]),
+      // there's nothing to pick between - same reasoning AggregatorFilters already uses for its
+      // own single-option case just below.
+      { name: "Aggregator", render: () => (this.aggregatorSelect && this.aggregators.length > 1) ? this.aggregatorSelect.render() : null },
+      { name: "AggregatorFilters", render: () => (this.aggregatorFilter && !this.aggregatorFilterHasSingleOption) ? this.aggregatorFilter.render() : null },
       { name: "Dividers", render: () => this.dividerSelect ? this.dividerSelect.render() : null },
       { name: "DividerFilters" }
     ];
@@ -133,6 +156,11 @@ class VizSidebar {
         } else {
           const divElement = document.getElementById(divId);
           if (divElement) {
+            // Clear any content from a previous render (e.g. switching from a multi-option
+            // aggregator to a single-option one, where AggregatorFilters now renders null) -
+            // otherwise it'd stay in the DOM just hidden, which the adjacent-sibling
+            // :not(:empty) CSS merge rule (styles.css) would still see as non-empty.
+            divElement.innerHTML = '';
             divElement.style.display = 'none';
           }
         }
@@ -141,7 +169,61 @@ class VizSidebar {
   
     this.updateFilterDisplay();
   }
-  
+
+  // Sits below the attribute list (see the "Attributes" element in render() above), opening a
+  // floating popup - built the same way as a Filter's "Reference Map" button/#mapPopup - listing
+  // every attribute in this sidebar's list that has a "definition" in config/attributes.json.
+  renderDefinitionsButton() {
+    const btn = document.createElement('calcite-button');
+    btn.innerText = "Definitions";
+    btn.classList.add('reference-map-button'); // same pill styling as Reference Map/Check All
+    btn.round = true;
+    btn.onclick = () => this.openDefinitionsPopup();
+
+    const container = document.createElement('div');
+    container.appendChild(btn);
+    return container;
+  }
+
+  openDefinitionsPopup() {
+    const popup = document.getElementById("definitionsPopup");
+    if (!popup) return;
+
+    // Cheap to rebuild every time (plain text, no ArcGIS view to keep alive like #mapPopup),
+    // so no init-once caching - always reflects this sidebar's current attribute list.
+    popup.innerHTML = "";
+
+    const header = document.createElement("div");
+    header.className = "definitions-popup-header";
+    const heading = document.createElement("h1");
+    heading.innerText = "Definitions";
+    const closeBtn = document.createElement("span");
+    closeBtn.className = "modal-close";
+    closeBtn.innerHTML = "&times;";
+    closeBtn.onclick = () => this.closeDefinitionsPopup();
+    header.appendChild(heading);
+    header.appendChild(closeBtn);
+    popup.appendChild(header);
+
+    const body = document.createElement("div");
+    body.className = "definitions-popup-body";
+    this.attributes.filter(item => item.definition).forEach(item => {
+      const entry = document.createElement("p");
+      entry.innerHTML = `<b>${item.alias}</b> ${item.definition}`;
+      body.appendChild(entry);
+    });
+    popup.appendChild(body);
+
+    makeDraggable(header, popup);
+
+    popup.style.display = "flex"; // #definitionsPopup is a flex column (header + scrolling body)
+  }
+
+  closeDefinitionsPopup() {
+    const popup = document.getElementById("definitionsPopup");
+    if (popup) popup.style.display = "none";
+  }
+
   hideLayout() {
     console.log('vizsidebar:hideLayout');
   }
@@ -243,7 +325,16 @@ class VizSidebar {
   getSelectedOptionsAsLongText() {
     return this.filters.filter(filter => filter.isVisible()).map(filter => '<b>' + filter.filterWij.title + ':</b> ' + filter.getSelectedOptionsAsListOfLabels()).join('; ');
   }
-  
+
+  // The aggregator's own checkbox sub-filter (e.g. "Select Summary Geography" -> "Plan Area":
+  // MAG, WFRC). Kept separate from getSelectedOptionsAsLongText() above since that method's
+  // existing callers (vizMap/vizMatrix/vizTrends) use aggregatorFilter for a different purpose
+  // (vizTrends' zone series picker) - this is specifically for vizDashboard's subtitle.
+  getSelectedAggregatorFilterText() {
+    if (!this.aggregatorFilter) return '';
+    return '<b>' + this.aggregatorFilter.filterWij.title + ':</b> ' + this.aggregatorFilter.getSelectedOptionsAsListOfLabels();
+  }
+
 
   // get the attribute code that is selected
   getACode() {
@@ -324,7 +415,7 @@ class VizSidebar {
   }
 
   afterUpdateAggregator() {
-    if (this.vizLayout.modelEntity.template!=='vizMap') {
+    if (this.usesAggregatorFilter()) {
       const selectedAggregator = this.getSelectedAggregator();
       this.aggregatorFilter = new Filter(
           null,
@@ -336,8 +427,14 @@ class VizSidebar {
               agCodeLabelField: selectedAggregator.agCodeLabelField
           }
       );
+      // #mapPopup is only ever created lazily, the first time a Filter's "Reference Map"
+      // button is actually clicked (see Filter.openMapPopup()) - if that's never happened
+      // yet in this session, it doesn't exist, and dereferencing it unconditionally used to
+      // throw here, aborting this method before reaching afterUpdateAggregator() below (the
+      // call that actually re-renders the sidebar) - which is why picking a new aggregator
+      // looked like it did nothing. Guarded the same way Filter.closeMapPopup() already is.
       const mapPopup = document.getElementById("mapPopup");
-      mapPopup.style.display = "none";
+      if (mapPopup) mapPopup.style.display = "none";
     }
     // "Select Zone Geography" should be the same no matter which view you're on - push this
     // choice out to every other view's aggregator picker too (where it's a valid option).
@@ -349,18 +446,32 @@ class VizSidebar {
   // real map geometry (TAZ, district, etc.) - a Reference Map showing that geometry helps in
   // both. vizMap doesn't need it since it already IS the map.
   usesAggregatorFilter() {
-    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix';
+    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix' || this.vizLayout.modelEntity.template === 'vizDashboard';
   }
 
   // vizTrends uses the aggregatorFilter's checkbox list as a real series picker (which zones
-  // to plot - see VizTrends.buildChart()/updateAllChartData()). vizMatrix has no such use for
-  // it - the OD table already shows every zone the data has - so it only wants the Reference
-  // Map button bundled onto the same widget, not a second (potentially huge) zone checklist.
+  // to plot - see VizTrends.buildChart()/updateAllChartData()) - starting empty there is
+  // correct, since plotting every zone as its own line by default would be unreadable.
+  // vizMatrix uses it to scope the PA table to just the checked origin zones (see
+  // VizMatrix.getMatrixData()/filterMatrixDataByAggregatorFilter()) - there, empty should mean
+  // "nothing selected yet" while still showing the full table until someone actually narrows
+  // it down, so it starts all-checked instead of Aggregator's own empty default.
   buildAggregatorFilterData(filterData) {
-    if (this.vizLayout.modelEntity.template === 'vizMatrix' && filterData) {
-      return { ...filterData, userModifiable: false };
+    let result = filterData;
+    if (this.vizLayout.modelEntity.template === 'vizMatrix' && result && result.fOptions) {
+      result = { ...result, fSelected: result.fOptions.map(option => option.value) };
     }
-    return filterData;
+
+    // With only one possible geography (e.g. SUBAREAID's single "Wasatch Front Model Area"),
+    // there's nothing meaningful to filter - the "AggregatorFilters" render() branch below
+    // hides the checklist entirely in that case, but only after this guarantees that one
+    // option is actually selected, since hidden-and-unselected would silently produce no data.
+    this.aggregatorFilterHasSingleOption = !!(result && result.fOptions && result.fOptions.length === 1);
+    if (this.aggregatorFilterHasSingleOption) {
+      result = { ...result, fSelected: [result.fOptions[0].value] };
+    }
+
+    return result;
   }
 
   updateFilterDisplay() {
@@ -396,6 +507,34 @@ class VizSidebar {
           }
         });
       }
+    }
+
+    this.updateNoFiltersPlaceholder();
+  }
+
+  // Some attribute/filter combinations leave every filter card hidden (e.g. this attribute's
+  // data key doesn't include any of the filters configured for this view) - without this, the
+  // "— FILTERS —" column just goes blank with nothing explaining why. Appended to the outer
+  // static div (not the inner "containerAttributeFilters" render() rebuilds from scratch each
+  // time) so it isn't wiped out by the next render() before this runs again.
+  updateNoFiltersPlaceholder() {
+    if (!this.filters) return;
+    const container = document.getElementById(this.getDiv('AttributeFilters'));
+    if (!container) return;
+
+    const anyVisible = this.filters.some(filterObject => filterObject.isVisible());
+    let placeholder = container.querySelector('.no-filters-message');
+
+    if (anyVisible) {
+      if (placeholder) placeholder.remove();
+      return;
+    }
+
+    if (!placeholder) {
+      placeholder = document.createElement('div');
+      placeholder.className = 'no-filters-message';
+      placeholder.textContent = 'No Filters';
+      container.appendChild(placeholder);
     }
   }
 

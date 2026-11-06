@@ -29,10 +29,24 @@ function restoreWijRadioSelection(wijRadio, value) {
 
 function restoreWijCheckboxesSelection(wijCheckboxes, values) {
   if (!wijCheckboxes || !values || !values.length) return;
-  wijCheckboxes.selected = values.slice();
+  // Two things can go wrong restoring straight from the URL's raw (always-string) values:
+  // (1) some filters' real option values are numbers (e.g. fModeRoute - see config/filters.json),
+  //     so a strict values.includes(option.value) never matches and every checkbox renders
+  //     unchecked even though .selected still gets set to a non-empty array - the checkboxes
+  //     look empty while data queries still treat it as "N options selected".
+  // (2) a URL can also carry a selection left over from a different attribute/view whose
+  //     options don't match this one at all.
+  // Comparing as strings on both sides fixes (1); building the result from wijCheckboxes.options
+  // (keeping each option's own original-typed value) rather than the raw URL strings fixes (2)
+  // implicitly, since only values with a real matching option survive.
+  const matchedValues = (wijCheckboxes.options || [])
+    .map(option => option.value)
+    .filter(optionValue => values.includes(String(optionValue)));
+  if (!matchedValues.length) return;
+  wijCheckboxes.selected = matchedValues;
   (wijCheckboxes.options || []).forEach(option => {
     const el = document.getElementById(wijCheckboxes.id + '-chk-' + option.value);
-    if (el) el.checked = values.includes(option.value);
+    if (el) el.checked = matchedValues.includes(option.value);
   });
 }
 
@@ -96,8 +110,15 @@ function syncUrlState() {
     if (sidebar.dividerSelect && sidebar.dividerSelect.selected && sidebar.dividerSelect.selected !== 'Nothing') {
       params.set('div', sidebar.dividerSelect.selected);
     }
+    // Only serialize filters the current attribute actually uses (same filter.isVisible()
+    // check getListOfSelectedFilterOptions() already gates the real data query on - see
+    // vizsidebar.js). Some concepts (e.g. road segment direction/functional group) have two
+    // widgets - an "All"-capable select and a checkbox-only variant - and only one is shown
+    // per attribute; without this check every reload/share URL carried both, including the
+    // hidden one's untouched config default (never a real selection), which read as if the
+    // view had picked a filter value that was actually inert and ignored by the query.
     (sidebar.filters || []).forEach(filter => {
-      if (!filter.fCode || !filter.filterWij) return;
+      if (!filter.fCode || !filter.filterWij || !filter.isVisible()) return;
       const wij = filter.filterWij;
       const value = wij.comboSelected !== undefined ? wij.comboSelected : wij.selected;
       if (value === undefined || value === null || value === '') return;
@@ -124,6 +145,9 @@ function syncUrlState() {
     }
     if (typeof yearSelect !== 'undefined' && yearSelect && yearSelect.selected) {
       params.set('year', yearSelect.selected);
+    }
+    if (typeof compareYearSelect !== 'undefined' && compareYearSelect && compareYearSelect.selected) {
+      params.set('compareyear', compareYearSelect.selected);
     }
     if (typeof scenarioChecker !== 'undefined' && scenarioChecker && scenarioChecker.selected && scenarioChecker.selected.length) {
       params.set('trendgroups', scenarioChecker.selected.join(','));
@@ -176,12 +200,12 @@ function restoreAppStateFromUrl() {
   }
 
   const cmpOn = params.get('cmp') === '1';
-  ['comparisonScenario', 'comparisonScenarioMatrix'].forEach(id => {
+  ['comparisonScenario', 'comparisonScenarioMatrix', 'comparisonScenarioDash'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.open = cmpOn;
   });
   if (params.has('cmptype')) {
-    ['selectCompareType', 'selectCompareTypeMatrix'].forEach(id => {
+    ['selectCompareType', 'selectCompareTypeMatrix', 'selectCompareTypeDash'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = params.get('cmptype');
     });
@@ -215,6 +239,7 @@ function restoreAppStateFromUrl() {
     if (params.has('seriesmode')) restoreWijSelectSelection(seriesModeSelect, params.get('seriesmode'));
     if (params.has('bargroup')) restoreWijSelectSelection(barGroupSelect, params.get('bargroup'));
     if (params.has('year')) restoreWijSelectSelection(yearSelect, params.get('year'));
+    if (params.has('compareyear')) restoreWijSelectSelection(compareYearSelect, params.get('compareyear'));
     if (params.has('trendgroups')) {
       restoreWijCheckboxesSelection(scenarioChecker, params.get('trendgroups').split(','));
     }

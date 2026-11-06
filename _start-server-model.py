@@ -14,8 +14,8 @@ import webbrowser
 # specify parent and scenario directorys
 # ----------------------------------------------------------------------------------------
 # create path to global variables input file
-in_GlobalVar_txt     = "_pp_GlobalVars.txt"
-path_in_GlobalVar_txt = os.path.join(os.getcwd(), "7_PostProcessing", in_GlobalVar_txt)
+in_GlobalVar_txt     = "py_Variables - ip_GlobalVars.txt"
+path_in_GlobalVar_txt = os.path.join(os.getcwd(), "_Log", in_GlobalVar_txt)
 
 # create variables from input file global variables
 GlobalVars = importlib.machinery.SourceFileLoader('data', path_in_GlobalVar_txt).load_module()
@@ -24,6 +24,7 @@ GlobalVars = importlib.machinery.SourceFileLoader('data', path_in_GlobalVar_txt)
 UsedZones   = GlobalVars.UsedZones
 ParentDir   = GlobalVars.ParentDir
 ScenarioDir = GlobalVars.ScenarioDir
+vizToolDir  = GlobalVars.vizToolDir
 
 
 # ----------------------------------------------------------------------------------------
@@ -43,7 +44,7 @@ class VerboseHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 def start_server():
     try:
         # Set the directory containing your HTML files
-        base_directory = os.path.join(ParentDir, r"Scenarios\\.vizTool\\")
+        base_directory = os.path.join(vizToolDir)
         os.chdir(base_directory)
         print(os.getcwd)
         

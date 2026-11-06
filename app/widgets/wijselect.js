@@ -1,5 +1,5 @@
 class WijSelect {
-  constructor(parentid, title, selected, options, vizLayout, spaceafter=false, subTotals=[]) {
+  constructor(parentid, title, selected, options, vizLayout, spaceafter=false, subTotals=[], collapsible=false, showTitle=true) {
     this.id = parentid + '-wij';
     this.title = title;
     this.selected = selected;
@@ -7,6 +7,10 @@ class WijSelect {
     this.vizLayout = vizLayout;
     this.spaceafter = spaceafter;
     this.subTotals = subTotals
+    this.collapsible = collapsible;
+    this.showTitle = showTitle; // false for a subAg picker nested inside its paired filter's
+                                 // own card (right under that filter's title) - no separate
+                                 // label needed there, just the bare dropdown
     this.containerId = this.id + "-container";
   }
 
@@ -14,10 +18,55 @@ class WijSelect {
     console.log('wijselect:render:' + this.containerId)
     const container = document.createElement('div');
     container.id = this.containerId;
-    
+    const wijSelectInstance = this;
+
     let title = document.createElement("calcite-label");  // Create a new div element
     title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
-    container.appendChild(title);  // Append the new element to the container
+
+    const selectBody = document.createElement('div');
+
+    let filterSummary = null;
+    if (this.collapsible) {
+      // Same collapse+summary pattern as WijCheckboxes/WijRadio: clicking the
+      // chevron+title toggles selectBody, collapsed state shows the current selection.
+      const toggleRow = document.createElement('div');
+      toggleRow.className = 'filter-toggle-row';
+
+      const chevron = document.createElement('calcite-icon');
+      chevron.icon = 'chevron-down';
+      chevron.scale = 's';
+
+      toggleRow.appendChild(chevron);
+      toggleRow.appendChild(title);
+      container.appendChild(toggleRow);
+
+      filterSummary = document.createElement('div');
+      filterSummary.className = 'filter-selected-summary';
+      filterSummary.style.display = 'none';
+      container.appendChild(filterSummary);
+
+      toggleRow.addEventListener('click', () => {
+        const collapsed = selectBody.style.display === 'none';
+        // See WijCheckboxes' identical lookup - a subAg picker (filter.js) can land as a
+        // sibling of selectBody here too, only after this widget has already rendered.
+        const subAgSlot = container.querySelector(':scope > .filter-subag-slot');
+        if (collapsed) {
+          selectBody.style.display = 'block';
+          if (subAgSlot) subAgSlot.style.display = '';
+          filterSummary.style.display = 'none';
+          chevron.icon = 'chevron-down';
+        } else {
+          filterSummary.textContent = wijSelectInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
+          selectBody.style.display = 'none';
+          if (subAgSlot) subAgSlot.style.display = 'none';
+          filterSummary.style.display = 'block';
+          chevron.icon = 'chevron-right';
+        }
+      });
+    } else if (this.showTitle) {
+      container.appendChild(title);  // Append the new element to the container
+    }
+    container.appendChild(selectBody);
 
     // Call a type-specific rendering method
     const select = document.createElement('calcite-select');
@@ -40,9 +89,12 @@ class WijSelect {
 
       if (this.id.includes('filter-subag-wij')) {
         const modifiedId = this.id.replace(/-subag-wij$/, '');
-        let filter = this.vizLayout.sidebar.filters.find(o => o.id === modifiedId) 
+        // sidebar.filters is only set when the sidebar has attribute filters at all (e.g.
+        // vizMap) - vizDashboard's sidebar has none, so this stays undefined there and the
+        // subAg picker's only possible match is sidebar.aggregatorFilter itself.
+        let filter = (this.vizLayout.sidebar.filters || []).find(o => o.id === modifiedId)
                      || this.vizLayout.sidebar.aggregatorFilter;
-    
+
         filter.afterUpdateSubAg();
     
       } else if (this.id.includes('_aggregator-selector')) {
@@ -54,11 +106,11 @@ class WijSelect {
       }
     });
     
-    container.appendChild(select);
-    
-        
+    selectBody.appendChild(select);
+
+
     let space = document.createElement("calcite-label");  // Create a new div element
-    container.appendChild(space);  // Append the new element to the container
+    selectBody.appendChild(space);  // Append the new element to the container
     
     // Check if this.hidden is true and hide the container if it is
     if (this.hidden) {
@@ -84,7 +136,7 @@ class WijSelect {
   }
   
   getSelectedOptionsAsListOfLabels() {
-    return this.options.filter(option => this.selected.includes(option.value)).map(option => option.label).join(', ');
+    return this.options.filter(option => option.value === this.selected).map(option => option.label).join(', ');
   }
 
   hide() {

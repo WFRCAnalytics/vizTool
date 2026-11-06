@@ -53,17 +53,30 @@ class MenuItem {
   }
 
   populateModelEntities() {
-    const secondaryMenu = document.querySelector('calcite-navigation[slot="navigation-secondary"] > calcite-menu[slot="content-start"]');
+    const secondaryNav = document.querySelector('calcite-navigation[slot="navigation-secondary"]');
+    const secondaryMenu = secondaryNav.querySelector('calcite-menu[slot="content-start"]');
 
     // Clear existing menu items
     secondaryMenu.innerHTML = '';
 
+    const availableEntities = this.modelEntities.filter(modelEntity => modelEntity.hasAvailableData());
+
     // Render each menu item and log (or insert into the DOM), skipping items with no available data
-    this.modelEntities
-      .filter(modelEntity => modelEntity.hasAvailableData())
-      .forEach(modelEntity => {
-        secondaryMenu.appendChild(modelEntity.createModelEntityElement());
-      });
+    availableEntities.forEach(modelEntity => {
+      secondaryMenu.appendChild(modelEntity.createModelEntityElement());
+    });
+
+    // With only one (or zero) entities there's nothing to choose between, so hide the whole
+    // bar - selectDefaultModelEntity() still auto-loads that single entity regardless, it just
+    // does so without a one-item tab strip to click. Set inline display too, not just hidden -
+    // calcite-navigation's own shadow CSS isn't guaranteed to yield to the hidden attribute.
+    const hideBar = availableEntities.length <= 1;
+    secondaryNav.hidden = hideBar;
+    secondaryNav.style.display = hideBar ? 'none' : '';
+
+    // Layout hooks (e.g. vizDashboard's right-sidebar collapse button) are positioned assuming
+    // the secondary bar's height is always there - this class lets their CSS pull up when it isn't.
+    document.body.classList.toggle('secondary-nav-hidden', hideBar);
   }
 
   // Re-select whichever model entity the user last viewed in this menu item, or the

@@ -2,8 +2,8 @@
     "fTgPurp": {
         "alias": "Trip Generation Purpose",
         "fWidget": "checkboxes",
-        "fSelected": "TotPer",
-        "fOptions": 
+        "fSelected": ["HBW","HBSHP","HBOTH","HBSCHPR","HBSCHSC","NHBW","NHBNW","HBC","TTUnique","IX","XI"],
+        "fOptions":
         [
             {"value":"HBW"      , "label": "Home-Based Work"               },
             {"value":"HBSHP"    , "label": "Home-Based Shopping"           },
@@ -46,7 +46,7 @@
         ]
     },
     "fCvVoc": {
-        "alias": "Truck Travel Pattern",
+        "alias": "Travel Pattern",
         "fWidget": "checkboxes",
         "fSelected": ["D2D","HNS","LHL","LCL","REG","UNK"],
         "fOptions":[
@@ -74,7 +74,8 @@
             {"value": "MD"     , "label":"Medium Trucks"                },
             {"value": "HV"     , "label":"Heavy Trucks"                 },
             {"value": "IX"     , "label":"Internal-to-External"         },
-            {"value": "XI"     , "label":"External-to-Internal"         }
+            {"value": "XI"     , "label":"External-to-Internal"         },
+            {"value": "XX"     , "label":"External-to-External"         }
         ]
     },
     "fPurp12NoTruckExternal": {
@@ -116,9 +117,9 @@
         "fWidget"  : "checkboxes",
         "fSelected": ["LT","MD","HV"],
         "fOptions" : [
-            {"value":"LT" , "label":"Light Commercial Vehicles" },
-            {"value":"MD" , "label":"Medium Commercial Vehicles"},
-            {"value":"HV" , "label":"Heavy Commercial Vehicles" }
+            {"value":"LT" , "label":"Light" },
+            {"value":"MD" , "label":"Medium"},
+            {"value":"HV" , "label":"Heavy" }
         ]
     },
     "fTrkTypeMdHv": {
@@ -126,8 +127,8 @@
         "fWidget"  : "checkboxes",
         "fSelected": ["MD","HV"],
         "fOptions" : [
-            {"value":"MD" , "label":"Medium Trucks"},
-            {"value":"HV" , "label":"Heavy Trucks" }
+            {"value":"MD" , "label":"Medium"},
+            {"value":"HV" , "label":"Heavy" }
         ]
     },
     "fTod4": {
@@ -299,7 +300,7 @@
         "subTotals": ["All"]
     },
     "fModeHier": {
-        "alias"    : "Hierarchacal Mode",
+        "alias"    : "Hierarchical Mode",
         "fWidget"  : "select",
         "fSelected": "ALL",
         "fOptions" : [
