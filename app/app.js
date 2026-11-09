@@ -420,8 +420,12 @@ const panelSyncGroups = {};
 // found by querying a sidebar) and viztrends' standalone #trendSelector column. syncGroup (e.g.
 // "display"/"filters") mirrors this column's collapsed state onto every other column set up
 // with the same group name - omit it (as #trendSelector's own caller does) for a column with
-// no cross-view counterpart to sync with.
-function setupColumnCollapse(el, title, syncGroup) {
+// no cross-view counterpart to sync with. flipChevron reverses which direction means "collapse"
+// vs. "expand" - every other caller collapses a LEFT-edge column, where chevron-left reads as
+// "collapse/slide away to the left" and chevron-right as "expand back out"; #mapSidebarRight
+// (vizmap.html) sits on the right edge instead, where collapsing slides it away to the right,
+// so its own chevrons need to point the opposite way to still read correctly.
+function setupColumnCollapse(el, title, syncGroup, flipChevron) {
   // A dedicated flag, not just "does the header already exist" - the header/body wrapper this
   // builds below are themselves ordinary DOM nodes some other code could end up clearing (e.g.
   // a careless el.innerHTML = '' instead of targeting .panel-col-body). If that ever happened,
@@ -459,7 +463,7 @@ function setupColumnCollapse(el, title, syncGroup) {
   header.appendChild(titleSpan);
 
   const icon = document.createElement("calcite-icon");
-  icon.icon = "chevron-left";
+  icon.icon = flipChevron ? "chevron-right" : "chevron-left";
   icon.scale = "s";
   header.appendChild(icon);
 
@@ -470,7 +474,7 @@ function setupColumnCollapse(el, title, syncGroup) {
   // column sharing that group's own copy of this same function to mirror it onto them too.
   const applyCollapsedState = (collapsed) => {
     el.classList.toggle("panel-collapsed", collapsed);
-    icon.icon = collapsed ? "chevron-right" : "chevron-left";
+    icon.icon = collapsed === flipChevron ? "chevron-left" : "chevron-right";
   };
 
   if (syncGroup) {
@@ -2324,7 +2328,7 @@ require([
     // children (the three empty sub-containers already in the static template) into the new
     // .panel-col-body wrapper, and everything that later fills them does so by ID, not by
     // assuming a particular parent.
-    setupColumnCollapse(document.getElementById("mapSidebarRight"), "Scenario / Legend");
+    setupColumnCollapse(document.getElementById("mapSidebarRight"), "Scenario / Legend", undefined, true);
     setupLegendPopout();
 
     setupHeaderCollapse();

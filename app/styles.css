@@ -1093,6 +1093,12 @@ td {
   gap: 4px;
   cursor: pointer;
   flex-grow: 1;
+  min-width: 0; /* .filter-toggle-row is itself a flex item of .filterTitle (styles.css) - without
+                   this, its own automatic minimum width defaults to the summed min-content of
+                   its children, which can still exceed .filterTitle's box even once each of
+                   those children (the title, the summary) truncates fine on its own. Same
+                   cascade as .filter-toggle-title/.filter-selected-summary's own min-width:0,
+                   just one level up. */
 }
 
 /* .filterName/.title/this class itself (WijCheckboxes/WijRadio/WijSelect's own title element,
@@ -1105,6 +1111,11 @@ td {
 .filter-toggle-row .filter-toggle-title {
   flex: 0 0 auto;
   max-width: 65%;
+  min-width: 0; /* max-width alone caps the rendered size, but a flex item's automatic minimum
+                   width still defaults to its un-truncated min-content size (the whole name,
+                   since this is nowrap) without this - some titles were still overrunning the
+                   card/pushing .filter-selected-summary off past it instead of actually
+                   truncating, the same cascade as #mapAppliedFilters' identical fix. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
