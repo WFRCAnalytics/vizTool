@@ -97,6 +97,11 @@ function syncUrlState() {
     if (compareTypeEl && compareTypeEl.value) {
       params.set('cmptype', compareTypeEl.value);
     }
+    // vizMap only - vizMatrix/vizDashboard have no side-by-side swipe view.
+    const compareViewEl = document.getElementById('selectCompareView');
+    if (compareViewEl && compareViewEl.value) {
+      params.set('cmpview', compareViewEl.value);
+    }
   }
 
   const sidebar = activeLayout && activeLayout.sidebar;
@@ -209,6 +214,10 @@ function restoreAppStateFromUrl() {
       const el = document.getElementById(id);
       if (el) el.value = params.get('cmptype');
     });
+  }
+  if (params.has('cmpview')) {
+    const el = document.getElementById('selectCompareView');
+    if (el) el.value = params.get('cmpview');
   }
 
   const sidebar = modelEntity.vizLayout && modelEntity.vizLayout.sidebar;

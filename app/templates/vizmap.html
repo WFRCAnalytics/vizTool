@@ -14,10 +14,22 @@
       <div class="rowFilters" id="vizMapAttributeFilters"></div>
     </div>
   </div>
-  <!-- Collapse button -->
-  <button id="openbtn" class="openbtn"><span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span></button>
   <div id="mainMap">
-    <div id="mapView"></div>
+    <!-- Side-by-side compare (app.js's setupMapCompareSync()/setMapCompareSplitVisible(),
+         vizmap.js's setCompRendererAndShow()): two independent MapViews sharing a fixed 50/50
+         splitter (not user-draggable), instead of a single view with Esri's Swipe widget - that widget has a
+         confirmed bug where its trailingLayers suppresses the other layer's labels, with no
+         workaround via the labeling API. Two separate views each label themselves normally
+         since neither competes with the other. #mapViewComp/#mapDivider stay hidden (and
+         #mapView stays full-width) outside that mode. #mapViewComp ("Compare to") comes first
+         in source order so it renders on the left, matching the Scenario Selector's "Compare
+         to:" panel being the one being compared TO - #mapView (Main, and all its widgets:
+         Scenario Selector/legend/zoom/basemap toggle) stays on the right. -->
+    <div id="mapViewRow">
+      <div id="mapViewComp" style="display:none;"></div>
+      <div id="mapDivider" style="display:none;"></div>
+      <div id="mapView"></div>
+    </div>
     <div id="mapFooter"></div>
   </div>
 </div>

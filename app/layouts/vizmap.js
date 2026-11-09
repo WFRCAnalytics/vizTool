@@ -8,8 +8,9 @@ require([
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query",
-  "esri/widgets/Expand"
-], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Expand) {
+  "esri/widgets/Expand",
+  "esri/widgets/Swipe"
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Expand, Swipe) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -39,6 +40,18 @@ require([
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
       this.modeCompare = 'diff' //default is abs  other option is pct
+
+      // Non-overlay compare (see getAttributeRendererPath(), updateDisplay() and
+      // setCompRendererAndShow()): a second FeatureLayer holding the comp scenario's own
+      // natural-value features instead of a diff/pct-diff. Where it lives depends on
+      // this.compareView - 'sidebyside' adds it to app.js's separate mapComp (its own
+      // MapView, synced with the main one - see vizmap.html's #mapViewRow comment); 'swipe'
+      // adds it to the SAME shared map instead, clipped against layerDisplay by an Esri Swipe
+      // widget (this.swipeWidget). Only built at all when this.mode === 'compare' and
+      // this.compareView is one of those two.
+      this.layerDisplayComp = new FeatureLayer();
+      this.compareView = 'overlay'; // 'overlay' (default, single diff/pctdiff map), 'sidebyside', or 'swipe'
+      this.swipeWidget = null;
 
       // Opt-in (see getPopupExtraAttributes()): shows every other same-filter-group attribute
       // in the popup alongside the one currently selected, but only outside compare mode -
@@ -437,10 +450,42 @@ require([
     
     hideLayers() {
       this.layerDisplay.visible = false;
-      
+
+      if (this.layerDisplayComp) {
+        this.layerDisplayComp.visible = false;
+      }
+      this.teardownCompareExtras();
+
       if (this.legend) {
         mapView.ui.remove(this.legend);
         mapView.ui.remove(this.expandLengend);
+      }
+    }
+
+    // Hides the side-by-side split (app.js's setMapCompareSplitVisible()) AND destroys the
+    // Esri Swipe widget, whichever of the two (if either) is currently showing for this view -
+    // called whenever this view stops being the active one (hideLayers()) and whenever a
+    // render leaves BOTH non-overlay compare modes (updateDisplay()), so neither lingers after
+    // the mode that opened it is gone.
+    teardownCompareExtras() {
+      if (typeof setMapCompareSplitVisible === 'function') {
+        setMapCompareSplitVisible(false);
+      }
+      if (typeof setMapCompareScenarioLabels === 'function') {
+        setMapCompareScenarioLabels(null);
+      }
+      this.teardownEsriSwipeWidget();
+    }
+
+    // Just the Swipe-widget half of teardownCompareExtras() - also called on its own from
+    // initializeLayer() whenever a render is NOT in 'swipe' mode specifically (even if it IS in
+    // 'sidebyside' mode, which must keep the split visible that teardownCompareExtras() would
+    // otherwise hide).
+    teardownEsriSwipeWidget() {
+      if (this.swipeWidget) {
+        mapView.ui.remove(this.swipeWidget);
+        this.swipeWidget.destroy();
+        this.swipeWidget = null;
       }
     }
     
@@ -464,8 +509,15 @@ require([
       var compareType = document.getElementById('selectCompareType');
       this.modeCompare = compareType ? compareType.selectedOption.value : null;
 
+      var compareView = document.getElementById('selectCompareView');
+      this.compareView = compareView ? compareView.selectedOption.value : 'overlay';
+
       const collection = this.sidebar.getAttributeRendererCollection();
-      if (this.mode === 'main') {
+
+      // The natural (non-diff) classification - used for mode 'main', and also for BOTH
+      // sides of a sidebyside/swipe compare, since each side shows a single scenario's own
+      // value rather than a computed difference between the two.
+      const _naturalRendererPath = () => {
         if (this.dCode !== "Nothing") {
           const _selectedDivider = this.sidebar.dividers.find(divider => divider.attributeCode === this.dCode) || null;
           return _selectedDivider && _selectedDivider.dCode in collection.main_divide_by
@@ -474,6 +526,11 @@ require([
         } else {
           return collection.main;
         }
+      };
+
+      const _isTwoLayerCompare = this.compareView === 'sidebyside' || this.compareView === 'swipe';
+      if (this.mode === 'main' || (this.mode === 'compare' && _isTwoLayerCompare)) {
+        return _naturalRendererPath();
       } else if (this.mode === 'compare') {
         return this.modeCompare === 'diff' ? collection.compare_abs :
                this.modeCompare === 'pctdiff' ? collection.compare_pct : null;
@@ -497,224 +554,184 @@ require([
       }
     }
 
+    // Dummy feature geometry, keyed by geometryType - just enough for the FeatureLayer
+    // constructor to infer a geometry type before real features are swapped in via
+    // applyEdits() (see updateDisplay()). Factored out of initializeLayer() so the comp
+    // layer (side-by-side swipe compare) can be seeded with the exact same shape.
+    getDummyGeometry() {
+      if (this.geometryType === 'polyline') {
+        return {
+          type: "polyline",
+          paths: [
+            [-111.8910, 40.7608],
+            [-111.8911, 40.7609]
+          ],
+          spatialReference: { wkid: 4326 }
+        };
+      } else if (this.geometryType === 'polygon') {
+        return {
+          type: "polygon",
+          rings: [
+            [-111.8910, 40.7608],
+            [-111.8911, 40.7609],
+            [-111.8912, 40.7610],
+            [-111.8910, 40.7608]
+          ],
+          spatialReference: { wkid: 4326 }
+        };
+      } else if (this.geometryType === 'point') {
+        return {
+          type: "point",
+          longitude: -111.8910,
+          latitude: 40.7608,
+          spatialReference: { wkid: 4326 }
+        };
+      }
+    }
+
+    // FeatureLayer field declarations - identical regardless of geometryType, so both
+    // layerDisplay and (when swiping) layerDisplayComp can share this.
+    getFieldDefs(dValFieldType) {
+      return [
+        { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
+        { name: "idLabel", type: "string"},
+        { name: "dVal", type: dValFieldType, alias: this.aCode },
+        { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
+        { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
+        ...this.getPopupExtraFieldDefs()
+      ];
+    }
+
+    // Also identical regardless of geometryType. The comp layer reuses the same popup
+    // (still showing both scenarios' values via mVal/cVal) rather than a single-scenario
+    // one - simplest option, and clicking either side of the swipe still shows the full
+    // Main vs. Comp comparison.
+    getPopupTemplateConfig() {
+      return {
+        title: this.getPopupTitle(),
+        content: this.popupContent,
+        expressionInfos: this.expressionInfos
+      };
+    }
+
+    // Only the font size/label placement vary by geometryType (lines get a smaller,
+    // along-the-line label; polygons/points get a larger, horizontal one). layerDisplay and
+    // layerDisplayComp each live in their own MapView in 'sidebyside' mode (see vizmap.html's
+    // #mapViewRow comment), so there's no cross-layer label competition to work around here -
+    // each one just labels itself normally, same as the regular single-map view. 'swipe' mode
+    // forces labelingInfo to [] instead of calling this (see initializeLayer()) since the two
+    // layers share one MapView there and Esri's Swipe widget suppresses most of the trailing
+    // layer's labels regardless of this config - see the Swipe widget comment further down.
+    getLabelingInfoConfig() {
+      const _isLine = this.geometryType === 'polyline';
+      return [{
+        symbol: {
+          type: "text",
+          color: [50, 50, 50],
+          haloColor: "white",
+          haloSize: "2px",
+          font: {
+            family: "sans-serif",
+            size: _isLine ? 9 : 10,
+            weight: "normal"
+          }
+        },
+        labelPlacement: _isLine ? "center-along" : "always-horizontal",
+        labelExpressionInfo: { expression: this.getLabelInfo() }
+      }];
+    }
+
+    // Placeholder "no data yet" renderer a freshly (re)built layer starts with, before
+    // setRendererAndLegend()/setCompRendererAndShow() assign the real attribute renderer.
+    getPlaceholderRenderer() {
+      if (this.geometryType === 'polyline') {
+        return {
+          type: "simple",
+          symbol: { type: 'simple-line', color: [255, 255, 255], width: 0.2 }
+        };
+      } else if (this.geometryType === 'polygon') {
+        return {
+          type: "simple",
+          symbol: {
+            type: "simple-fill",
+            color: [0, 0, 0, 0],
+            outline: { color: [255, 255, 255], width: 0.2 }
+          }
+        };
+      } else if (this.geometryType === 'point') {
+        return {
+          type: "simple",
+          symbol: {
+            type: "simple-marker",
+            color: [0, 0, 0, 0],
+            size: 6,
+            outline: { color: [255, 255, 255], width: 0.5 }
+          }
+        };
+      }
+      return null;
+    }
+
     initializeLayer() {
-      
-      let dValFieldType;
 
       // MANUALLY SET SCENARIO -- REPLACE WITH PROGRAMATIC SOLUTION
-      if (this.aCode === 'aFtClass') {
-        dValFieldType = "string";
-      } else {
-        dValFieldType = "double";  // or "int" based on your requirement
+      const dValFieldType = (this.aCode === 'aFtClass') ? "string" : "double";
+
+      this.dummyFeature = {
+        geometry: this.getDummyGeometry(),
+        attributes: {
+          id: 0,
+          idLabel: "",
+          dVal: null,
+          mVal: null,
+          cVal: null,
+          ...this.getPopupExtraFieldDefaults()
+        }
+      };
+
+      const _isSideBySide = (this.mode === 'compare' && this.compareView === 'sidebyside');
+      const _isSwipeMode = (this.mode === 'compare' && this.compareView === 'swipe');
+
+      const _layerConfig = {
+        source: [this.dummyFeature],
+        fields: this.getFieldDefs(dValFieldType),
+        popupTemplate: this.getPopupTemplateConfig(),
+        // 'swipe' shares one MapView between layerDisplay/layerDisplayComp, and Esri's Swipe
+        // widget suppresses most of the trailing layer's labels regardless of any labeling
+        // config - rather than show a misleadingly-partial set of labels, turn labels off
+        // entirely for both layers while swipe mode is active.
+        labelingInfo: _isSwipeMode ? [] : this.getLabelingInfoConfig(),
+        renderer: this.getPlaceholderRenderer()
+      };
+
+      this.layerDisplay = new FeatureLayer(_layerConfig);
+      map.add(this.layerDisplay);
+
+      // Second, parallel layer sharing the same geometry/fields/popup as layerDisplay, which
+      // updateDisplay() populates with the comp scenario's own values (via
+      // getAttributeRendererPath()'s natural renderer and the dVal swap in updateDisplay())
+      // instead of a diff/pct-diff. 'sidebyside' puts it in app.js's separate mapComp (its own
+      // MapView - see vizmap.html's #mapViewRow comment); 'swipe' puts it in the same shared
+      // map instead, for setCompRendererAndShow()'s Esri Swipe widget to clip against
+      // layerDisplay. Torn down in teardownCompareExtras()/hideLayers() when neither applies.
+      if (_isSideBySide || _isSwipeMode) {
+        this.layerDisplayComp = new FeatureLayer({ ..._layerConfig, source: [this.dummyFeature] });
+        (_isSideBySide ? mapComp : map).add(this.layerDisplayComp);
+      } else if (this.layerDisplayComp) {
+        mapComp.remove(this.layerDisplayComp);
+        map.remove(this.layerDisplayComp);
       }
-
-      if (this.geometryType=='polyline') {
-        // Dummy polyline feature
-        this.dummyFeature = {
-          geometry: {
-            type: "polyline",
-            paths: [
-              [-111.8910, 40.7608],
-              [-111.8911, 40.7609]
-            ],
-            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-          },
-          attributes: {
-            id: 0, // Unique ID, using "SEGID" as the objectIdField
-            idLabel: "",
-            // ... add other attribute fields if necessary
-            dVal: null, // Assuming you want a displayValue, you can set any initial value
-            mVal: null,
-            cVal: null,
-            ...this.getPopupExtraFieldDefaults()
-          }
-        };
-
-
-        this.layerDisplay = new FeatureLayer({
-          source: [this.dummyFeature],
-          //objectIdField: this.baseGeoJsonId,
-          fields: [
-            // ... your other fields
-            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
-            { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.aCode },
-            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
-            ...this.getPopupExtraFieldDefs()
-
-          ],
-          popupTemplate: {
-            title: this.getPopupTitle(),
-            content: this.popupContent,
-            expressionInfos: this.expressionInfos
-          },
-          labelingInfo: [{
-            symbol: {
-              type: "text",  // Use a text symbol for labeling
-              color: [50, 50, 50],  // Dark grey color
-              haloColor: "white",
-              haloSize: "2px",  // Halo size of 2px
-              font: {  // Define the font used for labeling
-                family: "sans-serif",
-                size: 9,
-                weight: "normal"  // Make the font weight normal (not bold)
-              }
-            },
-            labelPlacement: "center-along",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
-          }],
-          renderer: {
-            type: "simple",  // Use a simple renderer
-            symbol: {
-              type: 'simple-line',
-              color: [255, 255, 255],
-              width: 0.2
-            }
-          }
-        });
-        map.add(this.layerDisplay);
-
-      } else if (this.geometryType=='polygon') {
-        // Dummy polygon feature representing an area encompassing Salt Lake City and Provo
-        this.dummyFeature = {
-          geometry: {
-            type: "polygon",
-            rings: [
-              [-111.8910, 40.7608], // Start at Salt Lake City
-              [-111.8911, 40.7609], // A point near Provo
-              [-111.8912, 40.7610], // An additional point to make it a polygon, could be another city or arbitrary coordinate
-              [-111.8910, 40.7608]  // End at Salt Lake City to close the loop
-            ],
-            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-          },
-          attributes: {
-            id: 0,
-            idLabel: "",
-            dVal: null,
-            mVal: null,
-            cVal: null,
-            ...this.getPopupExtraFieldDefaults()
-          }
-        };
-
-        this.layerDisplay = new FeatureLayer({
-          source: [this.dummyFeature],
-          fields: [
-            // ... your other fields
-            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
-            { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.aCode },
-            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
-            ...this.getPopupExtraFieldDefs()
-          ],
-          popupTemplate: {
-            title: this.getPopupTitle(),
-            content: this.popupContent,
-            expressionInfos: this.expressionInfos
-          },
-          labelingInfo: [{
-            symbol: {
-              type: "text",  // Use a text symbol for labeling
-              color: [50, 50, 50],  // Dark grey color
-              haloColor: "white",
-              haloSize: "2px",  // Halo size of 2px
-              font: {  // Define the font used for labeling
-                family: "sans-serif",
-                size: 10,
-                weight: "normal"  // Make the font weight normal (not bold)
-              }
-            },
-            labelPlacement: "always-horizontal",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
-          }],
-          renderer: {
-            type: "simple",  // Use a simple renderer
-            symbol: {
-              type: "simple-fill",  // Use a fill symbol for polygons
-              color: [0, 0, 0, 0],  // No fill color (transparent)
-              outline: {  // Define the outline of the polygon
-                color: [255, 255, 255],  // Outline color (black)
-                width: 0.2  // Outline width
-              }
-            }
-          }
-        });
-        map.add(this.layerDisplay);
-      } else if (this.geometryType=='point') {
-        // Dummy point feature
-        this.dummyFeature = {
-          geometry: {
-            type: "point",
-            longitude: -111.8910,  // Use longitude instead of coordinates
-            latitude: 40.7608,     // Use latitude instead of coordinates
-            spatialReference: { wkid: 4326 }  // Specify WGS 84 spatial reference
-          },
-          attributes: {
-            id: 0,
-            idLabel: "",
-            dVal: null,
-            mVal: null,
-            cVal: null,
-            ...this.getPopupExtraFieldDefaults()
-          },
-          reunderer: {
-            "type": "simple-marker",
-            "color": "#EEEEEE",
-            "size":  1,
-            "outline": {
-              "color": "#CCCCCC",
-              "width": 0.2
-            }
-          }
-        };
-
-        this.layerDisplay = new FeatureLayer({
-          source: [this.dummyFeature],
-          fields: [
-            // ... your other fields
-            { name: this.baseGeoJsonId, type: "oid" },  // Object ID field
-            { name: "idLabel", type: "string"},
-            { name: "dVal", type: dValFieldType, alias: this.aCode },
-            { name: "mVal", type: dValFieldType, alias: this.getMainScenarioDisplayName()},
-            { name: "cVal", type: dValFieldType, alias: this.getCompScenarioDisplayName()},
-            ...this.getPopupExtraFieldDefs()
-          ],
-          popupTemplate: {
-            title: this.getPopupTitle(),
-            content: this.popupContent,
-            expressionInfos: this.expressionInfos
-          },
-          labelingInfo: [{
-            symbol: {
-              type: "text",  // Use a text symbol for labeling
-              color: [50, 50, 50],  // Dark grey color
-              haloColor: "white",
-              haloSize: "2px",  // Halo size of 2px
-              font: {  // Define the font used for labeling
-                family: "sans-serif",
-                size: 10,
-                weight: "normal"  // Make the font weight normal (not bold)
-              }
-            },
-            labelPlacement: "always-horizontal",  // Define where to place the label
-            labelExpressionInfo: { expression: this.getLabelInfo() }  // Define the expression for the label
-          }],
-          renderer: {
-            type: "simple",  // Use a simple renderer
-            symbol: {
-              type: "simple-marker",  // Type of symbol (point marker)
-              color: [0, 0, 0, 0],  // No fill color (transparent)
-              size: 6,  // Marker size (adjust as needed)
-              outline: {  // Define the outline of the marker
-                color: [255, 255, 255],  // White outline color
-                width: 0.5  // Outline width
-              }
-            }
-          }
-        });
-        map.add(this.layerDisplay);
+      if (typeof setMapCompareSplitVisible === 'function') {
+        setMapCompareSplitVisible(_isSideBySide);
+      }
+      if (!_isSwipeMode) {
+        this.teardownEsriSwipeWidget();
+      }
+      // The real two-scenario label text is set once setCompRendererAndShow() has the comp
+      // layer's data ready - for every other render (overlay, or no compare), show just the
+      // Main scenario's own label here instead (every map gets one, not just while comparing).
+      if (!_isSideBySide && !_isSwipeMode && typeof setMapCompareScenarioLabels === 'function') {
+        setMapCompareScenarioLabels('overlay', this.getMainScenarioDisplayName());
       }
     }
 
@@ -724,6 +741,18 @@ require([
       var labelToggle = document.getElementById('vizMapLabelToggle');
       if (this.layerDisplay) {
         this.sidebar.setAttributeLabelStatus(labelToggle.active);
+        // Labels are forced off for 'swipe' mode (see initializeLayer()'s _isSwipeMode check) -
+        // don't let the label toggle override that with the real labelingInfo this.originalLabelInfo
+        // may still be holding from a previous, non-swipe render.
+        if (this.mode === 'compare' && this.compareView === 'swipe') {
+          this.layerDisplay.labelingInfo = [];
+          this.layerDisplay.refresh();
+          if (this.layerDisplayComp && this.layerDisplayComp.loaded) {
+            this.layerDisplayComp.labelingInfo = [];
+            this.layerDisplayComp.refresh();
+          }
+          return;
+        }
         if (labelToggle.active) {
           // Checkbox is checked, show labels
           // Restore labels if originalLabelInfo has been stored
@@ -741,6 +770,12 @@ require([
           this.layerDisplay.labelingInfo = [];
         }
         this.layerDisplay.refresh(); // Refresh the layer to apply changes
+
+        // Keep the comp view's labels in lockstep with the main one's on/off state.
+        if (this.layerDisplayComp && this.layerDisplayComp.loaded) {
+          this.layerDisplayComp.labelingInfo = this.layerDisplay.labelingInfo;
+          this.layerDisplayComp.refresh();
+        }
       }
     }
 
@@ -816,6 +851,8 @@ require([
 
       // Reinitialize the layer with the current features array
       map.remove(this.layerDisplay);
+      map.remove(this.layerDisplayComp); // may be here ('swipe') or in mapComp ('sidebyside') - removing from both is a safe no-op either way
+      if (mapComp) mapComp.remove(this.layerDisplayComp);
 
       // get main data
       var _dataMain = this.getDataMain();
@@ -828,6 +865,8 @@ require([
       // get compare data
       if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
         this.mode = 'compare';
+        var compareViewSelect = document.getElementById('selectCompareView');
+        this.compareView = compareViewSelect ? compareViewSelect.selectedOption.value : 'overlay';
         var _dataComp = this.getDataComp();
         // get data for weighting
         if (this.sidebar.getWeightCode()) {
@@ -835,6 +874,7 @@ require([
         }
       } else {
         this.mode = 'main';
+        this.compareView = 'overlay';
       }
 
       // check if comp scenario values are complete. if selection is incomplete, then do not map
@@ -901,6 +941,8 @@ require([
         //}
         if (this.mode==='main') {
           _title += this.getMainScenarioDisplayName();
+        } else if (this.mode==='compare' && (this.compareView==='sidebyside' || this.compareView==='swipe')) {
+          _title += this.getCompScenarioDisplayName() + ' (left) vs. ' + this.getMainScenarioDisplayName() + ' (right)';
         } else if(this.mode==='compare' & (this.modeCompare==='diff' | this.modeCompare==='pctdiff')) {
           _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
         }
@@ -921,7 +963,11 @@ require([
           expandIcon: "legend",
           expanded: isLegendExpanded, // Use the previous state
           expandTooltip: 'Show Legend',
-          group: "bottom-right"
+          group: "bottom-right",
+          // "auto" (the default) switches to a full-screen modal mask below a width threshold -
+          // side-by-side compare (app.js's setMapCompareSplitVisible()) halves #mapView's width,
+          // which falls under that threshold and would otherwise mask the whole page behind this.
+          mode: "floating",
         });
 
         // Add the Expand widget to the view
@@ -1064,7 +1110,9 @@ require([
               // calculate final display value based on selection (absolute or change)
               try {
                 if (this.mode==='compare') {
-                  if (this.modeCompare=='diff') { // absolute change
+                  if (this.compareView==='sidebyside' || this.compareView==='swipe') { // two-layer compare: main layer shows its own natural value
+                    _valueDisp = _valueMain;
+                  } else if (this.modeCompare=='diff') { // absolute change
                     _valueDisp = _valueMain - _valueComp;
                   } else if (this.modeCompare=='pctdiff') { // percent change
                     if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
@@ -1315,7 +1363,9 @@ require([
 
                 // calculate final display value based on selection (absolute or change)
                 try {
-                  if (this.modeCompare=='diff') { // absolute change
+                  if (this.mode==='compare' && (this.compareView==='sidebyside' || this.compareView==='swipe')) { // two-layer compare: main layer shows its own natural value
+                    _valueDisp = _valueMain;
+                  } else if (this.modeCompare=='diff') { // absolute change
                   _valueDisp = _valueMain - _valueComp;
                   } else if (this.modeCompare=='pctdiff') { // percent change
                     if (_valueComp>0) _valueDisp = ((_valueMain - _valueComp) / _valueComp);
@@ -1350,6 +1400,16 @@ require([
             console.log("Layer error: ", event.error);
           });
 
+          // Non-overlay compare (sidebyside or swipe): clone each graphic for the second
+          // layer, swapping in the comp scenario's own value (cVal, computed above alongside
+          // mVal) as its dVal - see getAttributeRendererPath() for the matching
+          // natural-symbology renderer both sides use instead of a diff/pct-diff one.
+          const _buildCompLayer = (vizMapInstance.mode === 'compare' &&
+            (vizMapInstance.compareView === 'sidebyside' || vizMapInstance.compareView === 'swipe'));
+          const graphicsToAddComp = _buildCompLayer
+            ? graphicsToAdd.map(g => new Graphic({ geometry: g.geometry, attributes: { ...g.attributes, dVal: g.attributes.cVal } }))
+            : [];
+
           // Source modifications will not propagate after layer has been loaded. Please use .applyEdits() instead
           vizMapInstance.layerDisplay.applyEdits({ addFeatures: graphicsToAdd })
             .then(function(editsResult) {
@@ -1357,9 +1417,31 @@ require([
                 console.log("Number of features added:", editsResult.addFeatureResults.length);
                 // Call this AFTER adding graphics to the feature layer
                 setRendererAndLegend();
-                
+
                 // update agg table
                 vizMapInstance.sidebar.updateFilterDisplay();
+
+                if (_buildCompLayer && vizMapInstance.layerDisplayComp) {
+                  vizMapInstance.layerDisplayComp.applyEdits({ addFeatures: graphicsToAddComp })
+                    .then(function() {
+                      vizMapInstance.setCompRendererAndShow();
+                    })
+                    .catch(function(error) {
+                      console.error("Error applying edits to comp layer:", error);
+                    });
+                } else {
+                  // Left both non-overlay modes (or never entered either) since the last
+                  // render - make sure no leftover split/widget/comp layer is still showing.
+                  vizMapInstance.teardownCompareExtras();
+                  if (vizMapInstance.layerDisplayComp) {
+                    vizMapInstance.layerDisplayComp.visible = false;
+                  }
+                  // teardownCompareExtras() just hid both labels outright - show Main's own
+                  // one back again, same as initializeLayer() does for this same overlay case.
+                  if (typeof setMapCompareScenarioLabels === 'function') {
+                    setMapCompareScenarioLabels('overlay', vizMapInstance.getMainScenarioDisplayName());
+                  }
+                }
               } else {
                 console.log("No features were added.");
               }
@@ -1373,6 +1455,47 @@ require([
         });
       });
 
+    }
+
+    // Styles the comp layer with the same natural renderer as the main layer and makes it
+    // visible - called once the comp layer's own applyEdits() (updateDisplay()) has resolved.
+    // For 'sidebyside', that's all that's needed - the split itself (two independent MapViews,
+    // not Esri's Swipe widget) was already shown by initializeLayer()'s
+    // setMapCompareSplitVisible(true) earlier in this same render. For 'swipe', this also
+    // (re)builds the Esri Swipe widget clipping the two layers against each other in the
+    // single shared mapView - see vizmap.html's #mapViewRow comment for why 'sidebyside' exists
+    // as a separate, labels-safe alternative to this one.
+    setCompRendererAndShow() {
+      if (!this.layerDisplayComp) return;
+
+      this.layerDisplayComp.renderer = this.getRenderer();
+      if (this.compareView === 'swipe') {
+        // Keep labels off on both sides - see initializeLayer()'s _isSwipeMode comment.
+        this.layerDisplay.labelingInfo = [];
+        this.layerDisplayComp.labelingInfo = [];
+      } else {
+        this.layerDisplayComp.labelingInfo = this.layerDisplay.labelingInfo;
+      }
+      this.layerDisplayComp.refresh();
+      this.layerDisplayComp.visible = true;
+
+      if (typeof setMapCompareScenarioLabels === 'function') {
+        setMapCompareScenarioLabels(this.compareView, this.getMainScenarioDisplayName(), this.getCompScenarioDisplayName());
+      }
+
+      if (this.compareView !== 'swipe') return;
+
+      this.teardownEsriSwipeWidget();
+      this.swipeWidget = new Swipe({
+        view: mapView,
+        // "Compare to:" (layerDisplayComp) on the left/leading side, Main (layerDisplay) on
+        // the right/trailing side - see the matching legend title order below.
+        leadingLayers: [this.layerDisplayComp],
+        trailingLayers: [this.layerDisplay],
+        direction: "horizontal",
+        position: 50
+      });
+      mapView.ui.add(this.swipeWidget);
     }
 
   }

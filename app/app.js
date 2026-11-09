@@ -6,6 +6,12 @@ let dataKeys = {};
 let map;
 let geojsonSegments;
 let mapView;
+let mapComp; // second Map/MapView pair for side-by-side compare (ensureCompMapView()) - null until first used
+let mapViewComp;
+// Scenario-alias corner labels shown only in "sidebyside"/"swipe" compare view - vizmap.js's
+// setCompRendererAndShow()/teardownCompareExtras() set their text and show/hide them.
+let mapScenarioLabelMain;
+let mapScenarioLabelComp;
 let layerDisplay;
 let dummyFeature;
 let dataMenu;
@@ -121,15 +127,190 @@ function updateLabelToggleTooltip(btn) {
   btn.title = text;
 }
 
+// Keeps the two side-by-side compare MapViews' center/zoom/rotation identical as the user
+// pans or zooms EITHER one - called once (addMapAndOtherFunctionality()) after both views
+// exist. Only propagates a view's viewpoint while THAT view's own `interacting` is true (the
+// user is actively dragging/scrolling it) - a programmatic viewpoint assignment (the mirror
+// itself) never sets `interacting`, so the other view's own watcher sees its mirrored change
+// but takes no action, which is what actually breaks the ping-pong (a boolean "currently
+// syncing" flag doesn't: ArcGIS's "viewpoint" notifications are debounced to the view's render
+// frame, not synchronous with the assignment, so the flag would already be cleared again by
+// the time the echo fires).
+function setupMapCompareSync(viewA, viewB) {
+  function mirror(source, target) {
+    source.watch("viewpoint", (vp) => {
+      if (!vp || !source.interacting) return;
+      target.viewpoint = vp.clone();
+    });
+  }
+  mirror(viewA, viewB);
+  mirror(viewB, viewA);
+}
+
+// Shows/hides the #mapViewComp panel and #mapDivider splitter, and resets #mapView back to
+// full width when side-by-side compare isn't active. Called from vizmap.js's initializeLayer()
+// (knows whether the current render is actually in swipe/compare mode) and hideLayers()/
+// teardownCompareSplit() (leaving that view entirely). #mapViewComp (not #mapView) is the one
+// given an explicit width - it comes first in source order (vizmap.html), so it's the "left"
+// panel being sized from the row's left edge; #mapView fills whatever's left over.
+function setMapCompareSplitVisible(visible) {
+  const row = document.getElementById("mapViewRow");
+  const divider = document.getElementById("mapDivider");
+  const compView = document.getElementById("mapViewComp");
+  if (!row || !divider || !compView) return;
+
+  row.classList.toggle("split", visible);
+  divider.style.display = visible ? "" : "none";
+  compView.style.display = visible ? "" : "none";
+  if (!visible) {
+    compView.style.width = ""; // let .split's width rule take back over next time
+  } else {
+    if (!compView.style.width) {
+      compView.style.width = "50%"; // first time entering split - start at an even 50/50
+    }
+    // setupMapCompareSync() only mirrors a view the user is actively dragging/scrolling - it
+    // doesn't cover programmatic navigation (initial centerMap/zoom, URL restore) that may have
+    // moved mapView while mapViewComp sat hidden, so catch it up explicitly on every entry.
+    if (mapView && mapViewComp && mapView.viewpoint) {
+      mapViewComp.viewpoint = mapView.viewpoint.clone();
+    }
+  }
+}
+
+// Builds/refreshes one alias <calcite-select>'s option list from dataScenarios - the "Use
+// Alias" toggle's alternative to picking modVersion/scnGroup/scnYear one at a time. Options are
+// keyed by "modVersion|scnGroup|scnYear" so the change handler can look the full scenario back
+// up again; the visible text reuses the same alias-or-fallback logic as
+// VizMap.getMainScenarioDisplayName()/getCompScenarioDisplayName().
+function populateAliasSelectOptions(selectElem) {
+  if (!selectElem) return;
+  selectElem.innerHTML = "";
+  dataScenarios.forEach((scenario) => {
+    const option = document.createElement("calcite-option");
+    option.value = `${scenario.modVersion}|${scenario.scnGroup}|${scenario.scnYear}`;
+    option.textContent =
+      scenario.alias ||
+      `${scenario.modVersion} ${scenario.scnGroup} ${scenario.scnYear}`;
+    selectElem.appendChild(option);
+  });
+}
+
+// Shows/updates (or hides) the scenario-alias corner label(s) - called from vizmap.js's
+// setCompRendererAndShow() (mode === 'sidebyside'/'swipe', with both alias strings),
+// initializeLayer() and the applyEdits() callback (mode === 'overlay', main alias only, for
+// every non-two-layer-compare render - i.e. every map, not just while comparing), and
+// teardownCompareExtras() (mode === null/no args, to hide both, only when this view is going
+// fully inactive - see hideLayers()).
+// "sidebyside" labels each of the two independent MapViews in its own top-left corner.
+// "swipe" has only one visible MapView (mapViewComp stays hidden - see setMapCompareSplitVisible()),
+// so instead of hiding one side's label (previously dropped the Main/right side entirely), it
+// shows ONE combined label there - same "(left) vs. (right)" wording as the legend title.
+function setMapCompareScenarioLabels(mode, mainText, compText) {
+  if (!mapScenarioLabelMain || !mapScenarioLabelComp || !mapView || !mapViewComp) return;
+
+  if (mode === "sidebyside") {
+    mapScenarioLabelMain.textContent = mainText;
+    mapScenarioLabelMain.style.display = "";
+    mapView.ui.add(mapScenarioLabelMain, "top-left");
+
+    mapScenarioLabelComp.textContent = compText;
+    mapScenarioLabelComp.style.display = "";
+    mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
+  } else if (mode === "swipe") {
+    mapScenarioLabelMain.style.display = "none";
+
+    mapScenarioLabelComp.textContent = `${compText} (left) vs. ${mainText} (right)`;
+    mapScenarioLabelComp.style.display = "";
+    mapView.ui.add(mapScenarioLabelComp, "top-left");
+  } else if (mode === "overlay") {
+    mapScenarioLabelMain.textContent = mainText;
+    mapScenarioLabelMain.style.display = "";
+    mapView.ui.add(mapScenarioLabelMain, "top-left");
+
+    mapScenarioLabelComp.style.display = "none";
+  } else {
+    mapScenarioLabelMain.style.display = "none";
+    mapScenarioLabelComp.style.display = "none";
+  }
+}
+
+// Gives one sidebar's "Attributes"/"Filters" columns (.colAttributes/.colFilters) their own
+// independent collapse control - a small sticky header (title + chevron) at the top of each,
+// replacing the old single whole-sidebar collapse button (openbtn/openbtntrend/openbtnmatrix).
+// Collapsing shrinks just that column to a slim ~30px rail (not 0 width), so its own header -
+// and the chevron to reopen it - stays in place instead of needing to float somewhere else.
+// Only called for sidebars that actually pair the two columns this way (vizMap/vizTrends/
+// vizMatrix's left sidebar) - vizMatrix's/vizDashboard's separate scenario sidebars reuse the
+// same .colAttributes class for an unrelated single-column panel and keep their own existing
+// whole-sidebar toggle (openbtnmatrixscenario/openbtndashboard) untouched.
+function setupPanelColumnCollapse(sidebarId) {
+  const sidebar = document.getElementById(sidebarId);
+  if (!sidebar) return;
+
+  [
+    { el: sidebar.querySelector(":scope > .colAttributes"), title: "Attributes" },
+    { el: sidebar.querySelector(":scope > .colFilters"), title: "Filters" },
+  ].forEach(({ el, title }) => {
+    if (!el || el.querySelector(":scope > .panel-col-header")) return; // already set up
+
+    // Move the column's own padding/gap (if any - .colAttributes has some, for its bordered
+    // .rowGeography boxes; .colFilters has none) onto a new wrapper around its existing
+    // content, and zero it on the column itself. A sticky header needs to sit flush at the
+    // column's own top/left/right edges, and a negative margin meant to cancel that padding
+    // doesn't reliably escape it on a position:sticky element in every browser - tested and
+    // confirmed in Chrome here.
+    const elStyle = getComputedStyle(el);
+    const body = document.createElement("div");
+    body.className = "panel-col-body";
+    body.style.padding = elStyle.padding;
+    body.style.display = elStyle.display === "flex" ? "flex" : "block";
+    body.style.flexDirection = elStyle.flexDirection;
+    body.style.gap = elStyle.gap;
+    body.style.boxSizing = "border-box";
+    while (el.firstChild) body.appendChild(el.firstChild);
+    el.appendChild(body);
+    el.style.padding = "0";
+    el.style.gap = "0";
+
+    const header = document.createElement("div");
+    header.className = "panel-col-header";
+
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "panel-col-title";
+    titleSpan.textContent = title;
+    header.appendChild(titleSpan);
+
+    const icon = document.createElement("calcite-icon");
+    icon.icon = "chevron-left";
+    icon.scale = "s";
+    header.appendChild(icon);
+
+    el.insertBefore(header, body);
+
+    header.addEventListener("click", () => {
+      const collapsed = el.classList.toggle("panel-collapsed");
+      icon.icon = collapsed ? "chevron-right" : "chevron-left";
+
+      // #trendMain's Chart.js canvas (viztrends.js) doesn't pick up its own flex-driven resize
+      // on its own - nudge it once the column's width transition has actually finished, same
+      // as the old openbtntrend handler did.
+      setTimeout(() => {
+        if (activeLayout && activeLayout.currentChart) {
+          activeLayout.currentChart.resize();
+        }
+      }, 250);
+    });
+  });
+}
+
 require([
   "esri/Map",
   "esri/Basemap",
   "esri/layers/TileLayer",
   "esri/views/MapView",
   "esri/widgets/Expand",
-  "esri/widgets/BasemapToggle",
   "esri/widgets/Zoom",
-], function (Map, Basemap, TileLayer, MapView, Expand, BasemapToggle, Zoom) {
+], function (Map, Basemap, TileLayer, MapView, Expand, Zoom) {
   // The string basemap IDs ("gray-vector", "arcgis-imagery", ...) resolve through Esri's
   // basemap-styles service, which requires a valid API key - ours expired and Esri's policy
   // now requires a key for those even for anonymous/free use. Built the basemaps below from
@@ -814,6 +995,21 @@ require([
         selectedScenario_Comp = selectedScenario;
       }
     }
+
+    // Keep the "Use Alias" selects (vizMap's Scenario Selector only) populated and showing the
+    // current pick too, since they're a parallel view onto the same selectedScenario_Main/_Comp
+    // state - populated here (not at element-creation time) since dataScenarios is guaranteed
+    // loaded by the time this runs, which isn't true yet when the panel's first built.
+    const aliasScenarioMain = document.getElementById("aliasScenario_Main");
+    if (aliasScenarioMain && selectedScenario_Main) {
+      if (!aliasScenarioMain.children.length) populateAliasSelectOptions(aliasScenarioMain);
+      aliasScenarioMain.value = `${selectedScenario_Main.modVersion}|${selectedScenario_Main.scnGroup}|${selectedScenario_Main.scnYear}`;
+    }
+    const aliasScenarioComp = document.getElementById("aliasScenario_Comp");
+    if (aliasScenarioComp && selectedScenario_Comp) {
+      if (!aliasScenarioComp.children.length) populateAliasSelectOptions(aliasScenarioComp);
+      aliasScenarioComp.value = `${selectedScenario_Comp.modVersion}|${selectedScenario_Comp.scnGroup}|${selectedScenario_Comp.scnYear}`;
+    }
   }
 
   async function updateScenarioSelection(scenarioSelect) {
@@ -844,6 +1040,21 @@ require([
     } else {
       const _year = parseInt(selectedValue, 10);
       selectedScenario_x[_variable] = _year;
+    }
+    await populateScenarioSelections();
+    updateActiveVizMap();
+  }
+
+  // Applies an alias <calcite-select>'s current pick to selectedScenario_Main/_Comp and
+  // re-renders - the same end effect as updateScenarioSelection() above, just setting all
+  // three fields from one choice instead of one field at a time.
+  async function applyAliasScenarioSelection(selectElem, which) {
+    const [modVersion, scnGroup, scnYearStr] = selectElem.value.split("|");
+    const scenario = { modVersion, scnGroup, scnYear: parseInt(scnYearStr, 10) };
+    if (which === "Main") {
+      selectedScenario_Main = scenario;
+    } else {
+      selectedScenario_Comp = scenario;
     }
     await populateScenarioSelections();
     updateActiveVizMap();
@@ -1326,71 +1537,22 @@ require([
         });
       });
 
-    document.getElementById("openbtn").addEventListener("click", function () {
-      const sidebar = document.getElementById("mapSidebar");
-      const mainMap = document.getElementById("mainMap");
-
-      // Toggle the collapsed class
-      sidebar.classList.toggle("collapsed");
-      mainMap.classList.toggle("collapsed");
-      this.classList.toggle("collapsed");
-
-      // Change button text based on state
-      if (sidebar.classList.contains("collapsed")) {
-        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
-      } else {
-        this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
-      }
+    // "Compare Type" (diff/pct-diff) only applies to the "Single Map" overlay view - hide it
+    // whenever "Side-by-Side (Two Maps)" or "Swipe (Single Map)" is picked instead, since both
+    // show each scenario's own natural value rather than a computed difference.
+    const compareViewSelect = document.getElementById("selectCompareView");
+    const toggleCompareTypeVisibility = () => {
+      const isOverlay = compareViewSelect.value === "overlay";
+      const compareTypeSelect = document.getElementById("selectCompareType");
+      const compareTypeLabel = document.getElementById("compare-type-label");
+      if (compareTypeSelect) compareTypeSelect.style.display = isOverlay ? "" : "none";
+      if (compareTypeLabel) compareTypeLabel.style.display = isOverlay ? "" : "none";
+    };
+    compareViewSelect.addEventListener("calciteSelectChange", () => {
+      toggleCompareTypeVisibility();
+      updateActiveVizMap();
     });
-
-    document
-      .getElementById("openbtntrend")
-      .addEventListener("click", function () {
-        const sidebar = document.getElementById("trendSidebar");
-        const main = document.getElementById("trendMain");
-
-        // Toggle the collapsed class
-        sidebar.classList.toggle("collapsed");
-        main.classList.toggle("collapsed");
-        this.classList.toggle("collapsed");
-
-        // Change button text based on state
-        if (sidebar.classList.contains("collapsed")) {
-          this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
-        } else {
-          this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
-        }
-
-        // #trendMain (Chart.js's canvas parent) genuinely does grow/shrink via flex once the
-        // sidebar's width transition finishes - confirmed live - but Chart.js's own
-        // responsive:true resize observer doesn't pick that up on its own here, leaving the
-        // canvas stuck at its old pixel size. Nudge it once the 0.3s CSS transition (see
-        // .sidebar's transition: width) has actually finished.
-        setTimeout(() => {
-          if (activeLayout && activeLayout.currentChart) {
-            activeLayout.currentChart.resize();
-          }
-        }, 350);
-      });
-
-    document
-      .getElementById("openbtnmatrix")
-      .addEventListener("click", function () {
-        const sidebar = document.getElementById("matrixSidebar");
-        const main = document.getElementById("mainMatrix");
-
-        // Toggle the collapsed class
-        sidebar.classList.toggle("collapsed");
-        main.classList.toggle("collapsed");
-        this.classList.toggle("collapsed");
-
-        // Change button text based on state
-        if (sidebar.classList.contains("collapsed")) {
-          this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
-        } else {
-          this.innerHTML = `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`;
-        }
-      });
+    toggleCompareTypeVisibility();
 
     document
       .getElementById("openbtnmatrixscenario")
@@ -1470,14 +1632,6 @@ require([
         container: template.mapView,
       });
 
-      // add basemap toggle
-      const basemapToggle = new BasemapToggle({
-        view: mapView,
-        nextBasemap: imageryBasemap,
-      });
-
-      mapView.ui.add(basemapToggle, "bottom-left");
-
       // Push pan/zoom into the URL once a user-driven move settles ("stationary" fires once
       // per gesture, not per-frame). Skipped during our own goTo() calls (initial position,
       // URL restore) via _isProgrammaticMapMove (app/url-state.js), since those already end
@@ -1488,6 +1642,39 @@ require([
         }
       });
 
+      // SECOND MAP/VIEW FOR SIDE-BY-SIDE COMPARE
+      // Built eagerly alongside the primary one (not lazily on first use) to keep the sync
+      // wiring and the forEach's one-shot setup simple - vizmap.js's VizMap only ever adds a
+      // layer to it while "Side-by-Side (Slider)" is actually selected (see
+      // setCompRendererAndShow()), so an unused mapComp otherwise just sits idle. See
+      // vizmap.html's #mapViewRow comment for why this is two views instead of one view with
+      // Esri's Swipe widget.
+      mapComp = new Map({
+        basemap: grayBasemap,
+      });
+
+      mapViewComp = new MapView({
+        map: mapComp,
+        center: centerMap,
+        zoom: 10,
+        container: "mapViewComp",
+        ui: { components: [] }, // bare - no zoom/attribution chrome duplicating the main view's
+      });
+
+      setupMapCompareSync(mapView, mapViewComp);
+
+      // Scenario-alias corner labels - hidden until vizmap.js's setCompRendererAndShow() shows
+      // and fills them in for "sidebyside"/"swipe" compare view (see the globals' declaration).
+      mapScenarioLabelMain = document.createElement("div");
+      mapScenarioLabelMain.className = "map-scenario-label";
+      mapScenarioLabelMain.style.display = "none";
+      mapView.ui.add(mapScenarioLabelMain, "top-left");
+
+      mapScenarioLabelComp = document.createElement("div");
+      mapScenarioLabelComp.className = "map-scenario-label";
+      mapScenarioLabelComp.style.display = "none";
+      mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
+
       // CREATE SCENARIO SELECTOR
 
       // Create a container for the widget content
@@ -1495,10 +1682,36 @@ require([
       contentContainer.className = "scenario-selector-container";
 
 
-      // Add some descriptive text
+      // "Scenario Selector" title and the "Use Alias" toggle share one header row, title on the
+      // left and the toggle on the right. The toggle swaps the three modVersion/scnGroup/
+      // scnYear selects (Main, and Comp inside "Compare to:") for one alias-named select each,
+      // for scenarios whose config gives them a human-friendly alias (Scenario.alias -
+      // populateAliasSelectOptions() falls back to "modVersion scnGroup scnYear" for any
+      // scenario without one). On by default; can be switched back to the three-select view
+      // any time.
+      const headerRow = document.createElement("div");
+      headerRow.style.display = "flex";
+      headerRow.style.alignItems = "center";
+      headerRow.style.justifyContent = "space-between";
+      headerRow.style.width = "100%";
+
       const descriptionText = document.createElement("div");
       descriptionText.innerHTML = "<b>Scenario Selector</b>";
-      contentContainer.appendChild(descriptionText);
+      headerRow.appendChild(descriptionText);
+
+      const useAliasLabel = document.createElement("calcite-label");
+      useAliasLabel.setAttribute("layout", "inline");
+      useAliasLabel.style.margin = "0";
+      useAliasLabel.style.fontSize = "0.85em";
+      const useAliasSwitch = document.createElement("calcite-switch");
+      useAliasSwitch.id = "useAliasToggle";
+      useAliasSwitch.scale = "s";
+      useAliasSwitch.checked = true;
+      useAliasLabel.appendChild(useAliasSwitch);
+      useAliasLabel.appendChild(document.createTextNode("Use Alias"));
+      headerRow.appendChild(useAliasLabel);
+
+      contentContainer.appendChild(headerRow);
 
       const lstSelectIds = ["modVersion_Main", "scnGroup_Main", "scnYear_Main"];
       const compSelectIds = [
@@ -1506,11 +1719,13 @@ require([
         "scnGroup_Comp",
         "scnYear_Comp",
       ];
+      const mainSelectRows = [];
+      const compSelectRows = [];
 
       lstSelectIds.forEach((id) => {
         // Create a flex container for each select and its buttons
         const flexContainer = document.createElement("div");
-        flexContainer.style.display = "flex";
+        flexContainer.style.display = useAliasSwitch.checked ? "none" : "flex";
         flexContainer.style.alignItems = "center"; // Align items vertically
         flexContainer.style.width = "100%"; // Set container to full width
 
@@ -1529,18 +1744,33 @@ require([
         flexContainer.appendChild(calciteSelect);
 
         // Append the flex container to the content container
+        mainSelectRows.push(flexContainer);
         contentContainer.appendChild(flexContainer);
       });
+
+      // Alias alternative to the three Main selects above - same selectedScenario_Main state,
+      // just picked in one step (applyAliasScenarioSelection()) instead of one field at a time.
+      const aliasRowMain = document.createElement("div");
+      aliasRowMain.style.width = "100%";
+      aliasRowMain.style.display = useAliasSwitch.checked ? "block" : "none";
+      const aliasSelectMain = document.createElement("calcite-select");
+      aliasSelectMain.id = "aliasScenario_Main";
+      aliasSelectMain.style.width = "100%";
+      // Not populated here - dataScenarios isn't guaranteed loaded yet at this point (this
+      // whole panel can get built before loadScenarios() resolves). populateScenarioSelections()
+      // (called later, once dataScenarios is definitely ready) fills both alias selects' options
+      // the same way it fills modVersion/scnGroup/scnYear's.
+      aliasRowMain.appendChild(aliasSelectMain);
+      contentContainer.appendChild(aliasRowMain);
 
       const block = document.createElement("calcite-block");
       block.id = "comparisonScenario";
       block.setAttribute("heading", "Compare to:");
       block.setAttribute("collapsible", true);
-
       compSelectIds.forEach((id) => {
         // Create a flex container for each select and its buttons
         const flexContainer = document.createElement("div");
-        flexContainer.style.display = "flex";
+        flexContainer.style.display = useAliasSwitch.checked ? "none" : "flex";
         flexContainer.style.alignItems = "center"; // Align items vertically
         flexContainer.style.width = "100%"; // Set container to full width
 
@@ -1553,17 +1783,96 @@ require([
         flexContainer.appendChild(calciteSelect);
 
         // Append the flex container to the block
+        compSelectRows.push(flexContainer);
         block.appendChild(flexContainer);
       });
 
+      // Alias alternative to the three Comp selects above - same pairing as aliasRowMain/
+      // aliasSelectMain, for selectedScenario_Comp instead.
+      const aliasRowComp = document.createElement("div");
+      aliasRowComp.style.width = "100%";
+      aliasRowComp.style.display = useAliasSwitch.checked ? "block" : "none";
+      const aliasSelectComp = document.createElement("calcite-select");
+      aliasSelectComp.id = "aliasScenario_Comp";
+      aliasSelectComp.style.width = "100%";
+      // See aliasSelectMain above - populateScenarioSelections() fills this one's options too.
+      aliasRowComp.appendChild(aliasSelectComp);
+      block.appendChild(aliasRowComp);
+
+      useAliasSwitch.addEventListener("calciteSwitchChange", () => {
+        const useAlias = useAliasSwitch.checked;
+        mainSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+        aliasRowMain.style.display = useAlias ? "block" : "none";
+        compSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+        aliasRowComp.style.display = useAlias ? "block" : "none";
+      });
+      aliasSelectMain.addEventListener("calciteSelectChange", () =>
+        applyAliasScenarioSelection(aliasSelectMain, "Main")
+      );
+      aliasSelectComp.addEventListener("calciteSelectChange", () =>
+        applyAliasScenarioSelection(aliasSelectComp, "Comp")
+      );
+
+      // "Compare View" picks how the two scenarios get shown once "Compare to:" is open:
+      // - "overlay": a single diff/pct-diff map (the original behavior, "Compare Type" below
+      //   picks which).
+      // - "sidebyside": two independent, synced MapViews with a draggable splitter between
+      //   them (app.js's setMapCompareSplitVisible()/setupMapCompareSync()) - each view labels
+      //   itself normally since neither competes with the other.
+      // - "swipe": the classic single-map reveal, one MapView with Esri's Swipe widget
+      //   clipping leadingLayers/trailingLayers (VizMap.setCompRendererAndShow()). Esri's Swipe
+      //   widget has a confirmed bug where its trailingLayers suppresses the other layer's
+      //   labels (see https://community.esri.com/t5/arcgis-javascript-maps-sdk-questions/swipe-widget-label-issue/m-p/1379227) -
+      //   kept as an option anyway since some users want the familiar single-map swipe feel
+      //   more than complete labels, with "sidebyside" as the alternative when labels matter.
+      // "Compare Type" only means anything for the overlay option, so its own row gets hidden
+      // below whenever either compare-view option is selected (toggleCompareTypeVisibility()).
+      // Label and select share one line each (rather than a heading row above a select row) to
+      // keep this panel from getting tall once "Compare to:" is open.
+      const rowCompareView = document.createElement("div");
+      rowCompareView.className = "compare-inline-row";
+      const headingCompareView = document.createElement("div");
+      headingCompareView.className = "compare-inline-label";
+      headingCompareView.textContent = "Compare View";
+      headingCompareView.id = "compare-view-label";
+      rowCompareView.appendChild(headingCompareView);
+
+      const calciteSelectCompareView = document.createElement("calcite-select");
+      calciteSelectCompareView.id = "selectCompareView";
+      calciteSelectCompareView.style.flexGrow = "1";
+      calciteSelectCompareView.value = "overlay";
+
+      const optionOverlay = document.createElement("calcite-option");
+      optionOverlay.value = "overlay";
+      optionOverlay.textContent = "Single Map";
+      calciteSelectCompareView.appendChild(optionOverlay);
+
+      const optionSideBySide = document.createElement("calcite-option");
+      optionSideBySide.value = "sidebyside";
+      optionSideBySide.textContent = "Side-by-Side (Two Maps)";
+      calciteSelectCompareView.appendChild(optionSideBySide);
+
+      const optionSwipe = document.createElement("calcite-option");
+      optionSwipe.value = "swipe";
+      optionSwipe.textContent = "Swipe (Single Map)";
+      calciteSelectCompareView.appendChild(optionSwipe);
+
+      rowCompareView.appendChild(calciteSelectCompareView);
+      block.appendChild(rowCompareView);
+
+      const rowCompareType = document.createElement("div");
+      rowCompareType.className = "compare-inline-row";
+      rowCompareType.id = "compare-type-row";
       const headingCompare = document.createElement("div");
-      headingCompare.innerHTML = "<br/>Compare Type"; // Replace with your desired text
-      headingCompare.id = "compare-type-label"; // Replace with your desired text
-      block.appendChild(headingCompare);
+      headingCompare.className = "compare-inline-label";
+      headingCompare.textContent = "Compare Type";
+      headingCompare.id = "compare-type-label";
+      rowCompareType.appendChild(headingCompare);
 
       // Create a calcite-select element
       const calciteSelectCompare = document.createElement("calcite-select");
       calciteSelectCompare.id = "selectCompareType";
+      calciteSelectCompare.style.flexGrow = "1";
       calciteSelectCompare.value = "diff";
 
       const optionAbs = document.createElement("calcite-option");
@@ -1576,8 +1885,9 @@ require([
       optionPc.textContent = "Percent Difference";
       calciteSelectCompare.appendChild(optionPc);
 
-      // Append the calcite-select to the block and the block to the content container
-      block.appendChild(calciteSelectCompare);
+      rowCompareType.appendChild(calciteSelectCompare);
+      block.appendChild(rowCompareType);
+
       contentContainer.appendChild(block);
 
       // Create the Expand widget
@@ -1588,6 +1898,10 @@ require([
         expanded: true,
         expandTooltip: "Scenario Selector",
         group: "top-right",
+        // "auto" (the default) switches to a full-screen modal mask below a width threshold -
+        // side-by-side compare (setMapCompareSplitVisible()) halves #mapView's width, which
+        // falls under that threshold and would otherwise mask the whole page behind this panel.
+        mode: "floating",
       });
 
       // Add the Expand widget to the view
@@ -1605,6 +1919,27 @@ require([
 
       mapView.ui.add(labelToggleAction, "top-right");
 
+      // ADD BASEMAP TOGGLE - a plain icon button (replaces Esri's BasemapToggle widget, which
+      // only ever controlled mapView's own basemap) toggling map.basemap AND mapComp.basemap
+      // together in one handler, so the side-by-side compare view's map always matches the
+      // main one instead of possibly showing a different basemap.
+      const basemapToggleAction = document.createElement("calcite-action");
+      basemapToggleAction.id = "vizMapBasemapToggle";
+      basemapToggleAction.icon = "basemap";
+      basemapToggleAction.scale = "s";
+      basemapToggleAction.text = "Toggle basemap";
+      basemapToggleAction.textEnabled = false;
+      basemapToggleAction.title = "Switch to imagery basemap";
+      basemapToggleAction.addEventListener("click", (event) => {
+        const btn = event.currentTarget;
+        btn.active = !btn.active;
+        const nextBasemap = btn.active ? imageryBasemap : grayBasemap;
+        map.basemap = nextBasemap;
+        if (mapComp) mapComp.basemap = nextBasemap;
+        btn.title = btn.active ? "Switch to gray basemap" : "Switch to imagery basemap";
+      });
+      mapView.ui.add(basemapToggleAction, "top-right");
+
       // Remove default zoom controls
       mapView.ui.remove("zoom");
 
@@ -1616,6 +1951,15 @@ require([
       // Add the Zoom widget to the top-right corner of the view
       mapView.ui.add(zoomWidget, "top-right");
     });
+
+    // Give each left sidebar's "Attributes"/"Filters" columns their own independent collapse
+    // control (replaces the old single whole-sidebar openbtn/openbtntrend/openbtnmatrix
+    // buttons) - see setupPanelColumnCollapse()'s own comment. vizMatrix's/vizDashboard's
+    // separate scenario sidebars reuse .colAttributes for an unrelated single-column panel and
+    // keep their own existing openbtnmatrixscenario/openbtndashboard toggle untouched.
+    setupPanelColumnCollapse("mapSidebar");
+    setupPanelColumnCollapse("trendSidebar");
+    setupPanelColumnCollapse("matrixSidebar");
 
     init();
   }

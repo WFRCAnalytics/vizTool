@@ -304,6 +304,26 @@ progress::-moz-progress-bar {
   border-radius: 6px; /* same radius used app-wide for cards/panels (see .card, .filter-card) */
   padding: 10px;
 }
+/* calcite-block ("Compare to:") draws its own 1px border-bottom by default - looks like a
+   stray <hr> under the panel since it's the last element in .scenario-selector-container. */
+.scenario-selector-container calcite-block {
+  border-bottom: none;
+}
+
+/* "Compare View"/"Compare Type" rows (app.js) - label and select share one line instead of a
+   heading row above a select row, so "Compare to:" doesn't get as tall once it's open. */
+.compare-inline-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  margin-top: 8px;
+}
+.compare-inline-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 0.9em;
+}
 
 .checkbox-container {
   max-height: 250px;
@@ -656,7 +676,10 @@ td {
    SIDEBARS
    ========================= */
 .sidebar {
-  width: 500px;
+  /* No fixed width - sized by its .colAttributes/.colFilters children, which independently vary
+     between their normal width and panel-collapsed's slim rail width (setupPanelColumnCollapse(),
+     app.js). #matrixScenarioSidebar (single .colAttributes child, no .colFilters) still uses
+     .sidebar too, for its own separate whole-sidebar openbtnmatrixscenario toggle below. */
   height: calc(100vh - 114px);
   display: flex;
   position: relative;
@@ -689,6 +712,7 @@ td {
                        left sidebar (vizMap/vizTrends/vizMatrix), since they all share this
                        class structure. */
     flex-direction: column;
+    transition: width 0.2s ease, min-width 0.2s ease;
 }
 
 .colFilters {
@@ -696,6 +720,64 @@ td {
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     background-color: #DDDDDD; /* Optional: Add a background color */
+    transition: width 0.2s ease, min-width 0.2s ease;
+}
+
+/* Per-column collapse header (setupPanelColumnCollapse(), app.js) - a small sticky bar at the
+   top of .colAttributes/.colFilters with a title and a chevron, letting each column collapse
+   independently instead of one button collapsing the whole sidebar. Only sidebars that pair
+   these two columns (vizMap/vizTrends/vizMatrix's left sidebar) get this header injected -
+   vizMatrix's/vizDashboard's separate scenario sidebars reuse .colAttributes for an unrelated
+   single-column panel and never receive it, so this styling has no effect there. */
+.panel-col-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 10px;
+  background-color: inherit;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+.panel-col-title {
+  font-weight: bold;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Collapsed state - shrinks to a slim rail showing just the header (rotated title + chevron),
+   rather than the whole sidebar disappearing to 0 width. */
+.colAttributes.panel-collapsed,
+.colFilters.panel-collapsed {
+  width: 30px;
+  min-width: 30px;
+  overflow: hidden;
+}
+.colAttributes.panel-collapsed .panel-col-body,
+.colFilters.panel-collapsed .panel-col-body {
+  display: none;
+}
+.colAttributes.panel-collapsed .panel-col-header,
+.colFilters.panel-collapsed .panel-col-header {
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 10px 4px;
+}
+.colAttributes.panel-collapsed .panel-col-title,
+.colFilters.panel-collapsed .panel-col-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  margin-top: 6px;
 }
 
 .rowFilters{
@@ -748,10 +830,6 @@ td {
     width: 100%; /* Ensure it fills the width of its parent */
 }
 
-#mainMap.collapsed {
-    margin-left: 0;
-}
-
 .openbtn {
     font-size: 16px;
     padding: 8px 8px;
@@ -765,19 +843,6 @@ td {
     z-index: 2;
     transition: left 0.3s ease, transform 0.3s ease;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add simple drop shadow */
-}
-
-.openbtn.bottom {
-    left: 515px; /* Adjusted to match the sidebar's width */
-    top: calc(100vh - 50px);
-}
-
-.openbtn.bottom.collapsed {
-    left: 15px;
-}
-
-.openbtn.collapsed {
-    left: 30px;
 }
 
 .openbtn:hover {
@@ -846,30 +911,10 @@ td {
                       to the same near-black used everywhere else. */
 }
 
-/* Small grey section labels above each sidebar column - .rowAttributes/.colFilters are
-   static wrappers that survive re-render (only their children get rebuilt), so a CSS
-   ::before here doesn't need to be re-injected on every updateDisplay(). */
-.rowAttributes::before {
-  content: "\2014 ATTRIBUTES \2014";
-  display: block;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #999999;
-  text-align: center;
-  margin-bottom: 15px; /* .rowFilters (the FILTERS-side equivalent of the attribute list) has
-                           its own 15px top padding below the "— FILTERS —" label, so match it
-                           here to line up the top of the attribute list with the filter tiles */
-}
-
-.colFilters::before {
-  content: "\2014 FILTERS \2014";
-  display: block;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #999999;
-  text-align: center;
-  padding-top: 15px; /* matches .rowAttributes' 15px top padding so both labels line up */
-}
+/* The "Attributes"/"Filters" column labels used to live here as small grey ::before text
+   (scrolling away with the content) - superseded by .panel-col-header's sticky title, which
+   stays visible and doubles as the column's own collapse control
+   (setupPanelColumnCollapse(), app.js). */
 
 #trendSelector::before {
   content: "\2014 TREND SELECTOR \2014";
@@ -962,13 +1007,63 @@ td {
   width: 100%;
 }
 
-#mainMap.collapsed {
-  margin-left: 0;
-}
-
 #mapView {
   flex-grow: 1;
   width: 100%;
+}
+
+/* =========================
+   MAP COMPARE SPLIT VIEW
+   ========================= */
+/* #mapView/#mapViewComp (app.js's setupMapCompareSync()) are two independent MapViews kept in
+   sync (center/zoom) rather than one view clipped by Esri's Swipe widget - see the comment in
+   vizmap.html. #mapViewRow holds them side by side, #mapViewComp first (left) so "Compare to"
+   lands on the left and #mapView (Main, with all its widgets) stays on the right. JS sets
+   #mapViewComp's inline width (and the row toggles `.split`) when "Side-by-Side (Slider)" is
+   picked, and clears it back to #mapView alone otherwise. */
+#mapViewRow {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+#mapViewRow.split #mapViewComp {
+  flex: 0 0 auto; /* fixed 50/50 split - width set inline once by setMapCompareSplitVisible() (app.js) */
+  width: 50%;
+}
+#mapViewRow.split #mapView {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+#mapViewComp {
+  height: 100%;
+}
+#mapDivider {
+  /* Fixed 50/50 split line - not draggable, so no resize cursor or hover/drag affordance. */
+  flex: 0 0 6px;
+  width: 6px;
+  background-color: #1B9E8E;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.45);
+  z-index: 10;
+}
+
+/* Scenario-alias corner label (app.js's setMapCompareScenarioLabels()) shown in "sidebyside"/
+   "swipe" compare view so each visible map/side is identifiable at a glance. */
+.map-scenario-label {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #1B9E8E;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin: 6px;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: #151515;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 #mainLog {
@@ -986,10 +1081,6 @@ td {
                       so the table would just grow the page instead of scrolling in place. */
     display: flex;
     flex-direction: column;
-}
-
-#mainMatrix.collapsed {
-    margin-left: 0;
 }
 
 /* Right-hand scenario sidebar: narrower than the left one since it only holds one column
@@ -1453,13 +1544,16 @@ td {
   background-color: #C85327;
 }
 
-/* "NEW" tag directly on the secondary-nav tab for each newly-added entity - a small overlay
-   badge on calcite-menu-item's own light-DOM host element (::after generated content renders
-   outside its shadow tree, on top of it, since calcite-menu-item has no slot for arbitrary
-   child content - a plain appendChild()'d element goes nowhere visible). Selects by the same
-   `text` attribute the tab is built from (model-entity.js's createModelEntityElement()), so no
-   JS/CSS class needs adding per page - this lives entirely in one place regardless of how many
-   different templates (vizMap/vizTrends/vizMatrix) the flagged entities use. */
+/* "BETA" tag directly on the secondary-nav tab for each entity still being finalized - a small
+   overlay badge on calcite-menu-item's own light-DOM host element (::after generated content
+   renders outside its shadow tree, on top of it, since calcite-menu-item has no slot for
+   arbitrary child content - a plain appendChild()'d element goes nowhere visible). Selects by
+   the same `text` attribute the tab is built from (model-entity.js's createModelEntityElement()),
+   so no JS/CSS class needs adding per page - this lives entirely in one place regardless of how
+   many different templates (vizMap/vizTrends/vizMatrix) the flagged entities use. Unlike a "new"
+   indicator, this is a feature-maturity flag, not a per-viewer novelty one - it stays until
+   someone removes the entity's `text` from these selector lists once it's out of beta, not after
+   any number of views. */
 calcite-menu-item[text="Summary"],
 calcite-menu-item[text="PA Trips"],
 calcite-menu-item[text="Trip Gen"],
@@ -1478,7 +1572,7 @@ calcite-menu-item[text="Spec Attraction Zones (SAZ)"]::after,
 calcite-menu-item[text="SAZ Trends"]::after,
 calcite-menu-item[text="Spec Gen"]::after,
 calcite-menu-item[text="Spec Gen Trends"]::after {
-  content: "NEW";
+  content: "BETA";
   position: absolute;
   top: 2px; /* was -6px - the nav bar clips anything that pokes up past its own top edge, so a
                negative offset got the top of the tag chopped off instead of overlapping it */
@@ -1851,4 +1945,30 @@ calcite-card {
   pointer-events: none;
   max-width: 360px;
   text-align: center;
+}
+
+/* =========================
+   MAP COMPARE SWIPE WIDGET
+   ========================= */
+/* The ArcGIS Swipe widget's default divider/handle (vizmap.js's
+   setCompRendererAndSwipe()) is a thin 1px grey line with a small grey square - easy to lose
+   against a colored map. Restyled dark/near-black with a white border so it reads as an active,
+   draggable control rather than a stray map artifact (and stays visible against choropleth
+   colors a teal divider could blend into). !important overrides the widget's own baked-in
+   esri-widget styles, which outrank a plain class selector here. */
+.esri-swipe__divider {
+  background-color: #1a1a1a !important;
+  width: 3px !important;
+  box-shadow: 0 0 0 1px #ffffff, 0 0 8px rgba(0, 0, 0, 0.45);
+}
+.esri-swipe__handle {
+  background-color: #1a1a1a !important;
+  border: 2px solid #ffffff !important;
+  width: 34px !important;
+  height: 34px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+.esri-swipe__handle-icon {
+  color: #ffffff !important;
+  font-size: 16px !important;
 }
