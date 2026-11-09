@@ -78,6 +78,7 @@ class WijRadio {
       this._radioBody = radioBody;
       this._filterSummary = filterSummary;
       this._chevron = chevron;
+      this._container = container;
 
       toggleRow.addEventListener('click', () => {
         this.setCollapsedState(radioBody.style.display !== 'none');
@@ -153,6 +154,9 @@ class WijRadio {
   // See WijCheckboxes' identical pair for why this exists (filter.js calls collapse()).
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._radioBody) return;
+    // See WijCheckboxes' identical pair for why - normalizes padding while collapsed.
+    const _card = this._container.parentElement;
+    if (_card) _card.classList.toggle('wij-row-collapsed', collapsed);
     if (collapsed) {
       this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
       this._radioBody.style.display = 'none';

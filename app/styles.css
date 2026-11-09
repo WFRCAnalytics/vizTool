@@ -297,7 +297,13 @@ progress::-moz-progress-bar {
    SCENARIO / LABEL / CHECKBOX CONTAINERS
    ========================= */
 .scenario-selector-container {
-  width: 295px;
+  /* Fills its parent's own width now (vizmap.js's right sidebar, #mapSidebarRightScenario) -
+     a fixed 295px content-box width (plus this rule's own padding/border on top of that) is
+     what it needed to roughly match the Esri Expand panel it used to float in as; that panel's
+     gone, so sized-to-content-box fixed width here just overflowed the sidebar's own padding
+     instead. */
+  width: 100%;
+  box-sizing: border-box;
   background-color: #ffffff; /* white + blue border, same pattern as .filter-card's white+orange -
                                  a solid blue fill here blended into the now-also-blue card headers */
   border: 1px solid #5B9BD5;
@@ -463,6 +469,63 @@ td {
   color: #999999;
   text-align: center;
   margin-bottom: 15px;
+}
+
+/* Same small grey section-label convention as the ones above, plus a pop-out toggle (unlike the
+   plain ::before text label the others use, this section needs an actual interactive control
+   alongside its label) - vizMap's right sidebar (#mapSidebarRightLegend, vizmap.html/app.js)
+   labeling the Legend below it. Built once in setupLegendPopout() (app.js), not CSS content,
+   stays put across every render since nothing ever clears #mapSidebarRightLegend itself (only
+   the Legend widget's own inner container gets destroyed/recreated each render). */
+.map-legend-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 32px;
+  margin-bottom: 6px;
+}
+.map-legend-header-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+}
+.map-legend-header-row calcite-action {
+  position: absolute;
+  right: 0;
+}
+
+/* The legend's own floating, draggable window (setupLegendPopout(), app.js) once popped out of
+   the sidebar - a lightweight custom window (Esri's Expand doesn't drag) rather than a full
+   windowing library, since this is the only thing in the app that needs to float free of both
+   the map and the sidebar like this. */
+#mapLegendFloatWindow {
+  position: fixed;
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid #999999;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  min-width: 260px;
+  max-width: 400px;
+}
+.map-legend-float-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1B9E8E;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 6px 6px 0 0;
+  cursor: move;
+  font-weight: 600;
+  font-size: 0.9em;
+  user-select: none;
+}
+.map-legend-float-content {
+  padding: 10px;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 /* Tightens the gap between the "Select Summary Geography" dropdown and its own sub-filter
@@ -707,6 +770,31 @@ td {
   transition: width 0.3s ease;
 }
 
+/* vizMap's right sidebar (Scenario Selector/label toggle/Legend - see vizmap.html) - fixed
+   width, not flex-grow, so #mainMap's own map view takes up whatever's left (matches how
+   #mapSidebar's own fixed-width columns work on the other side). */
+.map-sidebar-right {
+  width: 320px;
+  flex: 0 0 auto;
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+  background-color: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Labels/Map Title toggles (app.js) side by side, splitting the row evenly. */
+#mapSidebarRightLabelToggle {
+  display: flex;
+  gap: 8px;
+}
+#mapSidebarRightLabelToggle calcite-action {
+  flex: 1 1 0;
+}
+
 /* Collapsed sidebar */
 .sidebar.collapsed {
     width: 0;
@@ -778,23 +866,27 @@ td {
 }
 
 /* Collapsed state - shrinks to a slim rail showing just the header (rotated title + chevron),
-   rather than the whole sidebar disappearing to 0 width. #trendSelector (viztrends.html) is a
-   third, standalone column using the same setupColumnCollapse() (app.js) treatment. */
+   rather than the whole sidebar disappearing to 0 width. #trendSelector (viztrends.html) and
+   .map-sidebar-right (vizmap's right sidebar) are standalone columns using the same
+   setupColumnCollapse() (app.js) treatment. */
 .colAttributes.panel-collapsed,
 .colFilters.panel-collapsed,
-#trendSelector.panel-collapsed {
+#trendSelector.panel-collapsed,
+.map-sidebar-right.panel-collapsed {
   width: 30px;
   min-width: 30px;
   overflow: hidden;
 }
 .colAttributes.panel-collapsed .panel-col-body,
 .colFilters.panel-collapsed .panel-col-body,
-#trendSelector.panel-collapsed .panel-col-body {
+#trendSelector.panel-collapsed .panel-col-body,
+.map-sidebar-right.panel-collapsed .panel-col-body {
   display: none;
 }
 .colAttributes.panel-collapsed .panel-col-header,
 .colFilters.panel-collapsed .panel-col-header,
-#trendSelector.panel-collapsed .panel-col-header {
+#trendSelector.panel-collapsed .panel-col-header,
+.map-sidebar-right.panel-collapsed .panel-col-header {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
@@ -802,7 +894,8 @@ td {
 }
 .colAttributes.panel-collapsed .panel-col-title,
 .colFilters.panel-collapsed .panel-col-title,
-#trendSelector.panel-collapsed .panel-col-title {
+#trendSelector.panel-collapsed .panel-col-title,
+.map-sidebar-right.panel-collapsed .panel-col-title {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   margin-top: 6px;
@@ -856,6 +949,13 @@ td {
     height: calc(100vh - 114px); /* Adjust height as needed */
     box-sizing: border-box; /* Include padding and border in width calculation */
     width: 100%; /* Ensure it fills the width of its parent */
+    /* Without this, a flex item's automatic minimum width defaults to its content's min-content
+       size - #mapFooter's #mapAppliedFilters (vizmap.js) can run to a lot of text (e.g. Route
+       Name with many values checked), and without min-width:0 all the way up this chain, that
+       text's full un-clamped width becomes a floor #mainMap (a flex item of #mainVizMap, a row)
+       can't shrink below, forcing the whole map column wider instead of letting the filters
+       line's own -webkit-line-clamp (styles.css) clip it in place. */
+    min-width: 0;
 }
 
 .openbtn {
@@ -999,9 +1099,15 @@ td {
    whichever one a given widget uses) would otherwise also inherit .filterName's flex-grow:1 -
    fine when it was the toggle row's only content, but once .filter-selected-summary joins it on
    the same line that growth needs to go to the summary instead, or there's no room left for it
-   to fill/truncate into. */
+   to fill/truncate into. max-width/nowrap/ellipsis keep a long name (e.g. "Cardinal Travel
+   Direction on Segment") from wrapping onto a second line or overflowing the card - it now
+   truncates instead, capped at 65% of the row so the value on the right still has some room. */
 .filter-toggle-row .filter-toggle-title {
   flex: 0 0 auto;
+  max-width: 65%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .filter-selected-summary {
@@ -1042,6 +1148,15 @@ td {
   margin-bottom: 8px;
 }
 
+/* Collapsed, every filter card is just one row regardless of widget type, so the roomier
+   .filter-card padding (meant for an expanded checkbox/radio list) is pointless extra
+   whitespace - match .filter-card-compact's tighter spacing while collapsed. Toggled by
+   WijCheckboxes/WijRadio/WijSelect's own setCollapsedState() on their card's parentElement. */
+.filter-card.wij-row-collapsed {
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+
 
 /* =========================
    MAIN CONTENT
@@ -1053,6 +1168,7 @@ td {
   height: calc(100vh - 114px);
   box-sizing: border-box;
   width: 100%;
+  min-width: 0; /* see the other #mainMap rule's identical comment */
 }
 
 #mapView {
@@ -1101,7 +1217,7 @@ td {
 /* Scenario-alias corner label (app.js's setMapCompareScenarioLabels()) shown in "sidebyside"/
    "swipe" compare view so each visible map/side is identifiable at a glance. */
 .map-scenario-label {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #ffffff;
   border: 1px solid #1B9E8E;
   border-radius: 4px;
   padding: 4px 10px;
@@ -1112,6 +1228,35 @@ td {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   pointer-events: none;
   white-space: nowrap;
+}
+
+/* Overlay-mode diff/pct-diff color key (see updateMapCompareColorHint(), app.js) - same floating
+   card look as .map-scenario-label right above it, just lighter/not bold since this is a legend
+   key, not a scenario identity. */
+.map-compare-color-hint {
+  background-color: #ffffff;
+  border: 1px solid #aaaaaa;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin: 0 6px 6px 6px;
+  font-size: 0.85em;
+  color: #151515;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.compare-color-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px 0 8px;
+  vertical-align: middle;
+}
+
+.compare-color-swatch:first-child {
+  margin-left: 0;
 }
 
 #mainLog {
@@ -1298,8 +1443,54 @@ td {
    MAP FOOTER
    ========================= */
 #mapFooter {
-  background-color: rgb(153, 204, 255);
+  /* Lighter band + a top border accent (was a solid, heavier blue fill) now that this only
+     holds the filter-selection breadcrumb - the scenario name/"vs." text that used to share
+     this bar moved to its own floating corner label (mapScenarioLabelMain, app.js). */
+  background-color: #eef4fb;
+  border-top: 2px solid #99ccff;
   color: rgb(33, 33, 33);
+  padding: 8px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0; /* see #mainMap's identical comment - keeps this from forcing its ancestors
+                   wider just because #mapAppliedFilters' own text can run long */
+}
+
+/* Plain text (vizmap.js joins every visible filter's "Name: value" with "; ") - collapsed to
+   2 lines with a native ellipsis on the 2nd by default; "Show all" (vizmap.js) adds .expanded,
+   which lets it wrap normally across as many lines as it needs instead. */
+#mapAppliedFilters {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#mapAppliedFilters.expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+/* "Show all"/"Show less" (vizmap.js) - only added at all once the text actually wraps past two
+   lines. Sits outside #mapAppliedFilters itself so it stays put at the footer's right edge
+   instead of competing for room on the last visible line or getting clipped along with the
+   rest once collapsed. */
+.map-subtitle-expand-btn {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  color: #1B6FC9;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 3px 2px;
+  white-space: nowrap;
+}
+.map-subtitle-expand-btn:hover {
+  text-decoration: underline;
 }
 
 
@@ -1718,10 +1909,11 @@ body.secondary-nav-hidden #openbtndashboard {
    body.secondary-nav-hidden above so it still wins if both happen to apply at once (both would
    otherwise agree anyway - header-collapsed's case subsumes secondary-nav-hidden's 65px-only one). */
 body.header-collapsed {
-  --header-location-bar-height: 27px; /* #headerLocationBar's own height below also reads this -
+  --header-location-bar-height: 32px; /* #headerLocationBar's own height below also reads this -
                                           the only place this value should ever need changing */
 }
 body.header-collapsed .sidebar,
+body.header-collapsed .map-sidebar-right,
 body.header-collapsed .colAttributes,
 body.header-collapsed .colFilters,
 body.header-collapsed #mainMap,
@@ -1799,7 +1991,7 @@ body.header-collapsed #headerLocationBar {
   box-sizing: border-box;
   background-color: #0b2c4d; /* matches #menu's own dark navy */
   color: #ffffff;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.3px;
   white-space: nowrap;

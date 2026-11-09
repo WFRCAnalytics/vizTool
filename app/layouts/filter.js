@@ -207,12 +207,14 @@ class Filter {
         }
       }
 
+      filterContainer.appendChild(filterWijEl);
+
       // Filters start collapsed by default (not "Select Trend Groups"/other direct, non-Filter
       // uses of these same widgets, which don't call this) - called after the subAg slot above
-      // is in place, since collapse() hides it too and it doesn't exist any earlier than this.
+      // is in place (collapse() hides it too and it doesn't exist any earlier than this), and
+      // after appending above so collapse() can reach filterContainer via its own parentElement
+      // to normalize the card's padding (see WijCheckboxes/WijRadio/WijSelect's setCollapsedState).
       if (this.filterWij.collapse) this.filterWij.collapse();
-
-      filterContainer.appendChild(filterWijEl);
     }
 
     if (this.geoJsonInfo && Object.keys(this.geoJsonInfo).length > 0) {

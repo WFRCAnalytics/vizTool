@@ -20,7 +20,12 @@ class WijSelect {
     container.id = this.containerId;
     const wijSelectInstance = this;
 
-    let title = document.createElement("calcite-label");  // Create a new div element
+    // Plain div (not calcite-label) - calcite-label's own internal spacing/line-height made its
+    // text sit slightly off-center next to the chevron in .filter-toggle-row, unlike
+    // WijCheckboxes/WijRadio's own plain div/span titles (align-items:center there centers the
+    // whole box correctly either way, but calcite-label's box has extra internal space the text
+    // itself isn't actually centered within).
+    let title = document.createElement("div");
     title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
     title.classList.add("filter-toggle-title");
 
@@ -147,6 +152,9 @@ class WijSelect {
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._selectBody) return;
     const subAgSlot = this._container.querySelector(':scope > .filter-subag-slot');
+    // See WijCheckboxes' identical pair for why - normalizes padding while collapsed.
+    const _card = this._container.parentElement;
+    if (_card) _card.classList.toggle('wij-row-collapsed', collapsed);
     if (collapsed) {
       this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
       this._selectBody.style.display = 'none';

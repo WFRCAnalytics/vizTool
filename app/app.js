@@ -12,6 +12,9 @@ let mapViewComp;
 // setCompRendererAndShow()/teardownCompareExtras() set their text and show/hide them.
 let mapScenarioLabelMain;
 let mapScenarioLabelComp;
+// Overlay-mode diff/pct-diff color key - vizmap.js's setRendererAndLegend() sets its text and
+// show/hide (see updateMapCompareColorHint() below).
+let mapCompareColorHint;
 let layerDisplay;
 let dummyFeature;
 let dataMenu;
@@ -113,16 +116,25 @@ function hideNoDataIndicator() {
 // this the load screen looks stalled for a couple of seconds even though it isn't. See the
 // #load-status-spinner comment in styles.css for why the spinner keeps animating through that
 // same stretch.
-function setLoadStatus(text) {
-  const el = document.getElementById('load-status-text');
-  if (el) el.textContent = text;
-}
+//function setLoadStatus(text) {
+//  const el = document.getElementById('load-status-text');
+//  if (el) el.textContent = text;
+//}
 
 // The label toggle button's tooltip reflects the action a click would perform next
 // (not the current state), so it reads "Hide Labels" while labels are on. Called from
 // vizmap.js too (loaded after this file, same global scope) wherever btn.active changes.
 function updateLabelToggleTooltip(btn) {
-  const text = btn.active ? 'Hide Labels' : 'Show Labels';
+  const text = btn.active ? 'Labels On' : 'Labels Off';
+  btn.text = text;
+  btn.title = text;
+}
+
+// Same state-describing text/tooltip pattern as updateLabelToggleTooltip() above, for the
+// "Map Title" sidebar toggle (app.js's "ADD MAP TITLE TOGGLE") - called both at setup and on
+// every click, since .text doesn't update itself just because .active changed.
+function updateMapTitleToggleLabel(btn) {
+  const text = btn.active ? 'Map Title On' : 'Map Title Off';
   btn.text = text;
   btn.title = text;
 }
@@ -178,7 +190,7 @@ function setMapCompareSplitVisible(visible) {
 }
 
 // Builds/refreshes one alias <calcite-select>'s option list from dataScenarios - the "Use
-// Alias" toggle's alternative to picking modVersion/scnGroup/scnYear one at a time. Options are
+// Aliases" toggle's alternative to picking modVersion/scnGroup/scnYear one at a time. Options are
 // keyed by "modVersion|scnGroup|scnYear" so the change handler can look the full scenario back
 // up again; the visible text reuses the same alias-or-fallback logic as
 // VizMap.getMainScenarioDisplayName()/getCompScenarioDisplayName().
@@ -210,28 +222,185 @@ function setMapCompareScenarioLabels(mode, mainText, compText) {
 
   if (mode === "sidebyside") {
     mapScenarioLabelMain.textContent = mainText;
-    mapScenarioLabelMain.style.display = "";
+    mapScenarioLabelMain.dataset.logicalShow = "true";
     mapView.ui.add(mapScenarioLabelMain, "top-left");
 
     mapScenarioLabelComp.textContent = compText;
-    mapScenarioLabelComp.style.display = "";
+    mapScenarioLabelComp.dataset.logicalShow = "true";
     mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
   } else if (mode === "swipe") {
-    mapScenarioLabelMain.style.display = "none";
+    mapScenarioLabelMain.dataset.logicalShow = "false";
 
     mapScenarioLabelComp.textContent = `${compText} (left) vs. ${mainText} (right)`;
-    mapScenarioLabelComp.style.display = "";
+    mapScenarioLabelComp.dataset.logicalShow = "true";
     mapView.ui.add(mapScenarioLabelComp, "top-left");
   } else if (mode === "overlay") {
-    mapScenarioLabelMain.textContent = mainText;
-    mapScenarioLabelMain.style.display = "";
+    // compText is only passed while actually in compare mode (see vizmap.js's two 'overlay'
+    // callers) - plain single-scenario view (this.mode === 'main') passes null/undefined and
+    // just gets its own name alone, same as before this label also had to carry the compare case.
+    mapScenarioLabelMain.textContent = compText ? `${mainText} vs. ${compText}` : mainText;
+    mapScenarioLabelMain.dataset.logicalShow = "true";
     mapView.ui.add(mapScenarioLabelMain, "top-left");
+    // Esri's ui.add() re-appends an already-present widget to the end of its corner container
+    // rather than leaving it in place - re-anchor the color hint (updateMapCompareColorHint()
+    // below) right after it every time this runs, not just once, or a later call here (this
+    // fires more than once per render - see vizmap.js's two 'overlay' callers) silently pushes
+    // the label past the hint instead of the other way around.
+    if (mapCompareColorHint) mapScenarioLabelMain.insertAdjacentElement("afterend", mapCompareColorHint);
 
-    mapScenarioLabelComp.style.display = "none";
+    mapScenarioLabelComp.dataset.logicalShow = "false";
   } else {
-    mapScenarioLabelMain.style.display = "none";
-    mapScenarioLabelComp.style.display = "none";
+    mapScenarioLabelMain.dataset.logicalShow = "false";
+    mapScenarioLabelComp.dataset.logicalShow = "false";
   }
+
+  applyMapTitleVisibility();
+}
+
+// The "Map Title" sidebar toggle (app.js's "ADD MAP TITLE TOGGLE" below) is a manual override
+// on top of whatever mode-driven logic above decides should show - each element's own "would
+// this mode show me at all" verdict lives in its dataset.logicalShow, set above (and in
+// updateMapCompareColorHint() below) instead of touching style.display directly, so toggling the
+// override never has to know or guess what the current mode last wanted.
+let mapTitleHidden = false;
+function applyMapTitleVisibility() {
+  [mapScenarioLabelMain, mapScenarioLabelComp, mapCompareColorHint].forEach((el) => {
+    if (!el) return;
+    const logicalShow = el.dataset.logicalShow === "true";
+    el.style.display = (logicalShow && !mapTitleHidden) ? "" : "none";
+  });
+}
+
+// Lets #mapSidebarRightLegend (vizmap.html) pop out into its own small draggable window and dock
+// back again - #mapSidebarRightLegend itself is never rebuilt (vizmap.js's setRendererAndLegend()
+// only destroys/recreates the Legend widget's own inner container each render, see its comment),
+// so moving this whole node in and out of the sidebar via plain DOM appendChild (which MOVES an
+// existing node, not clones it) carries the live widget along with it safely either way. Called
+// once; safe to call again (no-ops) since nothing else ever rebuilds #mapSidebarRightLegend.
+function setupLegendPopout() {
+  const legendContainer = document.getElementById("mapSidebarRightLegend");
+  if (!legendContainer || legendContainer.dataset.popoutSetup) return;
+  legendContainer.dataset.popoutSetup = "true";
+
+  const headerRow = document.createElement("div");
+  headerRow.className = "map-legend-header-row";
+
+  const label = document.createElement("span");
+  label.className = "map-legend-header-label";
+  label.textContent = "— LEGEND —";
+  headerRow.appendChild(label);
+
+  const toggleBtn = document.createElement("calcite-action");
+  toggleBtn.scale = "s";
+  toggleBtn.icon = "launch";
+  toggleBtn.title = "Pop out legend";
+  headerRow.appendChild(toggleBtn);
+
+  legendContainer.insertBefore(headerRow, legendContainer.firstChild);
+
+  // Built once, reused every pop-out (shown/hidden + repositioned, never recreated).
+  const floatWindow = document.createElement("div");
+  floatWindow.id = "mapLegendFloatWindow";
+  floatWindow.style.display = "none";
+
+  const floatHeader = document.createElement("div");
+  floatHeader.className = "map-legend-float-header";
+  const floatTitle = document.createElement("span");
+  floatTitle.textContent = "Legend";
+  floatHeader.appendChild(floatTitle);
+
+  // Docks back from here instead of the traveling header row above (hidden while popped out,
+  // below - this floating window's own title already says "Legend", so showing the sidebar's
+  // "— LEGEND —" label again inside it would just be the same thing twice).
+  const dockBtn = document.createElement("calcite-action");
+  dockBtn.scale = "s";
+  dockBtn.icon = "minimize";
+  dockBtn.title = "Dock legend";
+  dockBtn.appearance = "transparent";
+  floatHeader.appendChild(dockBtn);
+
+  floatWindow.appendChild(floatHeader);
+
+  const floatContent = document.createElement("div");
+  floatContent.className = "map-legend-float-content";
+  floatWindow.appendChild(floatContent);
+
+  document.body.appendChild(floatWindow);
+
+  // Classic "drag by the title bar" pattern - clamped loosely to stay reachable even if dragged
+  // toward an edge, not a full windowing library (nothing else in the app needs to float free
+  // of both the map and the sidebar like this).
+  let _dragging = false;
+  let _dragOffsetX = 0;
+  let _dragOffsetY = 0;
+  floatHeader.addEventListener("mousedown", (e) => {
+    _dragging = true;
+    const rect = floatWindow.getBoundingClientRect();
+    _dragOffsetX = e.clientX - rect.left;
+    _dragOffsetY = e.clientY - rect.top;
+    e.preventDefault();
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!_dragging) return;
+    const maxLeft = window.innerWidth - 60;
+    const maxTop = window.innerHeight - 40;
+    floatWindow.style.left = Math.min(maxLeft, Math.max(0, e.clientX - _dragOffsetX)) + "px";
+    floatWindow.style.top = Math.min(maxTop, Math.max(0, e.clientY - _dragOffsetY)) + "px";
+  });
+  document.addEventListener("mouseup", () => { _dragging = false; });
+
+  const popOut = () => {
+    const sidebarRect = legendContainer.getBoundingClientRect();
+    floatWindow.style.left = Math.max(0, sidebarRect.left - 320) + "px";
+    floatWindow.style.top = sidebarRect.top + "px";
+    headerRow.style.display = "none"; // see dockBtn's own comment above for why
+    floatContent.appendChild(legendContainer);
+    floatWindow.style.display = "block";
+  };
+  const dockBack = () => {
+    headerRow.style.display = "";
+    // Always the last section in the sidebar's own .panel-col-body (setupColumnCollapse(),
+    // above) - Scenario Selector/label toggles come first and never move, so appending here
+    // always lands it back in the right spot regardless of where it popped out from.
+    const sidebarBody = document.querySelector("#mapSidebarRight .panel-col-body") || document.getElementById("mapSidebarRight");
+    sidebarBody.appendChild(legendContainer);
+    floatWindow.style.display = "none";
+  };
+
+  // headerRow (and so toggleBtn) only ever shows while docked, dockBtn only while popped out -
+  // each button only ever needs to do the one thing.
+  toggleBtn.addEventListener("click", popOut);
+  dockBtn.addEventListener("click", dockBack);
+}
+
+// Reads the actual colors out of the current diff/pct-diff renderer (rather than hardcoding
+// "red"/"blue") so the hint stays correct even for the handful of attributes whose
+// compare_abs_style/compare_pct template reverses the usual ramp (e.g. absStyleI puts dark red
+// on the most-negative band instead of dark blue) - see attribute-templates.json. Every
+// template's bands run most-negative-first (see buildAbsScaleBounds/buildAbsCountBounds, app.js,
+// and the compare_pct templates in config/attribute-templates.json), so classBreakInfos[0] is
+// always the "Comp higher" end and the last entry is always the "Main higher" end, regardless of
+// which actual colors a given template assigns there. renderer null (main mode, or
+// sidebyside/swipe's natural per-scenario renderer) just hides it.
+// Only updates content/visibility - setMapCompareScenarioLabels()'s 'overlay' branch above owns
+// this element's actual position (right after mapScenarioLabelMain), since that's the one place
+// that reliably runs every time the label itself might have moved.
+function updateMapCompareColorHint(renderer, mainLabel) {
+  if (!mapCompareColorHint) return;
+  const breaks = renderer && renderer.classBreakInfos;
+  if (!breaks || breaks.length < 2) {
+    mapCompareColorHint.dataset.logicalShow = "false";
+    applyMapTitleVisibility();
+    return;
+  }
+  const toCssColor = (c) => Array.isArray(c) ? `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${c[3] !== undefined ? c[3] : 1})` : c;
+  const compHigherColor = toCssColor(breaks[0].symbol.color);
+  const mainHigherColor = toCssColor(breaks[breaks.length - 1].symbol.color);
+  mapCompareColorHint.innerHTML =
+    `<span class="compare-color-swatch" style="background:${mainHigherColor}"></span>${mainLabel} higher` +
+    `<span class="compare-color-swatch" style="background:${compHigherColor}"></span>${mainLabel} lower`;
+  mapCompareColorHint.dataset.logicalShow = "true";
+  applyMapTitleVisibility();
 }
 
 // "Display"/"Filters" being collapsed is one shared preference across vizMap/vizTrends/
@@ -253,7 +422,14 @@ const panelSyncGroups = {};
 // with the same group name - omit it (as #trendSelector's own caller does) for a column with
 // no cross-view counterpart to sync with.
 function setupColumnCollapse(el, title, syncGroup) {
-  if (!el || el.querySelector(":scope > .panel-col-header")) return; // already set up
+  // A dedicated flag, not just "does the header already exist" - the header/body wrapper this
+  // builds below are themselves ordinary DOM nodes some other code could end up clearing (e.g.
+  // a careless el.innerHTML = '' instead of targeting .panel-col-body). If that ever happened,
+  // re-deriving "original" padding from getComputedStyle(el) a second time would just capture
+  // the 0 this function itself left behind the first time, baking the lost padding in for good
+  // instead of only losing it until the next real re-render.
+  if (!el || el.dataset.columnCollapseSetup) return;
+  el.dataset.columnCollapseSetup = "true";
 
   // Move the column's own padding/gap (if any - .colAttributes has some, for its bordered
   // .rowGeography boxes; .colFilters/#trendSelector have none or their own) onto a new wrapper
@@ -409,9 +585,8 @@ require([
   "esri/Basemap",
   "esri/layers/TileLayer",
   "esri/views/MapView",
-  "esri/widgets/Expand",
   "esri/widgets/Zoom",
-], function (Map, Basemap, TileLayer, MapView, Expand, Zoom) {
+], function (Map, Basemap, TileLayer, MapView, Zoom) {
   // The string basemap IDs ("gray-vector", "arcgis-imagery", ...) resolve through Esri's
   // basemap-styles service, which requires a valid API key - ours expired and Esri's policy
   // now requires a key for those even for anonymous/free use. Built the basemaps below from
@@ -659,7 +834,7 @@ require([
 
   async function loadScenarios() {
     console.log("app:loadScenarios");
-    setLoadStatus("Loading scenario list and geo data...");
+    //setLoadStatus("Loading scenario list and geo data...");
 
     // load scenario data
     jsonScenario = await fetchScenarioData();
@@ -823,7 +998,7 @@ require([
 
   async function loadMenuAndItems() {
     console.log("app:loadMenuAndItems");
-    setLoadStatus("Loading configuration...");
+    //setLoadStatus("Loading configuration...");
 
     configAggregators = await fetchConfigAggregators();
     configAttributes = await fetchConfigAttributes();
@@ -850,7 +1025,7 @@ require([
     // loop below is synchronous construction of every menu item/model entity/sidebar in the
     // app (dozens of them) - real work, but neither progress bar moves during it, and it can
     // take a couple of seconds on its own.
-    setLoadStatus("Building menu...");
+    //setLoadStatus("Building menu...");
 
     menuItems = configApp.menuItems.map(
       (menuItem) => new MenuItem(menuItem, hideAllLayoutLayers)
@@ -901,7 +1076,7 @@ require([
     // passing the updateProgress function to be called when each check completes. Actual
     // scenario data is fetched lazily via Scenario.ensureDataLoaded() the first time it's
     // needed, instead of eagerly pulling every scenario's full dataset here.
-    setLoadStatus("Checking scenario data availability...");
+    //setLoadStatus("Checking scenario data availability...");
     for (let scenario of dataScenarios) {
       scenario.probeDataAvailability(dataMenu, updateProgress);
     }
@@ -1097,7 +1272,7 @@ require([
       }
     }
 
-    // Keep the "Use Alias" selects (vizMap's Scenario Selector only) populated and showing the
+    // Keep the "Use Aliases" selects (vizMap's Scenario Selector only) populated and showing the
     // current pick too, since they're a parallel view onto the same selectedScenario_Main/_Comp
     // state - populated here (not at element-creation time) since dataScenarios is guaranteed
     // loaded by the time this runs, which isn't true yet when the panel's first built.
@@ -1167,24 +1342,30 @@ require([
   // on either side should show up on the other immediately - not just next time that view
   // happens to re-render.
   const syncedComparePairs = [
-    { ids: ["comparisonScenario", "comparisonScenarioMatrix", "comparisonScenarioDash"], prop: "open", event: "calciteBlockToggle" },
-    { ids: ["selectCompareType", "selectCompareTypeMatrix", "selectCompareTypeDash"], prop: "value", event: "calciteSelectChange" },
+    { ids: ["comparisonScenario", "comparisonScenarioMatrix", "comparisonScenarioDash"], prop: "open", events: ["calciteBlockToggle"] },
+    // selectCompareType (vizMap) is a calcite-segmented-control now - selectCompareTypeMatrix/
+    // selectCompareTypeDash are still calcite-select, so this listens for both event names on
+    // every id. Each element only ever actually fires the one matching its own real component
+    // type, so the "wrong" listener on any given id is just never triggered, not harmful.
+    { ids: ["selectCompareType", "selectCompareTypeMatrix", "selectCompareTypeDash"], prop: "value", events: ["calciteSelectChange", "calciteSegmentedControlChange"] },
   ];
 
   function setupSyncedCompareControls() {
-    syncedComparePairs.forEach(({ ids, prop, event }) => {
+    syncedComparePairs.forEach(({ ids, prop, events }) => {
       ids.forEach((id) => {
         const el = document.getElementById(id);
-        el?.addEventListener(event, (changeEvent) => {
-          const newValue = changeEvent.target[prop];
-          ids.forEach((otherId) => {
-            if (otherId === id) return;
-            const other = document.getElementById(otherId);
-            if (other && other[prop] !== newValue) {
-              other[prop] = newValue;
-            }
+        events.forEach((event) => {
+          el?.addEventListener(event, (changeEvent) => {
+            const newValue = changeEvent.target[prop];
+            ids.forEach((otherId) => {
+              if (otherId === id) return;
+              const other = document.getElementById(otherId);
+              if (other && other[prop] !== newValue) {
+                other[prop] = newValue;
+              }
+            });
+            updateActiveVizMap();
           });
-          updateActiveVizMap();
         });
       });
     });
@@ -1649,7 +1830,9 @@ require([
       if (compareTypeSelect) compareTypeSelect.style.display = isOverlay ? "" : "none";
       if (compareTypeLabel) compareTypeLabel.style.display = isOverlay ? "" : "none";
     };
-    compareViewSelect.addEventListener("calciteSelectChange", () => {
+    // calcite-segmented-control's own change event (not calciteSelectChange - it's not a
+    // calcite-select, unlike selectCompareType).
+    compareViewSelect.addEventListener("calciteSegmentedControlChange", () => {
       toggleCompareTypeVisibility();
       updateActiveVizMap();
     });
@@ -1776,6 +1959,15 @@ require([
       mapScenarioLabelComp.style.display = "none";
       mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
 
+      // Overlay-mode diff/pct-diff color key - lives in #mapFooter under #mapTitle (vizmap.js's
+      // title-building code builds that fresh every render), not mapView's own UI, so it reads
+      // as part of the map's title rather than a floating corner badge. Hidden/positioned by
+      // updateMapCompareColorHint() below, which re-inserts it since #mapFooter gets wiped
+      // (innerHTML = '') on every render.
+      mapCompareColorHint = document.createElement("div");
+      mapCompareColorHint.className = "map-compare-color-hint";
+      mapCompareColorHint.style.display = "none";
+
       // CREATE SCENARIO SELECTOR
 
       // Create a container for the widget content
@@ -1783,7 +1975,7 @@ require([
       contentContainer.className = "scenario-selector-container";
 
 
-      // "Scenario Selector" title and the "Use Alias" toggle share one header row, title on the
+      // "Scenario Selector" title and the "Use Aliases" toggle share one header row, title on the
       // left and the toggle on the right. The toggle swaps the three modVersion/scnGroup/
       // scnYear selects (Main, and Comp inside "Compare to:") for one alias-named select each,
       // for scenarios whose config gives them a human-friendly alias (Scenario.alias -
@@ -1803,13 +1995,13 @@ require([
       const useAliasLabel = document.createElement("calcite-label");
       useAliasLabel.setAttribute("layout", "inline");
       useAliasLabel.style.margin = "0";
-      useAliasLabel.style.fontSize = "0.85em";
+      useAliasLabel.style.fontSize = "0.50em";
       const useAliasSwitch = document.createElement("calcite-switch");
       useAliasSwitch.id = "useAliasToggle";
       useAliasSwitch.scale = "s";
       useAliasSwitch.checked = true;
       useAliasLabel.appendChild(useAliasSwitch);
-      useAliasLabel.appendChild(document.createTextNode("Use Alias"));
+      useAliasLabel.appendChild(document.createTextNode("Use Aliases"));
       headerRow.appendChild(useAliasLabel);
 
       contentContainer.appendChild(headerRow);
@@ -1868,6 +2060,34 @@ require([
       block.id = "comparisonScenario";
       block.setAttribute("heading", "Compare to:");
       block.setAttribute("collapsible", true);
+
+      // Swaps selectedScenario_Main/_Comp (not just the two selects' own displayed values -
+      // the underlying state everything else, map labels/alias selects included, is driven
+      // from). Icon-only (arrow-up-down - "exchange" used here before was silently a 404
+      // against this Calcite version's icon set, rendering nothing), sitting at the right edge
+      // of whichever "compare to" select row is currently visible - the alias select's own row
+      // when alias mode is on, the last of the three plain selects (scnYear_Comp) otherwise -
+      // rather than its own labeled row, since this version's calcite-block also has no
+      // header-actions slot to put it next to the collapse chevron instead (tried that first,
+      // rendered into nothing, silently unslotted).
+      const swapScenarios = async () => {
+        const swappedMain = { ...selectedScenario_Comp };
+        selectedScenario_Comp = { ...selectedScenario_Main };
+        selectedScenario_Main = swappedMain;
+        await populateScenarioSelections();
+        updateActiveVizMap();
+      };
+      const makeSwapButton = () => {
+        const swapButton = document.createElement("calcite-button");
+        swapButton.appearance = "transparent";
+        swapButton.scale = "s";
+        swapButton.iconStart = "arrow-up-down";
+        swapButton.title = "Swap Main ↔ Compare";
+        swapButton.setAttribute("aria-label", "Swap Main and Compare scenarios");
+        swapButton.addEventListener("click", swapScenarios);
+        return swapButton;
+      };
+
       compSelectIds.forEach((id) => {
         // Create a flex container for each select and its buttons
         const flexContainer = document.createElement("div");
@@ -1892,12 +2112,14 @@ require([
       // aliasSelectMain, for selectedScenario_Comp instead.
       const aliasRowComp = document.createElement("div");
       aliasRowComp.style.width = "100%";
-      aliasRowComp.style.display = useAliasSwitch.checked ? "block" : "none";
+      aliasRowComp.style.display = useAliasSwitch.checked ? "flex" : "none";
+      aliasRowComp.style.alignItems = "center";
       const aliasSelectComp = document.createElement("calcite-select");
       aliasSelectComp.id = "aliasScenario_Comp";
-      aliasSelectComp.style.width = "100%";
+      aliasSelectComp.style.flexGrow = "1";
       // See aliasSelectMain above - populateScenarioSelections() fills this one's options too.
       aliasRowComp.appendChild(aliasSelectComp);
+      aliasRowComp.appendChild(makeSwapButton());
       block.appendChild(aliasRowComp);
 
       useAliasSwitch.addEventListener("calciteSwitchChange", () => {
@@ -1905,8 +2127,14 @@ require([
         mainSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
         aliasRowMain.style.display = useAlias ? "block" : "none";
         compSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
-        aliasRowComp.style.display = useAlias ? "block" : "none";
+        aliasRowComp.style.display = useAlias ? "flex" : "none";
       });
+
+      // Same button as aliasRowComp's own (see makeSwapButton above) - compSelectRows' last row
+      // (scnYear_Comp) is the one left visible when alias mode is off.
+      if (compSelectRows.length > 0) {
+        compSelectRows[compSelectRows.length - 1].appendChild(makeSwapButton());
+      }
       aliasSelectMain.addEventListener("calciteSelectChange", () =>
         applyAliasScenarioSelection(aliasSelectMain, "Main")
       );
@@ -1928,62 +2156,71 @@ require([
       //   more than complete labels, with "sidebyside" as the alternative when labels matter.
       // "Compare Type" only means anything for the overlay option, so its own row gets hidden
       // below whenever either compare-view option is selected (toggleCompareTypeVisibility()).
-      // Label and select share one line each (rather than a heading row above a select row) to
-      // keep this panel from getting tall once "Compare to:" is open.
-      const rowCompareView = document.createElement("div");
-      rowCompareView.className = "compare-inline-row";
+      // A calcite-segmented-control (not calcite-select, unlike Compare Type below) - three
+      // options read fine as one row of buttons instead of needing a dropdown to see them, and
+      // this panel's narrow enough that they need their own row (not sharing one with a label
+      // the way Compare Type's select does) to fit three at once without wrapping. Short labels
+      // (full names in each button's title tooltip instead) for the same reason.
       const headingCompareView = document.createElement("div");
       headingCompareView.className = "compare-inline-label";
       headingCompareView.textContent = "Compare View";
       headingCompareView.id = "compare-view-label";
-      rowCompareView.appendChild(headingCompareView);
+      headingCompareView.style.marginTop = "8px";
+      block.appendChild(headingCompareView);
 
-      const calciteSelectCompareView = document.createElement("calcite-select");
+      const calciteSelectCompareView = document.createElement("calcite-segmented-control");
       calciteSelectCompareView.id = "selectCompareView";
-      calciteSelectCompareView.style.flexGrow = "1";
-      calciteSelectCompareView.value = "overlay";
+      calciteSelectCompareView.width = "full";
+      calciteSelectCompareView.scale = "s";
 
-      const optionOverlay = document.createElement("calcite-option");
+      const optionOverlay = document.createElement("calcite-segmented-control-item");
       optionOverlay.value = "overlay";
-      optionOverlay.textContent = "Single Map";
+      optionOverlay.textContent = "Single";
+      optionOverlay.title = "Single Map";
+      optionOverlay.checked = true;
       calciteSelectCompareView.appendChild(optionOverlay);
 
-      const optionSideBySide = document.createElement("calcite-option");
+      const optionSideBySide = document.createElement("calcite-segmented-control-item");
       optionSideBySide.value = "sidebyside";
-      optionSideBySide.textContent = "Side-by-Side (Two Maps)";
+      optionSideBySide.textContent = "Split";
+      optionSideBySide.title = "Side-by-Side (Two Maps)";
       calciteSelectCompareView.appendChild(optionSideBySide);
 
-      const optionSwipe = document.createElement("calcite-option");
+      const optionSwipe = document.createElement("calcite-segmented-control-item");
       optionSwipe.value = "swipe";
-      optionSwipe.textContent = "Swipe (Single Map)";
+      optionSwipe.textContent = "Swipe";
+      optionSwipe.title = "Swipe (Single Map)";
       calciteSelectCompareView.appendChild(optionSwipe);
 
-      rowCompareView.appendChild(calciteSelectCompareView);
-      block.appendChild(rowCompareView);
+      block.appendChild(calciteSelectCompareView);
 
+      // Same calcite-segmented-control treatment as Compare View above - two options read fine
+      // as one row of buttons, and "% Difference" (not "Percent Difference") comfortably fits
+      // both buttons in this same narrow panel; the full name is still in its title tooltip.
       const rowCompareType = document.createElement("div");
-      rowCompareType.className = "compare-inline-row";
       rowCompareType.id = "compare-type-row";
       const headingCompare = document.createElement("div");
       headingCompare.className = "compare-inline-label";
       headingCompare.textContent = "Compare Type";
       headingCompare.id = "compare-type-label";
+      headingCompare.style.marginTop = "8px";
       rowCompareType.appendChild(headingCompare);
 
-      // Create a calcite-select element
-      const calciteSelectCompare = document.createElement("calcite-select");
+      const calciteSelectCompare = document.createElement("calcite-segmented-control");
       calciteSelectCompare.id = "selectCompareType";
-      calciteSelectCompare.style.flexGrow = "1";
-      calciteSelectCompare.value = "diff";
+      calciteSelectCompare.width = "full";
+      calciteSelectCompare.scale = "s";
 
-      const optionAbs = document.createElement("calcite-option");
+      const optionAbs = document.createElement("calcite-segmented-control-item");
       optionAbs.value = "diff";
       optionAbs.textContent = "Difference";
+      optionAbs.checked = true;
       calciteSelectCompare.appendChild(optionAbs);
 
-      const optionPc = document.createElement("calcite-option");
+      const optionPc = document.createElement("calcite-segmented-control-item");
       optionPc.value = "pctdiff";
-      optionPc.textContent = "Percent Difference";
+      optionPc.textContent = "% Difference";
+      optionPc.title = "Percent Difference";
       calciteSelectCompare.appendChild(optionPc);
 
       rowCompareType.appendChild(calciteSelectCompare);
@@ -1991,39 +2228,54 @@ require([
 
       contentContainer.appendChild(block);
 
-      // Create the Expand widget
-      const expandScenario = new Expand({
-        view: mapView,
-        content: contentContainer,
-        expandIcon: "collection",
-        expanded: true,
-        expandTooltip: "Scenario Selector",
-        group: "top-right",
-        // "auto" (the default) switches to a full-screen modal mask below a width threshold -
-        // side-by-side compare (setMapCompareSplitVisible()) halves #mapView's width, which
-        // falls under that threshold and would otherwise mask the whole page behind this panel.
-        mode: "floating",
-      });
+      // Lives in the right sidebar now (#mapSidebarRightScenario, vizmap.html) - always visible
+      // there, not a floating Expand panel over the map, so no "auto" full-screen-mask-below-a-
+      // width-threshold concern (that was specifically about side-by-side compare halving
+      // #mapView's own width, which doesn't affect the sidebar's fixed width at all).
+      document.getElementById("mapSidebarRightScenario").appendChild(contentContainer);
 
-      // Add the Expand widget to the view
-      mapView.ui.add(expandScenario, "top-right");
-
-      // ADD LABEL TOGGLE - a single-click icon button (no expand panel): clicking it
-      // directly toggles labels on/off, "active" state showing whether labels are on.
-      // Same top-right slot the old Expand+checkbox combo used.
+      // ADD LABEL TOGGLE - a single-click icon button: clicking it directly toggles labels
+      // on/off, "active" state showing whether labels are on. Lives right under the Scenario
+      // Selector in the sidebar (textEnabled so it reads as a labeled row there, not just a
+      // bare icon the way it had to as a floating corner button).
       const labelToggleAction = document.createElement("calcite-action");
       labelToggleAction.id = "vizMapLabelToggle";
       labelToggleAction.icon = "label";
-      labelToggleAction.scale = "s"; // match the 32x32 size of the adjacent Expand/Zoom buttons
+      labelToggleAction.scale = "s";
+      labelToggleAction.text = "Labels";
+      labelToggleAction.textEnabled = true;
       labelToggleAction.active = true; // labels are on by default
       updateLabelToggleTooltip(labelToggleAction);
 
-      mapView.ui.add(labelToggleAction, "top-right");
+      document.getElementById("mapSidebarRightLabelToggle").appendChild(labelToggleAction);
+
+      // ADD MAP TITLE TOGGLE - same single-click pattern as Labels above, sitting next to it.
+      // Hides/shows mapScenarioLabelMain/Comp and the compare color hint together (see
+      // applyMapTitleVisibility() above) - a manual override layered on top of whatever the
+      // current mode would otherwise show, not a replacement for that mode logic.
+      const mapTitleToggleAction = document.createElement("calcite-action");
+      mapTitleToggleAction.id = "vizMapTitleToggle";
+      mapTitleToggleAction.icon = "title";
+      mapTitleToggleAction.scale = "s";
+      mapTitleToggleAction.textEnabled = true;
+      mapTitleToggleAction.active = true; // shown by default
+      updateMapTitleToggleLabel(mapTitleToggleAction);
+      mapTitleToggleAction.addEventListener("click", (event) => {
+        const btn = event.currentTarget;
+        btn.active = !btn.active;
+        mapTitleHidden = !btn.active;
+        updateMapTitleToggleLabel(btn);
+        applyMapTitleVisibility();
+      });
+
+      document.getElementById("mapSidebarRightLabelToggle").appendChild(mapTitleToggleAction);
 
       // ADD BASEMAP TOGGLE - a plain icon button (replaces Esri's BasemapToggle widget, which
       // only ever controlled mapView's own basemap) toggling map.basemap AND mapComp.basemap
       // together in one handler, so the side-by-side compare view's map always matches the
-      // main one instead of possibly showing a different basemap.
+      // main one instead of possibly showing a different basemap. Stays a floating map widget
+      // (unlike Scenario Selector/labels/legend above) - bottom-right, the corner the legend
+      // used to float in before it also moved to the sidebar.
       const basemapToggleAction = document.createElement("calcite-action");
       basemapToggleAction.id = "vizMapBasemapToggle";
       basemapToggleAction.icon = "basemap";
@@ -2039,7 +2291,7 @@ require([
         if (mapComp) mapComp.basemap = nextBasemap;
         btn.title = btn.active ? "Switch to gray basemap" : "Switch to imagery basemap";
       });
-      mapView.ui.add(basemapToggleAction, "top-right");
+      mapView.ui.add(basemapToggleAction, "bottom-right");
 
       // Remove default zoom controls
       mapView.ui.remove("zoom");
@@ -2050,7 +2302,7 @@ require([
       });
 
       // Add the Zoom widget to the top-right corner of the view
-      mapView.ui.add(zoomWidget, "top-right");
+      mapView.ui.add(zoomWidget, "bottom-left");
     });
 
     // Give each left sidebar's "Attributes"/"Filters" columns their own independent collapse
@@ -2065,6 +2317,15 @@ require([
     // #trendSelector (viztrends.html) is its own standalone column, not paired inside a
     // sidebar like Attributes/Filters - same collapse treatment, called directly.
     setupColumnCollapse(document.getElementById("trendSelector"), "Trend Selector");
+
+    // vizMap's right sidebar (Scenario Selector/labels/Legend - vizmap.html) - another
+    // standalone column, same treatment. Safe to call before its own content (Scenario
+    // Selector/label toggles/Legend) exists yet - this only moves #mapSidebarRight's current
+    // children (the three empty sub-containers already in the static template) into the new
+    // .panel-col-body wrapper, and everything that later fills them does so by ID, not by
+    // assuming a particular parent.
+    setupColumnCollapse(document.getElementById("mapSidebarRight"), "Scenario / Legend");
+    setupLegendPopout();
 
     setupHeaderCollapse();
 

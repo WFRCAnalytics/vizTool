@@ -32,4 +32,14 @@
     </div>
     <div id="mapFooter"></div>
   </div>
+  <!-- Scenario Selector/label toggle/Legend (app.js/vizmap.js) - used to float over the map via
+       Esri UI widgets (Expand panels, a corner action button); moved here into their own sidebar
+       column instead, mirroring #mapSidebar on the other side. Zoom and the basemap toggle stay
+       as floating map widgets (bottom-left/bottom-right - see app.js's "ADD BASEMAP TOGGLE"/Zoom
+       comments). -->
+  <div id="mapSidebarRight" class="map-sidebar-right">
+    <div id="mapSidebarRightScenario"></div>
+    <div id="mapSidebarRightLabelToggle"></div>
+    <div id="mapSidebarRightLegend"></div>
+  </div>
 </div>

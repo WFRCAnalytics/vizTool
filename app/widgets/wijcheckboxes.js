@@ -34,7 +34,12 @@ class WijCheckboxes {
 
     const _thisInstance = this;
 
-    let _filterLabel = document.createElement("calcite-label");
+    // Plain div (not calcite-label) - calcite-label's own internal spacing/line-height made
+    // every collapsed checkbox filter card (the only ones with a wrapper like this at all -
+    // WijRadio/WijSelect's own toggle rows sit directly in their container, no equivalent
+    // outer wrapper) a few px taller than WijRadio/WijSelect's own cards, a stray gap under the
+    // row once collapsed that only this widget's filters showed.
+    let _filterLabel = document.createElement("div");
 
     // define filter title divs
     const _filterTitle = document.createElement('div');
@@ -210,6 +215,10 @@ class WijCheckboxes {
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._checkboxContainer) return;
     const _subAgSlot = this._mainContainer.querySelector(':scope > .filter-subag-slot');
+    // Card is this widget's parent once filter.js has appended it (see filter.js's render()) -
+    // normalizes padding to match the compact cards while collapsed (see styles.css).
+    const _card = this._mainContainer.parentElement;
+    if (_card) _card.classList.toggle('wij-row-collapsed', collapsed);
     if (collapsed) {
       this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
       this._checkboxContainer.style.display = 'none';

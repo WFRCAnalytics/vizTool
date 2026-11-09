@@ -8,9 +8,8 @@ require([
   "esri/PopupTemplate",
   "esri/widgets/Legend",
   "esri/rest/support/Query",
-  "esri/widgets/Expand",
   "esri/widgets/Swipe"
-], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Expand, Swipe) {
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Swipe) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -37,6 +36,11 @@ require([
         this.popupTitle = this.modelEntity.submenuText;
       }
       this.layerTitle = layerTitle;
+      // Remembers the user's own "Show all"/"Show less" pick for #mapAppliedFilters (setRendererAndLegend()
+      // below rebuilds that whole element from scratch on every render - a new filter selection
+      // would otherwise silently snap it back to collapsed every time, right as the thing that
+      // makes it worth expanding - a long value - is what just changed).
+      this.mapSubtitleExpanded = false;
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
       this.modeCompare = 'diff' //default is abs  other option is pct
@@ -457,8 +461,8 @@ require([
       this.teardownCompareExtras();
 
       if (this.legend) {
-        mapView.ui.remove(this.legend);
-        mapView.ui.remove(this.expandLengend);
+        this.legend.destroy();
+        this.legend = null;
       }
     }
 
@@ -507,10 +511,13 @@ require([
     getAttributeRendererPath() {
 
       var compareType = document.getElementById('selectCompareType');
-      this.modeCompare = compareType ? compareType.selectedOption.value : null;
+      this.modeCompare = compareType ? compareType.value : null; // calcite-segmented-control -
+      // no .selectedOption wrapper (unlike the calcite-select it used to be)
 
       var compareView = document.getElementById('selectCompareView');
-      this.compareView = compareView ? compareView.selectedOption.value : 'overlay';
+      this.compareView = compareView ? compareView.value : 'overlay'; // calcite-segmented-control
+      // (not calcite-select, unlike selectCompareType above) - its own current pick is just
+      // .value, no .selectedOption wrapper.
 
       const collection = this.sidebar.getAttributeRendererCollection();
 
@@ -728,10 +735,12 @@ require([
         this.teardownEsriSwipeWidget();
       }
       // The real two-scenario label text is set once setCompRendererAndShow() has the comp
-      // layer's data ready - for every other render (overlay, or no compare), show just the
-      // Main scenario's own label here instead (every map gets one, not just while comparing).
+      // layer's data ready - for every other render (overlay, or no compare), show the label
+      // here instead (every map gets one, not just while comparing) - Main alone outside compare
+      // mode, "Main vs. Comp" in overlay compare (setMapCompareScenarioLabels's own 'overlay'
+      // branch, app.js, only adds the "vs." part when a comp name is actually passed).
       if (!_isSideBySide && !_isSwipeMode && typeof setMapCompareScenarioLabels === 'function') {
-        setMapCompareScenarioLabels('overlay', this.getMainScenarioDisplayName());
+        setMapCompareScenarioLabels('overlay', this.getMainScenarioDisplayName(), this.mode === 'compare' ? this.getCompScenarioDisplayName() : null);
       }
     }
 
@@ -866,7 +875,7 @@ require([
       if (document.getElementById('comparisonScenario').open & this.getComp() !== null) {
         this.mode = 'compare';
         var compareViewSelect = document.getElementById('selectCompareView');
-        this.compareView = compareViewSelect ? compareViewSelect.selectedOption.value : 'overlay';
+        this.compareView = compareViewSelect ? compareViewSelect.value : 'overlay'; // calcite-segmented-control
         var _dataComp = this.getDataComp();
         // get data for weighting
         if (this.sidebar.getWeightCode()) {
@@ -906,6 +915,15 @@ require([
 
         this.layerDisplay.renderer = this.getRenderer();
 
+        // Diff/pct-diff coloring (red = Main higher, blue = Main lower, or possibly reversed -
+        // see updateMapCompareColorHint()'s own comment, app.js) only ever applies in overlay
+        // mode - sidebyside/swipe each show a natural single-scenario renderer instead (see
+        // getAttributeRendererPath()'s _isTwoLayerCompare branch), so the hint has nothing to
+        // explain there.
+        if (typeof updateMapCompareColorHint === 'function') {
+          updateMapCompareColorHint(this.mode === 'compare' && this.compareView === 'overlay' ? this.layerDisplay.renderer : null, this.getMainScenarioDisplayName());
+        }
+
         this.layerDisplay.refresh();
         this.layerDisplay.visible = true;
           
@@ -913,17 +931,16 @@ require([
           console.log("Total number of features in layer:", results.features.length);
         });
 
-        let isLegendExpanded = true; // Default state
-        if (this.expandLengend) {
-          isLegendExpanded = this.expandLengend.expanded; // Capture the current state
-          mapView.ui.remove(this.expandLengend);
+        // Lives in the right sidebar (#mapSidebarRightLegend) now, not floating over the map.
+        // Esri widgets' destroy() removes their own container node from the DOM entirely, not
+        // just its content - mounting straight into #mapSidebarRightLegend itself would delete
+        // that div the first time a prior legend gets destroyed, permanently breaking every
+        // render after (and its "LEGEND" heading, styles.css's ::before on that same id). Mount
+        // into a fresh inner wrapper each time instead, so the outer div survives forever.
+        if (this.legend) {
+          this.legend.destroy();
         }
 
-        // Proceed to remove the old legend
-        if (this.legend) {
-          mapView.ui.remove(this.legend);
-        }
-        
         if (this.dCode!="Nothing") {
           if (this.layerDisplay.renderer.visualVariables) {
             this.layerDisplay.renderer.visualVariables.forEach((visualVariable) => {
@@ -934,44 +951,19 @@ require([
           }
         }
 
-        var _title = "";
-        //if (this.sidebar.aggregators.length>0) {
-        //  const _aggCode = this.sidebar.getSelectedAggregator();
-        //  _title += ' by ' + _aggCode.agTitleText;
-        //}
-        if (this.mode==='main') {
-          _title += this.getMainScenarioDisplayName();
-        } else if (this.mode==='compare' && (this.compareView==='sidebyside' || this.compareView==='swipe')) {
-          _title += this.getCompScenarioDisplayName() + ' (left) vs. ' + this.getMainScenarioDisplayName() + ' (right)';
-        } else if(this.mode==='compare' & (this.modeCompare==='diff' | this.modeCompare==='pctdiff')) {
-          _title += this.getMainScenarioDisplayName() + ' compared to ' + this.getCompScenarioDisplayName();
-        }
-        
+        const legendInner = document.createElement('div');
+        document.getElementById('mapSidebarRightLegend').appendChild(legendInner);
+
+        // No title here anymore - setMapCompareScenarioLabels() (app.js) puts the same scenario
+        // name(s) this used to build in a corner label over the map itself, in every mode (not
+        // just compare), so repeating it as the legend's own title was now just redundant.
         this.legend = new Legend({
           view: mapView,
+          container: legendInner,
           layerInfos: [{
-            layer: this.layerDisplay,
-            title: _title// + (_filter !== "" ? " - Filtered by " + _filter : "")
+            layer: this.layerDisplay
           }]
         });
-        //mapView.ui.add(this.legend, "bottom-right");
-        
-        // Create the Expand widget
-        this.expandLengend = new Expand({
-          view: mapView,
-          content: this.legend,
-          expandIcon: "legend",
-          expanded: isLegendExpanded, // Use the previous state
-          expandTooltip: 'Show Legend',
-          group: "bottom-right",
-          // "auto" (the default) switches to a full-screen modal mask below a width threshold -
-          // side-by-side compare (app.js's setMapCompareSplitVisible()) halves #mapView's width,
-          // which falls under that threshold and would otherwise mask the whole page behind this.
-          mode: "floating",
-        });
-
-        // Add the Expand widget to the view
-        mapView.ui.add(this.expandLengend, "bottom-right");
 
         // toggle labels based on persisted per-attribute status
         this.originalLabelInfo = this.layerDisplay.labelingInfo;
@@ -983,23 +975,43 @@ require([
 
       };
 
-      // set map header
-      var _title = "";
+      // No separate title here - mapScenarioLabelMain (app.js's setMapCompareScenarioLabels())
+      // already floats the same scenario name(s)/"vs." phrasing over the map's own top-left
+      // corner, so a second one here would just be duplicate text. #mapFooter keeps just the
+      // filter-selection breadcrumb.
+      const footerElement = document.getElementById('mapFooter');
+      footerElement.innerHTML = '';
 
-      const _subTitle = this.sidebar.getSelectedOptionsAsLongText();
-
-      const containerHeaderElement = document.getElementById('mapFooter');
-      containerHeaderElement.innerHTML = '';
-      
-      const _titleDiv = document.createElement('div');
-      _titleDiv.id = 'mapTitle';
-      _titleDiv.innerHTML = '<h1>' + _title + '</h1>';
-      containerHeaderElement.appendChild(_titleDiv);
-  
       const _subTitleDiv = document.createElement('div');
-      _subTitleDiv.id = 'mapSubtitle';
-      _subTitleDiv.innerHTML = _subTitle;
-      containerHeaderElement.appendChild(_subTitleDiv);
+      _subTitleDiv.id = 'mapAppliedFilters';
+      _subTitleDiv.innerHTML = this.sidebar.getSelectedOptionsAsLongText();
+      footerElement.appendChild(_subTitleDiv);
+
+      // Collapsed to 2 lines (-webkit-line-clamp, styles.css) by default - some filters (e.g.
+      // Route Name, with many values checked at once) can produce enough text to need more than
+      // that. Measured here, before .expanded (below) ever gets applied - once that class is on,
+      // #mapAppliedFilters wraps freely instead of clamping, so scrollHeight stops being a meaningful
+      // truncation test.
+      const _isTruncated = _subTitleDiv.scrollHeight > _subTitleDiv.clientHeight + 1;
+
+      // Starts from this.mapSubtitleExpanded (not always collapsed) - this whole element gets
+      // rebuilt from scratch on every render (a new filter selection included), which would
+      // otherwise silently re-collapse it right as a new, possibly longer, value is what just
+      // changed.
+      _subTitleDiv.classList.toggle('expanded', this.mapSubtitleExpanded);
+
+      if (_isTruncated || this.mapSubtitleExpanded) {
+        const _expandBtn = document.createElement('button');
+        _expandBtn.className = 'map-subtitle-expand-btn';
+        _expandBtn.type = 'button';
+        _expandBtn.textContent = this.mapSubtitleExpanded ? 'Show less' : 'Show all';
+        _expandBtn.addEventListener('click', () => {
+          this.mapSubtitleExpanded = !this.mapSubtitleExpanded;
+          _subTitleDiv.classList.toggle('expanded', this.mapSubtitleExpanded);
+          _expandBtn.textContent = this.mapSubtitleExpanded ? 'Show less' : 'Show all';
+        });
+        footerElement.appendChild(_expandBtn);
+      }
 
       const vizMapInstance = this;
 
@@ -1105,7 +1117,7 @@ require([
               }
 
               var compareType = document.getElementById('selectCompareType');
-              this.modeCompare = compareType ? compareType.selectedOption.value : null;
+              this.modeCompare = compareType ? compareType.value : null; // calcite-segmented-control
 
               // calculate final display value based on selection (absolute or change)
               try {
@@ -1359,7 +1371,7 @@ require([
                 }
                 
                 var compareType = document.getElementById('selectCompareType');
-                this.modeCompare = compareType ? compareType.selectedOption.value : null;
+                this.modeCompare = compareType ? compareType.value : null; // calcite-segmented-control
 
                 // calculate final display value based on selection (absolute or change)
                 try {
@@ -1436,10 +1448,10 @@ require([
                   if (vizMapInstance.layerDisplayComp) {
                     vizMapInstance.layerDisplayComp.visible = false;
                   }
-                  // teardownCompareExtras() just hid both labels outright - show Main's own
-                  // one back again, same as initializeLayer() does for this same overlay case.
+                  // teardownCompareExtras() just hid both labels outright - show the label back
+                  // again, same as initializeLayer() does for this same overlay case.
                   if (typeof setMapCompareScenarioLabels === 'function') {
-                    setMapCompareScenarioLabels('overlay', vizMapInstance.getMainScenarioDisplayName());
+                    setMapCompareScenarioLabels('overlay', vizMapInstance.getMainScenarioDisplayName(), vizMapInstance.mode === 'compare' ? vizMapInstance.getCompScenarioDisplayName() : null);
                   }
                 }
               } else {
