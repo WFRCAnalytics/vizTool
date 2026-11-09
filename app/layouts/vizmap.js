@@ -94,8 +94,13 @@ require([
       // Tracks which aggregator's geometry this.geojsonLayer currently holds, so
       // updateDisplay() can tell if it's gone stale relative to sidebar.aggregatorSelect -
       // see the note in updateDisplay() for why that can happen without this view's own
-      // afterUpdateAggregator() ever having run.
-      this._loadedAggregatorAgCode = data.aggregatorSelected;
+      // afterUpdateAggregator() ever having run. this.baseGeoJsonId (not data.aggregatorSelected)
+      // - the dummy layer built just above is always the BASE geometry regardless of what the
+      // config's own default aggregator is, so that's what this needs to say "currently loaded"
+      // for updateDisplay()'s very first mismatch check to actually catch a config whose default
+      // aggregator differs from its base geometry (previously masked - every existing entity's
+      // own default aggregator happened to equal its base, so this was never wrong before now).
+      this._loadedAggregatorAgCode = this.baseGeoJsonId;
     }
 
     // The GeoJSONLayer swap that afterUpdateAggregator() does, factored out so
@@ -414,6 +419,23 @@ require([
       return this.sidebar.getSelectedAggregator();
     }
 
+    // this.geometryType is the entity's own native shape (e.g. "point" for Transit Stops) and
+    // never changes - but every real aggregator target in this app (city/plan area/district/
+    // etc.) is itself a polygon, regardless of what's being aggregated. An entity whose base
+    // and aggregate levels are the same shape (every polygon-based entity so far) sees no
+    // difference here; one whose base is a different shape (points aggregated up to zone
+    // polygons) needs the layer/dummy-geometry/labeling below built for whichever shape is
+    // actually on screen right now, not always the native one. getDummyGeometry()/
+    // getLabelingInfoConfig()/getPlaceholderRenderer() all key off this instead of
+    // this.geometryType directly for that reason.
+    getEffectiveGeometryType() {
+      const _selectedAggregator = this.getSelectedAggregator();
+      if (!_selectedAggregator || _selectedAggregator.agCode === this.baseGeoJsonId) {
+        return this.geometryType;
+      }
+      return 'polygon';
+    }
+
     getFilterGroup() {
       return this.getFilterGroupForAttributeCode(this.aCode);
     }
@@ -500,9 +522,44 @@ require([
     
     getRenderer() {
       let attributeRenderer = this.getAttributeRendererPath();
-      return attributeRenderer ? attributeRenderer.renderer : null;
+      let renderer = attributeRenderer ? attributeRenderer.renderer : null;
+      // A point/line entity's own renderer (attributes.json) is built with marker/line symbols -
+      // once aggregated to zone polygons (getEffectiveGeometryType()), those wouldn't render
+      // meaningfully on polygon features. Converts generically (same colors/breakpoints/legend,
+      // just simple-fill symbols) instead of requiring a whole second, polygon-specific renderer
+      // definition per attribute.
+      if (renderer && this.geometryType !== 'polygon' && this.getEffectiveGeometryType() === 'polygon') {
+        renderer = this.toPolygonFillRenderer(renderer);
+      }
+      return renderer;
     }
-    
+
+    // Rebuilds a ClassBreaksRenderer's own symbols as simple-fill polygons, keeping every other
+    // piece (field, each break's own min/max/label, defaultLabel, legendOptions) identical. Starts
+    // from renderer.clone() (not a fresh ClassBreaksRenderer - avoids importing that class here
+    // just for this) and only replaces classBreakInfos/defaultSymbol, since those are the only
+    // pieces whose symbol objects need converting - and builds NEW symbol objects rather than
+    // mutating the originals, since those come from shared style templates
+    // (attribute-templates.json) other attributes/renders also reference.
+    toPolygonFillRenderer(renderer) {
+      const toFillSymbol = (symbol) => ({
+        type: "simple-fill",
+        color: symbol.color,
+        outline: { color: [255, 255, 255], width: 0.3 }
+      });
+      const polygonRenderer = renderer.clone();
+      polygonRenderer.classBreakInfos = renderer.classBreakInfos.map((cb) => ({
+        minValue: cb.minValue,
+        maxValue: cb.maxValue,
+        label: cb.label,
+        symbol: toFillSymbol(cb.symbol)
+      }));
+      if (renderer.defaultSymbol) {
+        polygonRenderer.defaultSymbol = toFillSymbol(renderer.defaultSymbol);
+      }
+      return polygonRenderer;
+    }
+
     getLayerTitle() {
       let attributeRenderer = this.getAttributeRendererPath();
       return attributeRenderer ? attributeRenderer.title : null;
@@ -566,7 +623,8 @@ require([
     // applyEdits() (see updateDisplay()). Factored out of initializeLayer() so the comp
     // layer (side-by-side swipe compare) can be seeded with the exact same shape.
     getDummyGeometry() {
-      if (this.geometryType === 'polyline') {
+      const _effectiveGeometryType = this.getEffectiveGeometryType();
+      if (_effectiveGeometryType === 'polyline') {
         return {
           type: "polyline",
           paths: [
@@ -575,7 +633,7 @@ require([
           ],
           spatialReference: { wkid: 4326 }
         };
-      } else if (this.geometryType === 'polygon') {
+      } else if (_effectiveGeometryType === 'polygon') {
         return {
           type: "polygon",
           rings: [
@@ -586,7 +644,7 @@ require([
           ],
           spatialReference: { wkid: 4326 }
         };
-      } else if (this.geometryType === 'point') {
+      } else if (_effectiveGeometryType === 'point') {
         return {
           type: "point",
           longitude: -111.8910,
@@ -630,7 +688,7 @@ require([
     // layers share one MapView there and Esri's Swipe widget suppresses most of the trailing
     // layer's labels regardless of this config - see the Swipe widget comment further down.
     getLabelingInfoConfig() {
-      const _isLine = this.geometryType === 'polyline';
+      const _isLine = this.getEffectiveGeometryType() === 'polyline';
       return [{
         symbol: {
           type: "text",
@@ -651,12 +709,13 @@ require([
     // Placeholder "no data yet" renderer a freshly (re)built layer starts with, before
     // setRendererAndLegend()/setCompRendererAndShow() assign the real attribute renderer.
     getPlaceholderRenderer() {
-      if (this.geometryType === 'polyline') {
+      const _effectiveGeometryType = this.getEffectiveGeometryType();
+      if (_effectiveGeometryType === 'polyline') {
         return {
           type: "simple",
           symbol: { type: 'simple-line', color: [255, 255, 255], width: 0.2 }
         };
-      } else if (this.geometryType === 'polygon') {
+      } else if (_effectiveGeometryType === 'polygon') {
         return {
           type: "simple",
           symbol: {
@@ -665,7 +724,7 @@ require([
             outline: { color: [255, 255, 255], width: 0.2 }
           }
         };
-      } else if (this.geometryType === 'point') {
+      } else if (_effectiveGeometryType === 'point') {
         return {
           type: "simple",
           symbol: {
@@ -940,6 +999,19 @@ require([
         if (this.legend) {
           this.legend.destroy();
         }
+        // Belt-and-suspenders beyond this.legend.destroy() above: switching between two
+        // different model entities (not just between aggregators within this same one) can
+        // reach this point for the NEW entity's VizMap instance before the OLD one's own
+        // hideLayers() has actually run against IT, since #mapSidebarRightLegend is one shared,
+        // permanent DOM node every entity's instance points its own this.legend at - leaving a
+        // previous entity's own legendInner (and its now-stale "— LEGEND —" caption/colors)
+        // stacked in here alongside the new one instead of replaced by it. Clearing every
+        // sibling but the permanent header row (setupLegendPopout(), app.js) guarantees exactly
+        // one legendInner ever exists here, regardless of which instance's this.legend is stale.
+        const legendContainer = document.getElementById('mapSidebarRightLegend');
+        Array.from(legendContainer.children).forEach((child) => {
+          if (!child.classList.contains('map-legend-header-row')) child.remove();
+        });
 
         if (this.dCode!="Nothing") {
           if (this.layerDisplay.renderer.visualVariables) {
@@ -952,7 +1024,7 @@ require([
         }
 
         const legendInner = document.createElement('div');
-        document.getElementById('mapSidebarRightLegend').appendChild(legendInner);
+        legendContainer.appendChild(legendInner);
 
         // No title here anymore - setMapCompareScenarioLabels() (app.js) puts the same scenario
         // name(s) this used to build in a corner label over the map itself, in every mode (not

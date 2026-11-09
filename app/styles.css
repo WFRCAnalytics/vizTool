@@ -786,9 +786,28 @@ td {
   gap: 10px;
 }
 
+/* Same small grey section-label convention as NORMALIZATION/AGGREGATION/LEGEND (styles.css) -
+   no interactive control needed alongside this one (unlike LEGEND's own pop-out button), so a
+   plain ::before label is enough. #mapSidebarRightLabelToggle is itself the flex row the
+   Labels/Map Title buttons sit in though (unlike those others' plain block containers), where a
+   generated ::before would just become a third flex item alongside them instead of a heading
+   above them - flex-basis:100% forces it onto its own full-width line, wrapping the two buttons
+   down to the row below instead. */
+#mapSidebarRightLabelToggle::before {
+  content: "\2014 MAP ELEMENT VISIBILITY \2014";
+  flex-basis: 100%;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #999999;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
 /* Labels/Map Title toggles (app.js) side by side, splitting the row evenly. */
 #mapSidebarRightLabelToggle {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 #mapSidebarRightLabelToggle calcite-action {

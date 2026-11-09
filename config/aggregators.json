@@ -4,6 +4,11 @@
         "agGeoJsonKey"    : "taz",
         "agCodeLabelField": "TAZID"
     },
+    "STOPID": {
+        "agTitleText"     : "Transit Stop",
+        "agGeoJsonKey"    : "stop",
+        "agCodeLabelField": "STOPID"
+    },
     "CITY_NAME": {
         "agTitleText"      : "City Area",
         "agGeoJsonKey"     : "city",
