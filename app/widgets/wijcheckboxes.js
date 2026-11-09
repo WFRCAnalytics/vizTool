@@ -42,7 +42,7 @@ class WijCheckboxes {
 
     // set properties and styles
     _filterTitle.className = 'filterTitle';
-    _filterName.className = 'filterName';
+    _filterName.className = 'filterName filter-toggle-title';
     _filterName.textContent = 'Name of the Filter'; // Set the name
 
     // set name
@@ -65,30 +65,33 @@ class WijCheckboxes {
       _filterToggleRow.appendChild(_filterName);
       _filterTitle.appendChild(_filterToggleRow);
 
+      // Lives in the toggle row itself (not as its own row below) so collapsed state reads as
+      // one line - "Name: value" - instead of the name and its value on two separate lines.
       _filterSummary = document.createElement('div');
       _filterSummary.className = 'filter-selected-summary';
       _filterSummary.style.display = 'none';
+      _filterToggleRow.appendChild(_filterSummary);
+
+      // Stashed so collapse()/expand() (below) can drive the exact same state the click
+      // handler does, from outside - filter.js calls collapse() once, after this widget has
+      // fully rendered, to make a filter start collapsed instead of expanded.
+      this._checkboxContainer = checkboxContainer;
+      this._filterSummary = _filterSummary;
+      this._filterChevron = _filterChevron;
+      this._mainContainer = mainContainer;
 
       _filterToggleRow.addEventListener('click', () => {
-        const collapsed = checkboxContainer.style.display === 'none';
-        // Looked up at click time (not captured earlier) since filter.js inserts this - a
-        // subAg picker like fRouteName's "List Route Names for" mode dropdown - as a sibling
-        // of checkboxContainer only after this widget has already rendered.
-        const _subAgSlot = mainContainer.querySelector(':scope > .filter-subag-slot');
-        if (collapsed) {
-          checkboxContainer.style.display = 'block';
-          if (_checkAllButton) _checkAllButton.style.display = '';
-          if (_subAgSlot) _subAgSlot.style.display = '';
-          _filterSummary.style.display = 'none';
-          _filterChevron.icon = 'chevron-down';
-        } else {
-          _filterSummary.textContent = _thisInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
-          checkboxContainer.style.display = 'none';
-          if (_checkAllButton) _checkAllButton.style.display = 'none';
-          if (_subAgSlot) _subAgSlot.style.display = 'none';
-          _filterSummary.style.display = 'block';
-          _filterChevron.icon = 'chevron-right';
-        }
+        this.setCollapsedState(checkboxContainer.style.display !== 'none');
+      });
+
+      // Collapsed, there's nothing else clickable in here besides the toggle row/summary text -
+      // a click anywhere in the card expands it, a bigger and easier target than just the
+      // chevron. Collapsing stays chevron-only (this never fires while already expanded, since
+      // it only acts when currently collapsed) so clicking an option/button doesn't collapse it
+      // back up by accident.
+      mainContainer.addEventListener('click', (e) => {
+        if (e.target.closest('.filter-toggle-row')) return; // that row handles its own toggle
+        if (checkboxContainer.style.display === 'none') this.expand();
       });
     } else {
       _filterTitle.appendChild(_filterName); // Add the name to the title container
@@ -97,7 +100,6 @@ class WijCheckboxes {
     _filterLabel.appendChild(_filterTitle);
 
     mainContainer.appendChild(_filterLabel); // Append the _filterLabel to the main container
-    if (_filterSummary) mainContainer.appendChild(_filterSummary);
 
     this.options.forEach((option, index) => {
       // create checkboxes
@@ -189,6 +191,7 @@ class WijCheckboxes {
       });
 
       _checkAllButton = buttonCheckToggle;
+      this._checkAllButton = buttonCheckToggle;
       mainContainer.appendChild(buttonCheckToggle);
     }
 
@@ -199,6 +202,32 @@ class WijCheckboxes {
 
     return mainContainer;
   }
+
+  // Shared by the toggle-row click handler and collapse()/expand() (filter.js calls collapse()
+  // once, right after this widget's full render - including any subAg slot inserted afterward
+  // as its sibling - to make a filter start collapsed instead of its old hardcoded-expanded
+  // default). No-op if this widget wasn't built collapsible in the first place.
+  setCollapsedState(collapsed) {
+    if (!this.collapsible || !this._checkboxContainer) return;
+    const _subAgSlot = this._mainContainer.querySelector(':scope > .filter-subag-slot');
+    if (collapsed) {
+      this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
+      this._checkboxContainer.style.display = 'none';
+      if (this._checkAllButton) this._checkAllButton.style.display = 'none';
+      if (_subAgSlot) _subAgSlot.style.display = 'none';
+      this._filterSummary.style.display = 'block';
+      this._filterChevron.icon = 'chevron-right';
+    } else {
+      this._checkboxContainer.style.display = 'block';
+      if (this._checkAllButton) this._checkAllButton.style.display = '';
+      if (_subAgSlot) _subAgSlot.style.display = '';
+      this._filterSummary.style.display = 'none';
+      this._filterChevron.icon = 'chevron-down';
+    }
+  }
+
+  collapse() { this.setCollapsedState(true); }
+  expand() { this.setCollapsedState(false); }
 
   applySubAg(_subag) {
     let atleastonechecked = false; // Declare outside the loop to maintain its value across iterations
@@ -245,8 +274,13 @@ class WijCheckboxes {
     if (this.options.length>=this.numOptionsForCheckAllButton) {
       var numChecked = 0;
       this.options.forEach((option, index) => {
+        // Falls back to this.selected (always current, even before this widget's checkboxes
+        // are attached to the live document - e.g. collapse(), called from filter.js right
+        // after render() while everything's still in-memory) instead of requiring
+        // document.getElementById to find a live element.
         var checkbox = document.getElementById(this.id + '-chk-' + option.value);
-        if (checkbox.checked) { // Simplified condition
+        var isChecked = checkbox ? checkbox.checked : this.selected.includes(option.value);
+        if (isChecked) {
           numChecked++;
         }
       });

@@ -29,7 +29,7 @@ class WijRadio {
     // Inside the render() method, modify the title setup
 
     let titleContainer = document.createElement("span"); // Or "div" with inline styling
-    titleContainer.classList.add("title");
+    titleContainer.classList.add("title", "filter-toggle-title");
     titleContainer.innerHTML = `<b>${this.title}</b>`; // Keep your title as is
     titleContainer.style.display = "inline-block"; // Ensures inline display
 
@@ -65,23 +65,29 @@ class WijRadio {
       toggleRow.appendChild(titleContainer);
       container.appendChild(toggleRow);
 
+      // Lives in the toggle row itself (not as its own row below) so collapsed state reads as
+      // one line - "Name: value" - instead of the name and its value on two separate lines.
       filterSummary = document.createElement('div');
       filterSummary.className = 'filter-selected-summary';
       filterSummary.style.display = 'none';
-      container.appendChild(filterSummary);
+      toggleRow.appendChild(filterSummary);
+
+      // Stashed so collapse()/expand() (below) can drive the exact same state the click
+      // handler does, from outside - filter.js calls collapse() once, after this widget has
+      // rendered, to make a filter start collapsed instead of its old hardcoded-expanded default.
+      this._radioBody = radioBody;
+      this._filterSummary = filterSummary;
+      this._chevron = chevron;
 
       toggleRow.addEventListener('click', () => {
-        const collapsed = radioBody.style.display === 'none';
-        if (collapsed) {
-          radioBody.style.display = 'block';
-          filterSummary.style.display = 'none';
-          chevron.icon = 'chevron-down';
-        } else {
-          filterSummary.textContent = wijRadioInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
-          radioBody.style.display = 'none';
-          filterSummary.style.display = 'block';
-          chevron.icon = 'chevron-right';
-        }
+        this.setCollapsedState(radioBody.style.display !== 'none');
+      });
+
+      // See WijCheckboxes' identical listener for why - a click anywhere in a collapsed card
+      // expands it; collapsing stays chevron-only.
+      container.addEventListener('click', (e) => {
+        if (e.target.closest('.filter-toggle-row')) return;
+        if (radioBody.style.display === 'none') this.expand();
       });
     } else if (this.showTitle) {
       // Finally, append the titleContainer to the container, not the title directly
@@ -139,10 +145,28 @@ class WijRadio {
   getSelectedOptionsAsList() {
     return [this.selected];
   }
-  
+
   getSelectedOptionsAsListOfLabels() {
     return this.options.filter(option => this.getSelectedOptionsAsList().includes(option.value)).map(option => option.label).join(', ');
   }
+
+  // See WijCheckboxes' identical pair for why this exists (filter.js calls collapse()).
+  setCollapsedState(collapsed) {
+    if (!this.collapsible || !this._radioBody) return;
+    if (collapsed) {
+      this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
+      this._radioBody.style.display = 'none';
+      this._filterSummary.style.display = 'block';
+      this._chevron.icon = 'chevron-right';
+    } else {
+      this._radioBody.style.display = 'block';
+      this._filterSummary.style.display = 'none';
+      this._chevron.icon = 'chevron-down';
+    }
+  }
+
+  collapse() { this.setCollapsedState(true); }
+  expand() { this.setCollapsedState(false); }
 
   hide() {
     document.getElementById(this.containerId).style.display = 'none';

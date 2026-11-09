@@ -1,6 +1,6 @@
 {
   "title": "vizTool for wf-tdm v10.0-beta.2",
-  "subtitle": "v26.08.28",
+  "subtitle": "v26.11.09",
   "splash": {
     "title": "Welcome to the vizTool!",
     "textHtml": "<p>The vizTool is a visualization companion for the Wasatch Front Travel Demand Model (WF-TDM).</p><p>User guides, a data dictionary, and additional resources are available on our GitHub <a href=\"https://github.com/WFRCAnalytics/vizTool/wiki\" target=\"_blank\">vizTool Wiki</a>. If you have any general feedback, bug reports, or suggestions, please submit them via the <a href=\"https://github.com/WFRCAnalytics/vizTool/issues\" target=\"_blank\">GitHub issues page</a>.</p><p>For assistance or troubleshooting, please reach out to <a href=\"mailto:bill.hereth@wfrc.utah.gov\">Bill Hereth</a>.</p><button id=\"okButton\">Continue</button>",

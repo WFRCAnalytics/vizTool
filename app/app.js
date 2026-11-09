@@ -234,12 +234,95 @@ function setMapCompareScenarioLabels(mode, mainText, compText) {
   }
 }
 
-// Gives one sidebar's "Attributes"/"Filters" columns (.colAttributes/.colFilters) their own
-// independent collapse control - a small sticky header (title + chevron) at the top of each,
-// replacing the old single whole-sidebar collapse button (openbtn/openbtntrend/openbtnmatrix).
-// Collapsing shrinks just that column to a slim ~30px rail (not 0 width), so its own header -
-// and the chevron to reopen it - stays in place instead of needing to float somewhere else.
-// Only called for sidebars that actually pair the two columns this way (vizMap/vizTrends/
+// "Display"/"Filters" being collapsed is one shared preference across vizMap/vizTrends/
+// vizMatrix's own separate copies of those columns, not independent per-view state - same
+// reasoning as setupSyncedCompareControls()'s "Compare to:"/Compare Type. Keyed by the
+// syncGroup name setupColumnCollapse() is called with (e.g. "display", "filters"); each
+// entry is that column's own applyCollapsedState() (below), called directly (not via a
+// simulated click) so syncing one never re-triggers another's own click handler/chart-resize
+// nudge/etc.
+const panelSyncGroups = {};
+
+// Gives one column its own independent collapse control - a small sticky header (title +
+// chevron) at the top, replacing the old single whole-sidebar collapse button (openbtn/
+// openbtntrend/openbtnmatrix). Collapsing shrinks just that column to a slim ~30px rail (not 0
+// width), so its own header - and the chevron to reopen it - stays in place instead of needing
+// to float somewhere else. Shared by setupPanelColumnCollapse() (.colAttributes/.colFilters,
+// found by querying a sidebar) and viztrends' standalone #trendSelector column. syncGroup (e.g.
+// "display"/"filters") mirrors this column's collapsed state onto every other column set up
+// with the same group name - omit it (as #trendSelector's own caller does) for a column with
+// no cross-view counterpart to sync with.
+function setupColumnCollapse(el, title, syncGroup) {
+  if (!el || el.querySelector(":scope > .panel-col-header")) return; // already set up
+
+  // Move the column's own padding/gap (if any - .colAttributes has some, for its bordered
+  // .rowGeography boxes; .colFilters/#trendSelector have none or their own) onto a new wrapper
+  // around its existing content, and zero it on the column itself. A sticky header needs to
+  // sit flush at the column's own top/left/right edges, and a negative margin meant to cancel
+  // that padding doesn't reliably escape it on a position:sticky element in every browser -
+  // tested and confirmed in Chrome here.
+  const elStyle = getComputedStyle(el);
+  const body = document.createElement("div");
+  body.className = "panel-col-body";
+  body.style.padding = elStyle.padding;
+  body.style.display = elStyle.display === "flex" ? "flex" : "block";
+  body.style.flexDirection = elStyle.flexDirection;
+  body.style.gap = elStyle.gap;
+  body.style.boxSizing = "border-box";
+  while (el.firstChild) body.appendChild(el.firstChild);
+  el.appendChild(body);
+  el.style.padding = "0";
+  el.style.gap = "0";
+
+  const header = document.createElement("div");
+  header.className = "panel-col-header";
+
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "panel-col-title";
+  titleSpan.textContent = title;
+  header.appendChild(titleSpan);
+
+  const icon = document.createElement("calcite-icon");
+  icon.icon = "chevron-left";
+  icon.scale = "s";
+  header.appendChild(icon);
+
+  el.insertBefore(header, body);
+
+  // Applies a given collapsed/expanded state to just this one column (no further propagation) -
+  // the click handler below calls this for itself, then (if syncGroup is set) calls every other
+  // column sharing that group's own copy of this same function to mirror it onto them too.
+  const applyCollapsedState = (collapsed) => {
+    el.classList.toggle("panel-collapsed", collapsed);
+    icon.icon = collapsed ? "chevron-right" : "chevron-left";
+  };
+
+  if (syncGroup) {
+    if (!panelSyncGroups[syncGroup]) panelSyncGroups[syncGroup] = [];
+    panelSyncGroups[syncGroup].push(applyCollapsedState);
+  }
+
+  header.addEventListener("click", () => {
+    const collapsed = !el.classList.contains("panel-collapsed");
+    applyCollapsedState(collapsed);
+    if (syncGroup) {
+      panelSyncGroups[syncGroup].forEach((apply) => {
+        if (apply !== applyCollapsedState) apply(collapsed);
+      });
+    }
+
+    // #trendMain's Chart.js canvas (viztrends.js) doesn't pick up its own flex-driven resize
+    // on its own - nudge it once the column's width transition has actually finished, same
+    // as the old openbtntrend handler did.
+    setTimeout(() => {
+      if (activeLayout && activeLayout.currentChart) {
+        activeLayout.currentChart.resize();
+      }
+    }, 250);
+  });
+}
+
+// Only called for sidebars that pair "Attributes"/"Filters" this way (vizMap/vizTrends/
 // vizMatrix's left sidebar) - vizMatrix's/vizDashboard's separate scenario sidebars reuse the
 // same .colAttributes class for an unrelated single-column panel and keep their own existing
 // whole-sidebar toggle (openbtnmatrixscenario/openbtndashboard) untouched.
@@ -247,60 +330,78 @@ function setupPanelColumnCollapse(sidebarId) {
   const sidebar = document.getElementById(sidebarId);
   if (!sidebar) return;
 
-  [
-    { el: sidebar.querySelector(":scope > .colAttributes"), title: "Attributes" },
-    { el: sidebar.querySelector(":scope > .colFilters"), title: "Filters" },
-  ].forEach(({ el, title }) => {
-    if (!el || el.querySelector(":scope > .panel-col-header")) return; // already set up
+  // "Display" (not "Attributes") - this panel also holds Normalization/Aggregation, each with
+  // their own small grey subheader label, so naming the panel itself "Attributes" too read as
+  // if it were just another one of those rather than the title for the whole column.
+  // syncGroup names ("display"/"filters") mirror collapsed/expanded state across this same
+  // call's three callers (mapSidebar/trendSidebar/matrixSidebar, below) - one shared preference,
+  // not independent per-view state.
+  setupColumnCollapse(sidebar.querySelector(":scope > .colAttributes"), "Display", "display");
+  setupColumnCollapse(sidebar.querySelector(":scope > .colFilters"), "Filters", "filters");
+}
 
-    // Move the column's own padding/gap (if any - .colAttributes has some, for its bordered
-    // .rowGeography boxes; .colFilters has none) onto a new wrapper around its existing
-    // content, and zero it on the column itself. A sticky header needs to sit flush at the
-    // column's own top/left/right edges, and a negative margin meant to cancel that padding
-    // doesn't reliably escape it on a position:sticky element in every browser - tested and
-    // confirmed in Chrome here.
-    const elStyle = getComputedStyle(el);
-    const body = document.createElement("div");
-    body.className = "panel-col-body";
-    body.style.padding = elStyle.padding;
-    body.style.display = elStyle.display === "flex" ? "flex" : "block";
-    body.style.flexDirection = elStyle.flexDirection;
-    body.style.gap = elStyle.gap;
-    body.style.boxSizing = "border-box";
-    while (el.firstChild) body.appendChild(el.firstChild);
-    el.appendChild(body);
-    el.style.padding = "0";
-    el.style.gap = "0";
+// Collapses the whole header (#menu - both the primary nav bar and its nested secondary
+// submenu bar) with one control, instead of needing a separate toggle for each. #menu itself
+// goes to display:none and the "header-collapsed" class on <body> reclaims the viewport height
+// every sidebar/content column normally subtracts for it (styles.css). #headerCollapseToggle -
+// a small floating tab pinned to the top center, always visible regardless of this state - is
+// the only way back, so collapsing it is never a dead end.
+function setupHeaderCollapse() {
+  if (document.getElementById("headerCollapseToggle")) return; // already set up
 
-    const header = document.createElement("div");
-    header.className = "panel-col-header";
+  const toggle = document.createElement("button");
+  toggle.id = "headerCollapseToggle";
+  toggle.type = "button";
+  toggle.title = "Collapse header";
+  toggle.innerHTML = '<calcite-icon icon="chevron-up" scale="s"></calcite-icon>';
+  // This runs well before #menu itself is actually revealed (checkAndHideProgressContainer()'s
+  // menu.style.display = "block", once the load screen's progress bars hit 100%) - stay hidden
+  // until then too, so there's nothing to "collapse" showing up over a still-loading page.
+  toggle.style.display = "none";
 
-    const titleSpan = document.createElement("span");
-    titleSpan.className = "panel-col-title";
-    titleSpan.textContent = title;
-    header.appendChild(titleSpan);
+  toggle.addEventListener("click", () => {
+    const collapsed = document.body.classList.toggle("header-collapsed");
+    // #menu starts as inline style="display:none" (index.html) until data's loaded, then gets
+    // revealed via menu.style.display = "block" (see that line in app.js) - an inline style
+    // always outranks a stylesheet rule regardless of selector specificity, so
+    // body.header-collapsed #menu's own {display:none} (styles.css) can never actually hide it;
+    // this has to set the same inline property directly instead.
+    document.getElementById("menu").style.display = collapsed ? "none" : "block";
+    toggle.title = collapsed ? "Expand header" : "Collapse header";
+    toggle.querySelector("calcite-icon").icon = collapsed ? "chevron-down" : "chevron-up";
 
-    const icon = document.createElement("calcite-icon");
-    icon.icon = "chevron-left";
-    icon.scale = "s";
-    header.appendChild(icon);
-
-    el.insertBefore(header, body);
-
-    header.addEventListener("click", () => {
-      const collapsed = el.classList.toggle("panel-collapsed");
-      icon.icon = collapsed ? "chevron-right" : "chevron-left";
-
-      // #trendMain's Chart.js canvas (viztrends.js) doesn't pick up its own flex-driven resize
-      // on its own - nudge it once the column's width transition has actually finished, same
-      // as the old openbtntrend handler did.
-      setTimeout(() => {
-        if (activeLayout && activeLayout.currentChart) {
-          activeLayout.currentChart.resize();
-        }
-      }, 250);
-    });
+    // vizTrends' Chart.js canvas doesn't reliably pick up its own responsive:true resize
+    // observer on its own here - same reasoning as setupColumnCollapse()'s own post-toggle
+    // nudge. Esri's MapView, unlike Chart.js, already resizes itself off a native
+    // ResizeObserver on its container, so it needs no equivalent nudge here.
+    setTimeout(() => {
+      if (activeLayout && activeLayout.currentChart) {
+        activeLayout.currentChart.resize();
+      }
+    }, 250);
   });
+
+  document.body.appendChild(toggle);
+
+  // "Where am I" strip - only shown while the header (and with it, the primary/secondary nav's
+  // own "which tab is active" styling) is hidden, so collapsing it doesn't also lose all sense
+  // of current location. updateHeaderLocationBar() (below) keeps its text current; called here
+  // too so it already has today's location the first time someone collapses the header.
+  const locationBar = document.createElement("div");
+  locationBar.id = "headerLocationBar";
+  document.body.appendChild(locationBar);
+  updateHeaderLocationBar();
+}
+
+// Keeps #headerCollapseToggle's companion "where am I" strip current - called once up front
+// (setupHeaderCollapse()) and again on every navigation (model-entity.js's click handler), so
+// it's already correct whenever the header next gets collapsed, not just from then on.
+function updateHeaderLocationBar() {
+  const bar = document.getElementById("headerLocationBar");
+  if (!bar) return;
+  const primaryText = activeModelEntity?.menuItem?.menuText;
+  const secondaryText = activeModelEntity?.submenuText;
+  bar.textContent = [primaryText, secondaryText].filter(Boolean).join(" › "); // "Trips › Trip Ends by Mode"
 }
 
 require([
@@ -1961,6 +2062,12 @@ require([
     setupPanelColumnCollapse("trendSidebar");
     setupPanelColumnCollapse("matrixSidebar");
 
+    // #trendSelector (viztrends.html) is its own standalone column, not paired inside a
+    // sidebar like Attributes/Filters - same collapse treatment, called directly.
+    setupColumnCollapse(document.getElementById("trendSelector"), "Trend Selector");
+
+    setupHeaderCollapse();
+
     init();
   }
 
@@ -2035,6 +2142,10 @@ function checkAndHideProgressContainer() {
       setTimeout(() => {
         progressContainer.style.display = "none";
         document.getElementById("menu").style.display = "block";
+        // See setupHeaderCollapse()'s matching comment - kept hidden until #menu itself is,
+        // so it doesn't show up over the still-loading page.
+        const headerCollapseToggle = document.getElementById("headerCollapseToggle");
+        if (headerCollapseToggle) headerCollapseToggle.style.display = "";
 
         // If the URL names a menu item/model entity (someone refreshed or opened a shared
         // link), restoreAppStateFromUrl() (app/url-state.js) puts the whole app - scenario,

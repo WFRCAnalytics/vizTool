@@ -100,6 +100,11 @@ class ModelEntity {
       activeModelEntity= modelEntityInstance;
       modelEntityInstance.menuItem.lastSelectedModelEntityText = modelEntityInstance.submenuText;
 
+      // Keeps the small "where am I" bar (app.js's setupHeaderCollapse()) in sync - only
+      // visible while the header itself is collapsed, but updated on every navigation
+      // regardless, so it's already correct the moment someone does collapse it.
+      if (typeof updateHeaderLocationBar === 'function') updateHeaderLocationBar();
+
       modelEntityInstance.menuItem.hideAllLayoutLayers()
 
       activeLayout = modelEntityInstance.vizLayout;
@@ -206,6 +211,13 @@ class ModelEntity {
     // set app global model entity to keep track of what is actively being used
     activeModelEntity= this;
     this.menuItem.lastSelectedModelEntityText = this.submenuText;
+
+    // Keeps the small "where am I" bar (app.js's setupHeaderCollapse()) in sync - see the
+    // matching call in createModelEntityElement()'s click handler above. This method is the
+    // OTHER path that sets activeModelEntity (the initial default view on page load, and
+    // loadMenuItemAndModelEntity()'s URL-restore path) - without this too, the bar stayed blank
+    // until the user happened to click a secondary tab themselves.
+    if (typeof updateHeaderLocationBar === 'function') updateHeaderLocationBar();
 
     this.menuItem.hideAllLayoutLayers()
 

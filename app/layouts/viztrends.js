@@ -719,7 +719,10 @@ class VizTrends {
       document.getElementById('trendHeader').innerHTML = '';
       document.getElementById('trendContent').innerHTML = '';
       document.getElementById('trendTable').innerHTML = '';
-      document.getElementById('copyTableBtn').parentElement.style.display = 'none';
+      // copyTableBtn itself (not .parentElement, which IS #trendSettings - the "Select Trend
+      // Groups" checkboxes live there too, needed to turn a group back on with nothing else
+      // selected; hiding the whole panel along with the button left no way to undo this).
+      document.getElementById('copyTableBtn').style.display = 'none';
       // #trendChartToggle is the "> Chart" collapse header - it lives outside #trendContent
       // (see the click-listener setup above) so wiping trendContent's innerHTML doesn't touch
       // it. Left alone it kept showing a clickable "Chart" row that expanded to nothing, the
@@ -727,15 +730,15 @@ class VizTrends {
       document.getElementById('trendChartToggle').style.display = 'none';
       // #trendSelector was already populated by updateAllChartData() (it builds/appends the
       // geography/trend-group pin radios before calling buildChart()) - with nothing to chart,
-      // its "— TREND SELECTOR —" label and any radio group titles have nothing left to pin, so
-      // hide the whole column instead of leaving orphaned labels with no controls under them.
+      // any radio group titles have nothing left to pin, so hide the whole column instead of
+      // leaving orphaned labels with no controls under them.
       // visibility (not display) - #trendSelector is a flex-row sibling of #trendMain/
       // #trendSettings, and display:none would pull it out of flow and shift them over, same
       // as the #trendMain collapse bug fixed earlier.
       document.getElementById('trendSelector').style.visibility = 'hidden';
       return;
     }
-    document.getElementById('copyTableBtn').parentElement.style.display = '';
+    document.getElementById('copyTableBtn').style.display = '';
     document.getElementById('trendChartToggle').style.display = '';
     document.getElementById('trendSelector').style.visibility = '';
 
@@ -866,7 +869,11 @@ class VizTrends {
 
     const chartContainer = document.createElement('div');
     chartContainer.id = 'chartContainer';
-    chartContainer.style="width: 95%;";
+    // height:100% - with maintainAspectRatio:false (see the Chart() calls below), Chart.js
+    // sizes the canvas to fill this container's actual box instead of deriving height from
+    // width, so this container needs a real height of its own to fill (#trendContent's own
+    // CSS caps that - see styles.css).
+    chartContainer.style = "width: 95%; height: 100%;";
     containerElement.appendChild(chartContainer);
   
     const canvas = document.createElement('canvas');
@@ -1048,6 +1055,13 @@ class VizTrends {
             // bumping border.width would.
             devicePixelRatio: Math.max(2, window.devicePixelRatio || 1),
             responsive: true,
+            // Chart.js's default maintainAspectRatio:true derives the canvas's HEIGHT from its
+            // width (a fixed 2:1 ratio) regardless of how much vertical room is actually
+            // available - collapsing the Attributes/Filters/Trend Selector panels widens
+            // #trendContent a lot, which then scaled the chart's height up right along with it,
+            // overflowing past the browser's own height. false makes it fill #trendContent's
+            // own (CSS-bounded - see styles.css) height instead, same as its width already does.
+            maintainAspectRatio: false,
             scales: {
               x: {
                 type: 'linear',
@@ -1187,6 +1201,11 @@ class VizTrends {
             // to what's visible, without changing the line's apparent CSS width the way
             // bumping border.width would.
             devicePixelRatio: Math.max(2, window.devicePixelRatio || 1),
+            // See the matching comment on the all-years chart above - without this, the
+            // canvas's height was derived from its width (a fixed 2:1 ratio) instead of
+            // #trendContent's own bounded CSS height, overflowing once a wider chart (from
+            // collapsing the Attributes/Filters/Trend Selector panels) scaled height up with it.
+            maintainAspectRatio: false,
             scales: {
               x: {
                 beginAtZero: true,
@@ -1241,7 +1260,10 @@ class VizTrends {
   async updateDisplay() {
     console.log('viztrends:updateDisplay:' + this.id);
     if (typeof syncUrlState === 'function') syncUrlState();
-    const trendSelectorDiv = document.getElementById("trendSelector");
+    // .panel-col-body (not #trendSelector itself) holds the actual content - #trendSelector's
+    // first child is now setupColumnCollapse()'s (app.js) sticky collapse header instead,
+    // which a blanket innerHTML="" on #trendSelector would wipe out along with everything else.
+    const trendSelectorDiv = document.querySelector("#trendSelector .panel-col-body") || document.getElementById("trendSelector");
     trendSelectorDiv.innerHTML = "";
 
     await this.updateAllChartData();
@@ -1264,13 +1286,15 @@ class VizTrends {
       document.getElementById('trendHeader').innerHTML = '';
       document.getElementById('trendContent').innerHTML = '';
       document.getElementById('trendTable').innerHTML = '';
-      document.getElementById('copyTableBtn').parentElement.style.display = 'none';
+      // copyTableBtn itself - see the matching comment in buildChart()'s no-data branch for why
+      // not .parentElement (#trendSettings, needed to stay visible/usable).
+      document.getElementById('copyTableBtn').style.display = 'none';
       // See the matching comment in buildChart()'s no-data branch - #trendChartToggle lives
       // outside #trendContent, so clearing it above doesn't hide this too.
       document.getElementById('trendChartToggle').style.display = 'none';
       return;
     } else {
-      document.getElementById('copyTableBtn').parentElement.style.display = '';
+      document.getElementById('copyTableBtn').style.display = '';
       document.getElementById('trendChartToggle').style.display = '';
     }
 
@@ -1567,8 +1591,8 @@ class VizTrends {
       }
     }
 
-    // #trendSelector shows a static "— TREND SELECTOR —" label above these (see styles.css),
-    // but each radio still needs its own title: when a filter is the chart series, BOTH
+    // #trendSelector's own "Trend Selector" title lives in its sticky collapse header now, but
+    // each radio still needs its own title: when a filter is the chart series, BOTH
     // wijRadioAgId and wijRadioTrendCode render together to pin one geography and one trend
     // group (so the filter's own values can be plotted unambiguously) - with no label at all
     // that read as a single flat list of options instead of two separate pinned choices.
@@ -1692,8 +1716,9 @@ class VizTrends {
       this.setCompareYearVisible(modeNeedsBaseline || (modeSelect.selected === 'regular' && isAllYears));
     }
 
-    // Step 3: Update DOM elements with the rendered filters
-    const trendSelectorDiv = document.getElementById("trendSelector");
+    // Step 3: Update DOM elements with the rendered filters - .panel-col-body (not
+    // #trendSelector itself), see updateDisplay()'s own comment above for why.
+    const trendSelectorDiv = document.querySelector("#trendSelector .panel-col-body") || document.getElementById("trendSelector");
     trendSelectorDiv.innerHTML = "";
 
     if (this.wijRadioAgId) {
@@ -1739,7 +1764,7 @@ class VizTrends {
   // as a standalone method since generateTableFromChart() needs it too and isn't nested inside
   // buildChart()'s closure.
   // Compare To Year lives in its own "— TABLE DISPLAY SETTINGS —" card (#trendTableOptions,
-  // see viztrends.html) below the "— CHART DISPLAY SETTINGS —" card - unlike the other
+  // see viztrends.html) below the "— DISPLAY SETTINGS —" card - unlike the other
   // Wij-widgets, hiding just compareYearSelect's own container would leave that whole card
   // visibly empty (its own child mount div, #trendCompareYear, is never itself removed from
   // the DOM), so its card wrapper needs its own show/hide alongside the widget's.

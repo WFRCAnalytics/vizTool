@@ -207,6 +207,11 @@ class Filter {
         }
       }
 
+      // Filters start collapsed by default (not "Select Trend Groups"/other direct, non-Filter
+      // uses of these same widgets, which don't call this) - called after the subAg slot above
+      // is in place, since collapse() hides it too and it doesn't exist any earlier than this.
+      if (this.filterWij.collapse) this.filterWij.collapse();
+
       filterContainer.appendChild(filterWijEl);
     }
 

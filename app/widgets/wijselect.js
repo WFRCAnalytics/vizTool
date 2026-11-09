@@ -22,6 +22,7 @@ class WijSelect {
 
     let title = document.createElement("calcite-label");  // Create a new div element
     title.innerHTML = "<b>" + this.title + "</b>";  // Set its innerHTML
+    title.classList.add("filter-toggle-title");
 
     const selectBody = document.createElement('div');
 
@@ -40,28 +41,31 @@ class WijSelect {
       toggleRow.appendChild(title);
       container.appendChild(toggleRow);
 
+      // Lives in the toggle row itself (not as its own row below) so collapsed state reads as
+      // one line - "Name: value" - instead of the name and its value on two separate lines.
       filterSummary = document.createElement('div');
       filterSummary.className = 'filter-selected-summary';
       filterSummary.style.display = 'none';
-      container.appendChild(filterSummary);
+      toggleRow.appendChild(filterSummary);
+
+      // Stashed so collapse()/expand() (below) can drive the exact same state the click
+      // handler does, from outside - filter.js calls collapse() once, after this widget has
+      // fully rendered (including any subAg slot inserted afterward as container's sibling),
+      // to make a filter start collapsed instead of its old hardcoded-expanded default.
+      this._selectBody = selectBody;
+      this._filterSummary = filterSummary;
+      this._chevron = chevron;
+      this._container = container;
 
       toggleRow.addEventListener('click', () => {
-        const collapsed = selectBody.style.display === 'none';
-        // See WijCheckboxes' identical lookup - a subAg picker (filter.js) can land as a
-        // sibling of selectBody here too, only after this widget has already rendered.
-        const subAgSlot = container.querySelector(':scope > .filter-subag-slot');
-        if (collapsed) {
-          selectBody.style.display = 'block';
-          if (subAgSlot) subAgSlot.style.display = '';
-          filterSummary.style.display = 'none';
-          chevron.icon = 'chevron-down';
-        } else {
-          filterSummary.textContent = wijSelectInstance.getSelectedOptionsAsListOfLabels() || 'None selected';
-          selectBody.style.display = 'none';
-          if (subAgSlot) subAgSlot.style.display = 'none';
-          filterSummary.style.display = 'block';
-          chevron.icon = 'chevron-right';
-        }
+        this.setCollapsedState(selectBody.style.display !== 'none');
+      });
+
+      // See WijCheckboxes' identical listener for why - a click anywhere in a collapsed card
+      // expands it; collapsing stays chevron-only.
+      container.addEventListener('click', (e) => {
+        if (e.target.closest('.filter-toggle-row')) return;
+        if (selectBody.style.display === 'none') this.expand();
       });
     } else if (this.showTitle) {
       container.appendChild(title);  // Append the new element to the container
@@ -138,6 +142,27 @@ class WijSelect {
   getSelectedOptionsAsListOfLabels() {
     return this.options.filter(option => option.value === this.selected).map(option => option.label).join(', ');
   }
+
+  // See WijCheckboxes' identical pair for why this exists (filter.js calls collapse()).
+  setCollapsedState(collapsed) {
+    if (!this.collapsible || !this._selectBody) return;
+    const subAgSlot = this._container.querySelector(':scope > .filter-subag-slot');
+    if (collapsed) {
+      this._filterSummary.textContent = this.getSelectedOptionsAsListOfLabels() || 'None selected';
+      this._selectBody.style.display = 'none';
+      if (subAgSlot) subAgSlot.style.display = 'none';
+      this._filterSummary.style.display = 'block';
+      this._chevron.icon = 'chevron-right';
+    } else {
+      this._selectBody.style.display = 'block';
+      if (subAgSlot) subAgSlot.style.display = '';
+      this._filterSummary.style.display = 'none';
+      this._chevron.icon = 'chevron-down';
+    }
+  }
+
+  collapse() { this.setCollapsedState(true); }
+  expand() { this.setCollapsedState(false); }
 
   hide() {
     document.getElementById(this.containerId).style.display = 'none';

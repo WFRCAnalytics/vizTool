@@ -546,11 +546,19 @@ td {
 }
 
 #trendSelector {
-  height: calc(100vh - 144px);
+  height: calc(100vh - 134px); /* matches #trendSettings'/#trendMain's own formula - was
+                                   -144px, 10px shorter than its siblings for no functional
+                                   reason, leaving a sliver of whitespace below its grey
+                                   background that they didn't have. */
   overflow-y: auto;
   padding: 15px;
   background-color: #eeeeee;
   width: 150px;
+  /* No width transition (.colAttributes/.colFilters' own intended one is actually inert too -
+     an older, more specific .sidebar .colAttributes/.sidebar .colFilters rule's
+     transition:opacity silently overrides it, so they already snap instantly) - animating just
+     this one while the collapsed/expanded text content swaps instantly made the header's text
+     visibly squish and rewrap mid-transition. Snapping it matches the other two. */
 }
 
 #trendScenarios {
@@ -579,9 +587,11 @@ td {
 
 /* Same small grey section-label convention as .rowAttributes::before / #trendSelector::before,
    just sitting inside #trendOptions' own bordered card instead of a plain box (the card's
-   border already groups Year/Chart Series/Chart Mode, so the label reads as its title). */
+   border already groups Year/Chart Series/Chart Mode, so the label reads as its title).
+   "Display Settings" (not "Chart Display Settings") - Compare To Year/the table beneath the
+   chart also follow these, not just the chart itself. */
 #trendOptions::before {
-  content: "\2014 CHART DISPLAY SETTINGS \2014";
+  content: "\2014 DISPLAY SETTINGS \2014";
   display: block;
   font-size: 10px;
   letter-spacing: 2px;
@@ -630,12 +640,23 @@ td {
                         whole-panel scrolling - see the notes at each. */
 }
 
-/* Title and the chart toggle/chart itself keep their natural height always - only the table
-   area below grows/shrinks and scrolls independently (see #trendTableScroll). */
+/* Title and the chart toggle keep their natural height always - only the table area below
+   grows/shrinks and scrolls independently (see #trendTableScroll). */
 #trendHeader,
-#trendChartToggle,
-#trendContent {
+#trendChartToggle {
   flex-shrink: 0;
+}
+
+/* The chart itself (viztrends.js buildChart() - Chart.js's maintainAspectRatio:false makes it
+   fill whatever height this container actually has, instead of deriving height from width via a
+   fixed aspect ratio) - bounded so it can never force the page taller than the browser's own
+   viewport, which collapsing the Attributes/Filters/Trend Selector panels used to do (a wider
+   chart scaled its old aspect-ratio-derived height up right along with it). Can still shrink
+   (not flex-shrink:0) on a short viewport instead of overflowing past #trendMain's own height. */
+#trendContent {
+  flex: 0 1 400px;
+  min-height: 0;
+  max-height: 60vh;
 }
 
 #trendChartToggle {
@@ -712,7 +733,9 @@ td {
                        left sidebar (vizMap/vizTrends/vizMatrix), since they all share this
                        class structure. */
     flex-direction: column;
-    transition: width 0.2s ease, min-width 0.2s ease;
+    /* No width transition - a more specific .sidebar .colAttributes rule further down
+       (transition: opacity) overrides this anyway, and collapsing/expanding is a snap, not an
+       animation, everywhere these panels appear (see #trendSelector's own comment). */
 }
 
 .colFilters {
@@ -720,7 +743,7 @@ td {
     height: calc(100vh - 114px);
     overflow-y: auto; /* Enable vertical scrollbar */
     background-color: #DDDDDD; /* Optional: Add a background color */
-    transition: width 0.2s ease, min-width 0.2s ease;
+    /* No width transition - see .colAttributes' identical note above. */
 }
 
 /* Per-column collapse header (setupPanelColumnCollapse(), app.js) - a small sticky bar at the
@@ -755,26 +778,31 @@ td {
 }
 
 /* Collapsed state - shrinks to a slim rail showing just the header (rotated title + chevron),
-   rather than the whole sidebar disappearing to 0 width. */
+   rather than the whole sidebar disappearing to 0 width. #trendSelector (viztrends.html) is a
+   third, standalone column using the same setupColumnCollapse() (app.js) treatment. */
 .colAttributes.panel-collapsed,
-.colFilters.panel-collapsed {
+.colFilters.panel-collapsed,
+#trendSelector.panel-collapsed {
   width: 30px;
   min-width: 30px;
   overflow: hidden;
 }
 .colAttributes.panel-collapsed .panel-col-body,
-.colFilters.panel-collapsed .panel-col-body {
+.colFilters.panel-collapsed .panel-col-body,
+#trendSelector.panel-collapsed .panel-col-body {
   display: none;
 }
 .colAttributes.panel-collapsed .panel-col-header,
-.colFilters.panel-collapsed .panel-col-header {
+.colFilters.panel-collapsed .panel-col-header,
+#trendSelector.panel-collapsed .panel-col-header {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
   padding: 10px 4px;
 }
 .colAttributes.panel-collapsed .panel-col-title,
-.colFilters.panel-collapsed .panel-col-title {
+.colFilters.panel-collapsed .panel-col-title,
+#trendSelector.panel-collapsed .panel-col-title {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   margin-top: 6px;
@@ -911,26 +939,29 @@ td {
                       to the same near-black used everywhere else. */
 }
 
-/* The "Attributes"/"Filters" column labels used to live here as small grey ::before text
+/* The "Filters"/"Trend Selector" column labels used to live here as small grey ::before text
    (scrolling away with the content) - superseded by .panel-col-header's sticky title, which
-   stays visible and doubles as the column's own collapse control
-   (setupPanelColumnCollapse(), app.js). */
-
-#trendSelector::before {
-  content: "\2014 TREND SELECTOR \2014";
+   stays visible and doubles as the column's own collapse control (setupColumnCollapse(),
+   app.js). "Attributes" (below) still gets one, though - its panel is titled "Display" now
+   (setupPanelColumnCollapse()), so this label is the only thing still naming the actual
+   attribute-choice list, same role NORMALIZATION/AGGREGATION play for their own boxes. */
+.rowAttributes::before {
+  content: "\2014 ATTRIBUTES \2014";
   display: block;
   font-size: 10px;
   letter-spacing: 2px;
   color: #999999;
   text-align: center;
-  margin-bottom: 15px; /* same spacing as under "— ATTRIBUTES —" */
+  margin-bottom: 15px;
 }
 
 /* When a filter is the chart series, both a "Summary Geography" and a "Trend Group" radio
    group render here together (see viztrends.js buildChart()) - space them apart so they read
    as two separate pinned choices instead of one continuous list. Only kicks in with a second
-   group present; a single group needs no extra gap below the column label above. */
-#trendSelector > div + div {
+   group present. Scoped to #trendSelector's .panel-col-body (not #trendSelector directly) -
+   #trendSelector's own direct children are now setupColumnCollapse()'s (app.js) header + body
+   wrapper, which this selector would otherwise also match and wrongly space apart. */
+#trendSelector .panel-col-body > div + div {
   margin-top: 20px;
 }
 
@@ -953,7 +984,9 @@ td {
 }
 
 /* Collapsible filter sections: chevron+name row is the click target, summary is a
-   truncated one-line readout of the current selection shown only while collapsed. */
+   truncated one-line readout of the current selection shown only while collapsed - living
+   inside this same row (not a separate one below) so collapsed reads as one line, "Name: value",
+   instead of the name and its value stacked on two. */
 .filter-toggle-row {
   display: flex;
   align-items: center;
@@ -962,13 +995,28 @@ td {
   flex-grow: 1;
 }
 
+/* .filterName/.title/this class itself (WijCheckboxes/WijRadio/WijSelect's own title element,
+   whichever one a given widget uses) would otherwise also inherit .filterName's flex-grow:1 -
+   fine when it was the toggle row's only content, but once .filter-selected-summary joins it on
+   the same line that growth needs to go to the summary instead, or there's no room left for it
+   to fill/truncate into. */
+.filter-toggle-row .filter-toggle-title {
+  flex: 0 0 auto;
+}
+
 .filter-selected-summary {
   font-size: 90%;
   color: #6a6a6a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 2px 0 6px 0;
+}
+.filter-toggle-row .filter-selected-summary {
+  flex: 1 1 auto;
+  min-width: 0; /* lets text-overflow:ellipsis actually truncate within a flex row, instead of
+                   the row just growing wider than its card to fit the untruncated text */
+  text-align: right; /* name on the left, value right-justified - no ":" separator needed once
+                         the two ends of the line already read as label/value */
 }
 
 /* Card treatment for each collapsible filter section - breaks the sidebar's flat list
@@ -1653,6 +1701,111 @@ calcite-menu-item[text="Spec Gen Trends"]::after {
    it up to sit the same ~30px below the primary bar alone: 65 + 30 = 95px. */
 body.secondary-nav-hidden #openbtndashboard {
   top: 95px;
+}
+
+/* =========================
+   COLLAPSIBLE HEADER
+   ========================= */
+/* Collapses the ENTIRE header (#menu - both the primary nav bar and its nested secondary
+   submenu bar) with one control instead of the two separate bars each needing their own
+   (setupHeaderCollapse(), app.js) - #headerCollapseToggle (a small floating tab, always visible
+   regardless of this state, so there's a way back) drives it. Every one of these rules
+   normally reserves 114px (65px primary + 49px secondary) of viewport height for the header;
+   vizTrends' own three columns reserve 134px - 20px more, for their Title/chart-toggle row
+   sitting above them. Collapsed, the header itself takes 0px, but #headerLocationBar (above)
+   replaces it with its own --header-location-bar-height strip, so each needs its own override
+   to that - not 0px/a blank gap - instead of what it reserved for the full header. Placed after
+   body.secondary-nav-hidden above so it still wins if both happen to apply at once (both would
+   otherwise agree anyway - header-collapsed's case subsumes secondary-nav-hidden's 65px-only one). */
+body.header-collapsed {
+  --header-location-bar-height: 27px; /* #headerLocationBar's own height below also reads this -
+                                          the only place this value should ever need changing */
+}
+body.header-collapsed .sidebar,
+body.header-collapsed .colAttributes,
+body.header-collapsed .colFilters,
+body.header-collapsed #mainMap,
+body.header-collapsed #mainMatrix,
+body.header-collapsed #halfTable {
+  height: calc(100vh - var(--header-location-bar-height));
+}
+body.header-collapsed #dashboardMainDisplay {
+  min-height: calc(100vh - var(--header-location-bar-height));
+}
+/* Reducing the heights above only fixes the BOTTOM edge (so content doesn't run past the
+   viewport) - with #menu gone, these rows would otherwise start flush at the very top of the
+   page, right where #headerLocationBar (a position:fixed strip, so it takes no space of its
+   own in the document flow) now sits, overlapping/hiding whatever's directly underneath it -
+   including Display's/Filters' own sticky .panel-col-header. Pushing the whole row down by the
+   strip's own height fixes the TOP edge the same way the height overrides above fixed the
+   bottom one. */
+body.header-collapsed #mainVizMap,
+body.header-collapsed #logMainDisplay,
+body.header-collapsed #trendMainDisplay,
+body.header-collapsed #matrixMainDisplay,
+body.header-collapsed #mainVizTableMap,
+body.header-collapsed #dashboardMainDisplay {
+  margin-top: var(--header-location-bar-height);
+}
+body.header-collapsed #trendSettings,
+body.header-collapsed #trendSelector,
+body.header-collapsed #trendMain {
+  height: calc(100vh - var(--header-location-bar-height) - 20px);
+}
+body.header-collapsed .openbtn {
+  top: calc(var(--header-location-bar-height) + 30px); /* matches body.secondary-nav-hidden
+    #openbtndashboard's own 65+30 formula, just with the primary bar's 65px replaced by
+    #headerLocationBar's own height */
+}
+
+#headerCollapseToggle {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* above #menu (a calcite-navigation, which stacks its own content fairly high) */
+  background-color: #C85327; /* WFRC's brand orange - navy (matching #menu) nearly vanished
+                                 against the header's own dark navy background when expanded;
+                                 orange reads clearly against both that and the light page
+                                 background underneath once collapsed. */
+  color: #ffffff;
+  border: none;
+  border-radius: 0 0 6px 6px;
+  padding: 2px 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+#headerCollapseToggle:hover {
+  background-color: #a8431f;
+}
+
+/* "Where am I" strip (app.js's updateHeaderLocationBar()) - hidden by default, shown only once
+   the header itself is collapsed (below), since that's the only time it's needed - #menu's own
+   primary/secondary nav bars already make the current location obvious otherwise. */
+#headerLocationBar {
+  display: none;
+}
+body.header-collapsed #headerLocationBar {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-location-bar-height);
+  line-height: var(--header-location-bar-height);
+  padding: 0 10px; /* matches .panel-col-header's own 10px left padding, so "DISPLAY" right
+                       below it (once the header's collapsed, that's the first thing under this
+                       strip) lines up instead of sitting slightly left of this text */
+  box-sizing: border-box;
+  background-color: #0b2c4d; /* matches #menu's own dark navy */
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 999; /* just under #headerCollapseToggle (1000), which sits on top of this */
 }
 
 /* Panel background - the Calcite shell-panel provides its own chrome/width, so the
