@@ -2321,18 +2321,22 @@ require([
       // (this.layerOpacity, vizmap.js), reapplied there every render since initializeLayer()
       // rebuilds layerDisplay/layerDisplayComp from scratch each time - this handler only needs
       // to update whichever instance is active right now, not persist anything on its own.
+      // Same small grey section-label convention as "— MAP ELEMENT VISIBILITY —" above and
+      // "— LEGEND —" below (.map-legend-header-label, shared) - not .compare-inline-label (the
+      // plain "Compare View"/"Compare Type" style), per explicit request to match those two.
+      const headingOpacity = document.createElement("div");
+      headingOpacity.className = "map-legend-header-label";
+      headingOpacity.textContent = "— LAYER OPACITY —";
+      headingOpacity.style.flexBasis = "100%";
+      headingOpacity.style.textAlign = "center";
+      headingOpacity.style.marginTop = "8px";
+      document.getElementById("mapSidebarRightLabelToggle").appendChild(headingOpacity);
+
       const opacityRow = document.createElement("div");
       opacityRow.id = "mapOpacityRow";
       opacityRow.style.flexBasis = "100%";
       opacityRow.style.display = "flex";
       opacityRow.style.alignItems = "center";
-      opacityRow.style.gap = "8px";
-
-      const opacityLabel = document.createElement("span");
-      opacityLabel.textContent = "Opacity";
-      opacityLabel.style.fontSize = "0.85em";
-      opacityLabel.style.flex = "0 0 auto";
-      opacityRow.appendChild(opacityLabel);
 
       const opacitySlider = document.createElement("calcite-slider");
       opacitySlider.id = "vizMapOpacitySlider";
@@ -2415,7 +2419,7 @@ require([
     // vizDashboard's own right sidebar (vizdashboard.html) - same standalone column/right-edge
     // treatment as vizMap's above (replaces the old calcite-shell-panel/openbtndashboard
     // whole-sidebar hide, which couldn't shrink to a slim rail the way this can).
-    setupColumnCollapse(document.getElementById("dashboardSidebarRight"), "Scenario Selector", undefined, true);
+    setupColumnCollapse(document.getElementById("dashboardSidebarRight"), "Scenario / Summary Geography", undefined, true);
 
     setupHeaderCollapse();
 
