@@ -75,10 +75,12 @@ class VizDashboard {
   // geography options are selected.
   updateHeader() {
     const headerDiv = document.getElementById('dashboardHeader');
+    const compareHintDiv = document.getElementById('dashboardCompareHint');
     if (!headerDiv) return;
 
     let subtitle = this.getMainScenarioDisplayName();
-    if (this.isCompareActive()) {
+    const _compareActive = this.isCompareActive();
+    if (_compareActive) {
       subtitle += ' compared to ' + this.getCompScenarioDisplayName();
     }
 
@@ -95,6 +97,23 @@ class VizDashboard {
     headerDiv.innerHTML = '<h1>' + this.title + underDevBadge + '</h1>' +
                           '<div class="dashboard-subtitle">' + subtitle + '</div>' +
                           (geoText ? '<div class="dashboard-subtitle-geo">' + geoText + '</div>' : '');
+
+    // Lives below #dashboardHeader's own border-bottom (vizdashboard.html's #dashboardCompareHint,
+    // a sibling, not nested inside the header) rather than inside its bordered box, same
+    // "underneath the title area, not squeezed into it" placement vizMap's own hint uses (just
+    // under its floating scenario-name label there instead of a page title here). Same red/Main-
+    // higher, blue/Main-lower convention each card's own arrow/value coloring uses (measure.js) -
+    // hardcoded to the exact same hsl() hues used there (not read off a renderer the way vizMap's
+    // equivalent hint is, since there's no Esri renderer here to read colors from) rather than
+    // guessed to match.
+    if (compareHintDiv) {
+      compareHintDiv.innerHTML = _compareActive
+        ? '<div class="dashboard-compare-hint">' +
+          '<span class="compare-color-swatch" style="background:hsl(0, 70%, 50%)"></span>' + this.getMainScenarioDisplayName() + ' higher' +
+          '<span class="compare-color-swatch" style="background:hsl(215, 70%, 50%)"></span>' + this.getMainScenarioDisplayName() + ' lower' +
+          '</div>'
+        : '';
+    }
   }
 
   async ensureCardDataLoaded() {

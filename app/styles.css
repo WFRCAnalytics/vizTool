@@ -1760,17 +1760,27 @@ td {
 /* =========================
    DASHBOARD LAYOUT
    ========================= */
-/* Full-width and colored edge-to-edge - #dashboardContent (its child) is what actually caps
-   the card grid's reading width and centers it, so the color isn't confined to that centered
-   column with white gutters showing on either side on a wide screen.
-   calcite-shell stretches this to a fixed height (like it does #mainMap/#mainMatrix/
-   .colAttributes elsewhere), so min-height here doesn't actually let it grow past that to fit
-   taller card content - it needs its own overflow-y: auto, the same way those other
-   fixed-height panels scroll their own content internally, or the overflow just spills out
-   past the colored box (and past the bottom of the viewport) with no way to scroll to it. */
+/* #dashboardMainDisplay (content) + #dashboardSidebarRight (the right sidebar, styled by
+   .map-sidebar-right - see vizdashboard.html) side by side, same row-of-two pattern as vizMap's
+   own #mainVizMap. Replaces the old calcite-shell/calcite-shell-panel scaffold, which provided
+   this same two-pane layout but only let the sidebar fully hide (its own floating
+   #openbtndashboard/collapsed token), not shrink to a slim rail the way setupColumnCollapse()'s
+   sticky header treatment does everywhere else. */
+#mainDashboard {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 114px);
+}
+
+/* #dashboardContent (its child) is what actually caps the card grid's reading width and centers
+   it, so the background color isn't confined to that centered column with white gutters showing
+   on either side on a wide screen. flex:1 1 auto/min-width:0 (not width:100%) now that this is a
+   flex sibling of #dashboardSidebarRight rather than calcite-shell's only unslotted child -
+   needs its own overflow-y: auto regardless, same reason #mainMap's own children need it: so
+   taller card content scrolls within this pane instead of past the bottom of the viewport. */
 #dashboardMainDisplay {
-  width: 100%;
-  min-height: calc(100vh - 114px);
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-y: auto;
   /* No font-family override - inherit the same stack as everything else (vizTrends' title
      included), rather than forcing the browser's plain generic sans-serif over it. */
@@ -1871,6 +1881,21 @@ calcite-menu-item[text="Spec Gen Trends"]::after {
   margin-top: 2px;
 }
 
+/* Only shown while compare mode is active (updateHeader(), vizdashboard.js) - same red/Main-
+   higher, blue/Main-lower key as vizMap's own (.compare-color-swatch, shared), just left-aligned
+   under the page title/subtitle here instead of floating over a map corner. */
+/* #dashboardCompareHint (vizdashboard.html) is a sibling of #dashboardHeader, below its own
+   border-bottom - needs its own horizontal padding to line up with the title/subtitle above it,
+   which #dashboardHeader's own padding provided while this lived inside that div. */
+#dashboardCompareHint {
+  padding: 8px 16px 0;
+}
+
+.dashboard-compare-hint {
+  color: #666;
+  font-size: 0.9rem;
+}
+
 /* Dashboard grid */
 /* Multi-column layout instead of grid: cards flow top-to-bottom within a column and the
    next one starts immediately below, regardless of how tall its neighbor in an adjacent
@@ -1896,33 +1921,6 @@ calcite-menu-item[text="Spec Gen Trends"]::after {
   }
 }
 
-/* Sidebar width (Calcite shell-panel token) */
-#sidebarPanel {
-  --calcite-shell-panel-width: 316px;
-}
-
-/* Collapse button for the dashboard's right sidebar - same .openbtn.right base as
-   vizMatrix's openbtnmatrixscenario, but overriding the right offset since this panel is
-   316px wide (a calcite-shell-panel, via the token above) rather than matrix's 250px plain
-   div, so matrix's own right:280px/15px would sit at the wrong edge here. */
-#openbtndashboard {
-  /* 316px clears the sidebar panel itself, but #dashboardMainDisplay's own scrollbar (see
-     its overflow-y: auto above) renders right at that same boundary when the cards overflow
-     vertically - the extra ~17px pushes the button clear of it instead of sitting on top. */
-  right: 333px;
-}
-
-#openbtndashboard.collapsed {
-  right: 15px;
-}
-
-/* .openbtn's shared top:144px (base rule above) assumes the secondary submenu bar (49px) is
-   always present under the primary nav (65px) - on Summary, where menu-item.js hides that bar
-   for having only one model entity, that leaves a bare 144-65=79px gap above the button. Pull
-   it up to sit the same ~30px below the primary bar alone: 65 + 30 = 95px. */
-body.secondary-nav-hidden #openbtndashboard {
-  top: 95px;
-}
 
 /* =========================
    COLLAPSIBLE HEADER
@@ -2030,10 +2028,10 @@ body.header-collapsed #headerLocationBar {
   z-index: 999; /* just under #headerCollapseToggle (1000), which sits on top of this */
 }
 
-/* Panel background - the Calcite shell-panel provides its own chrome/width, so the
+/* .map-sidebar-right (vizdashboard.html) provides its own chrome/width now, so the
    Scenario/Summary Geography column just needs to fill it edge-to-edge instead of the
    fixed 250px width .colAttributes uses elsewhere alongside a .colFilters sibling. */
-#dashboardSidebar .colAttributes {
+#dashboardSidebarRight .colAttributes {
   width: 100%;
 }
 

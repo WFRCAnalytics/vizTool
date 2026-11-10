@@ -503,9 +503,11 @@ function setupColumnCollapse(el, title, syncGroup, flipChevron) {
 }
 
 // Only called for sidebars that pair "Attributes"/"Filters" this way (vizMap/vizTrends/
-// vizMatrix's left sidebar) - vizMatrix's/vizDashboard's separate scenario sidebars reuse the
-// same .colAttributes class for an unrelated single-column panel and keep their own existing
-// whole-sidebar toggle (openbtnmatrixscenario/openbtndashboard) untouched.
+// vizMatrix's left sidebar) - vizMatrix's own separate scenario sidebar reuses the same
+// .colAttributes class for an unrelated single-column panel and keeps its own existing
+// whole-sidebar toggle (openbtnmatrixscenario) untouched. vizDashboard's own scenario sidebar
+// (vizdashboard.html) gets setupColumnCollapse() called on it directly instead (see below) -
+// a standalone column like #trendSelector/#mapSidebarRight, not paired with anything.
 function setupPanelColumnCollapse(sidebarId) {
   const sidebar = document.getElementById(sidebarId);
   if (!sidebar) return;
@@ -1090,7 +1092,6 @@ require([
       progressBar.value = 100;
       progressText.textContent = "100%";
     }
-    setupDashboardSidebar();
   }
 
   async function toggleCompare(element) {
@@ -1276,20 +1277,26 @@ require([
       }
     }
 
-    // Keep the "Use Aliases" selects (vizMap's Scenario Selector only) populated and showing the
-    // current pick too, since they're a parallel view onto the same selectedScenario_Main/_Comp
-    // state - populated here (not at element-creation time) since dataScenarios is guaranteed
-    // loaded by the time this runs, which isn't true yet when the panel's first built.
-    const aliasScenarioMain = document.getElementById("aliasScenario_Main");
-    if (aliasScenarioMain && selectedScenario_Main) {
-      if (!aliasScenarioMain.children.length) populateAliasSelectOptions(aliasScenarioMain);
-      aliasScenarioMain.value = `${selectedScenario_Main.modVersion}|${selectedScenario_Main.scnGroup}|${selectedScenario_Main.scnYear}`;
-    }
-    const aliasScenarioComp = document.getElementById("aliasScenario_Comp");
-    if (aliasScenarioComp && selectedScenario_Comp) {
-      if (!aliasScenarioComp.children.length) populateAliasSelectOptions(aliasScenarioComp);
-      aliasScenarioComp.value = `${selectedScenario_Comp.modVersion}|${selectedScenario_Comp.scnGroup}|${selectedScenario_Comp.scnYear}`;
-    }
+    // Keep the "Use Aliases" selects (vizMap's and vizDashboard's own Scenario Selectors) populated
+    // and showing the current pick too, since they're a parallel view onto the same
+    // selectedScenario_Main/_Comp state - populated here (not at element-creation time) since
+    // dataScenarios is guaranteed loaded by the time this runs, which isn't true yet when either
+    // panel is first built. Not every id exists on every page (same reasoning as the `elements`
+    // loop above) - skipped rather than erroring.
+    const aliasElements = [
+      { id: "aliasScenario_Main", scenario: () => selectedScenario_Main },
+      { id: "aliasScenario_Comp", scenario: () => selectedScenario_Comp },
+      { id: "aliasScenario_DashMain", scenario: () => selectedScenario_Main },
+      { id: "aliasScenario_DashComp", scenario: () => selectedScenario_Comp },
+    ];
+    aliasElements.forEach(({ id, scenario }) => {
+      const el = document.getElementById(id);
+      const selectedScenario = scenario();
+      if (el && selectedScenario) {
+        if (!el.children.length) populateAliasSelectOptions(el);
+        el.value = `${selectedScenario.modVersion}|${selectedScenario.scnGroup}|${selectedScenario.scnYear}`;
+      }
+    });
   }
 
   async function updateScenarioSelection(scenarioSelect) {
@@ -1340,6 +1347,19 @@ require([
     updateActiveVizMap();
   }
 
+  // Swaps selectedScenario_Main/_Comp (not just whichever selects currently display them - the
+  // underlying state everything else, map labels/alias selects/vizDashboard's own copies
+  // included, is driven from). Shared by every view's own swap button (vizMap's lives in its
+  // Scenario Selector panel, vizDashboard's in its own sidebar) rather than each duplicating
+  // this same handful of lines.
+  async function swapScenarios() {
+    const swappedMain = { ...selectedScenario_Comp };
+    selectedScenario_Comp = { ...selectedScenario_Main };
+    selectedScenario_Main = swappedMain;
+    await populateScenarioSelections();
+    updateActiveVizMap();
+  }
+
   // Pairs of controls that exist once per view (vizMap's live in the map's UI widget,
   // vizMatrix's and vizDashboard's are each their own sidebar copies) but represent the
   // same single piece of app-wide "what am I comparing against, and how" state, so a change
@@ -1347,9 +1367,9 @@ require([
   // happens to re-render.
   const syncedComparePairs = [
     { ids: ["comparisonScenario", "comparisonScenarioMatrix", "comparisonScenarioDash"], prop: "open", events: ["calciteBlockToggle"] },
-    // selectCompareType (vizMap) is a calcite-segmented-control now - selectCompareTypeMatrix/
-    // selectCompareTypeDash are still calcite-select, so this listens for both event names on
-    // every id. Each element only ever actually fires the one matching its own real component
+    // selectCompareType/selectCompareTypeDash (vizMap/vizDashboard) are calcite-segmented-control
+    // now - selectCompareTypeMatrix is still calcite-select, so this listens for both event names
+    // on every id. Each element only ever actually fires the one matching its own real component
     // type, so the "wrong" listener on any given id is just never triggered, not harmful.
     { ids: ["selectCompareType", "selectCompareTypeMatrix", "selectCompareTypeDash"], prop: "value", events: ["calciteSelectChange", "calciteSegmentedControlChange"] },
   ];
@@ -1793,6 +1813,31 @@ require([
         "calciteSelectChange",
         updateScenarioSelection.bind(this)
       );
+
+    // vizDashboard's own "Use Aliases" toggle/alias selects/swap button - same controls and
+    // behavior as vizMap's Scenario Selector (see its "CREATE SCENARIO SELECTOR" block below),
+    // just against vizdashboard.html's static markup instead of being built fresh in JS.
+    const aliasScenarioDashMain = document.getElementById("aliasScenario_DashMain");
+    const aliasScenarioDashComp = document.getElementById("aliasScenario_DashComp");
+    aliasScenarioDashMain?.addEventListener("calciteSelectChange", () =>
+      applyAliasScenarioSelection(aliasScenarioDashMain, "Main")
+    );
+    aliasScenarioDashComp?.addEventListener("calciteSelectChange", () =>
+      applyAliasScenarioSelection(aliasScenarioDashComp, "Comp")
+    );
+    document.getElementById("swapScenariosDash")?.addEventListener("click", swapScenarios);
+
+    const useAliasToggleDash = document.getElementById("useAliasToggleDash");
+    useAliasToggleDash?.addEventListener("calciteSwitchChange", () => {
+      const useAlias = useAliasToggleDash.checked;
+      document.querySelectorAll(".dash-main-select-row").forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+      document.querySelectorAll(".dash-comp-select-row").forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+      const aliasRowDashMain = document.getElementById("aliasRowDashMain");
+      const aliasRowDashComp = document.getElementById("aliasRowDashComp");
+      if (aliasRowDashMain) aliasRowDashMain.style.display = useAlias ? "block" : "none";
+      if (aliasRowDashComp) aliasRowDashComp.style.display = useAlias ? "flex" : "none";
+    });
+
     // "Compare to:" is more than just a scenario pick - whether the panel is open (compare
     // mode on/off at all) and which compare type is chosen live on separate DOM elements per
     // view (vizMap's live inside the map's UI widget, vizMatrix's and vizDashboard's are each
@@ -2073,14 +2118,8 @@ require([
       // when alias mode is on, the last of the three plain selects (scnYear_Comp) otherwise -
       // rather than its own labeled row, since this version's calcite-block also has no
       // header-actions slot to put it next to the collapse chevron instead (tried that first,
-      // rendered into nothing, silently unslotted).
-      const swapScenarios = async () => {
-        const swappedMain = { ...selectedScenario_Comp };
-        selectedScenario_Comp = { ...selectedScenario_Main };
-        selectedScenario_Main = swappedMain;
-        await populateScenarioSelections();
-        updateActiveVizMap();
-      };
+      // rendered into nothing, silently unslotted). swapScenarios() itself is shared (defined
+      // above, near applyAliasScenarioSelection()) - vizDashboard's own swap button uses it too.
       const makeSwapButton = () => {
         const swapButton = document.createElement("calcite-button");
         swapButton.appearance = "transparent";
@@ -2274,6 +2313,48 @@ require([
 
       document.getElementById("mapSidebarRightLabelToggle").appendChild(mapTitleToggleAction);
 
+      // ADD LAYER OPACITY SLIDER - controls the active vizMap's own feature layer(s) opacity
+      // live while dragging. On its own full-width row under Labels/Map Title (same
+      // flex-basis:100% trick #mapSidebarRightLabelToggle's own ::before heading uses to force
+      // itself onto its own line in that flex row) - a slider needs more width than an icon
+      // button gets sharing a row. The value itself lives on the active VizMap instance
+      // (this.layerOpacity, vizmap.js), reapplied there every render since initializeLayer()
+      // rebuilds layerDisplay/layerDisplayComp from scratch each time - this handler only needs
+      // to update whichever instance is active right now, not persist anything on its own.
+      const opacityRow = document.createElement("div");
+      opacityRow.id = "mapOpacityRow";
+      opacityRow.style.flexBasis = "100%";
+      opacityRow.style.display = "flex";
+      opacityRow.style.alignItems = "center";
+      opacityRow.style.gap = "8px";
+
+      const opacityLabel = document.createElement("span");
+      opacityLabel.textContent = "Opacity";
+      opacityLabel.style.fontSize = "0.85em";
+      opacityLabel.style.flex = "0 0 auto";
+      opacityRow.appendChild(opacityLabel);
+
+      const opacitySlider = document.createElement("calcite-slider");
+      opacitySlider.id = "vizMapOpacitySlider";
+      opacitySlider.min = 0;
+      opacitySlider.max = 1;
+      opacitySlider.step = 0.05;
+      opacitySlider.value = 1;
+      opacitySlider.labelHandles = false;
+      opacitySlider.style.flex = "1 1 auto";
+      opacityRow.appendChild(opacitySlider);
+
+      opacitySlider.addEventListener("calciteSliderInput", (event) => {
+        const value = event.target.value;
+        if (activeLayout) {
+          activeLayout.layerOpacity = value;
+          if (activeLayout.layerDisplay) activeLayout.layerDisplay.opacity = value;
+          if (activeLayout.layerDisplayComp) activeLayout.layerDisplayComp.opacity = value;
+        }
+      });
+
+      document.getElementById("mapSidebarRightLabelToggle").appendChild(opacityRow);
+
       // ADD BASEMAP TOGGLE - a plain icon button (replaces Esri's BasemapToggle widget, which
       // only ever controlled mapView's own basemap) toggling map.basemap AND mapComp.basemap
       // together in one handler, so the side-by-side compare view's map always matches the
@@ -2306,14 +2387,14 @@ require([
       });
 
       // Add the Zoom widget to the top-right corner of the view
-      mapView.ui.add(zoomWidget, "bottom-left");
+      mapView.ui.add(zoomWidget, "top-right");
     });
 
     // Give each left sidebar's "Attributes"/"Filters" columns their own independent collapse
     // control (replaces the old single whole-sidebar openbtn/openbtntrend/openbtnmatrix
-    // buttons) - see setupPanelColumnCollapse()'s own comment. vizMatrix's/vizDashboard's
-    // separate scenario sidebars reuse .colAttributes for an unrelated single-column panel and
-    // keep their own existing openbtnmatrixscenario/openbtndashboard toggle untouched.
+    // buttons) - see setupPanelColumnCollapse()'s own comment. vizMatrix's separate scenario
+    // sidebar reuses .colAttributes for an unrelated single-column panel and keeps its own
+    // existing openbtnmatrixscenario toggle untouched.
     setupPanelColumnCollapse("mapSidebar");
     setupPanelColumnCollapse("trendSidebar");
     setupPanelColumnCollapse("matrixSidebar");
@@ -2330,6 +2411,11 @@ require([
     // assuming a particular parent.
     setupColumnCollapse(document.getElementById("mapSidebarRight"), "Scenario / Legend", undefined, true);
     setupLegendPopout();
+
+    // vizDashboard's own right sidebar (vizdashboard.html) - same standalone column/right-edge
+    // treatment as vizMap's above (replaces the old calcite-shell-panel/openbtndashboard
+    // whole-sidebar hide, which couldn't shrink to a slim rail the way this can).
+    setupColumnCollapse(document.getElementById("dashboardSidebarRight"), "Scenario Selector", undefined, true);
 
     setupHeaderCollapse();
 
@@ -2465,31 +2551,3 @@ function checkAndHideProgressContainer() {
   }
 }
 
-  // --- Sidebar integration script ---
-async function setupDashboardSidebar() {
-  const toggleBtn = document.getElementById('openbtndashboard');
-  const shellPanel = document.getElementById('sidebarPanel');
-
-  if (!toggleBtn || !shellPanel) {
-    console.warn('Sidebar elements not found in DOM');
-    return;
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    shellPanel.collapsed = !shellPanel.collapsed;
-    toggleBtn.classList.toggle('collapsed', shellPanel.collapsed);
-    // Starts expanded (icon starts as "collapse"), same convention as vizMatrix's
-    // openbtnmatrixscenario.
-    toggleBtn.innerHTML = shellPanel.collapsed
-      ? `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`
-      : `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
-  });
-
-  window.openDashboardSidebar = function(open = true) {
-    shellPanel.collapsed = !open;
-    toggleBtn.classList.toggle('collapsed', shellPanel.collapsed);
-    toggleBtn.innerHTML = shellPanel.collapsed
-      ? `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-expand"></span>`
-      : `<span aria-hidden="true" class="esri-collapse__icon esri-expand__icon--expanded esri-icon-collapse"></span>`;
-  };
-}

@@ -41,6 +41,12 @@ require([
       // would otherwise silently snap it back to collapsed every time, right as the thing that
       // makes it worth expanding - a long value - is what just changed).
       this.mapSubtitleExpanded = false;
+      // The feature layers' own opacity (sidebar's "Map Element Visibility" slider, app.js) -
+      // reapplied in initializeLayer() every render (it rebuilds this.layerDisplay/
+      // layerDisplayComp from scratch each time, same reasoning as every other per-render
+      // rebuild in this file), not just set once from the slider's own handler, or it would
+      // silently snap back to fully opaque the next time anything else triggers a re-render.
+      this.layerOpacity = 1;
       this.layerDisplay = new FeatureLayer();
       this.mode = 'main'; //default is main  other option is compare
       this.modeCompare = 'diff' //default is abs  other option is pct
@@ -771,6 +777,7 @@ require([
       };
 
       this.layerDisplay = new FeatureLayer(_layerConfig);
+      this.layerDisplay.opacity = this.layerOpacity;
       map.add(this.layerDisplay);
 
       // Second, parallel layer sharing the same geometry/fields/popup as layerDisplay, which
@@ -782,6 +789,7 @@ require([
       // layerDisplay. Torn down in teardownCompareExtras()/hideLayers() when neither applies.
       if (_isSideBySide || _isSwipeMode) {
         this.layerDisplayComp = new FeatureLayer({ ..._layerConfig, source: [this.dummyFeature] });
+        this.layerDisplayComp.opacity = this.layerOpacity;
         (_isSideBySide ? mapComp : map).add(this.layerDisplayComp);
       } else if (this.layerDisplayComp) {
         mapComp.remove(this.layerDisplayComp);
@@ -1044,6 +1052,13 @@ require([
         labelToggle.active = this.sidebar.getAttributeLabelStatus();
         updateLabelToggleTooltip(labelToggle);
         this.toggleLabels();
+
+        // Same reasoning as the label toggle above - this.layerOpacity (app.js's opacity
+        // slider) is per-VizMap-instance, so switching to a different model entity needs the
+        // slider's own displayed value resynced to match whatever THIS instance's opacity
+        // actually is, not left showing whatever the previously active entity's was.
+        var opacitySlider = document.getElementById('vizMapOpacitySlider');
+        if (opacitySlider) opacitySlider.value = this.layerOpacity;
 
       };
 
