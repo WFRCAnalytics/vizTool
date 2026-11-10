@@ -2273,10 +2273,19 @@ require([
         return swapButton;
       };
 
+      // The three plain selects stack in their own column, narrower than the full row width so
+      // the swap button (below) fits beside them, vertically centered across all three instead
+      // of sitting next to just the last one.
+      const compSelectsCol = document.createElement("div");
+      compSelectsCol.style.display = "flex";
+      compSelectsCol.style.flexDirection = "column";
+      compSelectsCol.style.flexGrow = "1";
+      compSelectsCol.style.minWidth = "0";
+
       compSelectIds.forEach((id) => {
         // Create a flex container for each select and its buttons
         const flexContainer = document.createElement("div");
-        flexContainer.style.display = useAliasSwitch.checked ? "none" : "flex";
+        flexContainer.style.display = "flex";
         flexContainer.style.alignItems = "center"; // Align items vertically
         flexContainer.style.width = "100%"; // Set container to full width
 
@@ -2284,14 +2293,27 @@ require([
         const calciteSelect = document.createElement("calcite-select");
         calciteSelect.id = id;
         calciteSelect.style.flexGrow = "1"; // Allow the select element to grow
+        calciteSelect.style.minWidth = "0";
 
         // Append the calcite-select to the flex container
         flexContainer.appendChild(calciteSelect);
 
-        // Append the flex container to the block
+        // Append the flex container to the column
         compSelectRows.push(flexContainer);
-        block.appendChild(flexContainer);
+        compSelectsCol.appendChild(flexContainer);
       });
+
+      // Outer row pairing compSelectsCol with the swap button - align-items:center on this row
+      // (not each individual select row) is what actually centers the button across all three
+      // stacked selects combined, rather than against just whichever row it would otherwise sit
+      // inside.
+      const compSelectsRow = document.createElement("div");
+      compSelectsRow.style.display = useAliasSwitch.checked ? "none" : "flex";
+      compSelectsRow.style.alignItems = "center";
+      compSelectsRow.style.width = "100%";
+      compSelectsRow.appendChild(compSelectsCol);
+      compSelectsRow.appendChild(makeSwapButton());
+      block.appendChild(compSelectsRow);
 
       // Alias alternative to the three Comp selects above - same pairing as aliasRowMain/
       // aliasSelectMain, for selectedScenario_Comp instead.
@@ -2311,15 +2333,9 @@ require([
         const useAlias = useAliasSwitch.checked;
         mainSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
         aliasRowMain.style.display = useAlias ? "block" : "none";
-        compSelectRows.forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+        compSelectsRow.style.display = useAlias ? "none" : "flex";
         aliasRowComp.style.display = useAlias ? "flex" : "none";
       });
-
-      // Same button as aliasRowComp's own (see makeSwapButton above) - compSelectRows' last row
-      // (scnYear_Comp) is the one left visible when alias mode is off.
-      if (compSelectRows.length > 0) {
-        compSelectRows[compSelectRows.length - 1].appendChild(makeSwapButton());
-      }
       aliasSelectMain.addEventListener("calciteSelectChange", () =>
         applyAliasScenarioSelection(aliasSelectMain, "Main")
       );
@@ -2523,6 +2539,11 @@ require([
         btn.title = btn.active ? "Switch to gray basemap" : "Switch to imagery basemap";
       });
       mapView.ui.add(basemapToggleAction, "bottom-right");
+
+      // Remove the default basemap source citation (e.g. "Esri, HERE, Garmin, USGS, EPA, NPS |
+      // Powered by Esri") - mapViewComp never shows one (built with ui:{components:[]}, fully
+      // bare), so this is the only one left to remove.
+      mapView.ui.remove("attribution");
 
       // Remove default zoom controls
       mapView.ui.remove("zoom");
