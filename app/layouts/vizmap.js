@@ -988,7 +988,7 @@ require([
         // getAttributeRendererPath()'s _isTwoLayerCompare branch), so the hint has nothing to
         // explain there.
         if (typeof updateMapCompareColorHint === 'function') {
-          updateMapCompareColorHint(this.mode === 'compare' && this.compareView === 'overlay' ? this.layerDisplay.renderer : null, this.getMainScenarioDisplayName());
+          updateMapCompareColorHint(this.mode === 'compare' && this.compareView === 'overlay' ? this.layerDisplay.renderer : null, this.getMainScenarioDisplayName(), this.getCompScenarioDisplayName());
         }
 
         this.layerDisplay.refresh();

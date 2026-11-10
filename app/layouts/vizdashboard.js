@@ -109,8 +109,10 @@ class VizDashboard {
     if (compareHintDiv) {
       compareHintDiv.innerHTML = _compareActive
         ? '<div class="dashboard-compare-hint">' +
-          '<span class="compare-color-swatch" style="background:hsl(0, 70%, 50%)"></span>' + this.getMainScenarioDisplayName() + ' higher' +
-          '<span class="compare-color-swatch" style="background:hsl(215, 70%, 50%)"></span>' + this.getMainScenarioDisplayName() + ' lower' +
+          this.getMainScenarioDisplayName() + ' is ' +
+          '<span style="color:hsl(0, 70%, 50%); font-weight:bold;">higher</span> / ' +
+          '<span style="color:hsl(215, 70%, 50%); font-weight:bold;">lower</span>' +
+          ' than ' + this.getCompScenarioDisplayName() +
           '</div>'
         : '';
     }

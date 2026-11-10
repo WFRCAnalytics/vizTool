@@ -1276,19 +1276,6 @@ td {
   white-space: nowrap;
 }
 
-.compare-color-swatch {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 0 5px 0 8px;
-  vertical-align: middle;
-}
-
-.compare-color-swatch:first-child {
-  margin-left: 0;
-}
-
 #mainLog {
   flex-grow: 1;
   white-space: pre-line;
@@ -1882,8 +1869,9 @@ calcite-menu-item[text="Spec Gen Trends"]::after {
 }
 
 /* Only shown while compare mode is active (updateHeader(), vizdashboard.js) - same red/Main-
-   higher, blue/Main-lower key as vizMap's own (.compare-color-swatch, shared), just left-aligned
-   under the page title/subtitle here instead of floating over a map corner. */
+   higher, blue/Main-lower convention as vizMap's own hint, "higher"/"lower" themselves colored
+   and bold rather than a separate dot swatch, just left-aligned under the page title/subtitle
+   here instead of floating over a map corner. */
 /* #dashboardCompareHint (vizdashboard.html) is a sibling of #dashboardHeader, below its own
    border-bottom - needs its own horizontal padding to line up with the title/subtitle above it,
    which #dashboardHeader's own padding provided while this lived inside that div. */
@@ -1921,6 +1909,18 @@ calcite-menu-item[text="Spec Gen Trends"]::after {
   }
 }
 
+
+/* menu-item.js hides the secondary submenu bar (toggling this class) for a top-level menu with
+   only one model entity - e.g. Summary (just "Performance Measures") - leaving just the 65px
+   primary bar instead of the usual 65+49=114px both reserved by #mainDashboard/.map-sidebar-right
+   (vizDashboard's own fixed-height flex row/sidebar - vizMap/vizTrends/vizMatrix auto-size via
+   calcite-shell or similar instead, so they've never needed this override). Without it, those two
+   stay sized for a bar that isn't actually there, leaving #mainDashboard short by the 49px the
+   secondary bar would have taken. */
+body.secondary-nav-hidden #mainDashboard,
+body.secondary-nav-hidden .map-sidebar-right {
+  height: calc(100vh - 65px);
+}
 
 /* =========================
    COLLAPSIBLE HEADER

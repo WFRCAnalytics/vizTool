@@ -385,7 +385,7 @@ function setupLegendPopout() {
 // Only updates content/visibility - setMapCompareScenarioLabels()'s 'overlay' branch above owns
 // this element's actual position (right after mapScenarioLabelMain), since that's the one place
 // that reliably runs every time the label itself might have moved.
-function updateMapCompareColorHint(renderer, mainLabel) {
+function updateMapCompareColorHint(renderer, mainLabel, compLabel) {
   if (!mapCompareColorHint) return;
   const breaks = renderer && renderer.classBreakInfos;
   if (!breaks || breaks.length < 2) {
@@ -397,8 +397,10 @@ function updateMapCompareColorHint(renderer, mainLabel) {
   const compHigherColor = toCssColor(breaks[0].symbol.color);
   const mainHigherColor = toCssColor(breaks[breaks.length - 1].symbol.color);
   mapCompareColorHint.innerHTML =
-    `<span class="compare-color-swatch" style="background:${mainHigherColor}"></span>${mainLabel} higher` +
-    `<span class="compare-color-swatch" style="background:${compHigherColor}"></span>${mainLabel} lower`;
+    `${mainLabel} is ` +
+    `<span style="color:${mainHigherColor}; font-weight:bold;">higher</span> / ` +
+    `<span style="color:${compHigherColor}; font-weight:bold;">lower</span>` +
+    ` than ${compLabel}`;
   mapCompareColorHint.dataset.logicalShow = "true";
   applyMapTitleVisibility();
 }
