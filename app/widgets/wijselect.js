@@ -33,6 +33,12 @@ class WijSelect {
 
     let filterSummary = null;
     if (this.collapsible) {
+      // Only the actual collapsible filter-card use of WijSelect (filter.js's main filter
+      // widget) gets the extra breathing room below - other WijSelect instances (the left
+      // sidebar's Aggregator/Divider pickers, vizTrends' chart controls, and the subAg dropdown
+      // nested under a parent filter's own title) aren't filter-tile cards and shouldn't gain
+      // the gap.
+      selectBody.classList.add('select-container');
       // Same collapse+summary pattern as WijCheckboxes/WijRadio: clicking the
       // chevron+title toggles selectBody, collapsed state shows the current selection.
       const toggleRow = document.createElement('div');

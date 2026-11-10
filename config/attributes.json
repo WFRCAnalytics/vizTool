@@ -138,6 +138,12 @@
     "aLn": {
         "alias": "Lanes",
         "definition": "is the number of cross-section lanes.",
+        "filterOverride":[
+            {
+            "filterOut": "fRoadSegFuncGroup",
+            "filterIn": "fRoadSegFuncGroupNoTotal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Lanes",
@@ -303,6 +309,12 @@
     "aCT": {
         "alias": "Total Capacity",
         "definition": "is the capacity for the entire period, which equals the number of lanes on the segment multiplied by the duration of the time period and the per hour per lane capacity.",
+        "filterOverride":[
+            {
+            "filterOut": "fRoadSegFuncGroup",
+            "filterIn": "fRoadSegFuncGroupNoTotal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Total Capacity (vehicles)",
@@ -405,6 +417,12 @@
     "aVl": {
         "alias": "Volume",
         "definition": "is the total number of vehicles using the segment.",
+        "filterOverride":[
+            {
+            "filterOut": "fRoadSegFuncGroup",
+            "filterIn": "fRoadSegFuncGroupNoTotal"
+            }
+        ],
         "rendererCollection": {
             "main": {
                 "legendTitle": "Volume (vehicles)",

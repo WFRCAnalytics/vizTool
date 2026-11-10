@@ -889,6 +889,7 @@ class VizTrends {
     // faint - so the axis border width is bumped to 2px below (border.width) alongside this.
     Chart.defaults.color = '#1a1a1a';
     Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.18)';
+    Chart.defaults.font.family = "'Inter', 'Segoe UI', system-ui, sans-serif";
 
     const calculatePercentChange = (currentValue, initialValue) => ((currentValue - initialValue) / initialValue) * 100;
 

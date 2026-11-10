@@ -558,14 +558,24 @@ function setupColumnCollapse(el, title, syncGroup, flipChevron) {
   // sit flush at the column's own top/left/right edges, and a negative margin meant to cancel
   // that padding doesn't reliably escape it on a position:sticky element in every browser -
   // tested and confirmed in Chrome here.
+  //
+  // #trendSelector/#mapSidebarRight/#dashboardSidebarRight are the exception - their
+  // .panel-col-body padding/display/gap is a plain CSS rule (styles.css) instead of a snapshot
+  // copied here, so it can never come back empty depending on exactly when/how this function
+  // happened to run (it was intermittently losing its padding this way - see those CSS rules'
+  // own comment). .colAttributes/.colFilters (3 different sidebars, no single shared id each)
+  // still get it the old way below.
+  const _hasFixedPanelBodyCss = ["trendSelector", "mapSidebarRight", "dashboardSidebarRight"].includes(el.id);
   const elStyle = getComputedStyle(el);
   const body = document.createElement("div");
   body.className = "panel-col-body";
-  body.style.padding = elStyle.padding;
-  body.style.display = elStyle.display === "flex" ? "flex" : "block";
-  body.style.flexDirection = elStyle.flexDirection;
-  body.style.gap = elStyle.gap;
-  body.style.boxSizing = "border-box";
+  if (!_hasFixedPanelBodyCss) {
+    body.style.padding = elStyle.padding;
+    body.style.display = elStyle.display === "flex" ? "flex" : "block";
+    body.style.flexDirection = elStyle.flexDirection;
+    body.style.gap = elStyle.gap;
+    body.style.boxSizing = "border-box";
+  }
   while (el.firstChild) body.appendChild(el.firstChild);
   el.appendChild(body);
   el.style.padding = "0";

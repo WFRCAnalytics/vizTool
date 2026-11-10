@@ -435,7 +435,7 @@
     "fRoadSegFuncGroupNoTotal": {
         "alias"    : "Functional Group",
         "fWidget"  : "checkboxes",
-        "fSelected": ["Freeway"],
+        "fSelected": ["Arterial","CD Road","Freeway","Managed"],
         "fOptions" : [
             {"value":"Arterial", "label": "Arterial/Collector"},
             {"value":"CD Road" , "label": "Freeway-CD Road"   },

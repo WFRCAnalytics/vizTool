@@ -1,3 +1,10 @@
+/* --calcite-sans-family cascades into every calcite component's shadow DOM (it's inherited,
+   unlike most --calcite-ui-* tokens which are per-component), so this one rule swaps the
+   default Avenir Next/Esri look for Inter app-wide. */
+:root {
+    --calcite-sans-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
 /* Nav menu items and the logo paint their own opaque background/text from these CSS custom
    properties (in their shadow DOM), so plain rules on the host elements get painted over -
    overriding the variables is the only way to reach them, and (unlike normal properties)
@@ -341,7 +348,25 @@ progress::-moz-progress-bar {
                           nothing here that should ever need to scroll sideways. */
   width: 100%;
   padding-left: 5px;
-  padding-top: 5px;
+  padding-top: 14px; /* breathing room under the title while expanded - this element is
+                         display:none while collapsed (WijCheckboxes.setCollapsedState()), so
+                         the collapsed card's padding/height is unaffected. */
+  box-sizing: border-box;
+}
+
+/* Same expanded-only breathing room as .checkbox-container, for WijRadio's option list -
+   display:none while collapsed (WijRadio.setCollapsedState()), so collapsed cards match. */
+.radio-container {
+  padding-left: 5px;
+  padding-top: 14px;
+  box-sizing: border-box;
+}
+
+/* Same expanded-only breathing room as .checkbox-container/.radio-container, for WijSelect's
+   dropdown - display:none while collapsed (WijSelect.setCollapsedState()), so collapsed cards
+   match. */
+.select-container {
+  padding-top: 14px;
   box-sizing: border-box;
 }
 
@@ -626,6 +651,14 @@ td {
      visibly squish and rewrap mid-transition. Snapping it matches the other two. */
 }
 
+/* #trendSelector's real content padding - see #mapSidebarRight's identical rule/comment above
+   for why this is a plain CSS rule rather than something setupColumnCollapse() (app.js) copies
+   over at setup time. */
+#trendSelector > .panel-col-body {
+  padding: 15px;
+  box-sizing: border-box;
+}
+
 #trendScenarios {
   /* No border/background of its own - its only content is the "Select Trend Groups"
      .filter-card, which already has its own orange border. A wrapper border here would
@@ -786,6 +819,34 @@ td {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* #mapSidebarRight's (and vizDashboard's #dashboardSidebarRight, same .map-sidebar-right class)
+   real content padding lives here now, as a plain CSS rule, instead of setupColumnCollapse()
+   (app.js) copying it over at setup time via a one-off getComputedStyle() snapshot baked into
+   an inline style - a real rule can't silently come back empty depending on exactly when/how
+   that snapshot got taken, the way the inline-style copy could. */
+#mapSidebarRight > .panel-col-body,
+#dashboardSidebarRight > .panel-col-body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  flex: 1 1 auto; /* stretches to fill the column's remaining height below the sticky header -
+                     without this, the body sizes to its own content (a flex column child never
+                     stretches along the main axis by default) and leaves its own leftover space
+                     below it, outside its box, where #mapSidebarRightOpacity's margin-top:auto
+                     (below) can't reach it. */
+}
+
+/* Pins Layer Opacity to the bottom of the column instead of leaving it wherever the Legend's
+   own content happens to end - the column itself keeps matching the map's full height, but a
+   short legend (few renderer classes) no longer leaves a trailing gap of blank space below
+   everything; that leftover space collects above Opacity instead, reading as "Opacity is
+   anchored to the bottom" rather than "there's empty space under the Legend for no reason". */
+#mapSidebarRightOpacity {
+  margin-top: auto;
 }
 
 /* Same small grey section-label convention as NORMALIZATION/AGGREGATION/LEGEND (styles.css) -
@@ -1644,7 +1705,7 @@ td {
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 1em;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -1681,7 +1742,7 @@ td {
 #trendTable .custom-chart-table {
   width: 100%;
   margin: 12px 0 0;
-  font-family: "Segoe UI", Roboto, sans-serif;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   box-shadow: none;
 }
 

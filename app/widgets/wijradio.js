@@ -49,6 +49,7 @@ class WijRadio {
     }
 
     const radioBody = document.createElement('div');
+    radioBody.classList.add('radio-container');
 
     let filterSummary = null;
     if (this.collapsible) {
