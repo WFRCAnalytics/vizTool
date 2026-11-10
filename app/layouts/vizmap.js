@@ -7,9 +7,8 @@ require([
   "esri/Color",
   "esri/PopupTemplate",
   "esri/widgets/Legend",
-  "esri/rest/support/Query",
-  "esri/widgets/Swipe"
-], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query, Swipe) {
+  "esri/rest/support/Query"
+], function(GeoJSONLayer, Graphic, FeatureLayer, SimpleRenderer, ColorVariable, Color, PopupTemplate, Legend, Query) {
   // Now you can use Graphic inside this callback function
 
   class VizMap {
@@ -53,15 +52,13 @@ require([
 
       // Non-overlay compare (see getAttributeRendererPath(), updateDisplay() and
       // setCompRendererAndShow()): a second FeatureLayer holding the comp scenario's own
-      // natural-value features instead of a diff/pct-diff. Where it lives depends on
-      // this.compareView - 'sidebyside' adds it to app.js's separate mapComp (its own
-      // MapView, synced with the main one - see vizmap.html's #mapViewRow comment); 'swipe'
-      // adds it to the SAME shared map instead, clipped against layerDisplay by an Esri Swipe
-      // widget (this.swipeWidget). Only built at all when this.mode === 'compare' and
+      // natural-value features instead of a diff/pct-diff. Both 'sidebyside' and 'swipe' add it
+      // to app.js's separate mapComp (its own MapView, synced with the main one - see
+      // vizmap.html's #mapViewRow comment), laid out two different ways
+      // (setMapCompareLayoutMode(), app.js). Only built at all when this.mode === 'compare' and
       // this.compareView is one of those two.
       this.layerDisplayComp = new FeatureLayer();
       this.compareView = 'overlay'; // 'overlay' (default, single diff/pctdiff map), 'sidebyside', or 'swipe'
-      this.swipeWidget = null;
 
       // Opt-in (see getPopupExtraAttributes()): shows every other same-filter-group attribute
       // in the popup alongside the one currently selected, but only outside compare mode -
@@ -494,33 +491,19 @@ require([
       }
     }
 
-    // Hides the side-by-side split (app.js's setMapCompareSplitVisible()) AND destroys the
-    // Esri Swipe widget, whichever of the two (if either) is currently showing for this view -
-    // called whenever this view stops being the active one (hideLayers()) and whenever a
-    // render leaves BOTH non-overlay compare modes (updateDisplay()), so neither lingers after
-    // the mode that opened it is gone.
+    // Hides whichever of sidebyside/swipe's shared layout (app.js's setMapCompareLayoutMode())
+    // is currently showing for this view - called whenever this view stops being the active one
+    // (hideLayers()) and whenever a render leaves BOTH non-overlay compare modes (updateDisplay()),
+    // so neither lingers after the mode that opened it is gone.
     teardownCompareExtras() {
-      if (typeof setMapCompareSplitVisible === 'function') {
-        setMapCompareSplitVisible(false);
+      if (typeof setMapCompareLayoutMode === 'function') {
+        setMapCompareLayoutMode(null);
       }
       if (typeof setMapCompareScenarioLabels === 'function') {
         setMapCompareScenarioLabels(null);
       }
-      this.teardownEsriSwipeWidget();
     }
 
-    // Just the Swipe-widget half of teardownCompareExtras() - also called on its own from
-    // initializeLayer() whenever a render is NOT in 'swipe' mode specifically (even if it IS in
-    // 'sidebyside' mode, which must keep the split visible that teardownCompareExtras() would
-    // otherwise hide).
-    teardownEsriSwipeWidget() {
-      if (this.swipeWidget) {
-        mapView.ui.remove(this.swipeWidget);
-        this.swipeWidget.destroy();
-        this.swipeWidget = null;
-      }
-    }
-    
     getLabelInfo() {
       let attributeRenderer = this.getAttributeRendererPath();
       return attributeRenderer ? attributeRenderer.labelExpressionInfo : null;
@@ -690,9 +673,9 @@ require([
     // layerDisplayComp each live in their own MapView in 'sidebyside' mode (see vizmap.html's
     // #mapViewRow comment), so there's no cross-layer label competition to work around here -
     // each one just labels itself normally, same as the regular single-map view. 'swipe' mode
-    // forces labelingInfo to [] instead of calling this (see initializeLayer()) since the two
-    // layers share one MapView there and Esri's Swipe widget suppresses most of the trailing
-    // layer's labels regardless of this config - see the Swipe widget comment further down.
+    // shares one MapView between the two instead, so both sides' labels can overlap right where
+    // they meet - accepted as a tradeoff (see setCompRendererAndShow()'s own comment) rather than
+    // suppressing labels there entirely.
     getLabelingInfoConfig() {
       const _isLine = this.getEffectiveGeometryType() === 'polyline';
       return [{
@@ -768,12 +751,22 @@ require([
         source: [this.dummyFeature],
         fields: this.getFieldDefs(dValFieldType),
         popupTemplate: this.getPopupTemplateConfig(),
-        // 'swipe' shares one MapView between layerDisplay/layerDisplayComp, and Esri's Swipe
-        // widget suppresses most of the trailing layer's labels regardless of any labeling
-        // config - rather than show a misleadingly-partial set of labels, turn labels off
-        // entirely for both layers while swipe mode is active.
-        labelingInfo: _isSwipeMode ? [] : this.getLabelingInfoConfig(),
-        renderer: this.getPlaceholderRenderer()
+        // 'swipe' shares one MapView between layerDisplay/layerDisplayComp - labels back on for
+        // both sides even here (overlapping where the two sides meet is acceptable; no labels
+        // at all was worse).
+        labelingInfo: this.getLabelingInfoConfig(),
+        renderer: this.getPlaceholderRenderer(),
+        // Draws larger-magnitude features last (on top), instead of FeatureLayer's default order
+        // (whichever order the data happens to arrive in, effectively random relative to symbol
+        // size) - every renderer here scales symbol width/size up with |dVal|, both the natural
+        // classification (always non-negative, so plain ascending dVal already sorts smallest-
+        // to-largest) and the compare_abs/compare_pct diff bands (symmetric around 0 - width
+        // grows toward EITHER extreme, hence Abs() so both a big increase and a big decrease
+        // still sort after the thin near-zero band instead of the negative extreme landing back
+        // at the bottom). Skipped for aFtClass's string dVal - a category, not a magnitude.
+        ...(dValFieldType === "double"
+          ? { orderBy: [{ valueExpression: "return Abs($feature.dVal);", order: "ascending" }] }
+          : {})
       };
 
       this.layerDisplay = new FeatureLayer(_layerConfig);
@@ -783,23 +776,20 @@ require([
       // Second, parallel layer sharing the same geometry/fields/popup as layerDisplay, which
       // updateDisplay() populates with the comp scenario's own values (via
       // getAttributeRendererPath()'s natural renderer and the dVal swap in updateDisplay())
-      // instead of a diff/pct-diff. 'sidebyside' puts it in app.js's separate mapComp (its own
-      // MapView - see vizmap.html's #mapViewRow comment); 'swipe' puts it in the same shared
-      // map instead, for setCompRendererAndShow()'s Esri Swipe widget to clip against
-      // layerDisplay. Torn down in teardownCompareExtras()/hideLayers() when neither applies.
+      // instead of a diff/pct-diff. Both 'sidebyside' and 'swipe' put it in app.js's separate
+      // mapComp (its own MapView - see vizmap.html's #mapViewRow comment for why both need
+      // their own independent view instead of sharing layerDisplay's). Torn down in
+      // teardownCompareExtras()/hideLayers() when neither applies.
       if (_isSideBySide || _isSwipeMode) {
         this.layerDisplayComp = new FeatureLayer({ ..._layerConfig, source: [this.dummyFeature] });
         this.layerDisplayComp.opacity = this.layerOpacity;
-        (_isSideBySide ? mapComp : map).add(this.layerDisplayComp);
+        mapComp.add(this.layerDisplayComp);
       } else if (this.layerDisplayComp) {
         mapComp.remove(this.layerDisplayComp);
         map.remove(this.layerDisplayComp);
       }
-      if (typeof setMapCompareSplitVisible === 'function') {
-        setMapCompareSplitVisible(_isSideBySide);
-      }
-      if (!_isSwipeMode) {
-        this.teardownEsriSwipeWidget();
+      if (typeof setMapCompareLayoutMode === 'function') {
+        setMapCompareLayoutMode(_isSideBySide ? 'sidebyside' : _isSwipeMode ? 'swipe' : null);
       }
       // The real two-scenario label text is set once setCompRendererAndShow() has the comp
       // layer's data ready - for every other render (overlay, or no compare), show the label
@@ -817,18 +807,6 @@ require([
       var labelToggle = document.getElementById('vizMapLabelToggle');
       if (this.layerDisplay) {
         this.sidebar.setAttributeLabelStatus(labelToggle.active);
-        // Labels are forced off for 'swipe' mode (see initializeLayer()'s _isSwipeMode check) -
-        // don't let the label toggle override that with the real labelingInfo this.originalLabelInfo
-        // may still be holding from a previous, non-swipe render.
-        if (this.mode === 'compare' && this.compareView === 'swipe') {
-          this.layerDisplay.labelingInfo = [];
-          this.layerDisplay.refresh();
-          if (this.layerDisplayComp && this.layerDisplayComp.loaded) {
-            this.layerDisplayComp.labelingInfo = [];
-            this.layerDisplayComp.refresh();
-          }
-          return;
-        }
         if (labelToggle.active) {
           // Checkbox is checked, show labels
           // Restore labels if originalLabelInfo has been stored
@@ -1558,43 +1536,20 @@ require([
 
     // Styles the comp layer with the same natural renderer as the main layer and makes it
     // visible - called once the comp layer's own applyEdits() (updateDisplay()) has resolved.
-    // For 'sidebyside', that's all that's needed - the split itself (two independent MapViews,
-    // not Esri's Swipe widget) was already shown by initializeLayer()'s
-    // setMapCompareSplitVisible(true) earlier in this same render. For 'swipe', this also
-    // (re)builds the Esri Swipe widget clipping the two layers against each other in the
-    // single shared mapView - see vizmap.html's #mapViewRow comment for why 'sidebyside' exists
-    // as a separate, labels-safe alternative to this one.
+    // Identical for 'sidebyside' and 'swipe' now (both independent MapViews laid out differently
+    // by initializeLayer()'s setMapCompareLayoutMode() call rather than anything specific to
+    // either happening here) - see vizmap.html's #mapViewRow comment for the two layouts.
     setCompRendererAndShow() {
       if (!this.layerDisplayComp) return;
 
       this.layerDisplayComp.renderer = this.getRenderer();
-      if (this.compareView === 'swipe') {
-        // Keep labels off on both sides - see initializeLayer()'s _isSwipeMode comment.
-        this.layerDisplay.labelingInfo = [];
-        this.layerDisplayComp.labelingInfo = [];
-      } else {
-        this.layerDisplayComp.labelingInfo = this.layerDisplay.labelingInfo;
-      }
+      this.layerDisplayComp.labelingInfo = this.layerDisplay.labelingInfo;
       this.layerDisplayComp.refresh();
       this.layerDisplayComp.visible = true;
 
       if (typeof setMapCompareScenarioLabels === 'function') {
         setMapCompareScenarioLabels(this.compareView, this.getMainScenarioDisplayName(), this.getCompScenarioDisplayName());
       }
-
-      if (this.compareView !== 'swipe') return;
-
-      this.teardownEsriSwipeWidget();
-      this.swipeWidget = new Swipe({
-        view: mapView,
-        // "Compare to:" (layerDisplayComp) on the left/leading side, Main (layerDisplay) on
-        // the right/trailing side - see the matching legend title order below.
-        leadingLayers: [this.layerDisplayComp],
-        trailingLayers: [this.layerDisplay],
-        direction: "horizontal",
-        position: 50
-      });
-      mapView.ui.add(this.swipeWidget);
     }
 
   }

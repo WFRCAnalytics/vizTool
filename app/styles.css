@@ -482,7 +482,9 @@ td {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-top: 32px;
+  margin-top: 20px; /* Layer Opacity (#mapSidebarRightOpacity, app.js) now sits below the Legend
+                        instead of above it - this just separates "— LEGEND —" from the Label/Map
+                        Title toggles above it in #mapSidebarRightLabelToggle. */
   margin-bottom: 6px;
 }
 .map-legend-header-label {
@@ -1224,7 +1226,7 @@ td {
   position: relative;
 }
 #mapViewRow.split #mapViewComp {
-  flex: 0 0 auto; /* fixed 50/50 split - width set inline once by setMapCompareSplitVisible() (app.js) */
+  flex: 0 0 auto; /* fixed 50/50 split - width set inline once by setMapCompareLayoutMode() (app.js) */
   width: 50%;
 }
 #mapViewRow.split #mapView {
@@ -1235,45 +1237,168 @@ td {
 #mapViewComp {
   height: 100%;
 }
+/* ArcGIS gives its view surface tabindex="0" for keyboard pan/zoom, so clicking the map focuses
+   it like any other focusable element - the browser's own default focus ring just isn't useful
+   here (there's no separate "unfocused" map behavior it's distinguishing), so suppress it on
+   both mapView/mapViewComp. Esri's own main.css draws that ring on a ::after pseudo-element,
+   not the surface's own outline - its actual selector is ".esri-view .esri-view-surface:focus::
+   after" (the ".esri-view" ancestor class included), which is MORE specific than the shorter
+   ".esri-view-surface:focus::after" (no ".esri-view") this started as, so that version lost the
+   cascade despite loading later - matching that exact selector here (content:none drops the
+   generated box entirely) is what actually overrides it. */
+.esri-view .esri-view-surface:focus,
+.esri-view .esri-view-surface:focus-visible {
+  outline: none;
+}
+.esri-view .esri-view-surface:focus::after,
+.esri-view .esri-view-surface:focus-visible::after {
+  content: none;
+  outline: none;
+}
+
 #mapDivider {
-  /* Fixed 50/50 split line - not draggable, so no resize cursor or hover/drag affordance. */
-  flex: 0 0 6px;
-  width: 6px;
-  background-color: #1B9E8E;
+  /* Fixed 50/50 split line in "sidebyside" mode - not draggable there, so no resize cursor or
+     hover/drag affordance; this same element becomes a draggable reveal handle in "swipe" mode
+     instead (.swipe-overlay below, setupMapSwipeDrag()/setMapCompareLayoutMode(), app.js). */
+  flex: 0 0 9px;
+  width: 9px;
+  box-sizing: border-box;
+  background-color: #000000;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.45);
   z-index: 10;
 }
 
-/* Scenario-alias corner label (app.js's setMapCompareScenarioLabels()) shown in "sidebyside"/
-   "swipe" compare view so each visible map/side is identifiable at a glance. */
+/* "swipe" compare mode (setMapCompareLayoutMode(), app.js) - #mapView/#mapViewComp overlaid in
+   the exact same space instead of placed side by side (.split above), #mapViewComp on top and
+   clipped (inline clip-path, applyMapSwipePosition()) to reveal #mapView underneath past
+   #mapDivider's own position - recreates Esri's Swipe widget's visual effect with two
+   independent MapViews instead of one shared view clipping leadingLayers/trailingLayers against
+   each other (see vizmap.html's #mapViewRow comment for why). */
+#mapViewRow.swipe-overlay {
+  position: relative;
+}
+#mapViewRow.swipe-overlay #mapView,
+#mapViewRow.swipe-overlay #mapViewComp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  flex: none;
+}
+#mapViewRow.swipe-overlay #mapViewComp {
+  z-index: 2;
+}
+#mapViewRow.swipe-overlay #mapDivider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  flex: none;
+  width: 9px;
+  margin-left: -4.5px; /* centers the handle on its own left% position (applyMapSwipePosition()) */
+  cursor: ew-resize;
+  /* left set inline by applyMapSwipePosition() (app.js), as a % of the row's own width. */
+}
+/* Drag-grip affordance, shown only here - "sidebyside"'s own #mapDivider is a static seam, not
+   draggable, so it has no equivalent handle. Positioned from the BOTTOM (--swipe-handle-bottom,
+   set by positionSwipeHandle(), app.js) rather than top:50%, so it anchors to #mapViewRow's own
+   bottom edge - the one edge that stays fixed on screen when #mapTitleBar's height changes (see
+   positionSwipeHandle()'s own comment) - instead of re-centering within #mapDivider's current
+   (changing) height and visibly jumping. The calc() fallback only matters before that JS runs. */
+#mapViewRow.swipe-overlay #mapDivider::after {
+  content: "< >";
+  position: absolute;
+  bottom: var(--swipe-handle-bottom, calc(50% - 21px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 42px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color: #000000;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 38px;
+  text-align: center;
+  letter-spacing: -1px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Header bar above the map(s) (vizmap.html) holding the scenario-alias title(s)/compare color
+   hint (app.js's setMapCompareScenarioLabels()/updateMapCompareColorHint()) - a plain row, not
+   floating map UI, so nothing in "swipe" mode (the divider/drag handle included) can ever cross
+   through or obscure it. */
+.map-title-bar {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 1.6em;
+  /* Same width as #mapDivider, so the gap between tiles lines up exactly with the real divider
+     below it (app.js sets each tile's own flex basis to mirror #mapView/#mapViewComp's own
+     width split - setMapCompareLayoutMode()/applyMapSwipePosition()). */
+  gap: 9px;
+  /* Cancels #mainMap's own 15px top padding so the bar sits flush against whatever's above it,
+     instead of leaving a visible gap there - left/right stay at #mainMap's normal inset (not
+     cancelled) so the titles stay aligned with the map's own left/right edges below them. */
+  margin: -15px 0 0 0;
+}
+/* "Map Title" sidebar toggle off (app.js's applyMapTitleVisibility()) - every tile inside is
+   already display:none, but the bar's own min-height/gap/margin above would otherwise still
+   leave a tall blank strip. Dropping back to a plain 0-height, 0-margin box lets #mainMap's
+   normal 15px padding show through above the map instead, matching its other 3 sides. */
+.map-title-bar.title-hidden {
+  min-height: 0;
+  gap: 0;
+  margin: 0;
+}
+
+/* Scenario-alias title tile (app.js's setMapCompareScenarioLabels()) shown in "sidebyside"/
+   "swipe"/"overlay" so the active scenario(s) are identifiable at a glance. Its own flex basis
+   is set in JS (setMapCompareLayoutMode()/applyMapSwipePosition(), app.js), not here, mirroring
+   #mapView/#mapViewComp's own width split exactly so the gap between tiles (.map-title-bar's own
+   9px gap) lines up with the real divider - a flat 50%/auto split in "sidebyside", tracking the
+   drag handle live in "swipe". A flex row itself so its own text span and (only
+   mapScenarioLabelMain, "overlay") the nested compare color hint sit on the same line, hint
+   pushed to the tile's own right edge via its own marginLeft:"auto" (updateMapCompareColorHint(),
+   app.js). */
 .map-scenario-label {
-  background-color: #ffffff;
+  background-color: #fdf1e3; /* slight light-orange tint, per explicit request */
   border: 1px solid #1B9E8E;
   border-radius: 4px;
   padding: 4px 10px;
-  margin: 6px;
+  margin: 4px 0;
   font-weight: 600;
   font-size: 0.9em;
   color: #151515;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  pointer-events: none;
   white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+.map-scenario-label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
-/* Overlay-mode diff/pct-diff color key (see updateMapCompareColorHint(), app.js) - same floating
-   card look as .map-scenario-label right above it, just lighter/not bold since this is a legend
-   key, not a scenario identity. */
+/* Overlay-mode diff/pct-diff color key (see updateMapCompareColorHint(), app.js) - nested inside
+   mapScenarioLabelMain's own title tile (not a separate box of its own), lighter/not bold since
+   this is a legend key, not a scenario identity. */
 .map-compare-color-hint {
-  background-color: #ffffff;
-  border: 1px solid #aaaaaa;
-  border-radius: 4px;
-  padding: 4px 10px;
-  margin: 0 6px 6px 6px;
   font-size: 0.85em;
+  font-weight: normal;
   color: #151515;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  pointer-events: none;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 #mainLog {

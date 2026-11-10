@@ -15,16 +15,25 @@
     </div>
   </div>
   <div id="mainMap">
-    <!-- Side-by-side compare (app.js's setupMapCompareSync()/setMapCompareSplitVisible(),
-         vizmap.js's setCompRendererAndShow()): two independent MapViews sharing a fixed 50/50
-         splitter (not user-draggable), instead of a single view with Esri's Swipe widget - that widget has a
-         confirmed bug where its trailingLayers suppresses the other layer's labels, with no
-         workaround via the labeling API. Two separate views each label themselves normally
-         since neither competes with the other. #mapViewComp/#mapDivider stay hidden (and
-         #mapView stays full-width) outside that mode. #mapViewComp ("Compare to") comes first
-         in source order so it renders on the left, matching the Scenario Selector's "Compare
-         to:" panel being the one being compared TO - #mapView (Main, and all its widgets:
-         Scenario Selector/legend/zoom/basemap toggle) stays on the right. -->
+    <!-- Scenario-alias title(s)/compare color hint (app.js's setMapCompareScenarioLabels()/
+         updateMapCompareColorHint()) - a plain header bar above the map(s), full width, so it's
+         never obscured by map content or (in "swipe" mode) the divider/drag handle. Used to float
+         as Esri UI corner widgets directly over the map instead; moved here so it stays readable
+         in every mode. -->
+    <div id="mapTitleBar" class="map-title-bar"></div>
+    <!-- Compare "sidebyside"/"swipe" (app.js's setupMapCompareSync()/setMapCompareLayoutMode(),
+         vizmap.js's setCompRendererAndShow()): two independent MapViews laid out two different
+         ways - "sidebyside" a fixed 50/50 split (#mapDivider a static seam, not draggable),
+         "swipe" the same two views overlaid in the same space instead, with #mapDivider now a
+         draggable handle revealing one through the other (.swipe-overlay, styles.css).
+         Previously (both) a single shared MapView with Esri's Swipe widget clipping
+         leadingLayers/trailingLayers against each other - dropped for a confirmed bug
+         suppressing one side's labels with no workaround via the labeling API. #mapViewComp/
+         #mapDivider stay hidden (and #mapView stays full-width) outside both modes. #mapViewComp
+         ("Compare to") comes first in source order so it renders on the left/on top, matching
+         the Scenario Selector's "Compare to:" panel being the one being compared TO - #mapView
+         (Main, and all its widgets: Scenario Selector/legend/zoom/basemap toggle) stays on the
+         right/underneath. -->
     <div id="mapViewRow">
       <div id="mapViewComp" style="display:none;"></div>
       <div id="mapDivider" style="display:none;"></div>
@@ -41,5 +50,6 @@
     <div id="mapSidebarRightScenario"></div>
     <div id="mapSidebarRightLabelToggle"></div>
     <div id="mapSidebarRightLegend"></div>
+    <div id="mapSidebarRightOpacity"></div>
   </div>
 </div>

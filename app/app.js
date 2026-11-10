@@ -8,10 +8,15 @@ let geojsonSegments;
 let mapView;
 let mapComp; // second Map/MapView pair for side-by-side compare (ensureCompMapView()) - null until first used
 let mapViewComp;
-// Scenario-alias corner labels shown only in "sidebyside"/"swipe" compare view - vizmap.js's
-// setCompRendererAndShow()/teardownCompareExtras() set their text and show/hide them.
+// Scenario-alias title tiles, each spanning its own map's full width in #mapTitleBar - vizmap.js's
+// setCompRendererAndShow()/teardownCompareExtras() set their text and show/hide them. Each tile's
+// own text lives in a nested span (mapScenarioLabelMainText/CompText below), not the tile div's
+// own textContent, so mapScenarioLabelMain can also carry mapCompareColorHint as a second child
+// (the "overlay" branch, setMapCompareScenarioLabels()) without textContent wiping it out.
 let mapScenarioLabelMain;
 let mapScenarioLabelComp;
+let mapScenarioLabelMainText;
+let mapScenarioLabelCompText;
 // Overlay-mode diff/pct-diff color key - vizmap.js's setRendererAndLegend() sets its text and
 // show/hide (see updateMapCompareColorHint() below).
 let mapCompareColorHint;
@@ -159,34 +164,139 @@ function setupMapCompareSync(viewA, viewB) {
   mirror(viewB, viewA);
 }
 
-// Shows/hides the #mapViewComp panel and #mapDivider splitter, and resets #mapView back to
-// full width when side-by-side compare isn't active. Called from vizmap.js's initializeLayer()
-// (knows whether the current render is actually in swipe/compare mode) and hideLayers()/
-// teardownCompareSplit() (leaving that view entirely). #mapViewComp (not #mapView) is the one
-// given an explicit width - it comes first in source order (vizmap.html), so it's the "left"
-// panel being sized from the row's left edge; #mapView fills whatever's left over.
-function setMapCompareSplitVisible(visible) {
+// Shows/hides #mapViewComp and #mapDivider and lays them out for whichever compare mode is
+// active, resetting #mapView back to full width/#mapViewComp hidden when neither is. Called from
+// vizmap.js's initializeLayer() (knows whether the current render is actually in sidebyside/swipe
+// mode) and hideLayers()/teardownCompareExtras() (leaving that view, or dropping both non-overlay
+// modes, entirely). mode is "sidebyside", "swipe", or null/undefined for neither.
+//
+// "sidebyside" is a fixed 50/50 flex split - #mapViewComp (not #mapView) is the one given an
+// explicit width since it comes first in source order (vizmap.html), so it's the "left" panel
+// being sized from the row's own left edge; #mapView fills whatever's left over. #mapDivider is
+// just a static visual seam there, not draggable.
+//
+// "swipe" instead overlays the two MapViews in the exact same space (.swipe-overlay, styles.css)
+// - #mapViewComp sits on top, clipped via clip-path to only show through up to #mapDivider's own
+// position, revealing #mapView underneath past that point. #mapDivider becomes a draggable
+// handle for it (setupMapSwipeDrag() below) - this recreates what Esri's Swipe widget used to do
+// (one shared MapView, leadingLayers/trailingLayers clipped against each other), but with two
+// independent, normally-labeled MapViews instead, since that widget had a confirmed bug
+// suppressing one side's labels with no workaround via the labeling API (see vizmap.html's
+// #mapViewRow comment).
+function setMapCompareLayoutMode(mode) {
   const row = document.getElementById("mapViewRow");
   const divider = document.getElementById("mapDivider");
   const compView = document.getElementById("mapViewComp");
   if (!row || !divider || !compView) return;
 
-  row.classList.toggle("split", visible);
+  const visible = mode === "sidebyside" || mode === "swipe";
+  row.classList.toggle("split", mode === "sidebyside");
+  row.classList.toggle("swipe-overlay", mode === "swipe");
   divider.style.display = visible ? "" : "none";
   compView.style.display = visible ? "" : "none";
-  if (!visible) {
-    compView.style.width = ""; // let .split's width rule take back over next time
-  } else {
+
+  if (mode === "sidebyside") {
+    compView.style.clipPath = "";
+    divider.style.left = "";
     if (!compView.style.width) {
       compView.style.width = "50%"; // first time entering split - start at an even 50/50
     }
-    // setupMapCompareSync() only mirrors a view the user is actively dragging/scrolling - it
-    // doesn't cover programmatic navigation (initial centerMap/zoom, URL restore) that may have
-    // moved mapView while mapViewComp sat hidden, so catch it up explicitly on every entry.
-    if (mapView && mapViewComp && mapView.viewpoint) {
-      mapViewComp.viewpoint = mapView.viewpoint.clone();
+    // #mapTitleBar's own tiles mirror #mapViewComp/#mapView's exact flex math (flat 50%/auto,
+    // not centered - unlike "swipe" below, this divider isn't nudged by a centering margin) so
+    // its gap (9px, same width as #mapDivider) lines up with the real divider directly below it.
+    if (mapScenarioLabelComp && mapScenarioLabelMain) {
+      mapScenarioLabelComp.style.flex = "0 0 50%";
+      mapScenarioLabelMain.style.flex = "1 1 auto";
     }
+  } else if (mode === "swipe") {
+    compView.style.width = "";
+    positionSwipeHandle(); // fixes the grip's screen position for this entry (see its own comment)
+    applyMapSwipePosition(mapSwipePosition); // also syncs the title tiles' own split (see above)
+  } else {
+    compView.style.width = ""; // let .split's width rule take back over next time
+    compView.style.clipPath = "";
+    divider.style.left = "";
+    if (mapScenarioLabelMain) mapScenarioLabelMain.style.flex = "1 1 auto";
   }
+
+  // setupMapCompareSync() only mirrors a view the user is actively dragging/scrolling - it
+  // doesn't cover programmatic navigation (initial centerMap/zoom, URL restore) that may have
+  // moved mapView while mapViewComp sat hidden, so catch it up explicitly on every entry.
+  if (visible && mapView && mapViewComp && mapView.viewpoint) {
+    mapViewComp.viewpoint = mapView.viewpoint.clone();
+  }
+}
+
+// Reveal position for "swipe" mode, as a percent from #mapViewRow's left edge - module-level
+// (not reset on every setMapCompareLayoutMode(null) call) so returning to swipe mode later in
+// the same page view keeps wherever the user last left the handle instead of recentering.
+let mapSwipePosition = 50;
+
+function applyMapSwipePosition(percent) {
+  mapSwipePosition = Math.min(95, Math.max(5, percent));
+  const divider = document.getElementById("mapDivider");
+  const compView = document.getElementById("mapViewComp");
+  if (!divider || !compView) return;
+  divider.style.left = mapSwipePosition + "%";
+  // Clips #mapViewComp's own right edge back to the handle's position, revealing #mapView
+  // (underneath, z-index-wise - see .swipe-overlay, styles.css) through the clipped-away part.
+  compView.style.clipPath = `inset(0 ${100 - mapSwipePosition}% 0 0)`;
+
+  // Keeps #mapTitleBar's own comp/main tiles split at the same point as the handle, moving with
+  // it while dragging - mirrors the divider's own centering (left:X%, margin-left:-4.5px) by
+  // ending the comp tile 4.5px short of X% and letting .map-title-bar's 9px gap (same width as
+  // #mapDivider) span the rest, so the gap sits centered on X% just like the real divider.
+  if (mapScenarioLabelComp && mapScenarioLabelMain) {
+    mapScenarioLabelComp.style.flex = `0 0 calc(${mapSwipePosition}% - 4.5px)`;
+    mapScenarioLabelMain.style.flex = "1 1 auto";
+  }
+}
+
+// Anchors the swipe handle's "< >" grip (#mapDivider::after) to a fixed screen position instead
+// of CSS's normal top:50% (which re-centers it within #mapDivider's own CURRENT height every
+// time that height changes - e.g. #mapTitleBar collapsing/expanding when "Map Title" is toggled,
+// which only ever changes #mapViewRow's height by moving its own TOP edge, never its bottom -
+// see setMapCompareLayoutMode()/resizeAlign on mapView/mapViewComp above for the same reasoning
+// applied to the map content itself). Deliberately NOT called from applyMapTitleVisibility() -
+// only on a genuine swipe-mode entry or window resize - so toggling the title alone never moves
+// it; the value set here (a bottom offset, --swipe-handle-bottom, consumed by the ::after rule in
+// styles.css) stays put across that toggle since #mapViewRow's bottom edge never moves either.
+function positionSwipeHandle() {
+  const divider = document.getElementById("mapDivider");
+  const row = document.getElementById("mapViewRow");
+  if (!divider || !row) return;
+  const rowHeight = row.getBoundingClientRect().height;
+  divider.style.setProperty("--swipe-handle-bottom", (rowHeight / 2 - 21) + "px");
+}
+
+// Classic "drag the handle" interaction, same pattern as setupLegendPopout()'s own dragging -
+// #mapDivider doubles as both sidebyside's static seam and swipe's draggable handle (one shared
+// element, not two), so this only actually moves anything while #mapViewRow has .swipe-overlay;
+// a mousedown while in sidebyside (where the class isn't present) just does nothing. Called once
+// at setup - safe to leave attached permanently since it's a no-op outside swipe mode.
+function setupMapSwipeDrag() {
+  const divider = document.getElementById("mapDivider");
+  const row = document.getElementById("mapViewRow");
+  if (!divider || !row) return;
+  let _dragging = false;
+  divider.addEventListener("mousedown", (e) => {
+    if (!row.classList.contains("swipe-overlay")) return;
+    _dragging = true;
+    e.preventDefault();
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!_dragging) return;
+    const rect = row.getBoundingClientRect();
+    applyMapSwipePosition(((e.clientX - rect.left) / rect.width) * 100);
+  });
+  document.addEventListener("mouseup", () => { _dragging = false; });
+
+  // Window resize is the other legitimate reason the grip's fixed screen position should change
+  // (unlike the "Map Title" toggle - see positionSwipeHandle()'s own comment) - re-centers it for
+  // the new size, only while swipe mode is actually active.
+  window.addEventListener("resize", () => {
+    if (row.classList.contains("swipe-overlay")) positionSwipeHandle();
+  });
 }
 
 // Builds/refreshes one alias <calcite-select>'s option list from dataScenarios - the "Use
@@ -207,46 +317,38 @@ function populateAliasSelectOptions(selectElem) {
   });
 }
 
-// Shows/updates (or hides) the scenario-alias corner label(s) - called from vizmap.js's
-// setCompRendererAndShow() (mode === 'sidebyside'/'swipe', with both alias strings),
-// initializeLayer() and the applyEdits() callback (mode === 'overlay', main alias only, for
-// every non-two-layer-compare render - i.e. every map, not just while comparing), and
+// Shows/updates (or hides) the scenario-alias title(s) in #mapTitleBar (vizmap.html) - called
+// from vizmap.js's setCompRendererAndShow() (mode === 'sidebyside'/'swipe', with both alias
+// strings), initializeLayer() and the applyEdits() callback (mode === 'overlay', main alias
+// only, for every non-two-layer-compare render - i.e. every map, not just while comparing), and
 // teardownCompareExtras() (mode === null/no args, to hide both, only when this view is going
 // fully inactive - see hideLayers()).
-// "sidebyside" labels each of the two independent MapViews in its own top-left corner.
-// "swipe" has only one visible MapView (mapViewComp stays hidden - see setMapCompareSplitVisible()),
-// so instead of hiding one side's label (previously dropped the Main/right side entirely), it
-// shows ONE combined label there - same "(left) vs. (right)" wording as the legend title.
+// "sidebyside"/"swipe" both show the two plain scenario names side by side in the bar, each
+// tile stretching to fill its own map's full width (CSS flex:1 1 0, matching each map's own 50%
+// column) - now that the bar sits above the map instead of floating over it, "swipe" no longer
+// needs the combined "(left) vs. (right)" text that used to keep a title readable regardless of
+// which overlaid map was on top. "overlay" only ever needs mapScenarioLabelMain, which then
+// grows to fill the whole bar on its own (mapScenarioLabelComp stays hidden).
 function setMapCompareScenarioLabels(mode, mainText, compText) {
-  if (!mapScenarioLabelMain || !mapScenarioLabelComp || !mapView || !mapViewComp) return;
+  if (!mapScenarioLabelMain || !mapScenarioLabelComp) return;
 
-  if (mode === "sidebyside") {
-    mapScenarioLabelMain.textContent = mainText;
+  if (mode === "sidebyside" || mode === "swipe") {
+    mapScenarioLabelCompText.textContent = compText;
+    mapScenarioLabelComp.dataset.logicalShow = "true";
+
+    mapScenarioLabelMainText.textContent = mainText;
     mapScenarioLabelMain.dataset.logicalShow = "true";
-    mapView.ui.add(mapScenarioLabelMain, "top-left");
-
-    mapScenarioLabelComp.textContent = compText;
-    mapScenarioLabelComp.dataset.logicalShow = "true";
-    mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
-  } else if (mode === "swipe") {
-    mapScenarioLabelMain.dataset.logicalShow = "false";
-
-    mapScenarioLabelComp.textContent = `${compText} (left) vs. ${mainText} (right)`;
-    mapScenarioLabelComp.dataset.logicalShow = "true";
-    mapView.ui.add(mapScenarioLabelComp, "top-left");
   } else if (mode === "overlay") {
     // compText is only passed while actually in compare mode (see vizmap.js's two 'overlay'
     // callers) - plain single-scenario view (this.mode === 'main') passes null/undefined and
     // just gets its own name alone, same as before this label also had to carry the compare case.
-    mapScenarioLabelMain.textContent = compText ? `${mainText} vs. ${compText}` : mainText;
+    mapScenarioLabelMainText.textContent = compText ? `${mainText} vs. ${compText}` : mainText;
     mapScenarioLabelMain.dataset.logicalShow = "true";
-    mapView.ui.add(mapScenarioLabelMain, "top-left");
-    // Esri's ui.add() re-appends an already-present widget to the end of its corner container
-    // rather than leaving it in place - re-anchor the color hint (updateMapCompareColorHint()
-    // below) right after it every time this runs, not just once, or a later call here (this
-    // fires more than once per render - see vizmap.js's two 'overlay' callers) silently pushes
-    // the label past the hint instead of the other way around.
-    if (mapCompareColorHint) mapScenarioLabelMain.insertAdjacentElement("afterend", mapCompareColorHint);
+    // Nests the color hint (updateMapCompareColorHint() below) inside the same title tile, right
+    // after the text span - CSS (.map-scenario-label's own flex row + the hint's marginLeft:auto)
+    // puts it on the same line, right-justified. Re-appended every time this runs, not just
+    // once, since this fires more than once per render (see vizmap.js's two 'overlay' callers).
+    if (mapCompareColorHint) mapScenarioLabelMain.appendChild(mapCompareColorHint);
 
     mapScenarioLabelComp.dataset.logicalShow = "false";
   } else {
@@ -269,6 +371,11 @@ function applyMapTitleVisibility() {
     const logicalShow = el.dataset.logicalShow === "true";
     el.style.display = (logicalShow && !mapTitleHidden) ? "" : "none";
   });
+  // Collapses #mapTitleBar itself back down to #mainMap's normal 15px top inset (matching the
+  // other 3 sides) while the toggle is off, instead of leaving its own min-height/gap as a blank
+  // strip now that every tile inside it is display:none.
+  const titleBar = document.getElementById("mapTitleBar");
+  if (titleBar) titleBar.classList.toggle("title-hidden", mapTitleHidden);
 }
 
 // Lets #mapSidebarRightLegend (vizmap.html) pop out into its own small draggable window and dock
@@ -359,11 +466,16 @@ function setupLegendPopout() {
   };
   const dockBack = () => {
     headerRow.style.display = "";
-    // Always the last section in the sidebar's own .panel-col-body (setupColumnCollapse(),
-    // above) - Scenario Selector/label toggles come first and never move, so appending here
-    // always lands it back in the right spot regardless of where it popped out from.
+    // Scenario Selector/label toggles come first and never move, and #mapSidebarRightOpacity
+    // (Layer Opacity) must stay AFTER the Legend - so dock back right before it (a plain
+    // appendChild to .panel-col-body's end would land the Legend after Opacity instead).
     const sidebarBody = document.querySelector("#mapSidebarRight .panel-col-body") || document.getElementById("mapSidebarRight");
-    sidebarBody.appendChild(legendContainer);
+    const opacityContainer = sidebarBody.querySelector("#mapSidebarRightOpacity");
+    if (opacityContainer) {
+      sidebarBody.insertBefore(legendContainer, opacityContainer);
+    } else {
+      sidebarBody.appendChild(legendContainer);
+    }
     floatWindow.style.display = "none";
   };
 
@@ -402,6 +514,9 @@ function updateMapCompareColorHint(renderer, mainLabel, compLabel) {
     `<span style="color:${compHigherColor}; font-weight:bold;">lower</span>` +
     ` than ${compLabel}`;
   mapCompareColorHint.dataset.logicalShow = "true";
+  // Pushed to the far side of its parent title tile (mapScenarioLabelMain) so it reads on the
+  // same line as the title text, right-justified, instead of wrapping onto its own line below it.
+  mapCompareColorHint.style.marginLeft = "auto";
   applyMapTitleVisibility();
 }
 
@@ -1965,6 +2080,12 @@ require([
         center: centerMap,
         zoom: 10,
         container: template.mapView,
+        // Toggling "Map Title"/collapsing #mapTitleBar only ever changes the container's height
+        // by extending/shrinking it at the TOP (it's a flex item above #mapViewRow in #mainMap's
+        // column layout, #mapFooter stays pinned below) - "bottom" keeps that bottom edge's
+        // content anchored across the resize instead of ArcGIS's default "center" behavior,
+        // which re-centers the viewpoint and makes previously-visible content visibly jump.
+        resizeAlign: "bottom",
       });
 
       // Push pan/zoom into the URL once a user-driven move settles ("stationary" fires once
@@ -1994,27 +2115,46 @@ require([
         zoom: 10,
         container: "mapViewComp",
         ui: { components: [] }, // bare - no zoom/attribution chrome duplicating the main view's
+        resizeAlign: "bottom", // same reasoning as mapView's own resizeAlign above
       });
 
       setupMapCompareSync(mapView, mapViewComp);
 
-      // Scenario-alias corner labels - hidden until vizmap.js's setCompRendererAndShow() shows
-      // and fills them in for "sidebyside"/"swipe" compare view (see the globals' declaration).
+      // Scenario-alias title(s) - hidden until vizmap.js's setCompRendererAndShow()/
+      // initializeLayer() show and fill them in (see the globals' declaration). Live in
+      // #mapTitleBar (vizmap.html), a plain header bar above the map(s), not floating map UI -
+      // appended once here and never touched again except via the inner *Text span's
+      // textContent/dataset.logicalShow (setMapCompareScenarioLabels() below). Comp appended
+      // before Main so it reads left-to-right matching mapViewComp (left) / mapView (right) in
+      // "sidebyside"/"swipe". Each tile's own text lives in a nested span, not the tile div's
+      // own textContent, so mapScenarioLabelMain can also carry mapCompareColorHint as a second
+      // child (the "overlay" branch below) without a later textContent wiping it back out.
       mapScenarioLabelMain = document.createElement("div");
       mapScenarioLabelMain.className = "map-scenario-label";
       mapScenarioLabelMain.style.display = "none";
-      mapView.ui.add(mapScenarioLabelMain, "top-left");
+      mapScenarioLabelMainText = document.createElement("span");
+      mapScenarioLabelMainText.className = "map-scenario-label-text";
+      mapScenarioLabelMain.appendChild(mapScenarioLabelMainText);
 
       mapScenarioLabelComp = document.createElement("div");
       mapScenarioLabelComp.className = "map-scenario-label";
       mapScenarioLabelComp.style.display = "none";
-      mapViewComp.ui.add(mapScenarioLabelComp, "top-left");
+      mapScenarioLabelCompText = document.createElement("span");
+      mapScenarioLabelCompText.className = "map-scenario-label-text";
+      mapScenarioLabelComp.appendChild(mapScenarioLabelCompText);
 
-      // Overlay-mode diff/pct-diff color key - lives in #mapFooter under #mapTitle (vizmap.js's
-      // title-building code builds that fresh every render), not mapView's own UI, so it reads
-      // as part of the map's title rather than a floating corner badge. Hidden/positioned by
-      // updateMapCompareColorHint() below, which re-inserts it since #mapFooter gets wiped
-      // (innerHTML = '') on every render.
+      const mapTitleBar = document.getElementById("mapTitleBar");
+      if (mapTitleBar) {
+        mapTitleBar.appendChild(mapScenarioLabelComp);
+        mapTitleBar.appendChild(mapScenarioLabelMain);
+      }
+
+      // Overlay-mode diff/pct-diff color key - nested inside mapScenarioLabelMain (the same
+      // title tile, not a separate one) so it reads as part of the same box, right-justified
+      // alongside the title text (CSS - .map-scenario-label is itself a flex row). Re-appended
+      // there every render (setMapCompareScenarioLabels()'s 'overlay' branch below), since this
+      // fires more than once per render (see vizmap.js's two 'overlay' callers). Hidden/filled
+      // in by updateMapCompareColorHint() below.
       mapCompareColorHint = document.createElement("div");
       mapCompareColorHint.className = "map-compare-color-hint";
       mapCompareColorHint.style.display = "none";
@@ -2190,15 +2330,16 @@ require([
       // "Compare View" picks how the two scenarios get shown once "Compare to:" is open:
       // - "overlay": a single diff/pct-diff map (the original behavior, "Compare Type" below
       //   picks which).
-      // - "sidebyside": two independent, synced MapViews with a draggable splitter between
-      //   them (app.js's setMapCompareSplitVisible()/setupMapCompareSync()) - each view labels
-      //   itself normally since neither competes with the other.
-      // - "swipe": the classic single-map reveal, one MapView with Esri's Swipe widget
-      //   clipping leadingLayers/trailingLayers (VizMap.setCompRendererAndShow()). Esri's Swipe
-      //   widget has a confirmed bug where its trailingLayers suppresses the other layer's
-      //   labels (see https://community.esri.com/t5/arcgis-javascript-maps-sdk-questions/swipe-widget-label-issue/m-p/1379227) -
-      //   kept as an option anyway since some users want the familiar single-map swipe feel
-      //   more than complete labels, with "sidebyside" as the alternative when labels matter.
+      // - "sidebyside": two independent, synced MapViews at a fixed 50/50 split (app.js's
+      //   setMapCompareLayoutMode()/setupMapCompareSync()) - each view labels itself normally
+      //   since neither competes with the other.
+      // - "swipe": the classic single-map reveal - two independent MapViews again, same as
+      //   "sidebyside", just overlaid in the same space with a draggable reveal handle instead
+      //   of placed side by side at a fixed 50/50 split (setMapCompareLayoutMode(), app.js).
+      //   Each keeps its own labels, same as every mode - previously a single shared MapView
+      //   with Esri's Swipe widget clipping leadingLayers/trailingLayers against each other,
+      //   dropped for a confirmed bug suppressing one side's labels with no workaround via the
+      //   labeling API.
       // "Compare Type" only means anything for the overlay option, so its own row gets hidden
       // below whenever either compare-view option is selected (toggleCompareTypeVisibility()).
       // A calcite-segmented-control (not calcite-select, unlike Compare Type below) - three
@@ -2316,23 +2457,22 @@ require([
       document.getElementById("mapSidebarRightLabelToggle").appendChild(mapTitleToggleAction);
 
       // ADD LAYER OPACITY SLIDER - controls the active vizMap's own feature layer(s) opacity
-      // live while dragging. On its own full-width row under Labels/Map Title (same
-      // flex-basis:100% trick #mapSidebarRightLabelToggle's own ::before heading uses to force
-      // itself onto its own line in that flex row) - a slider needs more width than an icon
-      // button gets sharing a row. The value itself lives on the active VizMap instance
-      // (this.layerOpacity, vizmap.js), reapplied there every render since initializeLayer()
-      // rebuilds layerDisplay/layerDisplayComp from scratch each time - this handler only needs
-      // to update whichever instance is active right now, not persist anything on its own.
-      // Same small grey section-label convention as "— MAP ELEMENT VISIBILITY —" above and
-      // "— LEGEND —" below (.map-legend-header-label, shared) - not .compare-inline-label (the
-      // plain "Compare View"/"Compare Type" style), per explicit request to match those two.
+      // live while dragging. Lives in its own #mapSidebarRightOpacity container (vizmap.html),
+      // below #mapSidebarRightLegend, per explicit request to put it under the Legend instead of
+      // above it. The value itself lives on the active VizMap instance (this.layerOpacity,
+      // vizmap.js), reapplied there every render since initializeLayer() rebuilds
+      // layerDisplay/layerDisplayComp from scratch each time - this handler only needs to update
+      // whichever instance is active right now, not persist anything on its own.
+      // Same small grey section-label convention as "— MAP ELEMENT VISIBILITY —"/"— LEGEND —"
+      // above (.map-legend-header-label, shared) - not .compare-inline-label (the plain "Compare
+      // View"/"Compare Type" style), per explicit request to match those two.
       const headingOpacity = document.createElement("div");
       headingOpacity.className = "map-legend-header-label";
       headingOpacity.textContent = "— LAYER OPACITY —";
       headingOpacity.style.flexBasis = "100%";
       headingOpacity.style.textAlign = "center";
-      headingOpacity.style.marginTop = "8px";
-      document.getElementById("mapSidebarRightLabelToggle").appendChild(headingOpacity);
+      headingOpacity.style.marginTop = "20px"; // matches "— LEGEND —"'s own top spacing above it
+      document.getElementById("mapSidebarRightOpacity").appendChild(headingOpacity);
 
       const opacityRow = document.createElement("div");
       opacityRow.id = "mapOpacityRow";
@@ -2359,7 +2499,7 @@ require([
         }
       });
 
-      document.getElementById("mapSidebarRightLabelToggle").appendChild(opacityRow);
+      document.getElementById("mapSidebarRightOpacity").appendChild(opacityRow);
 
       // ADD BASEMAP TOGGLE - a plain icon button (replaces Esri's BasemapToggle widget, which
       // only ever controlled mapView's own basemap) toggling map.basemap AND mapComp.basemap
@@ -2417,6 +2557,7 @@ require([
     // assuming a particular parent.
     setupColumnCollapse(document.getElementById("mapSidebarRight"), "Scenario / Legend", undefined, true);
     setupLegendPopout();
+    setupMapSwipeDrag();
 
     // vizDashboard's own right sidebar (vizdashboard.html) - same standalone column/right-edge
     // treatment as vizMap's above (replaces the old calcite-shell-panel/openbtndashboard
