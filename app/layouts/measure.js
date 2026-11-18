@@ -22,6 +22,8 @@ class Measure {
     this.divideBaseGeoJsonKey = cfg.divide_baseGeoJsonKey || null;
     this.baseGeoJsonId = cfg.baseGeoJsonId || null;
     this.divideBaseGeoJsonId = cfg.divide_baseGeoJsonId || null;
+    this.segIdPrefixFilter = cfg.segid_prefix_filter || null;
+    this.divideSegIdPrefixFilter = cfg.divide_segid_prefix_filter || null;
 
     // optional different jsonName for denominator
     this.divideJsonName = cfg.divide_jsonName || null;
@@ -345,7 +347,12 @@ class Measure {
     // VMT over roadway segments but Households over TAZs) - each needs its own geo set in
     // its own ID space rather than sharing one blindly, or the denominator's sum silently
     // matches nothing (every roadway SEGID is foreign to the household data's TAZID keys).
-    const buildGeosFor = (geoJsonKey, geoJsonId) => {
+    // idPrefixes restricts the geo set to ids (e.g. SEGID) starting with one of the given
+    // prefixes - lets a measure scope itself to specific routes (e.g. Interstates: "0015"
+    // I-15, "0080" I-80, "0084" I-84, "0215" I-215) without needing a dedicated aggregator/
+    // corridor key file, since there's no route-name attribute in the segment data to filter
+    // on directly.
+    const buildGeosFor = (geoJsonKey, geoJsonId, idPrefixes) => {
       if (!_selectedAggregator || !geoJsonKey || !geoJsonId) return [];
 
       const aggregatorKeyFile = mainScenario.getAggregatorKeyFile(_selectedAggregator, geoJsonKey);
@@ -361,10 +368,15 @@ class Measure {
         return selectedOptions.includes(recVal);
       });
 
-      return new Set(agRecords.map(r => r[geoJsonId]));
+      let ids = agRecords.map(r => r[geoJsonId]);
+      if (Array.isArray(idPrefixes) && idPrefixes.length) {
+        ids = ids.filter(id => idPrefixes.some(prefix => String(id).startsWith(prefix)));
+      }
+
+      return new Set(ids);
     };
 
-    const _geos = buildGeosFor(this.baseGeoJsonKey, this.baseGeoJsonId);
+    const _geos = buildGeosFor(this.baseGeoJsonKey, this.baseGeoJsonId, this.segIdPrefixFilter);
 
     // Combines an attribute's per-zone values across a summary geography. Each scenario
     // resolves its own filter combos from its own filterGroup metadata (see
@@ -406,9 +418,10 @@ class Measure {
 
         const divGeoJsonKey = this.divideBaseGeoJsonKey || this.baseGeoJsonKey;
         const divGeoJsonId = this.divideBaseGeoJsonId || this.baseGeoJsonId;
+        const divSegIdPrefixFilter = this.divideSegIdPrefixFilter || this.segIdPrefixFilter;
         const _geosDen = (divGeoJsonKey === this.baseGeoJsonKey && divGeoJsonId === this.baseGeoJsonId)
           ? _geos
-          : buildGeosFor(divGeoJsonKey, divGeoJsonId);
+          : buildGeosFor(divGeoJsonKey, divGeoJsonId, divSegIdPrefixFilter);
 
         const mainDen = aggregateAcrossGeos(mainScenario, divJsonName, this.divideAttribute, this.divideSelectedFilters, _geosDen);
 

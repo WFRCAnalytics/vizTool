@@ -214,6 +214,10 @@ class WijCheckboxes {
   // default). No-op if this widget wasn't built collapsible in the first place.
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._checkboxContainer) return;
+    // Remembered on the instance (not just reflected in the DOM) so a later render - switching
+    // tabs/views and back - can restore whatever the user last left this card as, instead of
+    // filter.js forcing every card back to collapsed every time (see filter.js's render()).
+    this.collapsed = collapsed;
     const _subAgSlot = this._mainContainer.querySelector(':scope > .filter-subag-slot');
     // Card is this widget's parent once filter.js has appended it (see filter.js's render()) -
     // normalizes padding to match the compact cards while collapsed (see styles.css).

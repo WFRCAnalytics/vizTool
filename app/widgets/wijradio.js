@@ -155,6 +155,10 @@ class WijRadio {
   // See WijCheckboxes' identical pair for why this exists (filter.js calls collapse()).
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._radioBody) return;
+    // Remembered on the instance (not just reflected in the DOM) so a later render - switching
+    // tabs/views and back - can restore whatever the user last left this card as, instead of
+    // filter.js forcing every card back to collapsed every time (see filter.js's render()).
+    this.collapsed = collapsed;
     // See WijCheckboxes' identical pair for why - normalizes padding while collapsed.
     const _card = this._container.parentElement;
     if (_card) _card.classList.toggle('wij-row-collapsed', collapsed);

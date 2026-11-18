@@ -28,32 +28,38 @@ class Scenario {
       if (!menuItem.modelEntities) return;
 
       menuItem.modelEntities.forEach(modelEntity => {
-        const vizLayout = modelEntity.vizLayout;
-        if (!vizLayout) return;
+        // Every view of this entity, not just whichever is active at startup - a multi-view
+        // entity's inactive view (e.g. Trends, while Map is the default) still needs its data
+        // probed up front too, so hasAvailableData()/hasViewAvailableData() have real answers
+        // for it the first time someone toggles to it.
+        modelEntity.views.forEach(view => {
+          const vizLayout = view.vizLayout;
+          if (!vizLayout) return;
 
-        // 1) Direct jsonName on the vizLayout itself (non-dashboard or simple cases)
-        if (vizLayout.jsonName) {
-          jsonFileNames.add(vizLayout.jsonName);
-        }
+          // 1) Direct jsonName on the vizLayout itself (non-dashboard or simple cases)
+          if (vizLayout.jsonName) {
+            jsonFileNames.add(vizLayout.jsonName);
+          }
 
-        // 2) If vizLayout is a vizDashboard instance, collect jsonNames from its cards' measures
-        const isVizDashboard = (typeof VizDashboard !== "undefined" && vizLayout instanceof VizDashboard)
+          // 2) If vizLayout is a vizDashboard instance, collect jsonNames from its cards' measures
+          const isVizDashboard = (typeof VizDashboard !== "undefined" && vizLayout instanceof VizDashboard)
 
-        if (isVizDashboard) {
+          if (isVizDashboard) {
 
-          vizLayout.cards.forEach(card => {
-            const cardConfig = configCards?.[card.cardId];
-            if (!cardConfig) return;
+            vizLayout.cards.forEach(card => {
+              const cardConfig = configCards?.[card.cardId];
+              if (!cardConfig) return;
 
-            const measureIds = cardConfig.measures || []; // e.g. ["measurePopTotal","measurePopGrowth",...]
-            measureIds.forEach(measureId => {
-              const measureConfig = configMeasures?.[measureId];
-              if (measureConfig && measureConfig.jsonName) {
-                jsonFileNames.add(measureConfig.jsonName);
-              }
+              const measureIds = cardConfig.measures || []; // e.g. ["measurePopTotal","measurePopGrowth",...]
+              measureIds.forEach(measureId => {
+                const measureConfig = configMeasures?.[measureId];
+                if (measureConfig && measureConfig.jsonName) {
+                  jsonFileNames.add(measureConfig.jsonName);
+                }
+              });
             });
-          });
-        }
+          }
+        });
       });
     });
 

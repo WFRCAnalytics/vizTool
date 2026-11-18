@@ -15,6 +15,10 @@
     "title": "Vehicle Miles Traveled",
     "measures": ["mVmt","mPersonalVmt","mCvVmt","mHbwVmtProduced","mVmtPerHh","mVmtPerCapita","mHbwVmtPerWorker"]
   },
+  "cardVmtInterstate": {
+    "title": "Truck VMT on Interstates",
+    "measures": ["mCvVmtInterstate"]
+  },
   "cardVht": {
     "title": "Vehicle Hours Traveled",
     "measures": ["mVht","mPersonalVht","mCvVht","mHbwVhtProduced","mVhtPerHh","mVhtPerCapita","mHbwVhtPerWorker"]

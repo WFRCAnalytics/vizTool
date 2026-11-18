@@ -17,6 +17,7 @@ class VizTrends {
 
     // link to parent
     this.modelEntity = modelEntity;
+    this.templateType = 'vizTrends';
 
     this.sidebar = new VizSidebar(data.attributes,
                                   data.attributeSelected,

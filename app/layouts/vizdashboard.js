@@ -5,6 +5,7 @@ class VizDashboard {
     this.id = modelEntity.id + '-' + this.generateIdFromText(modelEntity.submenuText); // use provided id or generate one if not provided
     this.data = data;
     this.modelEntity = modelEntity;
+    this.templateType = 'vizDashboard';
     this.title = modelEntity.submenuText;
 
     // Reference to the container div in your HTML

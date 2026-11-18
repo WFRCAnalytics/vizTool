@@ -10,6 +10,7 @@ class VizMatrix {
 
     // link to parent
     this.modelEntity = modelEntity;
+    this.templateType = 'vizMatrix';
 
     this.jsonName = data.jsonName;
     this.baseGeoJsonKey = data.baseGeoJsonKey;

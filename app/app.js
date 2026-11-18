@@ -860,7 +860,14 @@ require([
 
   function generateMainClassBreakInfos(main, symbols) {
     const bounds = buildMainAscendingBounds(main.breakpoints, main.unit, main.numberFormat, main.displayScale);
-    return bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
+    const classBreakInfos = bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
+    // Esri's Legend widget lists a class-breaks renderer's entries in reverse of this array by
+    // default (highest band at top) - reversing here flips the legend to read smallest-on-top/
+    // largest-on-bottom instead (per-attribute opt-in: config/attributes.json's own
+    // rendererCollection.main.legendReverse), without touching which color a given value
+    // actually renders as - ClassBreaksRenderer matches each feature by min/max range, not by
+    // position in this array.
+    return main.legendReverse ? classBreakInfos.reverse() : classBreakInfos;
   }
 
   function expandAttributesConfig(dataConfigAttributes, templates) {
@@ -879,6 +886,7 @@ require([
         delete mainR.unit;
         delete mainR.numberFormat;
         delete mainR.displayScale;
+        delete mainR.legendReverse;
       }
 
       const cp = rc.compare_pct;
@@ -1197,9 +1205,13 @@ require([
       dataMenu.forEach((menuItem) => {
         if (menuItem.modelEntities) {
           menuItem.modelEntities.forEach((modelEntity) => {
-            if (modelEntity.vizLayout && modelEntity.vizLayout.jsonName) {
-              jsonFileNames.add(modelEntity.vizLayout.jsonName);
-            }
+            // Every view, not just the active one - a multi-view entity's inactive view (e.g.
+            // Trends, while Map is shown first) still needs its own jsonName counted/preloaded.
+            modelEntity.views.forEach((view) => {
+              if (view.vizLayout && view.vizLayout.jsonName) {
+                jsonFileNames.add(view.vizLayout.jsonName);
+              }
+            });
           });
         }
       });
@@ -1415,6 +1427,8 @@ require([
       { id: "aliasScenario_Comp", scenario: () => selectedScenario_Comp },
       { id: "aliasScenario_DashMain", scenario: () => selectedScenario_Main },
       { id: "aliasScenario_DashComp", scenario: () => selectedScenario_Comp },
+      { id: "aliasScenario_MatrixMain", scenario: () => selectedScenario_Main },
+      { id: "aliasScenario_MatrixComp", scenario: () => selectedScenario_Comp },
     ];
     aliasElements.forEach(({ id, scenario }) => {
       const el = document.getElementById(id);
@@ -1494,10 +1508,9 @@ require([
   // happens to re-render.
   const syncedComparePairs = [
     { ids: ["comparisonScenario", "comparisonScenarioMatrix", "comparisonScenarioDash"], prop: "open", events: ["calciteBlockToggle"] },
-    // selectCompareType/selectCompareTypeDash (vizMap/vizDashboard) are calcite-segmented-control
-    // now - selectCompareTypeMatrix is still calcite-select, so this listens for both event names
-    // on every id. Each element only ever actually fires the one matching its own real component
-    // type, so the "wrong" listener on any given id is just never triggered, not harmful.
+    // All three are calcite-segmented-control now (selectCompareTypeMatrix included) - still
+    // listening for both event names here is harmless leftover belt-and-suspenders from when
+    // Matrix's was a calcite-select.
     { ids: ["selectCompareType", "selectCompareTypeMatrix", "selectCompareTypeDash"], prop: "value", events: ["calciteSelectChange", "calciteSegmentedControlChange"] },
   ];
 
@@ -1534,39 +1547,44 @@ require([
     // Sync only within the same template (vizMap views sync with each other, vizTrends with
     // each other, etc.) rather than across all of them - lets e.g. vizTrends sit on one
     // geography while vizMap sits on another, instead of every view being forced to match.
-    const sourceTemplate = sourceSidebar?.vizLayout?.modelEntity?.template;
+    const sourceTemplate = sourceSidebar?.vizLayout?.templateType;
 
     dataMenu.forEach((menuItem) => {
       menuItem.modelEntities.forEach((modelEntity) => {
-        if (modelEntity.template !== sourceTemplate) return;
+        // Every view of this entity, not just whichever one happens to be active right now -
+        // a multi-view entity's Map and Trends views can each have their own template type, so
+        // this has to check per-view rather than the entity as a whole.
+        modelEntity.views.forEach((view) => {
+          if (view.template !== sourceTemplate) return;
 
-        const sidebar = modelEntity.vizLayout?.sidebar;
-        if (!sidebar || sidebar === sourceSidebar || !sidebar.aggregatorSelect) return;
+          const sidebar = view.vizLayout?.sidebar;
+          if (!sidebar || sidebar === sourceSidebar || !sidebar.aggregatorSelect) return;
 
-        // Only apply where the synced code is actually a valid option for this view -
-        // e.g. the OD matrix doesn't offer TAZID, so it just keeps its own current choice.
-        const matchedAggregator = sidebar.aggregators.find((a) => a.agCode === newAgCode);
-        if (!matchedAggregator) return;
+          // Only apply where the synced code is actually a valid option for this view -
+          // e.g. the OD matrix doesn't offer TAZID, so it just keeps its own current choice.
+          const matchedAggregator = sidebar.aggregators.find((a) => a.agCode === newAgCode);
+          if (!matchedAggregator) return;
 
-        sidebar.aggregatorSelect.selected = newAgCode;
+          sidebar.aggregatorSelect.selected = newAgCode;
 
-        // vizTrends and vizMatrix both keep a separate "reference map" filter widget built for
-        // whichever aggregator is selected (see VizSidebar's constructor) - rebuild it too so
-        // it isn't stale the next time this (currently inactive) view is opened. The view the
-        // user is actively looking at already does this itself via its own
-        // afterUpdateAggregator().
-        if (sidebar.usesAggregatorFilter()) {
-          sidebar.aggregatorFilter = new Filter(
-            null,
-            modelEntity.vizLayout,
-            sidebar.buildAggregatorFilterData(matchedAggregator.filterData),
-            {
-              agGeoJsonKey: matchedAggregator.agGeoJsonKey,
-              agCode: matchedAggregator.agCode,
-              agCodeLabelField: matchedAggregator.agCodeLabelField,
-            }
-          );
-        }
+          // vizTrends and vizMatrix both keep a separate "reference map" filter widget built for
+          // whichever aggregator is selected (see VizSidebar's constructor) - rebuild it too so
+          // it isn't stale the next time this (currently inactive) view is opened. The view the
+          // user is actively looking at already does this itself via its own
+          // afterUpdateAggregator().
+          if (sidebar.usesAggregatorFilter()) {
+            sidebar.aggregatorFilter = new Filter(
+              null,
+              view.vizLayout,
+              sidebar.buildAggregatorFilterData(matchedAggregator.filterData),
+              {
+                agGeoJsonKey: matchedAggregator.agGeoJsonKey,
+                agCode: matchedAggregator.agCode,
+                agCodeLabelField: matchedAggregator.agCodeLabelField,
+              }
+            );
+          }
+        });
       });
     });
   }
@@ -1963,6 +1981,29 @@ require([
       const aliasRowDashComp = document.getElementById("aliasRowDashComp");
       if (aliasRowDashMain) aliasRowDashMain.style.display = useAlias ? "block" : "none";
       if (aliasRowDashComp) aliasRowDashComp.style.display = useAlias ? "flex" : "none";
+    });
+
+    // vizMatrix's own "Use Aliases" toggle/alias selects/swap button - same controls and
+    // behavior as vizDashboard's pair just above, against vizmatrix.html's static markup.
+    const aliasScenarioMatrixMain = document.getElementById("aliasScenario_MatrixMain");
+    const aliasScenarioMatrixComp = document.getElementById("aliasScenario_MatrixComp");
+    aliasScenarioMatrixMain?.addEventListener("calciteSelectChange", () =>
+      applyAliasScenarioSelection(aliasScenarioMatrixMain, "Main")
+    );
+    aliasScenarioMatrixComp?.addEventListener("calciteSelectChange", () =>
+      applyAliasScenarioSelection(aliasScenarioMatrixComp, "Comp")
+    );
+    document.getElementById("swapScenariosMatrix")?.addEventListener("click", swapScenarios);
+
+    const useAliasToggleMatrix = document.getElementById("useAliasToggleMatrix");
+    useAliasToggleMatrix?.addEventListener("calciteSwitchChange", () => {
+      const useAlias = useAliasToggleMatrix.checked;
+      document.querySelectorAll(".matrix-main-select-row").forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+      document.querySelectorAll(".matrix-comp-select-row").forEach((row) => { row.style.display = useAlias ? "none" : "flex"; });
+      const aliasRowMatrixMain = document.getElementById("aliasRowMatrixMain");
+      const aliasRowMatrixComp = document.getElementById("aliasRowMatrixComp");
+      if (aliasRowMatrixMain) aliasRowMatrixMain.style.display = useAlias ? "block" : "none";
+      if (aliasRowMatrixComp) aliasRowMatrixComp.style.display = useAlias ? "flex" : "none";
     });
 
     // "Compare to:" is more than just a scenario pick - whether the panel is open (compare

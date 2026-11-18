@@ -24,6 +24,7 @@ require([
       
       // link to parent
       this.modelEntity = modelEntity;
+      this.templateType = 'vizMap';
 
       this.jsonName = data.jsonName;
       this.baseGeoJsonKey = data.baseGeoJsonKey;
@@ -949,7 +950,13 @@ require([
       if (!_hasMainData && !_hasCompData) {
         const _scenarioLabel = _mainScenario ? (_mainScenario.alias || _mainScenario.scnFolder) : 'the selected scenario';
         const _entityLabel = this.modelEntity?.submenuText || 'data';
-        showNoDataIndicator(`No ${_entityLabel} data available for ${_scenarioLabel}.`);
+        // Not actually missing data - a visible filter with every option unchecked guarantees
+        // an empty result on its own, so say that instead of implying the scenario lacks data.
+        if (this.sidebar.hasEmptyVisibleFilterSelection()) {
+          showNoDataIndicator('No filters selected - select at least one option for each filter.');
+        } else {
+          showNoDataIndicator(`No ${_entityLabel} data available for ${_scenarioLabel}.`);
+        }
         return;
       }
       hideNoDataIndicator();

@@ -101,6 +101,22 @@ calcite-menu-item {
     flex-shrink: 0;
 }
 
+/* Map/Trends (etc) view toggle - lives in the secondary nav's own content-end slot (see
+   model-entity.js's populateViewToggle()) so a multi-view entity's two layouts share one nav
+   row instead of getting a row each, reusing the bar's already-budgeted height instead of
+   needing a new one (every template's own panel heights are calc()'d against whether this bar
+   is shown at all - see body.secondary-nav-hidden rules below). Hidden entirely (both the
+   attribute and an inline style, same belt-and-suspenders as secondaryNav.hidden in
+   menu-item.js) for the common single-view entity. */
+#entityViewToggle {
+    flex-shrink: 0;
+    margin-left: 12px;
+    /* WFRC's brand orange (same #C85327 as the top bar/modal titlebar) instead of Calcite's
+       default blue, so the one control that switches what the whole page below it shows reads
+       as more consequential than an ordinary filter/compare toggle. */
+    --calcite-ui-brand: #C85327;
+}
+
 /* Highlight for the selected item - different color per bar, each painted the same way:
    the shadow content's own background is made transparent so the flat fill below - painted
    on the host element itself, which sits behind the shadow content - shows through.
@@ -473,6 +489,15 @@ td {
   margin-bottom: 15px;
 }
 
+/* "Divide By" itself (WijSelect's own title) - same gap-under-title fix as the Aggregation
+   pickers below, for the same reason (a plain, non-collapsible WijSelect title sat flush
+   against its dropdown with no spacing of its own). */
+#vizTrendsDividers .filter-toggle-title,
+#vizMapDividers .filter-toggle-title {
+  display: block;
+  margin-bottom: 8px;
+}
+
 /* vizTrends/vizMap/vizMatrix "Select Summary/Zone Geography" boxes: same treatment, labeled
    "AGGREGATION". vizDashboard's Aggregator box (and the Scenario Selector boxes, which also use
    .rowGeography) keeps its original blue-bordered-card look - only these three are in scope. */
@@ -494,6 +519,18 @@ td {
   color: #999999;
   text-align: center;
   margin-bottom: 15px;
+}
+
+/* "Select Summary/Zone Geography" itself (WijSelect's own title, .filter-toggle-title) sat
+   flush against its dropdown right below it, with none of the usual card/title spacing - these
+   three aggregator pickers are the only non-collapsible WijSelect use with its own title line
+   (others either live inside a collapsible filter card, which already has its own gap, or have
+   showTitle:false, e.g. the subAg dropdown nested under a filter's title). */
+#vizTrendsAggregator .filter-toggle-title,
+#vizMapAggregator .filter-toggle-title,
+#vizMatrixAggregator .filter-toggle-title {
+  display: block;
+  margin-bottom: 8px;
 }
 
 /* Same small grey section-label convention as the ones above, plus a pop-out toggle (unlike the
@@ -1434,7 +1471,7 @@ td {
   padding: 4px 10px;
   margin: 4px 0;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1.2em; /* was 0.9em; 1.5x read too big, dialed back per explicit request */
   color: #151515;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   white-space: nowrap;

@@ -210,11 +210,16 @@ class Filter {
       filterContainer.appendChild(filterWijEl);
 
       // Filters start collapsed by default (not "Select Trend Groups"/other direct, non-Filter
-      // uses of these same widgets, which don't call this) - called after the subAg slot above
-      // is in place (collapse() hides it too and it doesn't exist any earlier than this), and
-      // after appending above so collapse() can reach filterContainer via its own parentElement
-      // to normalize the card's padding (see WijCheckboxes/WijRadio/WijSelect's setCollapsedState).
-      if (this.filterWij.collapse) this.filterWij.collapse();
+      // uses of these same widgets, which don't call this) and stay however the user last left
+      // them across re-renders - switching tabs/views and back, or toggling Map/Trends - rather
+      // than snapping back to collapsed every time. this.filterWij.collapsed is undefined only
+      // on this filter's very first-ever render (setCollapsedState, called from here and from
+      // the widget's own toggle-row click handler, is what sets it from then on - see
+      // WijCheckboxes/WijRadio/WijSelect). Called after the subAg slot above is in place
+      // (setCollapsedState(true) hides it too and it doesn't exist any earlier than this), and
+      // after appending above so it can reach filterContainer via its own parentElement to
+      // normalize the card's padding (see WijCheckboxes/WijRadio/WijSelect's setCollapsedState).
+      if (this.filterWij.setCollapsedState) this.filterWij.setCollapsedState(this.filterWij.collapsed !== false);
     }
 
     if (this.geoJsonInfo && Object.keys(this.geoJsonInfo).length > 0) {
@@ -247,7 +252,7 @@ class Filter {
     // live on the left, so open toward the left there. Anything else keeps the roughly
     // centered default position.
     mapPopup.classList.remove('align-left', 'align-right');
-    const template = this.vizLayout?.modelEntity?.template;
+    const template = this.vizLayout?.templateType;
     if (template === 'vizDashboard') {
       mapPopup.classList.add('align-right');
     } else if (template === 'vizTrends') {

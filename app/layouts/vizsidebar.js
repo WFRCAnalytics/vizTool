@@ -9,7 +9,14 @@ class VizSidebar {
     // owning model entity's submenuText instead - that's guaranteed unique (it's what the menu
     // and URL restore already key off of) - falling back to attributeTitle only if it's ever
     // unavailable.
-    this.id = this.generateIdFromText(vizLayout?.modelEntity?.submenuText || attributeTitle) + "-sidebar"; // use provided id or generate one if not provided
+    //
+    // A multi-view entity's Map and Trends sidebars share that same submenuText too (one
+    // modelEntity, two views - see ModelEntity.views, model-entity.js), so submenuText alone
+    // isn't enough to tell their two attribute radio groups apart - exactly the same collision
+    // as above, just within one entity instead of across two. templateType ('vizMap'/'vizTrends'/
+    // etc, set in each layout's own constructor) is unique per view, so folding it in here
+    // disambiguates both cases with the same fix.
+    this.id = this.generateIdFromText((vizLayout?.modelEntity?.submenuText || attributeTitle) + '-' + (vizLayout?.templateType || '')) + "-sidebar"; // use provided id or generate one if not provided
 
     // link to parent
     this.vizLayout = vizLayout;
@@ -263,6 +270,14 @@ class VizSidebar {
     return this.findAllCombinationsOfLists(_listsOfEachFilter);
   }
 
+  // True when some currently-visible filter (a checkbox list, almost always) has nothing
+  // checked - that alone guarantees getListOfSelectedFilterOptions() comes back empty
+  // (findAllCombinationsOfLists short-circuits on an empty list), which otherwise looks
+  // identical to "the scenario genuinely has no data" to callers like vizMap's no-data check.
+  hasEmptyVisibleFilterSelection() {
+    return this.filters.some(filter => filter.isVisible() && filter.getSelectedOptionsAsList().length === 0);
+  }
+
   getListOfSelectedFilterOptionsWithLock(lockedFCode, lockedValue) {
     // Get the list of filters excluding the lockedFilter
 
@@ -446,7 +461,7 @@ class VizSidebar {
   // real map geometry (TAZ, district, etc.) - a Reference Map showing that geometry helps in
   // both. vizMap doesn't need it since it already IS the map.
   usesAggregatorFilter() {
-    return this.vizLayout.modelEntity.template === 'vizTrends' || this.vizLayout.modelEntity.template === 'vizMatrix' || this.vizLayout.modelEntity.template === 'vizDashboard';
+    return this.vizLayout.templateType === 'vizTrends' || this.vizLayout.templateType === 'vizMatrix' || this.vizLayout.templateType === 'vizDashboard';
   }
 
   // vizTrends uses the aggregatorFilter's checkbox list as a real series picker (which zones
@@ -458,7 +473,7 @@ class VizSidebar {
   // it down, so it starts all-checked instead of Aggregator's own empty default.
   buildAggregatorFilterData(filterData) {
     let result = filterData;
-    if (this.vizLayout.modelEntity.template === 'vizMatrix' && result && result.fOptions) {
+    if (this.vizLayout.templateType === 'vizMatrix' && result && result.fOptions) {
       result = { ...result, fSelected: result.fOptions.map(option => option.value) };
     }
 

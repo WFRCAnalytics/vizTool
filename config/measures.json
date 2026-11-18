@@ -97,6 +97,23 @@
       "fVehTypePcLiMdHv": ["LT","MD","HV"]
     }
   },
+  "mCvVmtInterstate": {
+    "faIcon": "fa-solid fa-truck",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Truck Vehicle Miles Traveled on Interstates (I-15, I-80, I-84, I-215)",
+    "jsonName": "j-roadway-trends",
+    "baseGeoJsonKey": "segment",
+    "baseGeoJsonId": "SEGID",
+    "displayFormat": "#,##0",
+    "attribute": "aVmt",
+    "selected_filters" : {
+      "fRoadSegFuncGroup": ["Total"],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypePcLiMdHv": ["MD","HV"]
+    },
+    "segid_prefix_filter": ["0015","0080","0084","0215"]
+  },
   "mHbwVmtProduced": {
     "faIcon": "fa-solid fa-briefcase",
     "iconColor": "#1B9E8E",

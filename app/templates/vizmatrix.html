@@ -23,31 +23,50 @@
   <div id="matrixScenarioSidebar" class="sidebar">
     <div class="colAttributes">
       <div class="rowGeography" id="vizMatrixScenarioSelector">
-        <div><b>Scenario Selector</b></div>
-        <div style="display: flex; align-items: center; width: 100%;">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+          <b>Scenario Selector</b>
+          <calcite-label layout="inline" style="margin: 0; font-size: 0.85em;">
+            <calcite-switch id="useAliasToggleMatrix" scale="s" checked></calcite-switch>
+            Use Aliases
+          </calcite-label>
+        </div>
+        <div class="matrix-main-select-row" style="display: none; align-items: center; width: 100%;">
           <calcite-select id="modVersion_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Main"></calcite-select>
         </div>
-        <div style="display: flex; align-items: center; width: 100%;">
+        <div class="matrix-main-select-row" style="display: none; align-items: center; width: 100%;">
           <calcite-select id="scnGroup_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Main"></calcite-select>
         </div>
-        <div style="display: flex; align-items: center; width: 100%;">
+        <div class="matrix-main-select-row" style="display: none; align-items: center; width: 100%;">
           <calcite-select id="scnYear_MatrixMain" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Main"></calcite-select>
         </div>
+        <!-- Alias alternative to the three Main selects above - same selectedScenario_Main state,
+             just picked in one step (applyAliasScenarioSelection(), app.js) instead of one field
+             at a time, matching vizMap's/vizDashboard's own Scenario Selectors. -->
+        <div id="aliasRowMatrixMain" style="width: 100%;">
+          <calcite-select id="aliasScenario_MatrixMain" scale="m" width="auto" style="width: 100%;"></calcite-select>
+        </div>
         <calcite-block id="comparisonScenarioMatrix" heading="Compare to:" collapsible>
-          <div style="display: flex; align-items: center; width: 100%;">
+          <div class="matrix-comp-select-row" style="display: none; align-items: center; width: 100%;">
             <calcite-select id="modVersion_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="modVersion" data-scenario-target="Comp"></calcite-select>
           </div>
-          <div style="display: flex; align-items: center; width: 100%;">
+          <div class="matrix-comp-select-row" style="display: none; align-items: center; width: 100%;">
             <calcite-select id="scnGroup_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnGroup" data-scenario-target="Comp"></calcite-select>
           </div>
-          <div style="display: flex; align-items: center; width: 100%;">
+          <div class="matrix-comp-select-row" style="display: none; align-items: center; width: 100%;">
             <calcite-select id="scnYear_MatrixComp" scale="m" width="auto" style="flex-grow: 1;" data-scenario-variable="scnYear" data-scenario-target="Comp"></calcite-select>
           </div>
-          <div><br/>Compare Type</div>
-          <calcite-select id="selectCompareTypeMatrix" scale="m" width="auto">
-            <calcite-option value="diff">Difference</calcite-option>
-            <calcite-option value="pctdiff">Percent Difference</calcite-option>
-          </calcite-select>
+          <!-- Alias alternative to the three Comp selects above, same pairing as
+               aliasRowMatrixMain/aliasScenario_MatrixMain - plus the swap button
+               (swapScenarios(), app.js), same icon/placement as vizMap's/vizDashboard's own. -->
+          <div id="aliasRowMatrixComp" style="display: flex; align-items: center; width: 100%;">
+            <calcite-select id="aliasScenario_MatrixComp" scale="m" width="auto" style="flex-grow: 1;"></calcite-select>
+            <calcite-button id="swapScenariosMatrix" appearance="transparent" scale="s" icon-start="arrow-up-down" title="Swap Main ↔ Compare" aria-label="Swap Main and Compare scenarios"></calcite-button>
+          </div>
+          <div class="compare-inline-label" style="margin-top: 8px;">Compare Type</div>
+          <calcite-segmented-control id="selectCompareTypeMatrix" width="full" scale="s">
+            <calcite-segmented-control-item value="diff" checked>Difference</calcite-segmented-control-item>
+            <calcite-segmented-control-item value="pctdiff" title="Percent Difference">% Difference</calcite-segmented-control-item>
+          </calcite-segmented-control>
         </calcite-block>
       </div>
     </div>

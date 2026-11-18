@@ -157,6 +157,10 @@ class WijSelect {
   // See WijCheckboxes' identical pair for why this exists (filter.js calls collapse()).
   setCollapsedState(collapsed) {
     if (!this.collapsible || !this._selectBody) return;
+    // Remembered on the instance (not just reflected in the DOM) so a later render - switching
+    // tabs/views and back - can restore whatever the user last left this card as, instead of
+    // filter.js forcing every card back to collapsed every time (see filter.js's render()).
+    this.collapsed = collapsed;
     const subAgSlot = this._container.querySelector(':scope > .filter-subag-slot');
     // See WijCheckboxes' identical pair for why - normalizes padding while collapsed.
     const _card = this._container.parentElement;

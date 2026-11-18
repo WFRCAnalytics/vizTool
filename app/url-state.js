@@ -78,6 +78,11 @@ function syncUrlState() {
   const params = new URLSearchParams();
   params.set('menu', activeModelEntity.menuItem.menuText);
   params.set('entity', activeModelEntity.submenuText);
+  // Only entities with more than one view (the Map/Trends toggle) need this - omitting it for
+  // the common single-view entity keeps old share links (from before this param existed) valid.
+  if (activeModelEntity.views && activeModelEntity.views.length > 1) {
+    params.set('view', activeModelEntity.activeViewIndex);
+  }
 
   if (selectedScenario_Main && selectedScenario_Main.modVersion) {
     params.set('mv', selectedScenario_Main.modVersion);
@@ -129,6 +134,9 @@ function syncUrlState() {
       if (value === undefined || value === null || value === '') return;
       const serialized = Array.isArray(value) ? value.join(',') : String(value);
       if (serialized) params.set('f_' + filter.fCode, serialized);
+      // Filter cards start collapsed by default (filter.js's render()) - only worth a param
+      // when a card's been expanded, the non-default state, to keep plain share links short.
+      if (wij.collapsed === false) params.set('fx_' + filter.fCode, '1');
     });
   }
 
@@ -186,6 +194,17 @@ function restoreAppStateFromUrl() {
   const modelEntity = menuItem ? menuItem.modelEntities.find(e => e.submenuText === entityText) : null;
   if (!menuItem || !modelEntity) return false;
 
+  // Set directly (not via switchView(), which also drives DOM activation - this entity hasn't
+  // been loaded into the DOM yet) so every modelEntity.vizLayout read below, and the later
+  // finishRestoringEntityFromUrl()/loadMenuItemAndModelEntity() load, already resolve to the
+  // right view instead of defaulting to view 0.
+  if (params.has('view')) {
+    const viewIndex = parseInt(params.get('view'), 10);
+    if (!Number.isNaN(viewIndex) && modelEntity.views[viewIndex]) {
+      modelEntity.activeViewIndex = viewIndex;
+    }
+  }
+
   if (params.has('mv')) {
     selectedScenario_Main = {
       modVersion: params.get('mv'),
@@ -235,8 +254,16 @@ function restoreAppStateFromUrl() {
     (sidebar.filters || []).forEach(filter => {
       if (!filter.fCode) return;
       const raw = params.get('f_' + filter.fCode);
-      if (raw === null) return;
-      restoreFilterSelection(filter, raw);
+      if (raw !== null) restoreFilterSelection(filter, raw);
+      // Sets the widget instance's own .collapsed before this filter has ever rendered -
+      // filter.js's render() reads it from there (see its own comment) once
+      // finishRestoringEntityFromUrl()/loadMenuItemAndModelEntity() runs below. Absent
+      // (collapsed by default) means leave whatever's already there untouched, not force it
+      // collapsed - a view switch earlier on this same page load may have already carried over
+      // an expanded state worth keeping (see carryOverFilterSelections(), model-entity.js).
+      if (filter.filterWij && params.get('fx_' + filter.fCode) === '1') {
+        filter.filterWij.collapsed = false;
+      }
     });
   }
 
