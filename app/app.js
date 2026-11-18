@@ -860,14 +860,7 @@ require([
 
   function generateMainClassBreakInfos(main, symbols) {
     const bounds = buildMainAscendingBounds(main.breakpoints, main.unit, main.numberFormat, main.displayScale);
-    const classBreakInfos = bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
-    // Esri's Legend widget lists a class-breaks renderer's entries in reverse of this array by
-    // default (highest band at top) - reversing here flips the legend to read smallest-on-top/
-    // largest-on-bottom instead (per-attribute opt-in: config/attributes.json's own
-    // rendererCollection.main.legendReverse), without touching which color a given value
-    // actually renders as - ClassBreaksRenderer matches each feature by min/max range, not by
-    // position in this array.
-    return main.legendReverse ? classBreakInfos.reverse() : classBreakInfos;
+    return bounds.map((b, i) => ({ minValue: b.minValue, maxValue: b.maxValue, symbol: symbols[i], label: b.label }));
   }
 
   function expandAttributesConfig(dataConfigAttributes, templates) {
@@ -886,7 +879,6 @@ require([
         delete mainR.unit;
         delete mainR.numberFormat;
         delete mainR.displayScale;
-        delete mainR.legendReverse;
       }
 
       const cp = rc.compare_pct;

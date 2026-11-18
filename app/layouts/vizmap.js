@@ -757,16 +757,24 @@ require([
         // at all was worse).
         labelingInfo: this.getLabelingInfoConfig(),
         renderer: this.getPlaceholderRenderer(),
-        // Draws larger-magnitude features last (on top), instead of FeatureLayer's default order
-        // (whichever order the data happens to arrive in, effectively random relative to symbol
-        // size) - every renderer here scales symbol width/size up with |dVal|, both the natural
-        // classification (always non-negative, so plain ascending dVal already sorts smallest-
-        // to-largest) and the compare_abs/compare_pct diff bands (symmetric around 0 - width
-        // grows toward EITHER extreme, hence Abs() so both a big increase and a big decrease
-        // still sort after the thin near-zero band instead of the negative extreme landing back
-        // at the bottom). Skipped for aFtClass's string dVal - a category, not a magnitude.
+        // Draws larger-magnitude features last (on top) by default, instead of FeatureLayer's
+        // default order (whichever order the data happens to arrive in, effectively random
+        // relative to symbol size) - every renderer here scales symbol width/size up with
+        // |dVal|, both the natural classification (always non-negative, so plain ascending dVal
+        // already sorts smallest-to-largest) and the compare_abs/compare_pct diff bands
+        // (symmetric around 0 - width grows toward EITHER extreme, hence Abs() so both a big
+        // increase and a big decrease still sort after the thin near-zero band instead of the
+        // negative extreme landing back at the bottom). A few attributes (Volume - overlapping
+        // road segments read better with the busiest ones UNDER everything else, not on top)
+        // opt into the reverse via config/attributes.json's own drawOrderDescending - see
+        // Attribute (attribute.js) for where that's read into this.sidebar.attributes. Skipped
+        // for aFtClass's string dVal - a category, not a magnitude.
         ...(dValFieldType === "double"
-          ? { orderBy: [{ valueExpression: "return Abs($feature.dVal);", order: "ascending" }] }
+          ? { orderBy: [{
+                valueExpression: "return Abs($feature.dVal);",
+                order: this.sidebar.attributes.find(a => a.attributeCode === this.aCode)?.drawOrderDescending
+                  ? "descending" : "ascending"
+              }] }
           : {})
       };
 

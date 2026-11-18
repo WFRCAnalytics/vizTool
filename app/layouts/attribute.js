@@ -24,6 +24,10 @@ class Attribute {
         this.agFilterOptionsMethod    = _configAttribute.agFilterOptionsMethod || "sum";
         this.stackable                = _configAttribute.hasOwnProperty('stackable') ? _configAttribute.stackable : true;
         this.aggregatable             = _configAttribute.hasOwnProperty('aggregatable') ? _configAttribute.aggregatable : true;
+        // vizMap's FeatureLayer orderBy (which magnitude draws on top when features overlap -
+        // see its own comment in vizmap.js) defaults to ascending (larger on top) for every
+        // attribute unless explicitly flipped here.
+        this.drawOrderDescending      = _configAttribute.hasOwnProperty('drawOrderDescending') ? _configAttribute.drawOrderDescending : false;
 
         this.filterOverride           = _configAttribute.filterOverride || null;
     }

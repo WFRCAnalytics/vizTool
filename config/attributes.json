@@ -417,6 +417,7 @@
     "aVl": {
         "alias": "Volume",
         "definition": "is the total number of vehicles using the segment.",
+        "drawOrderDescending": true,
         "filterOverride":[
             {
             "filterOut": "fRoadSegFuncGroup",
@@ -431,8 +432,7 @@
                 "breakpoints": [6000.0, 18000.0, 36000.0, 72000.0, 120000.0, 160000.0, 200000.0, 240000.0],
                 "numberFormat": "comma",
                 "defaultSymbol": {"type": "simple-line", "color": "#EEEEEE", "width": 0.5},
-                "defaultLabel": "No Volume",
-                "legendReverse": true
+                "defaultLabel": "No Volume"
             },
             "compare_abs": {
                 "labelExpressionInfo": "absLeiD",
