@@ -78,6 +78,7 @@
     "aBd": {
         "alias": "P->A Direction Boardings",
         "definition": "is the number of passengers boarding at a stop for trips moving in the production-to-attraction direction (eg., home to work for home-based work trips). Each transfer counts as a separate boarding, and each trip is recorded twice in the same direction to account for the return trip as well.",
+        "drawOrderDescending": false,
         "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
@@ -108,6 +109,7 @@
     "aAl": {
         "alias": "P->A Direction Alightings",
         "definition": "is the number of passengers alighting at a stop for trips moving in the production-to-attraction direction (eg., home to work for home-based work trips). Each transfer counts as a separate alighting, and each trip is recorded twice in the same direction to account for the return trip as well.",
+        "drawOrderDescending": false,
         "agFilterOptionsMethod": "sum",
         "rendererCollection": {
             "main": {
@@ -417,7 +419,6 @@
     "aVl": {
         "alias": "Volume",
         "definition": "is the total number of vehicles using the segment.",
-        "drawOrderDescending": true,
         "filterOverride":[
             {
             "filterOut": "fRoadSegFuncGroup",

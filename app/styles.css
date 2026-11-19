@@ -18,12 +18,6 @@
     --calcite-ui-text-2: #ffffff;
 }
 
-#menu calcite-navigation[slot="navigation-secondary"] {
-    --calcite-navigation-background: #f4f6f8;
-    --calcite-ui-text-1: #202020;
-    --calcite-ui-text-2: #202020;
-}
-
 /* Match unselected items' own background to the bar they're on so they blend in;
    -foreground-2 is a light hover shade. Default (used by the secondary/submenu bar). */
 calcite-menu-item {
@@ -82,57 +76,102 @@ calcite-menu-item {
     outline: none;
 }
 
-/* calcite-menu/calcite-navigation have no built-in overflow handling (unlike calcite-action-bar,
-   which auto-collapses into an ellipsis menu) - with enough submenu items the bar just runs past
-   the window edge with no way to reach the rest. Scroll it horizontally instead; flex-shrink:0
-   keeps items at their natural width so they overflow into the scroll area rather than squishing.
-   The scrollbar itself is hidden (scroll still works via wheel/drag/keyboard) - calcite-menu's
-   flex row lives inside its shadow DOM ul with no exposed ::part, so a real wrap/collapse layout
-   isn't reachable from here without piercing the shadow root. */
-#menu calcite-navigation[slot="navigation-secondary"] calcite-menu {
+/* Secondary (submenu) nav bar - plain HTML/JS (index.html, menu-item.js, model-entity.js),
+   not Calcite. Stays the same fixed 49px height as the Calcite bar it replaces - a long list
+   of otherwise-unrelated calc(100vh - 114px) budgets elsewhere in this file assume exactly
+   that (65px primary + 49px secondary), so this bar's height must not drift from it. The
+   Map/Trends toggle (model-entity.js's populateViewToggle()) lives in the active view's own
+   sidebar instead (see .sidebar-view-toggle-slot further down), not in this bar at all. */
+.secondary-nav-bar {
+    display: flex;
+    align-items: center;
+    height: 49px;
+    width: 100%; /* otherwise this only auto-sizes to its tabs' own content width, leaving the
+                    rest of the row showing the page's white background through past the last tab */
+    background: #f4f6f8; /* the grey the tab buttons themselves used to show through as */
+    color: #202020;
+    box-sizing: border-box;
+}
+
+/* No built-in overflow handling on a plain flex row either - with enough tabs the strip just
+   runs past the window edge. Scroll it horizontally instead; flex-shrink:0 on each tab (below)
+   keeps them at their natural width so they overflow into the scroll area rather than
+   squishing. Scrollbar hidden (scroll still works via wheel/drag/keyboard), same approach as
+   the Calcite version this replaces, just without needing to pierce any shadow DOM for it now. */
+.secondary-nav-tabs {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
     overflow-x: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* old Edge/IE */
 }
-#menu calcite-navigation[slot="navigation-secondary"] calcite-menu::-webkit-scrollbar {
+.secondary-nav-tabs::-webkit-scrollbar {
     display: none; /* Chrome/Safari/Edge */
 }
-#menu calcite-navigation[slot="navigation-secondary"] calcite-menu-item {
+
+/* Each tab - a plain <button> (model-entity.js's createModelEntityElement()), button-reset so
+   it reads as a tab, not a form control. Icon + label inline, in one row. */
+.secondary-nav-tab {
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: #202020;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    position: relative; /* BETA badge (below) anchors to this */
+}
+.secondary-nav-tab:hover {
+    background: #e8ebee;
+}
+/* Selected tab - same light tint of WFRC's sky blue CTA color (from wfrc.utah.gov) the old
+   Calcite version used, just as a plain background instead of a --calcite-* token override. */
+.secondary-nav-tab.active {
+    background: #d6eef8;
+    color: #0093c5;
+    font-weight: 500;
 }
 
-/* Map/Trends (etc) view toggle - lives in the secondary nav's own content-end slot (see
-   model-entity.js's populateViewToggle()) so a multi-view entity's two layouts share one nav
-   row instead of getting a row each, reusing the bar's already-budgeted height instead of
-   needing a new one (every template's own panel heights are calc()'d against whether this bar
-   is shown at all - see body.secondary-nav-hidden rules below). Hidden entirely (both the
-   attribute and an inline style, same belt-and-suspenders as secondaryNav.hidden in
-   menu-item.js) for the common single-view entity. */
-#entityViewToggle {
-    flex-shrink: 0;
-    margin-left: 12px;
+/* Map/Trends (etc) toggle - sits at the top of whichever view's sidebar is currently showing
+   (model-entity.js's populateViewToggle() appends the shared #entityViewToggle into this slot
+   and un-hides it; every template's matching slot - app/templates/vizmap.html,
+   viztrends.html, vizmatrix.html - stays hidden/empty for a single-view entity). The slot
+   itself stretches to the Display column's full width (same as every other row in
+   .colAttributes - no explicit width needed here), and the control (width="full", set in
+   model-entity.js) fills that same width edge-to-edge, each item splitting it evenly. Own
+   bottom margin/divider so it visually reads as "this whole panel has two modes" rather than
+   competing with the attribute list right below it. */
+.sidebar-view-toggle-slot {
+    display: flex;
+    padding: 10px 10px 14px;
+    border-bottom: 1px solid #dde3e8;
+    margin-bottom: 6px;
+}
+.sidebar-view-toggle-slot[hidden] {
+    display: none;
+}
+.sidebar-view-toggle-slot #entityViewToggle {
     /* WFRC's brand orange (same #C85327 as the top bar/modal titlebar) instead of Calcite's
        default blue, so the one control that switches what the whole page below it shows reads
        as more consequential than an ordinary filter/compare toggle. */
     --calcite-ui-brand: #C85327;
 }
 
-/* Highlight for the selected item - different color per bar, each painted the same way:
-   the shadow content's own background is made transparent so the flat fill below - painted
-   on the host element itself, which sits behind the shadow content - shows through.
-   -foreground-2/-3 (hover/press backgrounds) are also made transparent here: they're opaque
-   by default (-2 is the light gray/navy hover set above), and clicking a menu item leaves it
-   focused, so without this the fill got painted over by that hover shade the moment the item
-   had focus - it only reappeared once focus moved elsewhere.
-   Each selector has to out-specificity that bar's own bare-item rule above (id + attribute +
-   two type selectors) so this wins there instead. */
-
-/* Top-level (primary) bar: dark blue at top fading to WFRC's brand orange (#C85327, same
-   one used on the modal titlebar) at the bottom, paired with near-white text there too.
-   This `background` is a plain property on the host (not a --calcite-* token like the bar's
-   own background above), so it takes a gradient directly with no extra tricks needed.
-   --calcite-ui-brand tints the item's icon when selected - it has to stay white (matching
-   the text), not the orange end of the gradient, or the icon disappears into it. */
+/* Top-level (primary) bar's own selected-item highlight - dark blue at top fading to WFRC's
+   brand orange (#C85327, same one used on the modal titlebar) at the bottom, paired with
+   near-white text there too. This `background` is a plain property on the host (not a
+   --calcite-* token like the bar's own background above), so it takes a gradient directly with
+   no extra tricks needed. --calcite-ui-brand tints the item's icon when selected - it has to
+   stay white (matching the text), not the orange end of the gradient, or the icon disappears
+   into it. (The secondary bar's own equivalent is .secondary-nav-tab.active above now - this
+   one's unaffected, still Calcite, still needs the shadow-DOM token overrides.) */
 #menu > calcite-menu[slot="content-start"] > calcite-menu-item.menu-item-selected {
     --calcite-ui-foreground-1: transparent;
     --calcite-ui-foreground-2: transparent;
@@ -143,16 +182,22 @@ calcite-menu-item {
     background: linear-gradient(180deg, #0b2c4d 0%, #C85327 100%);
 }
 
-/* Secondary (submenu) bar: a light tint of WFRC's sky blue CTA color (from wfrc.utah.gov),
-   not the solid brand blue, so text-1 can stay dark (#202020, matching unselected items)
-   and stay legible without needing white text. */
-#menu calcite-navigation[slot="navigation-secondary"] calcite-menu-item.menu-item-selected {
+/* Top-level (primary) bar's own selected-item highlight - dark blue at top fading to WFRC's
+   brand orange (#C85327, same one used on the modal titlebar) at the bottom, paired with
+   near-white text there too. This `background` is a plain property on the host (not a
+   --calcite-* token like the bar's own background above), so it takes a gradient directly with
+   no extra tricks needed. --calcite-ui-brand tints the item's icon when selected - it has to
+   stay white (matching the text), not the orange end of the gradient, or the icon disappears
+   into it. (The secondary bar's own equivalent is .secondary-nav-tab.active above now - this
+   one's unaffected, still Calcite, still needs the shadow-DOM token overrides.) */
+#menu > calcite-menu[slot="content-start"] > calcite-menu-item.menu-item-selected {
     --calcite-ui-foreground-1: transparent;
     --calcite-ui-foreground-2: transparent;
     --calcite-ui-foreground-3: transparent;
-    --calcite-ui-brand: #0093c5;
-    --calcite-ui-text-1: #202020;
-    background: #d6eef8;
+    --calcite-ui-brand: #ffffff;
+    --calcite-ui-text-1: #ffffff;
+    --calcite-ui-text-2: #ffffff;
+    background: linear-gradient(180deg, #0b2c4d 0%, #C85327 100%);
 }
 
 /* Custom styles for disabled option elements */
@@ -199,6 +244,7 @@ option:disabled {
     overflow-y: auto;
     position: relative;
     animation: modalFadeIn 0.2s ease-out;
+    line-height: 1.5;
 }
 
 @keyframes modalFadeIn {
@@ -1064,7 +1110,6 @@ td {
 #mainMap {
     display: flex; /* Use flex layout */
     flex-direction: column; /* Stack children vertically */
-    padding: 15px;
     height: calc(100vh - 114px); /* Adjust height as needed */
     box-sizing: border-box; /* Include padding and border in width calculation */
     width: 100%; /* Ensure it fills the width of its parent */
@@ -1294,7 +1339,6 @@ td {
 #mainMap {
   display: flex;
   flex-direction: column;
-  padding: 15px;
   height: calc(100vh - 114px);
   box-sizing: border-box;
   width: 100%;
@@ -1322,6 +1366,8 @@ td {
   min-height: 0;
   width: 100%;
   position: relative;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
 }
 #mapViewRow.split #mapViewComp {
   flex: 0 0 auto; /* fixed 50/50 split - width set inline once by setMapCompareLayoutMode() (app.js) */
@@ -1436,19 +1482,17 @@ td {
   width: 100%;
   box-sizing: border-box;
   min-height: 1.6em;
+  /* Matches #mapDivider's own black, so the gap between tiles (and anywhere a tile doesn't
+     fully cover the bar) reads as the same divider color as the swipe/side-by-side bar below. */
+  background-color: #000000;
   /* Same width as #mapDivider, so the gap between tiles lines up exactly with the real divider
      below it (app.js sets each tile's own flex basis to mirror #mapView/#mapViewComp's own
      width split - setMapCompareLayoutMode()/applyMapSwipePosition()). */
   gap: 9px;
-  /* Cancels #mainMap's own 15px top padding so the bar sits flush against whatever's above it,
-     instead of leaving a visible gap there - left/right stay at #mainMap's normal inset (not
-     cancelled) so the titles stay aligned with the map's own left/right edges below them. */
-  margin: -15px 0 0 0;
 }
 /* "Map Title" sidebar toggle off (app.js's applyMapTitleVisibility()) - every tile inside is
-   already display:none, but the bar's own min-height/gap/margin above would otherwise still
-   leave a tall blank strip. Dropping back to a plain 0-height, 0-margin box lets #mainMap's
-   normal 15px padding show through above the map instead, matching its other 3 sides. */
+   already display:none, but the bar's own min-height/gap above would otherwise still leave a
+   tall blank strip. */
 .map-title-bar.title-hidden {
   min-height: 0;
   gap: 0;
@@ -1466,10 +1510,8 @@ td {
    app.js). */
 .map-scenario-label {
   background-color: #fdf1e3; /* slight light-orange tint, per explicit request */
-  border: 1px solid #1B9E8E;
-  border-radius: 4px;
+  border: 1px solid #ffffff;
   padding: 4px 10px;
-  margin: 4px 0;
   font-weight: 600;
   font-size: 1.2em; /* was 0.9em; 1.5x read too big, dialed back per explicit request */
   color: #151515;
@@ -1687,7 +1729,8 @@ td {
      holds the filter-selection breadcrumb - the scenario name/"vs." text that used to share
      this bar moved to its own floating corner label (mapScenarioLabelMain, app.js). */
   background-color: #eef4fb;
-  border-top: 2px solid #99ccff;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
   color: rgb(33, 33, 33);
   padding: 8px 10px;
   display: flex;
@@ -1695,6 +1738,11 @@ td {
   gap: 8px;
   min-width: 0; /* see #mainMap's identical comment - keeps this from forcing its ancestors
                    wider just because #mapAppliedFilters' own text can run long */
+}
+/* The ID selector above beats the UA's own [hidden] rule on specificity, so vizmap.js setting
+   footerElement.hidden on an empty filter breadcrumb wouldn't otherwise actually hide it. */
+#mapFooter[hidden] {
+  display: none;
 }
 
 /* Plain text (vizmap.js joins every visible filter's "Name: value" with "; ") - collapsed to
@@ -2034,33 +2082,30 @@ td {
 }
 
 /* "BETA" tag directly on the secondary-nav tab for each entity still being finalized - a small
-   overlay badge on calcite-menu-item's own light-DOM host element (::after generated content
-   renders outside its shadow tree, on top of it, since calcite-menu-item has no slot for
-   arbitrary child content - a plain appendChild()'d element goes nowhere visible). Selects by
-   the same `text` attribute the tab is built from (model-entity.js's createModelEntityElement()),
-   so no JS/CSS class needs adding per page - this lives entirely in one place regardless of how
-   many different templates (vizMap/vizTrends/vizMatrix) the flagged entities use. Unlike a "new"
-   indicator, this is a feature-maturity flag, not a per-viewer novelty one - it stays until
-   someone removes the entity's `text` from these selector lists once it's out of beta, not after
-   any number of views. */
-calcite-menu-item[text="Summary"],
-calcite-menu-item[text="PA Trips"],
-calcite-menu-item[text="Trip Gen"],
-calcite-menu-item[text="Trip Gen Trends"],
-calcite-menu-item[text="Spec Attraction Zones (SAZ)"],
-calcite-menu-item[text="SAZ Trends"],
-calcite-menu-item[text="Spec Gen"],
-calcite-menu-item[text="Spec Gen Trends"] {
+   overlay badge on the tab's own plain <button> (model-entity.js's createModelEntityElement()).
+   Selects by the same `data-text` attribute the tab is built from, so no JS/CSS class needs
+   adding per page - this lives entirely in one place regardless of how many different templates
+   (vizMap/vizTrends/vizMatrix) the flagged entities use. Unlike a "new" indicator, this is a
+   feature-maturity flag, not a per-viewer novelty one - it stays until someone removes the
+   entity's text from these selector lists once it's out of beta, not after any number of views. */
+.secondary-nav-tab[data-text="Summary"],
+.secondary-nav-tab[data-text="PA Trips"],
+.secondary-nav-tab[data-text="Trip Gen"],
+.secondary-nav-tab[data-text="Trip Gen Trends"],
+.secondary-nav-tab[data-text="Spec Attraction Zones (SAZ)"],
+.secondary-nav-tab[data-text="SAZ Trends"],
+.secondary-nav-tab[data-text="Spec Gen"],
+.secondary-nav-tab[data-text="Spec Gen Trends"] {
   position: relative;
 }
-calcite-menu-item[text="Summary"]::after,
-calcite-menu-item[text="PA Trips"]::after,
-calcite-menu-item[text="Trip Gen"]::after,
-calcite-menu-item[text="Trip Gen Trends"]::after,
-calcite-menu-item[text="Spec Attraction Zones (SAZ)"]::after,
-calcite-menu-item[text="SAZ Trends"]::after,
-calcite-menu-item[text="Spec Gen"]::after,
-calcite-menu-item[text="Spec Gen Trends"]::after {
+.secondary-nav-tab[data-text="Summary"]::after,
+.secondary-nav-tab[data-text="PA Trips"]::after,
+.secondary-nav-tab[data-text="Trip Gen"]::after,
+.secondary-nav-tab[data-text="Trip Gen Trends"]::after,
+.secondary-nav-tab[data-text="Spec Attraction Zones (SAZ)"]::after,
+.secondary-nav-tab[data-text="SAZ Trends"]::after,
+.secondary-nav-tab[data-text="Spec Gen"]::after,
+.secondary-nav-tab[data-text="Spec Gen Trends"]::after {
   content: "BETA";
   position: absolute;
   top: 2px; /* was -6px - the nav bar clips anything that pokes up past its own top edge, so a

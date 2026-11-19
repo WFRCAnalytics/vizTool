@@ -53,8 +53,8 @@ class MenuItem {
   }
 
   populateModelEntities() {
-    const secondaryNav = document.querySelector('calcite-navigation[slot="navigation-secondary"]');
-    const secondaryMenu = secondaryNav.querySelector('calcite-menu[slot="content-start"]');
+    const secondaryNav = document.getElementById('secondaryNav');
+    const secondaryMenu = document.getElementById('secondaryNavTabs');
 
     // Clear existing menu items
     secondaryMenu.innerHTML = '';

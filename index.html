@@ -51,9 +51,9 @@
                 <calcite-navigation-logo slot="logo"></calcite-navigation-logo>
                 <calcite-menu slot="content-start"></calcite-menu>
                 <button slot="content-end" id="infoButton" type="button" title="About vizTool" aria-label="About vizTool"><i class="fa-solid fa-circle-info"></i></button>
-                <calcite-navigation slot="navigation-secondary">
-                    <calcite-menu slot="content-start"></calcite-menu>
-                </calcite-navigation>
+                <div slot="navigation-secondary" id="secondaryNav" class="secondary-nav-bar">
+                    <div id="secondaryNavTabs" class="secondary-nav-tabs"></div>
+                </div>
             </calcite-navigation>
             <!-- Reference-counted lazy-load spinner (see showDataLoadingIndicator/
                  hideDataLoadingIndicator in app.js) - every view's on-demand scenario data
@@ -70,7 +70,7 @@
             <!-- Progress container centered -->
             <div id="load-screen" style="display:none;">
                 <div id="progress-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-                    <div style="margin-bottom: 32px;"><h1>Welcome to the vizTool!</h1></div>
+                    <div style="margin-bottom: 16px;"><h1>Welcome to the vizTool!</h1></div>
                     <table>
                         <tr>
                             <td align="right">

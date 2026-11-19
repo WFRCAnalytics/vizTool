@@ -107,40 +107,66 @@ class ModelEntity {
     return !!getFirstScenarioWithTrendData(view.vizLayout.jsonName);
   }
 
-  // Builds (once) and repopulates the shared Map/Trends/... toggle living in the secondary
-  // nav's content-end slot - a calcite-segmented-control with one item per view, hidden
-  // entirely for the common single-view entity. Reusing one shared control (rather than one
-  // per entity) matches how vizTrends' own mode/series/year selectors are already page-global
-  // singletons rewired per render (see viztrends.js).
-  populateViewToggle() {
-    const secondaryNav = document.querySelector('calcite-navigation[slot="navigation-secondary"]');
-    if (!secondaryNav) return;
+  // The view index to actually land on when entering this entity (tab click or menu
+  // navigation) - the page-global preferredViewTemplate (app.js) if this entity has a matching
+  // view with data, otherwise this entity's own last-active view (this.activeViewIndex,
+  // defaulting to 0). Not used by switchView() itself, which always honors the exact view the
+  // toggle was clicked for.
+  preferredOrDefaultViewIndex() {
+    if (preferredViewTemplate) {
+      const idx = this.views.findIndex(v => v.template === preferredViewTemplate);
+      if (idx !== -1 && this.hasViewAvailableData(idx)) return idx;
+    }
+    return this.activeViewIndex;
+  }
 
+  // Builds (once) and repopulates the shared Map/Trends/... toggle - a calcite-segmented-control
+  // with one item per view, hidden entirely for the common single-view entity. Reusing one
+  // shared control (rather than one per entity) matches how vizTrends' own mode/series/year
+  // selectors are already page-global singletons rewired per render (see viztrends.js). Lives at
+  // the top of whichever view's own sidebar is currently showing (see the
+  // #vizMapViewToggleSlot/#vizTrendsViewToggleSlot/#vizMatrixViewToggleSlot markup in
+  // app/templates/*.html) rather than inside the nav-bar tab itself - each view's own template
+  // is the only one visible at a time (_activateView() below hides the rest), so its slot is
+  // naturally the only one showing the toggle too.
+  populateViewToggle() {
     let toggle = document.getElementById('entityViewToggle');
     if (!toggle) {
       toggle = document.createElement('calcite-segmented-control');
       toggle.id = 'entityViewToggle';
-      toggle.setAttribute('slot', 'content-end');
       toggle.setAttribute('scale', 's');
+      toggle.setAttribute('width', 'full'); // stretch to fill .sidebar-view-toggle-slot's own full-column width, each item splitting it evenly
       toggle.addEventListener('calciteSegmentedControlChange', () => {
         const viewIndex = parseInt(toggle.value, 10);
         if (!Number.isNaN(viewIndex) && activeModelEntity && typeof activeModelEntity.switchView === 'function') {
           activeModelEntity.switchView(viewIndex);
         }
       });
-      secondaryNav.appendChild(toggle);
     }
 
-    const hideToggle = this.views.length <= 1;
-    // Same belt-and-suspenders as menu-item.js's secondaryNav.hidden/style.display pair -
-    // calcite's own shadow CSS isn't guaranteed to yield to the hidden attribute alone.
-    toggle.hidden = hideToggle;
-    toggle.style.display = hideToggle ? 'none' : '';
-    if (hideToggle) return;
+    const showToggle = this.views.length > 1;
+    const activeView = this.views[this.activeViewIndex];
+    const activeSlot = activeView && document.getElementById(activeView.template + 'ViewToggleSlot');
+    // Every OTHER view's slot must be cleared/hidden too - otherwise a slot that held the toggle
+    // before a view switch would keep showing hidden:false with no toggle inside it (the toggle
+    // itself just moved to the new active slot via appendChild below).
+    document.querySelectorAll('.sidebar-view-toggle-slot').forEach(slot => {
+      if (slot !== activeSlot) slot.hidden = true;
+    });
+
+    if (activeSlot) {
+      activeSlot.hidden = !showToggle;
+      if (showToggle) activeSlot.appendChild(toggle); // appendChild moves an existing node - safe every render
+    }
+
+    toggle.hidden = !showToggle;
+    toggle.style.display = showToggle ? '' : 'none';
+    if (!showToggle) return;
 
     toggle.innerHTML = '';
     this.views.forEach((view, index) => {
       const item = document.createElement('calcite-segmented-control-item');
+      item.scale = 's'; // doesn't reliably inherit from the parent control's own scale="s"
       item.value = String(index);
       item.textContent = view.viewLabel;
       item.title = view.viewLabel;
@@ -152,22 +178,23 @@ class ModelEntity {
 
   createModelEntityElement() {
     console.log('model-entity:createModelEntityElement');
-    const modelEntity = document.createElement('calcite-menu-item');
-    modelEntity.setAttribute('id', this.id);
-    modelEntity.setAttribute('text', this.submenuText);
-    modelEntity.setAttribute('icon-start', this.submenuIconStart);
-    modelEntity.setAttribute('text-enabled', '');
+    const modelEntity = document.createElement('button');
+    modelEntity.type = 'button';
+    modelEntity.id = this.id;
+    modelEntity.className = 'secondary-nav-tab';
+    modelEntity.dataset.text = this.submenuText; // BETA-badge CSS hook, see styles.css
+    modelEntity.dataset.entityId = this.id;      // how _activateView() finds "the active tab"
 
-
-    // Set the disabled attribute to true
-    modelEntity.setAttribute('disabled', true);
-    modelEntity.setAttribute('draggable', true);
-    modelEntity.setAttribute('text-enabled', false);
+    const icon = document.createElement('calcite-icon');
+    icon.icon = this.submenuIconStart;
+    icon.scale = 's';
+    modelEntity.appendChild(icon);
+    modelEntity.appendChild(document.createTextNode(this.submenuText));
 
     const modelEntityInstance = this;
 
     modelEntity.addEventListener('click', async function() {
-      await modelEntityInstance._activateView(modelEntityInstance.activeViewIndex);
+      await modelEntityInstance._activateView(modelEntityInstance.preferredOrDefaultViewIndex());
     });
     return modelEntity;
   }
@@ -251,15 +278,19 @@ class ModelEntity {
     this.activeViewIndex = viewIndex;
     const view = this.views[viewIndex];
 
+    // Primary bar only now (calcite-menu-item) - secondary tabs are plain buttons, handled below.
     let mainSidebarItems = document.querySelectorAll('calcite-menu-item');
     mainSidebarItems.forEach(item => {
-      if (item.text === this.submenuText || item.text === this.menuItem.menuText) {  // Use the saved instance context here
+      if (item.text === this.menuItem.menuText) {  // Use the saved instance context here
         item.active = true;
         item.classList.add('menu-item-selected');
       } else {
         item.active = false;
         item.classList.remove('menu-item-selected');
       }
+    });
+    document.querySelectorAll('.secondary-nav-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.entityId === this.id);
     });
 
     // Show corresponding template
@@ -298,14 +329,17 @@ class ModelEntity {
   }
 
   async loadModelEntity() {
-    await this._activateView(this.activeViewIndex);
+    await this._activateView(this.preferredOrDefaultViewIndex());
   }
 
   // Map/Trends (etc) toggle - switches which view is active within this same nav row, without
-  // touching the menu/menuItem selection at all.
+  // touching the menu/menuItem selection at all. Also records the chosen template as the
+  // page-global preference (app.js's preferredViewTemplate), so every other multi-view entity
+  // lands on the same kind of view (if it has one) when next entered.
   async switchView(viewIndex) {
     if (viewIndex === this.activeViewIndex || !this.views[viewIndex]) return;
     this.carryOverFilterSelections(this.activeViewIndex, viewIndex);
+    preferredViewTemplate = this.views[viewIndex].template;
     await this._activateView(viewIndex);
   }
 

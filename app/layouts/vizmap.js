@@ -757,18 +757,19 @@ require([
         // at all was worse).
         labelingInfo: this.getLabelingInfoConfig(),
         renderer: this.getPlaceholderRenderer(),
-        // Draws larger-magnitude features last (on top) by default, instead of FeatureLayer's
-        // default order (whichever order the data happens to arrive in, effectively random
-        // relative to symbol size) - every renderer here scales symbol width/size up with
-        // |dVal|, both the natural classification (always non-negative, so plain ascending dVal
-        // already sorts smallest-to-largest) and the compare_abs/compare_pct diff bands
-        // (symmetric around 0 - width grows toward EITHER extreme, hence Abs() so both a big
-        // increase and a big decrease still sort after the thin near-zero band instead of the
-        // negative extreme landing back at the bottom). A few attributes (Volume - overlapping
-        // road segments read better with the busiest ones UNDER everything else, not on top)
-        // opt into the reverse via config/attributes.json's own drawOrderDescending - see
-        // Attribute (attribute.js) for where that's read into this.sidebar.attributes. Skipped
-        // for aFtClass's string dVal - a category, not a magnitude.
+        // Draws larger-magnitude features UNDER everything else by default (descending |dVal|),
+        // instead of FeatureLayer's default order (whichever order the data happens to arrive
+        // in, effectively random relative to symbol size) - overlapping line/polygon features
+        // (Volume, Riders, ...) read better with the busiest ones underneath, not on top. Every
+        // renderer here scales symbol width/size up with |dVal|, both the natural classification
+        // (always non-negative, so plain dVal already sorts smallest-to-largest) and the
+        // compare_abs/compare_pct diff bands (symmetric around 0 - width grows toward EITHER
+        // extreme, hence Abs()). Point attributes (Transit Stops' Boardings/Alightings - dots
+        // don't overlap/obscure each other the way lines do, so the busiest one showing ON TOP
+        // reads better) opt back into ascending via config/attributes.json's own
+        // drawOrderDescending: false - see Attribute (attribute.js) for where that's read into
+        // this.sidebar.attributes. Skipped entirely for aFtClass's string dVal - a category, not
+        // a magnitude.
         ...(dValFieldType === "double"
           ? { orderBy: [{
                 valueExpression: "return Abs($feature.dVal);",
@@ -1066,6 +1067,12 @@ require([
       _subTitleDiv.id = 'mapAppliedFilters';
       _subTitleDiv.innerHTML = this.sidebar.getSelectedOptionsAsLongText();
       footerElement.appendChild(_subTitleDiv);
+
+      // No visible filters for this entity (e.g. sidebar.filters is empty) - nothing to show,
+      // so collapse the whole bar instead of leaving its padding/border visible around blank
+      // space (hidden, not just emptied, so .map-subtitle-expand-btn below never has a reason
+      // to render either).
+      footerElement.hidden = !_subTitleDiv.textContent.trim();
 
       // Collapsed to 2 lines (-webkit-line-clamp, styles.css) by default - some filters (e.g.
       // Route Name, with many values checked at once) can produce enough text to need more than

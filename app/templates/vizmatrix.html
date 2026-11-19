@@ -1,6 +1,9 @@
 <div id="matrixMainDisplay">
   <div id="matrixSidebar" class="sidebar">
     <div class="colAttributes">
+      <!-- Map/Trends toggle (model-entity.js's populateViewToggle()) - see vizmap.html's matching
+           #vizMapViewToggleSlot for why this lives here, scoped to this column's own width. -->
+      <div id="vizMatrixViewToggleSlot" class="sidebar-view-toggle-slot" hidden></div>
       <div class="rowAttributes" id="vizMatrixAttributes"></div>
       <div class="rowGeography" id="vizMatrixAggregator"></div>
       <div class="rowGeography" id="vizMatrixAggregatorFilters"></div>

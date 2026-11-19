@@ -202,6 +202,7 @@ function restoreAppStateFromUrl() {
     const viewIndex = parseInt(params.get('view'), 10);
     if (!Number.isNaN(viewIndex) && modelEntity.views[viewIndex]) {
       modelEntity.activeViewIndex = viewIndex;
+      preferredViewTemplate = modelEntity.views[viewIndex].template; // so other multi-view entities follow suit too
     }
   }
 

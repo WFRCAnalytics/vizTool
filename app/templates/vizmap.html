@@ -1,6 +1,13 @@
 <div id="mainVizMap">
   <div id="mapSidebar" class="sidebar">
     <div class="colAttributes">
+      <!-- Map/Trends toggle (model-entity.js's populateViewToggle()) - only populated/shown for
+           a multi-view entity, hidden otherwise. A plain flex-column sibling of .rowAttributes
+           (which already flex-grows to absorb leftover space - see app.js's comment on that
+           class), so adding this fixed-size row just shrinks .rowAttributes' own leftover space
+           instead of growing .colAttributes' overall (fixed) height. Scoped to this column's own
+           width (not the full sidebar) - deliberate, see this class' own comment in styles.css. -->
+      <div id="vizMapViewToggleSlot" class="sidebar-view-toggle-slot" hidden></div>
       <div class="rowAttributes" id="vizMapAttributes"></div>
       <div class="rowAttributeSettings" id="vizMapDividers"></div>
       <div class="rowAttributeSettings" id="vizMapDividerFilters"></div>

@@ -413,7 +413,7 @@
             }
           ]
         },
-        { "submenuText": "Zone Metrics - Roadway",
+        { "submenuText": "Roadway Trip-Based Metrics",
           "submenuIconStart": "graph-pie-slice",
           "views": [
             { "template": "vizMap",

@@ -1,6 +1,9 @@
 <div id="trendMainDisplay">
   <div id="trendSidebar" class="sidebar">
     <div class="colAttributes">
+      <!-- Map/Trends toggle (model-entity.js's populateViewToggle()) - see vizmap.html's matching
+           #vizMapViewToggleSlot for why this lives here, scoped to this column's own width. -->
+      <div id="vizTrendsViewToggleSlot" class="sidebar-view-toggle-slot" hidden></div>
       <div class="rowAttributes" id="vizTrendsAttributes"></div>
       <div class="rowAttributeSettings" id="vizTrendsDividers"  ></div>
       <div class="rowGeography" id="vizTrendsAggregator"></div>

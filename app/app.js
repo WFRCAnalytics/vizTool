@@ -24,6 +24,9 @@ let layerDisplay;
 let dummyFeature;
 let dataMenu;
 let activeModelEntity;
+let preferredViewTemplate; // last view template (e.g. 'vizMap'/'vizTrends') picked via the Map/Trends
+// toggle on ANY multi-view entity - applied to every other multi-view entity too (model-entity.js's
+// preferredOrDefaultViewIndex()), so toggling to Trends once keeps showing Trends as you navigate.
 let scenarioChecker; // vizTrends global item
 let modeSelect; // vizTrends global item
 let selectedScenario_Main = {};
