@@ -131,6 +131,13 @@ calcite-menu-item {
 .secondary-nav-tab:hover {
     background: #e8ebee;
 }
+/* Inline-SVG icon kind (model-entity.js createModelEntityElement()/SUBMENU_SVG_ICONS) -
+   sized/positioned to sit in the same icon slot a calcite-icon would normally occupy. */
+.secondary-nav-tab-svg-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+}
 /* Selected tab - same light tint of WFRC's sky blue CTA color (from wfrc.utah.gov) the old
    Calcite version used, just as a plain background instead of a --calcite-* token override. */
 .secondary-nav-tab.active {

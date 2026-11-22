@@ -53,72 +53,130 @@
     "textIcon": "TOT",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Total Vehicle Miles Traveled",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVmt",
+    "attribute": "aVMT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC","LT","MD","HV"]
+      "fVehTypeFacility": ["PC","LT","MD","HV"]
     }
   },
   "mPersonalVmt": {
     "faIcon": "fa-solid fa-car",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Miles Traveled",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVmt",
+    "attribute": "aVMT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     }
   },
   "mCvVmt": {
-    "faIcon": "fa-solid fa-truck",
+    "textIcon": "TOT",
     "iconColor": "#1B9E8E",
-    "iconHoverText": "Truck Vehicle Miles Traveled",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Miles Traveled",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVmt",
+    "attribute": "aVMT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["LT","MD","HV"]
+      "fVehTypeFacility": ["MD","HV"]
     }
   },
-  "mCvVmtInterstate": {
-    "faIcon": "fa-solid fa-truck",
+  "mCvVhtFwy": {
+    "textIcon": "FWY",
     "iconColor": "#1B9E8E",
-    "iconHoverText": "Truck Vehicle Miles Traveled on Interstates (I-15, I-80, I-84, I-215)",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Hours Traveled on Interstates (I-15, I-80, I-84, I-215)",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVmt",
+    "attribute": "aVHT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
+      "fFuncType": [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["MD","HV"]
-    },
-    "segid_prefix_filter": ["0015","0080","0084","0215"]
+      "fVehTypeFacility": ["MD","HV"]
+    }
+  },
+  "mCvVht": {
+    "textIcon": "TOT",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Hours Traveled",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aVHT",
+    "selected_filters" : {
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypeFacility": ["MD","HV"]
+    }
+  },
+  "mCvVmtFwy": {
+    "textIcon": "FWY",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Miles Traveled on Interstates (I-15, I-80, I-84, I-215)",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aVMT",
+    "selected_filters" : {
+      "fFuncType": [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypeFacility": ["MD","HV"]
+    }
+  },
+  "mCvVhd": {
+    "textIcon": "TOT",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Hours of Delay",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aVHD",
+    "selected_filters" : {
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypeFacility": ["MD","HV"]
+    }
+  },
+  "mCvVhdFwy": {
+    "textIcon": "FWY",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Medium and Heavy Commercial Daily Vehicle Hours of Delay on Interstates (I-15, I-80, I-84, I-215)",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aVHD",
+    "selected_filters" : {
+      "fFuncType": [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypeFacility": ["MD","HV"]
+    }
   },
   "mHbwVmtProduced": {
     "faIcon": "fa-solid fa-briefcase",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Home Based Work Vehicle Miles Traveled",
-    "jsonName": "j-zone-metrics",
+    "jsonName": "j-zone-trip-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
@@ -133,17 +191,16 @@
   "mVmtPerHh": {
     "textIcon": "VMT/HH",
     "iconColor": "#1B9E8E",
-    "iconHoverText": "Personal Vehicle Miles Traveled per Household", 
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "iconHoverText": "Personal Vehicle Miles Traveled per Household",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
-    "attribute": "aVmt",
+    "attribute": "aVMT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     },
     "divide_jsonName": "j-zone-se",
     "divide_baseGeoJsonKey": "taz",
@@ -157,16 +214,15 @@
     "textIcon": "VMT/Pop",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Miles Traveled per Person",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
-    "attribute": "aVmt",
+    "attribute": "aVMT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     },
     "divide_jsonName": "j-zone-se",
     "divide_baseGeoJsonKey": "taz",
@@ -178,7 +234,7 @@
     "textIcon": "VMT/Wrk",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Miles Traveled per Worker",
-    "jsonName": "j-zone-metrics",
+    "jsonName": "j-zone-trip-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
@@ -196,56 +252,38 @@
   "mVht": {
     "textIcon": "TOT",
     "iconColor": "#1B9E8E",
-    "iconHoverText": "Average Travel Time",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "iconHoverText": "Total Vehicle Hours Traveled",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVht",
+    "attribute": "aVHT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC","LT","MD","HV"]
+      "fVehTypeFacility": ["PC","LT","MD","HV"]
     }
   },
   "mPersonalVht": {
     "faIcon": "fa-solid fa-car",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Hours Traveled",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVht",
+    "attribute": "aVHT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
-    }
-  },
-  "mCvVht": {
-    "faIcon": "fa-solid fa-truck",
-    "iconColor": "#1B9E8E",
-    "iconHoverText": "Commercial Vehicle Hours Traveled",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
-    "displayFormat": "#,##0",
-    "attribute": "aVht",
-    "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
-      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
-      "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["LT","MD","HV"]
+      "fVehTypeFacility": ["PC"]
     }
   },
   "mHbwVhtProduced": {
     "faIcon": "fa-solid fa-briefcase",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Home Based Work Vehicle Hours Traveled",
-    "jsonName": "j-zone-metrics",
+    "jsonName": "j-zone-trip-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
@@ -261,16 +299,15 @@
     "textIcon": "VHT/HH",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Hours Traveled per Household",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
-    "attribute": "aVht",
+    "attribute": "aVHT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     },
     "divide_jsonName": "j-zone-se",
     "divide_baseGeoJsonKey": "taz",
@@ -284,16 +321,15 @@
     "textIcon": "VHT/Pop",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Hours Traveled per Person",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
-    "attribute": "aVht",
+    "attribute": "aVHT",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     },
     "divide_jsonName": "j-zone-se",
     "divide_baseGeoJsonKey": "taz",
@@ -305,7 +341,7 @@
     "textIcon": "VHT/Wrk",
     "iconColor": "#1B9E8E",
     "iconHoverText": "Personal Vehicle Hours Traveled per Worker",
-    "jsonName": "j-zone-metrics",
+    "jsonName": "j-zone-trip-metrics",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
     "displayFormat": "0.00",
@@ -324,49 +360,108 @@
     "textIcon": "TOT",
     "iconColor": "#D9534F",
     "iconHoverText": "Total Vehicle Hours of Delay",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVhd",
+    "attribute": "aVHD",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC","LT","MD","HV"]
+      "fVehTypeFacility": ["PC","LT","MD","HV"]
     }
   },
   "mPersonalVhd": {
     "faIcon": "fa-solid fa-car",
     "iconColor": "#D9534F",
     "iconHoverText": "Personal Vehicle Hours of Delay",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVhd",
+    "attribute": "aVHD",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["PC"]
+      "fVehTypeFacility": ["PC"]
     }
   },
-  "mCvVhd": {
-    "faIcon": "fa-solid fa-truck",
+  "mHbwVhdProduced": {
+    "faIcon": "fa-solid fa-briefcase",
     "iconColor": "#D9534F",
-    "iconHoverText": "Commercial Vehicle Hours of Delay",
-    "jsonName": "j-roadway-trends",
-    "baseGeoJsonKey": "segment",
-    "baseGeoJsonId": "SEGID",
+    "iconHoverText": "Home Based Work Vehicle Hours of Delay",
+    "jsonName": "j-zone-trip-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
     "displayFormat": "#,##0",
-    "attribute": "aVhd",
+    "attribute": "aVHD",
     "selected_filters" : {
-      "fRoadSegFuncGroup": ["Total"],
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    }
+  },
+  "mVhdPerHh": {
+    "textIcon": "VHD/HH",
+    "iconColor": "#D9534F",
+    "iconHoverText": "Personal Vehicle Hours of Delay per Household",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.00",
+    "attribute": "aVHD",
+    "selected_filters" : {
       "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
       "fTod4pDy": ["DY"],
-      "fVehTypePcLiMdHv": ["LT","MD","HV"]
+      "fVehTypeFacility": ["PC"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_baseGeoJsonId": "TAZID",
+    "divide_attribute": "aHV",
+    "divide_selected_filters": {
+      "fVehNum": ["0","1","2","3p"]
     }
+  },
+  "mVhdPerCapita": {
+    "textIcon": "VHD/Pop",
+    "iconColor": "#D9534F",
+    "iconHoverText": "Personal Vehicle Hours of Delay per Person",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.00",
+    "attribute": "aVHD",
+    "selected_filters" : {
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["DY"],
+      "fVehTypeFacility": ["PC"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_baseGeoJsonKey": "taz",
+    "divide_baseGeoJsonId": "TAZID",
+    "divide_attribute": "aHP",
+    "divide_selected_filters": {}
+  },
+  "mHbwVhdPerWorker": {
+    "textIcon": "VHD/Wrk",
+    "iconColor": "#D9534F",
+    "iconHoverText": "Personal Vehicle Hours of Delay per Worker",
+    "jsonName": "j-zone-trip-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.00",
+    "attribute": "aVHD",
+    "selected_filters" : {
+      "fTod4": ["AM","MD","PM","EV"],
+      "fPurp12": ["HBW"],
+      "fPA": ["P"],
+      "fModeRoad":["DAn","DAt","SRn","SRt","SRh","Ss" ,"Sd" ,"Sb", "Truck", "External"]
+    },
+    "divide_jsonName": "j-zone-se",
+    "divide_attribute": "aWk",
+    "divide_selected_filters": {}
   },
   "mWk": {
     "faIcon": "fa-solid fa-briefcase",

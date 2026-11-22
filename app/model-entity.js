@@ -28,6 +28,14 @@ async function ensureMainScenarioDataLoaded(vizLayout) {
 // Builds the one vizLayout instance a single view entry needs, given its own
 // template/templateSettings - factored out of the ModelEntity constructor so it can be
 // called once per entry in a multi-view entity's "views" array instead of just once per entity.
+// Hand-drawn single-color line-art icons for entities Calcite/Font Awesome have no good
+// glyph for (checked both - neither has a plain "road" or "train tracks" symbol). stroke
+// uses currentColor so they tint the same way a calcite-icon would (e.g. .secondary-nav-tab.active).
+const SUBMENU_SVG_ICONS = {
+  'road-stripe': '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><line x1="4" y1="1" x2="1" y2="15"/><line x1="12" y1="1" x2="15" y2="15"/><line x1="8" y1="1" x2="8" y2="15" stroke-dasharray="1 3.2"/></svg>',
+  'rail-ties': '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3"><line x1="4.2" y1="4" x2="11.8" y2="4"/><line x1="3.7" y1="7" x2="12.3" y2="7"/><line x1="3.2" y1="10" x2="12.8" y2="10"/><line x1="2.6" y1="13" x2="13.4" y2="13"/><line x1="6.2" y1="1" x2="3.8" y2="15"/><line x1="9.8" y1="1" x2="12.2" y2="15"/></svg>'
+};
+
 function buildVizLayoutForView(template, templateSettings, modelEntity) {
   if (template == 'vizMap') {
     return new VizMap(templateSettings, modelEntity.submenuText, modelEntity);
@@ -185,9 +193,16 @@ class ModelEntity {
     modelEntity.dataset.text = this.submenuText; // BETA-badge CSS hook, see styles.css
     modelEntity.dataset.entityId = this.id;      // how _activateView() finds "the active tab"
 
-    const icon = document.createElement('calcite-icon');
-    icon.icon = this.submenuIconStart;
-    icon.scale = 's';
+    let icon;
+    if (SUBMENU_SVG_ICONS[this.submenuIconStart]) {
+      icon = document.createElement('span');
+      icon.className = 'secondary-nav-tab-svg-icon';
+      icon.innerHTML = SUBMENU_SVG_ICONS[this.submenuIconStart];
+    } else {
+      icon = document.createElement('calcite-icon');
+      icon.icon = this.submenuIconStart;
+      icon.scale = 's';
+    }
     modelEntity.appendChild(icon);
     modelEntity.appendChild(document.createTextNode(this.submenuText));
 

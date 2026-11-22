@@ -3018,6 +3018,61 @@
             ]
         }
     },
+    "aLM": {
+        "alias": "Lane Miles",
+        "definition": "is the total length of lanes on roadway facilities located within the specified geography, calculated by multiplying segment length by number of lanes.",
+        "rendererCollection": {
+            "main": {
+                "legendTitle": "Lane Miles",
+                "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.5, '', Text($feature.dVal, '#,##0.0')))",
+                "style": "mainStyleC",
+                "breakpoints": [1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0],
+                "numberFormat": "comma",
+                "defaultSymbol": {"type": "simple-fill", "color": [221, 221, 221, 0.75], "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+                "defaultLabel": "No Lane Miles"
+            },
+            "compare_abs": {
+                "labelExpressionInfo": "absLeiD",
+                "style": "absStyleG",
+                "mode": "scale",
+                "breakpoints": [1.0, 10.0, 50.0],
+                "numberFormat": "comma",
+                "defaultSymbol": {"type": "simple-fill", "color": "#DDDDDD", "outline": {"type": "simple-line", "color": "#FFFFFF", "width": 1}},
+                "defaultLabel": "No Lane Miles"
+            },
+            "compare_pct": {
+                "template": "pctB",
+                "defaultSymbol": "pctDefSymD",
+                "defaultLabel": "No Lane Miles"
+            },
+            "main_divide_by": [
+                {
+                    "divider": "default",
+                    "legendTitle": "Lane Miles",
+                    "labelExpressionInfo": "IIF(IsEmpty($feature.dVal), '', IIF($feature.dVal<0.01, '', Text($feature.dVal, '#,##0.00')))",
+                    "simpleRenderer": {
+                        "symbol": {
+                            "type": "simple-fill",
+                            "outline": {
+                                "color": "rgba(255,255,255,0.75)",
+                                "width": 1.0
+                            }
+                        },
+                        "visualVariables": [
+                            {
+                                "type": "color",
+                                "stops": [
+                                    { "value":    0, "color": "rgba(255,255,255,0.75)" },
+                                    { "value": 0.01, "color": "rgba(235,235,235,0.75" },
+                                    { "value":    1, "color": "rgba(255,0,0,0.75)" }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
     "aTPMT": {
         "alias": "Passenger-Miles Traveled",
         "definition": "is the total miles traveled by passengers on segments over a given period of time in the specified geography.",

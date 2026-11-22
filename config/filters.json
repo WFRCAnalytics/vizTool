@@ -454,6 +454,48 @@
             {"value":"CBD-like"  , "label": "5-CBD-like"  }
         ]
     },
+    "fFuncType": {
+        "alias"    : "Functional Type",
+        "fWidget"  : "checkboxes",
+        "fOptions" : [
+            {"value":1 , "label": "Centroid Connector"                 },
+            {"value":2 , "label": "Principal Arterial"                 },
+            {"value":3 , "label": "Minor Arterial"                     },
+            {"value":4 , "label": "Major Collector"                    },
+            {"value":5 , "label": "Minor Collector"                    },
+            {"value":6 , "label": "Local"                              },
+            {"value":7 , "label": "Unpaved"                            },
+            {"value":12, "label": "Expressway (60-70 mph)"             },
+            {"value":13, "label": "Expressway (55-65 mph)"             },
+            {"value":14, "label": "Expressway (50-60 mph)"             },
+            {"value":15, "label": "Expressway (45-55 mph)"             },
+            {"value":30, "label": "Freeway: Fwy-to-Fwy Loop Ramp"      },
+            {"value":31, "label": "Freeway: C-D Road, Flyover Ramp"    },
+            {"value":32, "label": "Freeway (55-60 mph)"                },
+            {"value":33, "label": "Freeway (65 mph, No Aux Lane)"      },
+            {"value":34, "label": "Freeway (65 mph, Aux Lane)"         },
+            {"value":35, "label": "Freeway (75 mph, No Aux Lane)"      },
+            {"value":36, "label": "Freeway (75 mph, Aux Lane)"         },
+            {"value":38, "label": "Freeway: Managed Lane"              },
+            {"value":39, "label": "Freeway: Managed Lane Access"       },
+            {"value":41, "label": "Freeway: On-Ramp"                   },
+            {"value":42, "label": "Freeway: Off-Ramp"                  }
+        ]
+    },
+    "fVehTypeFacility": {
+        "alias"    : "Vehicle Type",
+        "fWidget"  : "select",
+        "fSelected": "Total",
+        "fOptions" : [
+            {"value":"Total"   , "label": "All Vehicles"  },
+            {"value":"PC"      , "label": "Passenger Cars"},
+            {"value":"LT"      , "label": "Light Trucks"  },
+            {"value":"MD"      , "label": "Medium Trucks" },
+            {"value":"HV"      , "label": "Heavy Trucks"  },
+            {"value":"External", "label": "External"      }
+        ],
+        "subTotals": ["Total"]
+    },
     "fDirName4pAll": {
         "alias"    : "Cardinal Travel Direction on Segment",
         "fWidget"  : "select",

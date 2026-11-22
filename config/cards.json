@@ -12,20 +12,28 @@
     "measures": ["mTotEmp","mOthEmp","mRetEmp","mIndEmp"]
   },
   "cardVmt": {
-    "title": "Vehicle Miles Traveled",
-    "measures": ["mVmt","mPersonalVmt","mCvVmt","mHbwVmtProduced","mVmtPerHh","mVmtPerCapita","mHbwVmtPerWorker"]
+    "title": "Daily Vehicle Miles Traveled",
+    "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mVmtPerCapita","mHbwVmtPerWorker"]
   },
-  "cardVmtInterstate": {
-    "title": "Truck VMT on Interstates",
-    "measures": ["mCvVmtInterstate"]
+  "cardVmtTruck": {
+    "title": "Medium and Heavy Truck Daily Vehicle Miles Traveled",
+    "measures": ["mCvVmt","mCvVmtFwy"]
   },
   "cardVht": {
-    "title": "Vehicle Hours Traveled",
-    "measures": ["mVht","mPersonalVht","mCvVht","mHbwVhtProduced","mVhtPerHh","mVhtPerCapita","mHbwVhtPerWorker"]
+    "title": "Daily Vehicle Hours Traveled",
+    "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mVhtPerCapita","mHbwVhtPerWorker"]
+  },
+  "cardVhtTruck": {
+    "title": "Medium and Heavy Truck Daily Vehicle Hours Traveled",
+    "measures": ["mCvVht","mCvVhtFwy"]
   },
   "cardVhd": {
-    "title": "Vehicle Hours of Delay",
-    "measures": ["mVhd","mPersonalVhd","mCvVhd"]
+    "title": "Daily Vehicle Hours of Delay",
+    "measures": ["mVhd","mPersonalVhd","mHbwVhdProduced","mVhdPerHh","mVhdPerCapita","mHbwVhdPerWorker"]
+  },
+  "cardVhdTruck": {
+    "title": "Medium and Heavy Truck Daily Vehicle Hours of Delay",
+    "measures": ["mCvVhd","mCvVhdFwy"]
   },
   "cardTrips": {
     "title": "Personal Trips",

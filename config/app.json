@@ -32,7 +32,7 @@
           "submenuIconStart": "desktop",
           "template": "vizDashboard",
           "templateSettings": {
-            "cards": ["cardPopHh","cardEmp","cardATO","cardVmt","cardVmtInterstate","cardVht","cardVhd","cardTrips","cardModeTrips","cardModeSplit","cardTransitTrips","cardTransitSplit","cardHbwModeSplit"],
+            "cards": ["cardPopHh","cardEmp","cardATO","cardVmt","cardVmtTruck","cardVht","cardVhtTruck","cardVhd","cardVhdTruck","cardTrips","cardModeTrips","cardModeSplit","cardTransitTrips","cardTransitSplit","cardHbwModeSplit"],
             "aggregatorTitle": "Select Summary Geography",
             "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","MAGHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected" : "PLANAREA"
@@ -44,7 +44,7 @@
       "menuIconStart": "driving-distance",
       "modelEntities": [
         { "submenuText": "Road Segments",
-          "submenuIconStart": "line-straight",
+          "submenuIconStart": "road-stripe",
           "views": [
             { "template": "vizMap",
               "templateSettings": {
@@ -96,7 +96,7 @@
           }
         },
         { "submenuText": "Transit Segments",
-          "submenuIconStart": "line-straight",
+          "submenuIconStart": "rail-ties",
           "views": [
             { "template": "vizMap",
               "templateSettings": {
@@ -203,7 +203,7 @@
                 "geometryType": "polygon",
                 "popupTitle": "Zone Mode Share",
                 "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
                 "aggregatorSelected" : "TAZID",
                 "dividerTitle": "Divide By",
                 "dividerSelected": "",
@@ -234,7 +234,7 @@
             }
           ]
         },
-        { "submenuText": "PA Trips",
+        { "submenuText": "Production<>Attraction Trip Matrix",
           "submenuIconStart": "2d-explore",
           "template": "vizMatrix",
           "templateSettings": {
@@ -242,7 +242,7 @@
             "baseGeoJsonKey": "distSml",
             "baseGeoJsonId": "DISTSML",
             "aggregatorTitle": "Select Zone Geography",
-            "aggregators": ["DISTSML","PLANAREA","DISTMED","DISTLRG","DISTSUPER","SUBAREAID"],
+            "aggregators": ["SUBAREAID","PLANAREA","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
             "aggregatorSelected" : "DISTLRG",
             "attributeTitle": "Trip Mode",
             "attributeSelected": "a0",
@@ -250,7 +250,7 @@
             "filters" : ["fPurp5pAll","fModeRouteCode3","fModeAccessSingleLetter","fModeAuto"]
           }
         },
-        { "submenuText": "Trip Gen",
+        { "submenuText": "Trip Generation",
           "submenuIconStart": "arrow-double-diagonal-1",
           "views": [
             { "template": "vizMap",
@@ -261,7 +261,7 @@
                 "geometryType": "polygon",
                 "popupTitle": "",
                 "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
                 "aggregatorSelected" : "TAZID",
                 "dividerTitle": "Divide By",
                 "dividerSelected": "",
@@ -292,7 +292,7 @@
             }
           ]
         },
-        { "submenuText": "Spec Attraction Zones (SAZ)",
+        { "submenuText": "Special Attraction Zones",
           "submenuIconStart": "ribbon-rosette",
           "views": [
             { "template": "vizMap",
@@ -325,7 +325,7 @@
             }
           ]
         },
-        { "submenuText": "Spec Gen",
+        { "submenuText": "Special Generators",
           "submenuIconStart": "arrow-double-diagonal-1",
           "views": [
             { "template": "vizMap",
@@ -336,7 +336,7 @@
                 "geometryType": "polygon",
                 "popupTitle": "",
                 "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
                 "aggregatorSelected" : "TAZID",
                 "dividerTitle": "Divide By",
                 "dividerSelected": "",
@@ -387,7 +387,7 @@
                 "dividerSelected": "",
                 "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
                 "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
                 "aggregatorSelected" : "TAZID",
                 "attributes": ["aHP","aHV","aV","aWk","aE3","aE12","aI","aSc"],
                 "filters" : ["fVehNum","fEmp3Cat","fEmp12Cat","fSchType"]
@@ -413,48 +413,6 @@
             }
           ]
         },
-        { "submenuText": "Roadway Trip-Based Metrics",
-          "submenuIconStart": "graph-pie-slice",
-          "views": [
-            { "template": "vizMap",
-              "templateSettings": {
-                "jsonName": "j-zone-metrics",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "geometryType": "polygon",
-                "popupTitle": "Zone Metrics",
-                "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
-                "aggregatorSelected" : "TAZID",
-                "attributeTitle": "Zone Metric",
-                "attributeSelected": "aPMT",
-                "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-                "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"],
-                "dividerTitle": "Divide By",
-                "dividerSelected": "",
-                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"]
-              }
-            },
-            { "template": "vizTrends",
-              "templateSettings": {
-                "jsonName": "j-zone-metrics",
-                "baseGeoJsonKey": "taz",
-                "baseGeoJsonId": "TAZID",
-                "aggregatorTitle": "Select Summary Geography",
-                "comboSelected": "",
-                "attributeTitle": "Zone Metrics",
-                "attributeSelected": "aPMT",
-                "dividerTitle": "Divide By",
-                "dividerSelected": "",
-                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
-                "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
-                "aggregatorSelected" : "DISTSUPER",
-                "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
-                "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"]
-              }
-            }
-          ]
-        },
         { "submenuText": "Access to Opportunities (ATO)",
           "submenuIconStart": "desktop",
           "views": [
@@ -467,7 +425,7 @@
                 "attributeTitle": "Access to Opportunities",
                 "attributeSelected": "aJA",
                 "aggregatorTitle": "Select Zone Geography",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
                 "aggregatorSelected" : "TAZID",
                 "attributes": ["aJA","aHA","aJAr","aHAr","aJL","aHL","aJ","aH"],
                 "filters" : ["fAtoMode","fAtoLossType","fAtoRelGeo"]
@@ -482,10 +440,94 @@
                 "comboSelected": "",
                 "attributeTitle": "Access to Opportunities",
                 "attributeSelected": "aJA",
-                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA"],
+                "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
                 "aggregatorSelected" : "PLANAREA",
                 "attributes": ["aJA","aHA","aJAr","aHAr","aJL","aHL","aJ","aH"],
                 "filters" : ["fAtoMode","fAtoLossType","fAtoRelGeo"]
+              }
+            }
+          ]
+        },
+        { "submenuText": "Zone Trip Metrics (Road)",
+          "submenuIconStart": "graph-pie-slice",
+          "views": [
+            { "template": "vizMap",
+              "templateSettings": {
+                "jsonName": "j-zone-trip-metrics",
+                "baseGeoJsonKey": "taz",
+                "baseGeoJsonId": "TAZID",
+                "geometryType": "polygon",
+                "popupTitle": "Zone Metrics",
+                "aggregatorTitle": "Select Zone Geography",
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
+                "aggregatorSelected" : "TAZID",
+                "attributeTitle": "Zone Metric",
+                "attributeSelected": "aPMT",
+                "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
+                "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"],
+                "dividerTitle": "Divide By",
+                "dividerSelected": "",
+                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"]
+              }
+            },
+            { "template": "vizTrends",
+              "templateSettings": {
+                "jsonName": "j-zone-trip-metrics",
+                "baseGeoJsonKey": "taz",
+                "baseGeoJsonId": "TAZID",
+                "aggregatorTitle": "Select Summary Geography",
+                "comboSelected": "",
+                "attributeTitle": "Zone Metrics",
+                "attributeSelected": "aPMT",
+                "dividerTitle": "Divide By",
+                "dividerSelected": "",
+                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+                "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+                "aggregatorSelected" : "PLANAREA",
+                "attributes": ["aPMT","aPHT","aPHD","aVMT","aVHT","aVHD"],
+                "filters" : ["fTod4","fPurp12", "fPurp12NoTruckExternal","fPA","fModeRoad","fModeRoadNoTruckExternal"]
+              }
+            }
+          ]
+        },
+        { "submenuText": "Zone Facility Metrics (Road)",
+          "submenuIconStart": "driving-distance",
+          "views": [
+            { "template": "vizMap",
+              "templateSettings": {
+                "jsonName": "j-zone-facility-metrics",
+                "baseGeoJsonKey": "taz",
+                "baseGeoJsonId": "TAZID",
+                "geometryType": "polygon",
+                "popupTitle": "Zone Facility Metrics",
+                "aggregatorTitle": "Select Zone Geography",
+                "aggregators": ["TAZID","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","PLANAREA","SUBAREAID"],
+                "aggregatorSelected" : "TAZID",
+                "attributeTitle": "Facility Metric",
+                "attributeSelected": "aVMT",
+                "attributes": ["aVMT","aVHT","aVHD","aLM"],
+                "filters" : ["fFuncType","fAreaType","fVehTypeFacility","fTod4pDy"],
+                "dividerTitle": "Divide By",
+                "dividerSelected": "",
+                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"]
+              }
+            },
+            { "template": "vizTrends",
+              "templateSettings": {
+                "jsonName": "j-zone-facility-metrics",
+                "baseGeoJsonKey": "taz",
+                "baseGeoJsonId": "TAZID",
+                "aggregatorTitle": "Select Summary Geography",
+                "comboSelected": "",
+                "attributeTitle": "Facility Metrics",
+                "attributeSelected": "aVMT",
+                "dividerTitle": "Divide By",
+                "dividerSelected": "",
+                "dividers": ["TAZ_HH","TAZ_POP","TAZ_WRK","TAZ_VEH","TAZ_EMP","TAZ_HJI"],
+                "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER"],
+                "aggregatorSelected" : "PLANAREA",
+                "attributes": ["aVMT","aVHT","aVHD","aLM"],
+                "filters" : ["fFuncType","fAreaType","fVehTypeFacility","fTod4pDy"]
               }
             }
           ]
