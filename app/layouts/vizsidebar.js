@@ -33,7 +33,7 @@ class VizSidebar {
           console.error(`Error: Missing configuration or title text for attribute code: ${agCode}`);
           return { value: attributeCode, label: 'Unknown' }; // Provide a default value in case of error
         }
-        return { value: attributeCode, label: configAt.alias };
+        return { value: attributeCode, label: configAt.alias, indent: configAt.indent || 0 };
       });
 
       // The attribute list's own title/info-icon is dropped now that the "— ATTRIBUTES —"

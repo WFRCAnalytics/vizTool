@@ -131,7 +131,17 @@ class WijRadio {
 
       // Nest the radio button directly inside the calcite-label
       radioButtonLabel.appendChild(radioButton);
-      radioButtonLabel.appendChild(document.createTextNode(option.label));
+      // Indent (option.indent, e.g. a sub-item under a category header like "Motorized Trips")
+      // offsets only the text, not the whole label - otherwise the radio button itself would
+      // shift right too and the radio column would stop lining up down the list.
+      if (option.indent) {
+        const labelText = document.createElement('span');
+        labelText.style.marginLeft = (option.indent * 8) + 'px';
+        labelText.textContent = option.label;
+        radioButtonLabel.appendChild(labelText);
+      } else {
+        radioButtonLabel.appendChild(document.createTextNode(option.label));
+      }
 
       radioBody.appendChild(radioButtonLabel);
     });

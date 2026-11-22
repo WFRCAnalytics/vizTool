@@ -1949,7 +1949,8 @@
         }
     },
     "aM": {
-        "alias": "  Motorized Trips",
+        "alias": "Motorized Trips",
+        "indent": 1,
         "definition": "includes all trips made using motorized transport, including cars, motorcycles, and public transit.",
         "rendererCollection": {
             "main": {
@@ -2004,7 +2005,8 @@
         }
     },
     "aA": {
-        "alias": "    Auto Trips",
+        "alias": "Auto Trips",
+        "indent": 2,
         "definition": "specifically refers to trips made using personal automobiles.",
         "rendererCollection": {
             "main": {
@@ -2059,7 +2061,8 @@
         }
     },
     "aT": {
-        "alias": "    Transit Trips",
+        "alias": "Transit Trips",
+        "indent": 2,
         "definition": "is the number of trips made using public transportation services, such as buses or trains.",
         "rendererCollection": {
         "main": {
@@ -2114,7 +2117,8 @@
         }
     },
     "aN": {
-        "alias": "  Non-Motorized Trips",
+        "alias": "Non-Motorized Trips",
+        "indent": 1,
         "definition": "encompasses trips made without the use of motorized vehicles, namely walking and bicycling.",
         "rendererCollection": {
             "main": {
@@ -2170,6 +2174,7 @@
     },
     "aNM": {
         "alias": "  Non-Motorized Trips",
+        "indent": 1,
         "definition": "encompasses trips made without the use of motorized vehicles, namely walking and bicycling.",
         "rendererCollection": {
             "main": {
@@ -2224,7 +2229,8 @@
         }
     },
     "aW": {
-        "alias": "    Walk Trips",
+        "alias": "Walk Trips",
+        "indent": 2,
         "definition": "is specifically the number of trips made entirely on foot.",
         "rendererCollection": {
             "main": {
@@ -2279,7 +2285,8 @@
         }
     },
     "aB": {
-        "alias": "    Bike Trips",
+        "alias": "Bike Trips",
+        "indent": 2,
         "definition": "refers to trips made using only a bicycle.",
         "rendererCollection": {
             "main": {

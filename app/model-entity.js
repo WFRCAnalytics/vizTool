@@ -36,6 +36,32 @@ const SUBMENU_SVG_ICONS = {
   'rail-ties': '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3"><line x1="4.2" y1="4" x2="11.8" y2="4"/><line x1="3.7" y1="7" x2="12.3" y2="7"/><line x1="3.2" y1="10" x2="12.8" y2="10"/><line x1="2.6" y1="13" x2="13.4" y2="13"/><line x1="6.2" y1="1" x2="3.8" y2="15"/><line x1="9.8" y1="1" x2="12.2" y2="15"/></svg>'
 };
 
+// templateSettings fields that are usually identical between a modelEntity's vizMap/vizTrends/
+// vizMatrix views (jsonName, geography keys, aggregator/attribute/filter/divider lists and
+// titles) can be set once on the modelEntity itself instead of repeated in every view - see
+// mergeSharedSettings() below. aggregatorSelected is deliberately excluded: the sensible default
+// genuinely differs by view type (vizMap defaults to the native unit, vizTrends to a roll-up), so
+// it always stays per-view.
+const SHARED_SETTINGS_KEYS = [
+  'jsonName', 'baseGeoJsonKey', 'baseGeoJsonId',
+  'aggregators', 'aggregatorTitle',
+  'attributes', 'attributeTitle', 'attributeSelected',
+  'filters',
+  'dividers', 'dividerTitle', 'dividerSelected',
+];
+
+// A view's own templateSettings always wins over the modelEntity-level default for the same key -
+// this is what lets an entity hoist e.g. a shared `attributes` list while still letting one view
+// override it (Socioeconomics' vizMap-only aI aside, Trip Generation's vizMap-only aAtTaz still
+// needs its own attributes list since aAtTaz isn't aggregatable and can't be offered on vizTrends).
+function mergeSharedSettings(modelEntityData, templateSettings) {
+  const shared = {};
+  for (const key of SHARED_SETTINGS_KEYS) {
+    if (modelEntityData[key] !== undefined) shared[key] = modelEntityData[key];
+  }
+  return { ...shared, ...templateSettings };
+}
+
 function buildVizLayoutForView(template, templateSettings, modelEntity) {
   if (template == 'vizMap') {
     return new VizMap(templateSettings, modelEntity.submenuText, modelEntity);
@@ -69,7 +95,7 @@ class ModelEntity {
     this.views = viewConfigs.map(v => ({
       template: v.template,
       viewLabel: v.viewLabel || this.defaultViewLabelForTemplate(v.template),
-      vizLayout: buildVizLayoutForView(v.template, v.templateSettings, this)
+      vizLayout: buildVizLayoutForView(v.template, mergeSharedSettings(data, v.templateSettings), this)
     }));
     this.activeViewIndex = 0;
   }
