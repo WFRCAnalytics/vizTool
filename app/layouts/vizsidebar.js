@@ -21,19 +21,20 @@ class VizSidebar {
     // link to parent
     this.vizLayout = vizLayout;
     
-    this.attributes       = (attributes  || []).map(item => new Attribute (item));
+    this.attributes       = (attributes  || []).map(item => new Attribute (item, vizLayout?.jsonName));
     this.aggregators      = (aggregators || []).map(item => new Aggregator(item));
     this.dividers         = (dividers    || []).map(item => new Divider   (item));
 
     if (attributes) {
       
+      const _vmtBasis = (typeof getVmtBasisForJsonName === 'function') ? getVmtBasisForJsonName(this.vizLayout?.jsonName) : null;
       const attributeOptions = attributes.map(attributeCode => {
         const configAt = configAttributes[attributeCode];
         if (!configAt || !configAt.alias) {
           console.error(`Error: Missing configuration or title text for attribute code: ${agCode}`);
           return { value: attributeCode, label: 'Unknown' }; // Provide a default value in case of error
         }
-        return { value: attributeCode, label: configAt.alias, indent: configAt.indent || 0 };
+        return { value: attributeCode, label: configAt.alias, indent: configAt.indent || 0, disclaimerBasis: _vmtBasis };
       });
 
       // The attribute list's own title/info-icon is dropped now that the "— ATTRIBUTES —"
@@ -114,7 +115,8 @@ class VizSidebar {
       { name: "Attributes", render: () => {
           if (!this.attributeSelect) return null;
           const parts = [this.attributeSelect.render()];
-          if (this.attributes.some(item => item.definition)) parts.push(this.renderDefinitionsButton());
+          const _hasVmtBasis = (typeof getVmtBasisForJsonName === 'function') && getVmtBasisForJsonName(this.vizLayout?.jsonName);
+          if (this.attributes.some(item => item.definition) || _hasVmtBasis) parts.push(this.renderDefinitionsButton());
           return parts;
         }
       },
@@ -214,6 +216,35 @@ class VizSidebar {
 
     const body = document.createElement("div");
     body.className = "definitions-popup-body";
+
+    // Methodology-wide disclaimer (trip/facility/segment-based) for this sidebar's own data
+    // source, if any - one per sidebar, shown once above the per-attribute glossary below,
+    // since it applies to the whole jsonName rather than any one attribute.
+    const _vmtBasis = (typeof getVmtBasisForJsonName === 'function') ? getVmtBasisForJsonName(this.vizLayout?.jsonName) : null;
+    if (_vmtBasis) {
+      const note = document.createElement("div");
+      note.className = "vmt-disclaimer-note";
+
+      const text = document.createElement("p");
+      text.textContent = getVmtDisclaimerText(_vmtBasis);
+      note.appendChild(text);
+
+      getVmtJumpTargets(_vmtBasis).forEach(target => {
+        const link = document.createElement("a");
+        link.href = "#";
+        link.className = "vmt-jump-link";
+        link.textContent = "→ " + target.label;
+        link.onclick = (e) => {
+          e.preventDefault();
+          jumpToModelEntity(target.menuText, target.entityText, target.view);
+          this.closeDefinitionsPopup();
+        };
+        note.appendChild(link);
+      });
+
+      body.appendChild(note);
+    }
+
     this.attributes.filter(item => item.definition).forEach(item => {
       const entry = document.createElement("p");
       entry.innerHTML = `<b>${item.alias}</b> ${item.definition}`;

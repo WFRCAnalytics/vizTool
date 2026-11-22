@@ -2003,6 +2003,41 @@ td {
   margin: 0 0 12px 0;
 }
 
+/* =========================
+   VMT (trip/facility/segment-based) disclaimers - app/disclaimers.js
+   ========================= */
+/* The asterisk marker itself - shown next to an attribute's label (wijradio.js) or a dashboard
+   measure's icon (measure.js) whenever its data source has a basis-specific caveat. cursor:help
+   signals the native title= tooltip it carries (plain text only - see disclaimers.js for why). */
+.vmt-disclaimer-asterisk {
+  color: #C85327; /* WFRC brand orange, same "flag" accent used elsewhere (e.g. .dashboard-compare-hint) */
+  font-weight: bold;
+  margin-left: 2px;
+  cursor: help;
+}
+
+/* The full disclaimer paragraph + jump link(s), shown once at the top of the Definitions popup
+   (vizsidebar.js's openDefinitionsPopup()) rather than per-attribute - it applies to the whole
+   jsonName, not any one attribute in the list below it. */
+.vmt-disclaimer-note {
+  background-color: #fff6ef;
+  border: 1px solid #C85327;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+}
+
+.vmt-disclaimer-note p {
+  margin: 0 0 8px 0;
+}
+
+.vmt-jump-link {
+  display: inline-block;
+  margin-right: 14px;
+  color: #5B9BD5; /* same pastel blue as .reference-map-button */
+  cursor: pointer;
+}
+
 #closePopup {
   position: absolute;
   top: 10px;

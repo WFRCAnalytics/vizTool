@@ -2863,6 +2863,9 @@
     "aVMT": {
         "alias": "Vehicle Miles Traveled",
         "definition": "is the total miles traveled by vehicles produced or attracted to the specified geography over a given time period.",
+        "definitionByBasis": {
+            "facility": "is the total miles traveled by vehicles on all travel demand model links, including centroid connectors, that pass through the specified geography over a given time period."
+        },
         "rendererCollection": {
             "main": {
                 "legendTitle": "Vehicle Miles Traveled",
@@ -2918,6 +2921,9 @@
     "aVHT": {
         "alias": "Vehicle Hours Traveled",
         "definition": "measures the total time spent by vehicles traveling produced or attracted to the specified geography over a given period of time.",
+        "definitionByBasis": {
+            "facility": "measures the total time spent by vehicles traveling on all travel demand model links, including centroid connectors, that pass through the specified geography over a given period of time."
+        },
         "rendererCollection": {
             "main": {
                 "legendTitle": "Vehicle Hours Traveled",

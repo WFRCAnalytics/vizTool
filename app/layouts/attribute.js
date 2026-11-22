@@ -1,5 +1,5 @@
 class Attribute {
-    constructor(attributeCode) {
+    constructor(attributeCode, jsonName = null) {
         if (!attributeCode) {
             throw new Error("Attribute code (attributeCode) is required.");
         }
@@ -14,9 +14,19 @@ class Attribute {
             throw new Error(`No configuration found for attribute code: ${attributeCode}`);
         }
 
+        // Which area-based-summary methodology (trip/facility/segment) this attribute's data
+        // actually comes from - resolved off the owning jsonName, not attributeCode, since
+        // attribute codes are a global namespace shared across entities with different
+        // methodologies (e.g. aVMT on both Zone Trip Metrics and Zone Facility Metrics).
+        this.vmtBasis = (typeof getVmtBasisForJsonName === 'function') ? getVmtBasisForJsonName(jsonName) : null;
+
+        const _basisDefinition = this.vmtBasis && _configAttribute.definitionByBasis
+            ? _configAttribute.definitionByBasis[this.vmtBasis]
+            : null;
+
         this.attributeCode            = attributeCode;
         this.alias                    = _configAttribute.alias || null;
-        this.definition                = _configAttribute.definition || null;
+        this.definition                = _basisDefinition || _configAttribute.definition || null;
         this.agWeightCode             = _configAttribute.agWeightCode || null;
         this.labelsOn                 = _configAttribute.hasOwnProperty('labelsOn') ? _configAttribute.labelsOn : true;
         this.agWeightCodeFilter       = _configAttribute.agWeightCodeFilter || null;

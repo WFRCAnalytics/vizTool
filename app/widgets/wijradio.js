@@ -133,15 +133,15 @@ class WijRadio {
       radioButtonLabel.appendChild(radioButton);
       // Indent (option.indent, e.g. a sub-item under a category header like "Motorized Trips")
       // offsets only the text, not the whole label - otherwise the radio button itself would
-      // shift right too and the radio column would stop lining up down the list.
-      if (option.indent) {
-        const labelText = document.createElement('span');
-        labelText.style.marginLeft = (option.indent * 8) + 'px';
-        labelText.textContent = option.label;
-        radioButtonLabel.appendChild(labelText);
-      } else {
-        radioButtonLabel.appendChild(document.createTextNode(option.label));
-      }
+      // shift right too and the radio column would stop lining up down the list. Wrapped in a
+      // span regardless of indent so a trailing disclaimer asterisk (option.disclaimerBasis,
+      // see disclaimers.js) has somewhere to attach right after the label text.
+      const labelWrap = document.createElement('span');
+      if (option.indent) labelWrap.style.marginLeft = (option.indent * 8) + 'px';
+      labelWrap.appendChild(document.createTextNode(option.label));
+      const _asterisk = (typeof renderVmtAsterisk === 'function') ? renderVmtAsterisk(option.disclaimerBasis) : null;
+      if (_asterisk) labelWrap.appendChild(_asterisk);
+      radioButtonLabel.appendChild(labelWrap);
 
       radioBody.appendChild(radioButtonLabel);
     });

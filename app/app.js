@@ -40,6 +40,7 @@ let configDividers;
 let configFilters;
 let configCards;
 let configMeasures;
+let configDisclaimers;
 let menuItems;
 let onOpenMenuItem;
 let onOpenModelEntity;
@@ -968,6 +969,13 @@ require([
     return dataConfigMeasures;
   }
 
+  async function fetchConfigDisclaimers() {
+    console.log('app:fetchConfigDisclaimers');
+    const response = await fetchWithTimeout('config/disclaimers.json');
+    const dataConfigDisclaimers = await response.json();
+    return dataConfigDisclaimers;
+  }
+
   async function loadScenarios() {
     console.log("app:loadScenarios");
     //setLoadStatus("Loading scenario list and geo data...");
@@ -1142,6 +1150,7 @@ require([
     configDividers = await fetchConfigDividers();
     configCards = await fetchConfigCards();
     configMeasures = await fetchConfigMeasures();
+    configDisclaimers = await fetchConfigDisclaimers();
 
     configApp = await fetchConfigApp();
 

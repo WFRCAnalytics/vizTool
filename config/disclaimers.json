@@ -1,0 +1,29 @@
+{
+  "jsonNameBasis": {
+    "j-zone-trip-metrics": "trip",
+    "j-zone-facility-metrics": "facility",
+    "j-roadway-trends": "segment"
+  },
+  "basisShortLabel": {
+    "trip": "Trip-based",
+    "facility": "Facility-based",
+    "segment": "Segment-based"
+  },
+  "basisText": {
+    "trip": "Trip-based: The values reported here come from area-based summaries. They include trips to and from geographies irrespective of route: between a given origin and destination, a trip could travel any of several possible paths through the network, so the distance (or time) attributed to it comes from the final zone-to-zone skim taken after traffic assignment — reflecting the loaded network's travel cost between origin and destination — rather than from tracking which specific links or geographies that trip actually passed through. Because each trip is counted at both its production and attraction end, this view lets you summarize by one end at a time (Production or Attraction) rather than both together, to avoid double-counting the same trip in a single total. To see summaries based on which links physically pass through a geography, including centroid connectors, please visit Zone Facility Metrics; to see summaries based on segment association, including corridor aggregation, please visit Roadway Segment Trends.",
+    "facility": "Facility-based: The values reported here come from area-based summaries. They include values from all travel demand model links, including centroid connectors, that travel through a given geography. Centroid connectors connect Transportation Analysis Zones (TAZs) to the roadway network. While these connectors can serve as a proxy for local road travel not explicitly represented in the travel demand model, they only approximate travel on the actual local road network. To see summaries based on segment association, including corridor aggregation, please visit Roadway Segment Trends.",
+    "segment": "Segment-based: The values reported here come from segment-based summaries. They only include values from travel demand model links explicitly associated with segments defined in the segment shapefile. Links without an associated segment, or links associated with segments not found in the shapefile, are excluded from the summary data, regardless of their magnitude. To see summaries for all links regardless of segment associations, please visit Zone Facility Metrics."
+  },
+  "basisJumpTargets": {
+    "trip": [
+      {"label": "Zone Facility Metrics", "menuText": "Communities", "entityText": "Zone Facility Metrics (Road)"},
+      {"label": "Roadway Segment Trends", "menuText": "Roads and Transit", "entityText": "Road Segments", "view": "vizTrends"}
+    ],
+    "facility": [
+      {"label": "Roadway Segment Trends", "menuText": "Roads and Transit", "entityText": "Road Segments", "view": "vizTrends"}
+    ],
+    "segment": [
+      {"label": "Zone Facility Metrics", "menuText": "Communities", "entityText": "Zone Facility Metrics (Road)"}
+    ]
+  }
+}
