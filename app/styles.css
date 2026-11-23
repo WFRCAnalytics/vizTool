@@ -1290,6 +1290,12 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0; /* WijRadio's own title also carries the standalone .title class (its
+                        margin-bottom:10px is meant for a title sitting above a standalone
+                        option list, e.g. vizTrends' chart-series picker), which otherwise
+                        leaks into this one-line toggle row too - WijCheckboxes' equivalent
+                        title never had that class, so a collapsed radio filter rendered ~10px
+                        taller than a collapsed checkboxes filter for no visible reason. */
 }
 
 .filter-selected-summary {
