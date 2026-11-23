@@ -679,6 +679,8 @@
     "faIcon": "fa-solid fa-car-side",
     "iconColor": "#7B5EA7",
     "iconHoverText": "Auto Share",
+    "pictogramLabel": "Auto",
+    "pictogramColor": "#6B7280",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -689,11 +691,13 @@
       "fTod2pDy":["Dy"],
       "fPA":["P"]
     }
-  }, 
+  },
   "mTransitTrips": {
     "faIcon": "fa-solid fa-bus-side",
     "iconColor": "#7B5EA7",
     "iconHoverText": "Transit Trips",
+    "pictogramLabel": "Transit",
+    "pictogramColor": "#2E75B6",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -705,12 +709,14 @@
       "fPA":["P"],
       "fModeAccessSingleLetter": ["D","W"],
       "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
-    }  
+    }
   },
   "mBikeTrips": {
     "faIcon": "fa-solid fa-bicycle",
     "iconColor": "#7B5EA7",
     "iconHoverText": "Bike Trips",
+    "pictogramLabel": "Bike",
+    "pictogramColor": "#70AD47",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -726,6 +732,8 @@
     "faIcon": "fa-solid fa-person-walking",
     "iconColor": "#7B5EA7",
     "iconHoverText": "Walk Trips",
+    "pictogramLabel": "Walk",
+    "pictogramColor": "#FFC000",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -742,6 +750,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "CRT",
     "iconHoverText": "Commuter Rail Trips",
+    "pictogramLabel": "CRT",
+    "pictogramColor": "#Af2944",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -788,6 +798,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "LRT",
     "iconHoverText": "Light Rail Trips",
+    "pictogramLabel": "LRT",
+    "pictogramColor": "#Eb672d",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -834,6 +846,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "BRT",
     "iconHoverText": "Bus Rapid Transit Trips",
+    "pictogramLabel": "BRT",
+    "pictogramColor": "#8dc348",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -880,6 +894,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "ENH",
     "iconHoverText": "Enhanced Bus Trips",
+    "pictogramLabel": "Enhanced Bus",
+    "pictogramColor": "#1ba9e6",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -926,6 +942,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "EXP",
     "iconHoverText": "Express Bus Trips",
+    "pictogramLabel": "Express Bus",
+    "pictogramColor": "#00a74e",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -972,6 +990,8 @@
     "iconColor": "#7B5EA7",
     "iconBadge": "LCL",
     "iconHoverText": "Local Bus Trips",
+    "pictogramLabel": "Local Bus",
+    "pictogramColor": "#31398a",
     "jsonName": "j-zone-mode-trips",
     "baseGeoJsonKey": "taz",
     "baseGeoJsonId": "TAZID",
@@ -1175,5 +1195,94 @@
       "fTod2pDy": ["Dy"],
       "fPA": ["P"]
     }
+  },
+  "mHbwDaTrips": {
+    "faIcon": "fa-solid fa-car-side",
+    "iconColor": "#7B5EA7",
+    "iconHoverText": "Home-Based Work Drive-Alone Trips",
+    "pictogramLabel": "Drive Alone",
+    "pictogramColor": "#6B7280",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aA",
+    "selected_filters" : {
+      "fPurp5pAll": ["HBW"],
+      "fTod2pDy": ["Dy"],
+      "fPA": ["P"],
+      "fModeAuto": ["DA","IMZD2DDA"]
+    }
+  },
+  "mHbwSrTrips": {
+    "faIcon": "fa-solid fa-people-group",
+    "iconColor": "#7B5EA7",
+    "iconHoverText": "Home-Based Work Shared-Ride Trips",
+    "pictogramLabel": "Shared Ride",
+    "pictogramColor": "#9B59B6",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aA",
+    "selected_filters" : {
+      "fPurp5pAll": ["HBW"],
+      "fTod2pDy": ["Dy"],
+      "fPA": ["P"],
+      "fModeAuto": ["SR2","SR3p","IMZD2DSR2","IMZD2DSR3p"]
+    }
+  },
+  "mHbwTransitTrips": {
+    "faIcon": "fa-solid fa-bus-side",
+    "iconColor": "#7B5EA7",
+    "iconHoverText": "Home-Based Work Transit Trips",
+    "pictogramLabel": "Transit",
+    "pictogramColor": "#2E75B6",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aT",
+    "selected_filters" : {
+      "fPurp5pAll": ["HBW"],
+      "fTod2pDy": ["Dy"],
+      "fPA": ["P"],
+      "fModeAccessSingleLetter": ["D","W"],
+      "fModeRouteCode3": ["LCL","EXP","LRT","CRT","BRT","COR"]
+    }
+  },
+  "mHbwBikeTrips": {
+    "faIcon": "fa-solid fa-bicycle",
+    "iconColor": "#7B5EA7",
+    "iconHoverText": "Home-Based Work Bike Trips",
+    "pictogramLabel": "Bike",
+    "pictogramColor": "#70AD47",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aB",
+    "selected_filters" : {
+      "fPurp5pAll": ["HBW"],
+      "fTod2pDy": ["Dy"],
+      "fPA": ["P"]
+    }
+  },
+  "mHbwWalkTrips": {
+    "faIcon": "fa-solid fa-person-walking",
+    "iconColor": "#7B5EA7",
+    "iconHoverText": "Home-Based Work Walk Trips",
+    "pictogramLabel": "Walk",
+    "pictogramColor": "#FFC000",
+    "jsonName": "j-zone-mode-trips",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "#,##0",
+    "attribute": "aW",
+    "selected_filters" : {
+      "fPurp5pAll": ["HBW"],
+      "fTod2pDy": ["Dy"],
+      "fPA": ["P"]
+    }
   }
-} 
+}

@@ -66,5 +66,23 @@
   "cardHbwModeSplit": {
     "title": "HBW Mode Split",
     "measures": ["mHbwDaShare","mHbwSrShare","mHbwTransitShare","mHbwBikeShare","mHbwWalkShare"]
+  },
+  "cardTravelModePictogram": {
+    "type": "pictogram",
+    "fullWidth": true,
+    "title": "Daily Trip Split by Mode",
+    "measures": ["mAutoTrips","mTransitTrips","mBikeTrips","mWalkTrips"]
+  },
+  "cardHbwModePictogram": {
+    "type": "pictogram",
+    "fullWidth": true,
+    "title": "HBW Daily Trip Split by Mode",
+    "measures": ["mHbwDaTrips","mHbwSrTrips","mHbwTransitTrips","mHbwBikeTrips","mHbwWalkTrips"]
+  },
+  "cardTransitModePictogram": {
+    "type": "pictogram",
+    "fullWidth": true,
+    "title": "Daily Transit Trip Split by Mode",
+    "measures": ["mLCLTrips","mCORTrips","mEXPTrips","mBRTTrips","mLRTTrips","mCRTTrips"]
   }
 }

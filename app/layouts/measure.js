@@ -12,6 +12,8 @@ class Measure {
                                              // measures that would otherwise share one generic
                                              // icon (all the bus submodes use fa-bus alike)
     this.iconTitle = cfg.iconTitle || cfg.iconHoverText || null;
+    this.pictogramLabel = cfg.pictogramLabel || null; // short label for a pictogram-card segment (e.g. "LRT"), falls back to toLabel(measureId)
+    this.pictogramColor = cfg.pictogramColor || null; // segment fill color for a pictogram card, falls back to iconColor
     this.jsonName = cfg.jsonName;
     this.attribute = cfg.attribute;
     this.selectedFilters = cfg.selected_filters || {};
@@ -157,9 +159,11 @@ class Measure {
     if (iconEl) iconWrap.appendChild(iconEl);
     row.append(iconWrap);
 
-    const mainScenario = this.getMain();
-    if (!mainScenario) {
-      // Graceful fallback if main scenario missing
+    const { mainScenario, compareMode, compareType, valueMain: _valueMain, valueComp: _valueComp, unsupported }
+      = this.computeValues();
+
+    if (!mainScenario || unsupported) {
+      // Graceful fallback if main scenario missing, or agFilterOptionsMethod isn't "sum"
       const valueEl = document.createElement('span');
       valueEl.className = 'measure-value';
       valueEl.textContent = "–";
@@ -167,300 +171,21 @@ class Measure {
       return row;
     }
 
-        // --- Helpers ---
-    const safeSum = (obj) => {
-      if (!obj || typeof obj !== "object") return 0;
-      let sum = 0;
-      for (const key in obj) {
-        if (!Object.hasOwn(obj, key)) continue;
-        const n = Number(obj[key]);
-        if (!Number.isNaN(n)) sum += n;
-      }
-      return sum;
-    };
-
-    // Build a lookup set: which TAZIDs have DISTLRG == 1?
-    const buildFilterSet = (lookupArray, field = "DISTLRG", matchValue = 1) => {
-      return new Set(
-        lookupArray
-          .filter(r => r[field] === matchValue)
-          .map(r => String(r.TAZID)) // make keys match object keys
-      );
-    };
-
-    function normalizeKey(k) {
-      // Convert numeric strings to numbers; leave others as strings
-      return (!isNaN(k) && k !== "" && k !== null) ? Number(k) : k;
-    }
-
-    // Filtered summation
-    const filteredSafeSum = (obj, allowedset) => {
-      if (!obj || typeof obj !== "object") return 0;
-
-      let sum = 0;
-
-      // Normalize allowedset once (convert all numeric strings → numbers)
-      const normalizedAllowed = new Set(
-        Array.from(allowedset, normalizeKey)
-      );
-
-      for (const key in obj) {
-        if (!Object.hasOwn(obj, key)) continue;
-
-        const normalizedKey = normalizeKey(key);
-
-        if (!normalizedAllowed.has(normalizedKey)) continue;
-
-        const n = Number(obj[key]);
-        if (!Number.isNaN(n)) sum += n;
-      }
-
-      return sum;
-    };
-
-    // Filtered weighted average: sum(value*weight)/sum(weight) over the allowed geo set.
-    // Mirrors vizMap's own zone-to-summary-geography aggregation (vizmap.js's _wtCode handling)
-    // for an attribute that configures an agWeightCode - an index like Access to Jobs is
-    // meaningless just summed across a whole region, but a household-weighted average of it
-    // means something. Falls back to a plain sum if no weight data is available for a zone.
-    const filteredWeightedAverage = (valObj, weightObj, allowedset) => {
-      if (!valObj || typeof valObj !== "object") return 0;
-      if (!weightObj || typeof weightObj !== "object") return filteredSafeSum(valObj, allowedset);
-
-      const normalizedAllowed = new Set(Array.from(allowedset, normalizeKey));
-
-      let sumValWt = 0;
-      let sumWt = 0;
-      for (const key in valObj) {
-        if (!Object.hasOwn(valObj, key)) continue;
-        const normalizedKey = normalizeKey(key);
-        if (!normalizedAllowed.has(normalizedKey)) continue;
-
-        const val = Number(valObj[key]);
-        const wt = Number(weightObj[key]);
-        if (Number.isNaN(val) || Number.isNaN(wt) || !wt) continue;
-
-        sumValWt += val * wt;
-        sumWt += wt;
-      }
-
-      return sumWt > 0 ? sumValWt / sumWt : 0;
-    };
-
-    // Arcade-style number formatter
-    const applyArcadeFormat = (value, format) => {
-      let num = Number(value);
-      if (!Number.isFinite(num)) return "–";
-
-      // Percent handling
-      const isPercent = format.includes("%");
-      if (isPercent) num *= 100;
-
-      // Decimal places from format (e.g. 0.00 → 2)
-      const decimalMatch = format.match(/\.(0+)/);
-      const decimals = decimalMatch ? decimalMatch[1].length : 0;
-
-      // Format base number
-      let formatted = num.toFixed(decimals);
-
-      // Thousands separator
-      if (format.includes(",")) {
-        formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-
-      // Inject into format string
-      return format
-        .replace(/[#0,.]+/, formatted)
-        .replace("%", isPercent ? "%" : "");
-    };
-
-    const formatNumber = (val) => {
-      if (val == null || Number.isNaN(val)) return "–";
-
-      const num = Number(val);
-      // A literal zero here almost always means "no matching data for this geography/filter",
-      // not "the model computed an actual zero" - same dash as the null case above, rather
-      // than a bare "0" or "0.0%" that reads as real data.
-      if (num === 0) return "–";
-
-      // If displayFormat is provided, use it
-      if (typeof this.displayFormat === "string" && this.displayFormat.length) {
-        return applyArcadeFormat(num, this.displayFormat);
-      }
-
-    };
-
-    const formatSignedNumber = (val) => {
-      if (val == null || Number.isNaN(val)) return "–";
-      const n = Number(val);
-      if (!Number.isFinite(n)) return "–";
-
-      const sign = n > 0 ? "+" : (n < 0 ? "−" : "");
-      const abs = Math.abs(n);
-
-      // Use same displayFormat as everything else
-      const absText =
-        (typeof this.displayFormat === "string" && this.displayFormat.length)
-          ? applyArcadeFormat(abs, this.displayFormat)
-          : String(abs);
-
-      return sign ? `${sign}${absText}` : absText;
-    };
-
-    // Percent diff always with 1 decimal (independent of displayDecimals)
-    const formatPercent = (val) => {
-      if (val == null || Number.isNaN(val)) return "–";
-      const pct = Number(val) * 100;
-      const sign = pct > 0 ? "+" : (pct < 0 ? "−" : "");
-      const absStr = Math.abs(pct).toFixed(1);
-      return `${sign}${absStr}%`;
-    };
-
-    // --- Compare mode? ---
-    const comparePanel = document.getElementById('comparisonScenarioDash');
-    const compScenario = this.getComp();
-    const hasComparePanelOpen = comparePanel && comparePanel.open;
-    const compareMode = hasComparePanelOpen && compScenario ? 'compare' : 'main';
-
-    let _valueMain = 0;
-    let _valueComp = 0;
     let _valueDisp = 0;
     let _textDisp = '';
     let _textMain = '';
     let _textComp = '';
 
-    //agCodeLabelField : "PLANAREA"
-    //agGeoJsonKey : "planarea"
-    
-    // get summary geography
-
-    const _selectedAggregator = this.parentCard.vizLayout.getSelectedAggregator();
-
-    function normalizeValue(v) {
-      // Convert numeric strings to numbers, otherwise return original
-      return (!isNaN(v) && v !== '' && v !== null) ? Number(v) : v;
-    }
-
-    // Builds the set of geo IDs (in whichever ID space geoJsonKey/geoJsonId use) that fall
-    // inside the currently selected Summary Geography, for filteredSafeSum() to restrict to.
-    // Numerator and denominator can live at different geography levels (e.g. VMT/HH sums
-    // VMT over roadway segments but Households over TAZs) - each needs its own geo set in
-    // its own ID space rather than sharing one blindly, or the denominator's sum silently
-    // matches nothing (every roadway SEGID is foreign to the household data's TAZID keys).
-    // idPrefixes restricts the geo set to ids (e.g. SEGID) starting with one of the given
-    // prefixes - lets a measure scope itself to specific routes (e.g. Interstates: "0015"
-    // I-15, "0080" I-80, "0084" I-84, "0215" I-215) without needing a dedicated aggregator/
-    // corridor key file, since there's no route-name attribute in the segment data to filter
-    // on directly.
-    const buildGeosFor = (geoJsonKey, geoJsonId, idPrefixes) => {
-      if (!_selectedAggregator || !geoJsonKey || !geoJsonId) return [];
-
-      const aggregatorKeyFile = mainScenario.getAggregatorKeyFile(_selectedAggregator, geoJsonKey);
-      if (!aggregatorKeyFile) return [];
-
-      const selectedOptions = this.parentCard.vizLayout.sidebar
-        .aggregatorFilter
-        .getSelectedOptionsAsList()
-        .map(normalizeValue);
-
-      const agRecords = aggregatorKeyFile.filter(record => {
-        const recVal = normalizeValue(record[_selectedAggregator.agCode]);
-        return selectedOptions.includes(recVal);
-      });
-
-      let ids = agRecords.map(r => r[geoJsonId]);
-      if (Array.isArray(idPrefixes) && idPrefixes.length) {
-        ids = ids.filter(id => idPrefixes.some(prefix => String(id).startsWith(prefix)));
-      }
-
-      return new Set(ids);
-    };
-
-    const _geos = buildGeosFor(this.baseGeoJsonKey, this.baseGeoJsonId, this.segIdPrefixFilter);
-
-    // Combines an attribute's per-zone values across a summary geography. Each scenario
-    // resolves its own filter combos from its own filterGroup metadata (see
-    // _buildFilterGroupCombos) - main and comp can be different model versions whose data
-    // pipeline added/renamed a filter dimension for this attribute between them, so sharing
-    // one combo list between them could silently match nothing on whichever side's data
-    // doesn't have that shape.
-    // If the attribute configures an agWeightCode (attributes.json), aggregate the same way
-    // vizMap does for it (vizmap.js's _wtCode handling) - a household-weighted average instead
-    // of a plain sum, since an index like Access to Jobs isn't meaningful just summed across a
-    // whole region. No existing dashboard measure's attribute sets one today, so this only
-    // changes behavior for a measure that actually opts into it via its attribute config.
-    const aggregateAcrossGeos = (scenario, jsonName, attributeCode, selectedFilters, geos) => {
-      const combos = this._buildFilterGroupCombos(scenario, jsonName, attributeCode, selectedFilters);
-      const data = scenario.getDataForFilterOptionsList(jsonName, combos, this.agFilterOptionsMethod, attributeCode);
-
-      const weightCode = (configAttributes[attributeCode] || {}).agWeightCode || null;
-      if (!weightCode) {
-        return filteredSafeSum(data, geos);
-      }
-
-      const weightCombos = this._buildFilterGroupCombos(scenario, jsonName, weightCode, {});
-      const weightData = scenario.getDataForFilterOptionsList(jsonName, weightCombos, "sum", weightCode);
-      return filteredWeightedAverage(data, weightData, geos);
-    };
-
-    if (this.agFilterOptionsMethod === 'sum') {
-      // --- Numerator values (main / comp) ---
-      const mainNum = aggregateAcrossGeos(mainScenario, this.jsonName, this.attribute, this.selectedFilters, _geos);
-
-      let compNum = 0;
-      if (compareMode === 'compare') {
-        compNum = aggregateAcrossGeos(compScenario, this.jsonName, this.attribute, this.selectedFilters, _geos);
-      }
-
-      // --- Optional denominator (divide_attribute / divide_jsonName) ---
-      if (this.divideAttribute) {
-        const divJsonName = this.divideJsonName || this.jsonName;
-
-        const divGeoJsonKey = this.divideBaseGeoJsonKey || this.baseGeoJsonKey;
-        const divGeoJsonId = this.divideBaseGeoJsonId || this.baseGeoJsonId;
-        const divSegIdPrefixFilter = this.divideSegIdPrefixFilter || this.segIdPrefixFilter;
-        const _geosDen = (divGeoJsonKey === this.baseGeoJsonKey && divGeoJsonId === this.baseGeoJsonId)
-          ? _geos
-          : buildGeosFor(divGeoJsonKey, divGeoJsonId, divSegIdPrefixFilter);
-
-        const mainDen = aggregateAcrossGeos(mainScenario, divJsonName, this.divideAttribute, this.divideSelectedFilters, _geosDen);
-
-        let compDen = null;
-        if (compareMode === 'compare') {
-          compDen = aggregateAcrossGeos(compScenario, divJsonName, this.divideAttribute, this.divideSelectedFilters, _geosDen);
-        }
-
-        _valueMain = mainDen ? mainNum / mainDen : null;
-        _valueComp =
-          compareMode === 'compare'
-            ? (compDen ? compNum / compDen : null)
-            : 0;
-      } else {
-        // No divide → just raw sums
-        _valueMain = mainNum;
-        _valueComp = compNum;
-      }
-    } else {
-      // Only sum supported here; just show nothing meaningful
-      const valueEl = document.createElement('span');
-      valueEl.className = 'measure-value';
-      valueEl.textContent = "–";
-      row.append(valueEl);
-      return row;
-    }
-
     // --- Display value (main vs diff / pctdiff) ---
-    const compareType = this._getCompareTypeOption();
-
     try {
       if (compareMode === 'compare' && compareType) {
         if (compareType === 'diff') {
           _valueDisp = _valueMain - _valueComp;
-          _textDisp = formatSignedNumber(_valueDisp);
+          _textDisp = this.formatSignedNumber(_valueDisp);
         } else if (compareType === 'pctdiff') {
           if (_valueComp !== 0 && _valueComp != null) {
             _valueDisp = (_valueMain - _valueComp) / _valueComp;
-            _textDisp = formatPercent(_valueDisp);
+            _textDisp = this.formatPercent(_valueDisp);
           } else {
             _valueDisp = null;
             _textDisp = "–";
@@ -468,23 +193,23 @@ class Measure {
         } else {
           // Unknown compare type → fallback to main
           _valueDisp = _valueMain;
-          _textDisp = formatNumber(_valueDisp);
+          _textDisp = this.formatNumber(_valueDisp);
         }
       } else {
         // No compare → just show main
         _valueDisp = _valueMain;
-        _textDisp = formatNumber(_valueDisp);
+        _textDisp = this.formatNumber(_valueDisp);
       }
 
       // Absolute values for stacked display
-      _textMain = formatNumber(_valueMain);
-      _textComp = compareMode === 'compare' ? formatNumber(_valueComp) : "";
+      _textMain = this.formatNumber(_valueMain);
+      _textComp = compareMode === 'compare' ? this.formatNumber(_valueComp) : "";
     } catch (err) {
       // Fallback: show main
       _valueDisp = _valueMain;
-      _textDisp = formatNumber(_valueDisp);
-      _textMain = formatNumber(_valueMain);
-      _textComp = compareMode === 'compare' ? formatNumber(_valueComp) : "";
+      _textDisp = this.formatNumber(_valueDisp);
+      _textMain = this.formatNumber(_valueMain);
+      _textComp = compareMode === 'compare' ? this.formatNumber(_valueComp) : "";
     }
 
     // --- Direction arrow badge ---
@@ -608,8 +333,305 @@ class Measure {
       rightWrap.append(table);
       row.append(rightWrap);
     }
-    
+
     return row;
+  }
+
+  // --- Shared aggregation (no DOM) ---
+  // Pulled out of renderMeasure() so Card's pictogram renderer (several measures shown as
+  // proportional shares of one shared total, instead of one row each) can reuse the exact same
+  // geo/filter/compare-aware aggregation logic instead of re-deriving it - a second
+  // implementation could easily drift out of sync (e.g. forget _buildFilterGroupCombos' fallback
+  // to "every value this scenario has for a dimension missing from selectedFilters") without
+  // anyone noticing until one specific scenario/filterGroup combination silently mismatched.
+  computeValues() {
+
+    const mainScenario = this.getMain();
+    if (!mainScenario) {
+      return { mainScenario: null, compareMode: 'main', compareType: null, valueMain: null, valueComp: null, unsupported: false };
+    }
+
+        // --- Helpers ---
+    const safeSum = (obj) => {
+      if (!obj || typeof obj !== "object") return 0;
+      let sum = 0;
+      for (const key in obj) {
+        if (!Object.hasOwn(obj, key)) continue;
+        const n = Number(obj[key]);
+        if (!Number.isNaN(n)) sum += n;
+      }
+      return sum;
+    };
+
+    // Build a lookup set: which TAZIDs have DISTLRG == 1?
+    const buildFilterSet = (lookupArray, field = "DISTLRG", matchValue = 1) => {
+      return new Set(
+        lookupArray
+          .filter(r => r[field] === matchValue)
+          .map(r => String(r.TAZID)) // make keys match object keys
+      );
+    };
+
+    function normalizeKey(k) {
+      // Convert numeric strings to numbers; leave others as strings
+      return (!isNaN(k) && k !== "" && k !== null) ? Number(k) : k;
+    }
+
+    // Filtered summation
+    const filteredSafeSum = (obj, allowedset) => {
+      if (!obj || typeof obj !== "object") return 0;
+
+      let sum = 0;
+
+      // Normalize allowedset once (convert all numeric strings → numbers)
+      const normalizedAllowed = new Set(
+        Array.from(allowedset, normalizeKey)
+      );
+
+      for (const key in obj) {
+        if (!Object.hasOwn(obj, key)) continue;
+
+        const normalizedKey = normalizeKey(key);
+
+        if (!normalizedAllowed.has(normalizedKey)) continue;
+
+        const n = Number(obj[key]);
+        if (!Number.isNaN(n)) sum += n;
+      }
+
+      return sum;
+    };
+
+    // Filtered weighted average: sum(value*weight)/sum(weight) over the allowed geo set.
+    // Mirrors vizMap's own zone-to-summary-geography aggregation (vizmap.js's _wtCode handling)
+    // for an attribute that configures an agWeightCode - an index like Access to Jobs is
+    // meaningless just summed across a whole region, but a household-weighted average of it
+    // means something. Falls back to a plain sum if no weight data is available for a zone.
+    const filteredWeightedAverage = (valObj, weightObj, allowedset) => {
+      if (!valObj || typeof valObj !== "object") return 0;
+      if (!weightObj || typeof weightObj !== "object") return filteredSafeSum(valObj, allowedset);
+
+      const normalizedAllowed = new Set(Array.from(allowedset, normalizeKey));
+
+      let sumValWt = 0;
+      let sumWt = 0;
+      for (const key in valObj) {
+        if (!Object.hasOwn(valObj, key)) continue;
+        const normalizedKey = normalizeKey(key);
+        if (!normalizedAllowed.has(normalizedKey)) continue;
+
+        const val = Number(valObj[key]);
+        const wt = Number(weightObj[key]);
+        if (Number.isNaN(val) || Number.isNaN(wt) || !wt) continue;
+
+        sumValWt += val * wt;
+        sumWt += wt;
+      }
+
+      return sumWt > 0 ? sumValWt / sumWt : 0;
+    };
+
+    // --- Compare mode? ---
+    const comparePanel = document.getElementById('comparisonScenarioDash');
+    const compScenario = this.getComp();
+    const hasComparePanelOpen = comparePanel && comparePanel.open;
+    const compareMode = hasComparePanelOpen && compScenario ? 'compare' : 'main';
+
+    let _valueMain = 0;
+    let _valueComp = 0;
+
+    //agCodeLabelField : "PLANAREA"
+    //agGeoJsonKey : "planarea"
+    
+    // get summary geography
+
+    const _selectedAggregator = this.parentCard.vizLayout.getSelectedAggregator();
+
+    function normalizeValue(v) {
+      // Convert numeric strings to numbers, otherwise return original
+      return (!isNaN(v) && v !== '' && v !== null) ? Number(v) : v;
+    }
+
+    // Builds the set of geo IDs (in whichever ID space geoJsonKey/geoJsonId use) that fall
+    // inside the currently selected Summary Geography, for filteredSafeSum() to restrict to.
+    // Numerator and denominator can live at different geography levels (e.g. VMT/HH sums
+    // VMT over roadway segments but Households over TAZs) - each needs its own geo set in
+    // its own ID space rather than sharing one blindly, or the denominator's sum silently
+    // matches nothing (every roadway SEGID is foreign to the household data's TAZID keys).
+    // idPrefixes restricts the geo set to ids (e.g. SEGID) starting with one of the given
+    // prefixes - lets a measure scope itself to specific routes (e.g. Interstates: "0015"
+    // I-15, "0080" I-80, "0084" I-84, "0215" I-215) without needing a dedicated aggregator/
+    // corridor key file, since there's no route-name attribute in the segment data to filter
+    // on directly.
+    const buildGeosFor = (geoJsonKey, geoJsonId, idPrefixes) => {
+      if (!_selectedAggregator || !geoJsonKey || !geoJsonId) return [];
+
+      const aggregatorKeyFile = mainScenario.getAggregatorKeyFile(_selectedAggregator, geoJsonKey);
+      if (!aggregatorKeyFile) return [];
+
+      const selectedOptions = this.parentCard.vizLayout.sidebar
+        .aggregatorFilter
+        .getSelectedOptionsAsList()
+        .map(normalizeValue);
+
+      const agRecords = aggregatorKeyFile.filter(record => {
+        const recVal = normalizeValue(record[_selectedAggregator.agCode]);
+        return selectedOptions.includes(recVal);
+      });
+
+      let ids = agRecords.map(r => r[geoJsonId]);
+      if (Array.isArray(idPrefixes) && idPrefixes.length) {
+        ids = ids.filter(id => idPrefixes.some(prefix => String(id).startsWith(prefix)));
+      }
+
+      return new Set(ids);
+    };
+
+    const _geos = buildGeosFor(this.baseGeoJsonKey, this.baseGeoJsonId, this.segIdPrefixFilter);
+
+    // Combines an attribute's per-zone values across a summary geography. Each scenario
+    // resolves its own filter combos from its own filterGroup metadata (see
+    // _buildFilterGroupCombos) - main and comp can be different model versions whose data
+    // pipeline added/renamed a filter dimension for this attribute between them, so sharing
+    // one combo list between them could silently match nothing on whichever side's data
+    // doesn't have that shape.
+    // If the attribute configures an agWeightCode (attributes.json), aggregate the same way
+    // vizMap does for it (vizmap.js's _wtCode handling) - a household-weighted average instead
+    // of a plain sum, since an index like Access to Jobs isn't meaningful just summed across a
+    // whole region. No existing dashboard measure's attribute sets one today, so this only
+    // changes behavior for a measure that actually opts into it via its attribute config.
+    const aggregateAcrossGeos = (scenario, jsonName, attributeCode, selectedFilters, geos) => {
+      const combos = this._buildFilterGroupCombos(scenario, jsonName, attributeCode, selectedFilters);
+      const data = scenario.getDataForFilterOptionsList(jsonName, combos, this.agFilterOptionsMethod, attributeCode);
+
+      const weightCode = (configAttributes[attributeCode] || {}).agWeightCode || null;
+      if (!weightCode) {
+        return filteredSafeSum(data, geos);
+      }
+
+      const weightCombos = this._buildFilterGroupCombos(scenario, jsonName, weightCode, {});
+      const weightData = scenario.getDataForFilterOptionsList(jsonName, weightCombos, "sum", weightCode);
+      return filteredWeightedAverage(data, weightData, geos);
+    };
+
+    if (this.agFilterOptionsMethod === 'sum') {
+      // --- Numerator values (main / comp) ---
+      const mainNum = aggregateAcrossGeos(mainScenario, this.jsonName, this.attribute, this.selectedFilters, _geos);
+
+      let compNum = 0;
+      if (compareMode === 'compare') {
+        compNum = aggregateAcrossGeos(compScenario, this.jsonName, this.attribute, this.selectedFilters, _geos);
+      }
+
+      // --- Optional denominator (divide_attribute / divide_jsonName) ---
+      if (this.divideAttribute) {
+        const divJsonName = this.divideJsonName || this.jsonName;
+
+        const divGeoJsonKey = this.divideBaseGeoJsonKey || this.baseGeoJsonKey;
+        const divGeoJsonId = this.divideBaseGeoJsonId || this.baseGeoJsonId;
+        const divSegIdPrefixFilter = this.divideSegIdPrefixFilter || this.segIdPrefixFilter;
+        const _geosDen = (divGeoJsonKey === this.baseGeoJsonKey && divGeoJsonId === this.baseGeoJsonId)
+          ? _geos
+          : buildGeosFor(divGeoJsonKey, divGeoJsonId, divSegIdPrefixFilter);
+
+        const mainDen = aggregateAcrossGeos(mainScenario, divJsonName, this.divideAttribute, this.divideSelectedFilters, _geosDen);
+
+        let compDen = null;
+        if (compareMode === 'compare') {
+          compDen = aggregateAcrossGeos(compScenario, divJsonName, this.divideAttribute, this.divideSelectedFilters, _geosDen);
+        }
+
+        _valueMain = mainDen ? mainNum / mainDen : null;
+        _valueComp =
+          compareMode === 'compare'
+            ? (compDen ? compNum / compDen : null)
+            : 0;
+      } else {
+        // No divide → just raw sums
+        _valueMain = mainNum;
+        _valueComp = compNum;
+      }
+    } else {
+      // Only sum supported here; just show nothing meaningful
+      return { mainScenario, compareMode, compareType: this._getCompareTypeOption(), valueMain: null, valueComp: null, unsupported: true };
+    }
+
+    return {
+      mainScenario,
+      compareMode,
+      compareType: this._getCompareTypeOption(),
+      valueMain: _valueMain,
+      valueComp: _valueComp,
+      unsupported: false
+    };
+  }
+
+  // --- Display formatting (shared by renderMeasure()'s rows and Card's pictogram segments) ---
+  _applyArcadeFormat(value, format) {
+    let num = Number(value);
+    if (!Number.isFinite(num)) return "–";
+
+    // Percent handling
+    const isPercent = format.includes("%");
+    if (isPercent) num *= 100;
+
+    // Decimal places from format (e.g. 0.00 → 2)
+    const decimalMatch = format.match(/\.(0+)/);
+    const decimals = decimalMatch ? decimalMatch[1].length : 0;
+
+    // Format base number
+    let formatted = num.toFixed(decimals);
+
+    // Thousands separator
+    if (format.includes(",")) {
+      formatted = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Inject into format string
+    return format
+      .replace(/[#0,.]+/, formatted)
+      .replace("%", isPercent ? "%" : "");
+  }
+
+  formatNumber(val) {
+    if (val == null || Number.isNaN(val)) return "–";
+
+    const num = Number(val);
+    // A literal zero here almost always means "no matching data for this geography/filter",
+    // not "the model computed an actual zero" - same dash as the null case above, rather
+    // than a bare "0" or "0.0%" that reads as real data.
+    if (num === 0) return "–";
+
+    // If displayFormat is provided, use it
+    if (typeof this.displayFormat === "string" && this.displayFormat.length) {
+      return this._applyArcadeFormat(num, this.displayFormat);
+    }
+  }
+
+  formatSignedNumber(val) {
+    if (val == null || Number.isNaN(val)) return "–";
+    const n = Number(val);
+    if (!Number.isFinite(n)) return "–";
+
+    const sign = n > 0 ? "+" : (n < 0 ? "−" : "");
+    const abs = Math.abs(n);
+
+    // Use same displayFormat as everything else
+    const absText =
+      (typeof this.displayFormat === "string" && this.displayFormat.length)
+        ? this._applyArcadeFormat(abs, this.displayFormat)
+        : String(abs);
+
+    return sign ? `${sign}${absText}` : absText;
+  }
+
+  // Percent diff always with 1 decimal (independent of displayDecimals)
+  formatPercent(val) {
+    if (val == null || Number.isNaN(val)) return "–";
+    const pct = Number(val) * 100;
+    const sign = pct > 0 ? "+" : (pct < 0 ? "−" : "");
+    const absStr = Math.abs(pct).toFixed(1);
+    return `${sign}${absStr}%`;
   }
 
 

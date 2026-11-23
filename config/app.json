@@ -34,11 +34,12 @@
           "submenuIconStart": "desktop",
           "template": "vizDashboard",
           "templateSettings": {
-            "cards": ["cardPopHh","cardEmp","cardATO","cardVmt","cardVmtTruck","cardVht","cardVhtTruck","cardVhd","cardVhdTruck","cardTruckSpeedFwy","cardTrips","cardModeTrips","cardModeSplit","cardTransitTrips","cardTransitSplit","cardHbwModeSplit"],
+            "cards": ["cardPopHh","cardEmp","cardATO","cardVmt","cardVmtTruck","cardVht","cardVhtTruck","cardVhd","cardVhdTruck","cardTruckSpeedFwy","cardTrips","cardModeTrips","cardTransitTrips","cardTravelModePictogram","cardHbwModePictogram","cardTransitModePictogram"],
             "aggregatorTitle": "Select Summary Geography",
             "aggregators": ["SUBAREAID","PLANAREA","CITY_NAME","CITYGRP","DISTSML","DISTMED","DISTLRG","DISTSUPER","WFRCHIGHWAY_ID","MAGHIGHWAY_ID","FREIGHT_ID"],
             "aggregatorSelected": "PLANAREA",
-            "disclaimerText": "All Vehicle-Miles Traveled (VMT), Vehicle Hours Traveled (VHT), and Vehicle Hours of Delay (VHD) numbers on this dashboard are facility-based: they include travel on every model link - including centroid connectors - that falls within the selected summary geography. \"Truck\" cards and measures refer specifically to medium and heavy commercial vehicles."
+            "disclaimerText": "All Vehicle-Miles Traveled (VMT), Vehicle Hours Traveled (VHT), and Vehicle Hours of Delay (VHD) numbers on this dashboard are facility-based: they include travel on every model link - including centroid connectors - that falls within the selected summary geography. \"Truck\" cards and measures refer specifically to medium and heavy commercial vehicles.",
+            "disclaimerSummary": "VMT/VHT/VHD are facility-based (every model link); \"Truck\" means medium/heavy commercial vehicles."
           }
         }
       ]

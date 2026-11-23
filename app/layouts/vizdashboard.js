@@ -14,6 +14,13 @@ class VizDashboard {
     // (getNeededJsonNames() below) with no single Definitions popup of its own, so this is a
     // plain opt-in string instead of being derived from jsonName.
     this.disclaimerText = data.disclaimerText || null;
+    // Optional one-line version (templateSettings.disclaimerSummary) shown in the collapsed
+    // <summary> row; falls back to a truncated disclaimerText so the banner is still collapsible
+    // even if a config entry never bothers setting its own short version.
+    this.disclaimerSummary = data.disclaimerSummary
+      || (this.disclaimerText && this.disclaimerText.length > 90
+        ? this.disclaimerText.slice(0, 87) + '…'
+        : this.disclaimerText);
 
     // Reference to the container div in your HTML
     this.divDashboard = document.getElementById("dashboardContent");
@@ -153,6 +160,44 @@ class VizDashboard {
 
     this.updateHeader();
 
+    // Config-driven methodology caveat (templateSettings.disclaimerText) - rendered once right
+    // above the card grid, so it's the first thing read before anyone looks at the numbers below
+    // it, rather than a footnote easy to miss after the fact. Kept as its own sibling (not rebuilt
+    // along with wrapper's innerHTML below) purely so re-renders don't recreate the element for
+    // no reason; its content still gets refreshed every time in case disclaimerText ever becomes
+    // scenario-dependent. Explicitly (re-)inserted right before the card wrapper on every render -
+    // appendChild alone only gets the order right the very first time; a later render (or an
+    // overlapping one, if updateDisplay() is ever invoked twice close together) can otherwise find
+    // the wrapper already created first and tack this on after it instead.
+    if (this.disclaimerText) {
+      let bannerDiv = this.divDashboard.querySelector('.dashboard-disclaimer-banner');
+      if (!bannerDiv) {
+        bannerDiv = document.createElement('div');
+        bannerDiv.className = 'dashboard-disclaimer-banner';
+      }
+
+      // <details>/<summary> built only once (not torn down on every render) - collapsed by
+      // default, but rebuilding it on every scenario/aggregator change would reset it back to
+      // collapsed even if the person just opened it. Only the text inside gets refreshed each
+      // time, in case disclaimerText/disclaimerSummary ever become scenario-dependent.
+      let details = bannerDiv.querySelector('.dashboard-disclaimer-details');
+      if (!details) {
+        bannerDiv.innerHTML =
+          '<details class="vmt-disclaimer-note dashboard-disclaimer-note dashboard-disclaimer-details">' +
+            '<summary class="dashboard-disclaimer-summary">' +
+              '<span class="disclaimer-important-tag">Important</span>' +
+              '<span class="dashboard-disclaimer-summary-text"></span>' +
+            '</summary>' +
+            '<p class="dashboard-disclaimer-full"></p>' +
+          '</details>';
+        details = bannerDiv.querySelector('.dashboard-disclaimer-details');
+      }
+      details.querySelector('.dashboard-disclaimer-summary-text').textContent = this.disclaimerSummary;
+      details.querySelector('.dashboard-disclaimer-full').textContent = this.disclaimerText;
+
+      this.divDashboard.insertBefore(bannerDiv, this.divDashboard.querySelector('.dashboard'));
+    }
+
     // Clear and rebuild just the card grid - dashboardHeader (updated above) is a sibling
     // that has to survive this, not get wiped along with the cards each render.
     let wrapper = this.divDashboard.querySelector('.dashboard');
@@ -163,27 +208,25 @@ class VizDashboard {
     }
     wrapper.innerHTML = '';
 
-    // Render each card and append to wrapper
+    // fullWidth cards (config/cards.json - the pictogram cards) don't belong in the narrow
+    // multi-column masonry above; they get their own 2-up grid below it instead, so a pair of
+    // them sits side by side at half the dashboard's width each rather than each hogging a whole
+    // row. appendChild on an existing node moves it, so re-appending this every render keeps it
+    // pinned after `wrapper` regardless of whatever order a prior render left things in (the same
+    // fix the disclaimer banner above needed).
+    let wideWrapper = this.divDashboard.querySelector('.dashboard-wide');
+    if (!wideWrapper) {
+      wideWrapper = document.createElement('div');
+      wideWrapper.className = 'dashboard-wide';
+    }
+    wideWrapper.innerHTML = '';
+
     this.cards.forEach(card => {
       const cardEl = card.render(); // Card.render() returns its DOM element
-      wrapper.appendChild(cardEl);
+      (card.fullWidth ? wideWrapper : wrapper).appendChild(cardEl);
     });
 
-    // Config-driven methodology caveat (templateSettings.disclaimerText) - rendered once below
-    // every card rather than up in the header, so it reads as a footnote on the numbers above it
-    // instead of a warning before anyone's looked at them. Kept as its own sibling (not rebuilt
-    // along with wrapper's innerHTML above) purely so re-renders don't recreate the element for
-    // no reason; its content still gets refreshed every time in case disclaimerText ever becomes
-    // scenario-dependent.
-    if (this.disclaimerText) {
-      let footerDiv = this.divDashboard.querySelector('.dashboard-disclaimer-footer');
-      if (!footerDiv) {
-        footerDiv = document.createElement('div');
-        footerDiv.className = 'dashboard-disclaimer-footer';
-        this.divDashboard.appendChild(footerDiv);
-      }
-      footerDiv.innerHTML = '<div class="vmt-disclaimer-note dashboard-disclaimer-note"><p><span class="disclaimer-important-tag">Important</span> ' + this.disclaimerText + '</p></div>';
-    }
+    this.divDashboard.appendChild(wideWrapper);
   }
 
   renderSidebar() {

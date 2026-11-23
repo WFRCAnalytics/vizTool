@@ -2213,18 +2213,74 @@ td {
   font-size: 0.9rem;
 }
 
-/* Rendered as a footnote below every card (.dashboard-disclaimer-footer, a sibling of .dashboard
-   appended in vizdashboard.js's updateDisplay(), config-driven via templateSettings.
-   disclaimerText) rather than a popup like vizMap/vizTrends' own .vmt-disclaimer-note - reuses
-   that same class for the identical light-orange callout look, just needs its own top margin
-   since here it follows the card grid instead of sitting at the top of a popup body. */
+/* Rendered just above the card grid (.dashboard-disclaimer-banner, a sibling of .dashboard
+   inserted right before it in vizdashboard.js's updateDisplay(), config-driven via
+   templateSettings.disclaimerText/disclaimerSummary) rather than a popup like vizMap/vizTrends'
+   own .vmt-disclaimer-note - reuses that same class for the identical light-orange callout look.
+   It's a <details>/<summary> (collapsed by default) so the one-line disclaimerSummary is always
+   visible but the full disclaimerText only takes up space once someone asks for it. */
 .dashboard-disclaimer-note {
-  margin-top: 20px;
-  margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 
-.dashboard-disclaimer-footer {
-  padding: 0 16px 16px;
+.dashboard-disclaimer-banner {
+  padding: 12px 16px 0;
+}
+
+.dashboard-disclaimer-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  list-style: none; /* hides the native marker in Firefox/modern Chrome */
+}
+.dashboard-disclaimer-summary::-webkit-details-marker,
+.dashboard-disclaimer-summary::marker {
+  display: none; /* hides the native marker in Safari/older Chromium */
+}
+
+/* Our own double-chevron button in place of the native marker hidden above, on the right edge of
+   the box (an ::after - summary's own content, including the "Important" tag and summary text,
+   always renders first). Base glyph points right, rotated 90° at rest to point down (collapsed -
+   "more below"); expanding flips it to point up ("collapse back"), the reverse of the sidebar's
+   own collapsible filter sections' chevron-right/chevron-down convention, since this one opens
+   downward into the page rather than sideways into a panel. */
+.dashboard-disclaimer-summary::after {
+  content: '\203A\203A';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 18px;
+  border: 1px solid #C85327;
+  border-radius: 4px;
+  background-color: #C85327;
+  color: #ffffff;
+  font-size: 0.8em;
+  transition: transform 0.15s ease;
+  transform: rotate(90deg);
+  flex: 0 0 auto;
+}
+.dashboard-disclaimer-details[open] .dashboard-disclaimer-summary::after {
+  transform: rotate(-90deg);
+}
+
+.dashboard-disclaimer-summary-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: #5a3a28; /* same warm-dark tone .vmt-disclaimer-note p's default text already reads as */
+}
+
+.dashboard-disclaimer-details .dashboard-disclaimer-full {
+  /* two classes - needed to outweigh .vmt-disclaimer-note p's own margin:0 0 8px 0 (an element+
+     class selector, (0,1,1), higher specificity than a single .dashboard-disclaimer-full class on
+     its own would be), which otherwise resets margin-top back to 0 regardless of source order. */
+  margin-top: 16px;
 }
 
 /* Same pill look as .dashboard-under-dev-badge, just inline at the front of the disclaimer
@@ -2267,6 +2323,25 @@ td {
 @media (min-width: 700px) {
   .dashboard {
     columns: 4 260px;
+  }
+}
+
+/* Opt-in (config/cards.json's "fullWidth") escape hatch from the column masonry above, for a
+   card that doesn't make sense squeezed into one ~260px column (e.g. a pictogram's icon grid) -
+   rendered into its own sibling wrapper (vizdashboard.js's updateDisplay(), .dashboard-wide
+   below) rather than living inside .dashboard's own multi-column flow at all, so a pair of them
+   can sit side by side at half the dashboard's width each instead of each one claiming a whole
+   row the way column-span:all would force. */
+.dashboard-wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+@media (min-width: 700px) {
+  .dashboard-wide {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -2521,6 +2596,81 @@ calcite-card {
   font-size: 0.65rem;
   font-weight: 700;
   color: white;               /* white arrow */
+}
+
+/* =========================
+   PICTOGRAM CARD (Card.renderPictogram(), card.js)
+   ========================= */
+/* A 100-icon waffle/isotype grid - one icon per 1% of the shared total across the card's
+   measures - rather than a proportional bar. Trips by mode can be extremely lopsided (auto vs.
+   transit, region-wide), where a proportional bar would render as one solid block with an
+   unreadable sliver at the end; discrete icons stay honest about the real scale instead (see the
+   rounding/"guarantee at least 1" logic in card.js). */
+.pictogram-empty {
+  color: #999;
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+/* Compare mode (card.js): a small label above each of the two grids (Before/After) so it's clear
+   which scenario that grid belongs to - same wording renderMeasure()'s own compare table uses. */
+.pictogram-scenario-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.pictogram-scenario-label:not(:first-child) {
+  margin-top: 14px;
+}
+
+/* 1fr columns (not fixed px) - with the card now half the dashboard's width (.dashboard-wide
+   above) and 25 columns (4 rows of 25 = the 100-icon grid), letting each column stretch to
+   exactly 1/25th of the card's actual width keeps every row at exactly 25 icons AND fills the
+   card's full width with no overflow/clipping, without having to guess its pixel width up front
+   (it varies with viewport/zoom). aspect-ratio keeps each cell square despite not having a fixed
+   px size. */
+.pictogram-grid {
+  display: grid;
+  grid-template-columns: repeat(25, 1fr);
+  gap: 2px;
+}
+
+.pictogram-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem; /* smaller than the old 20-column layout's icons - 50 columns means much narrower cells */
+  /* color set inline on the <i> itself (card.js), not inherited from the cell */
+}
+
+.pictogram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pictogram-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+.pictogram-legend-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 3px;
+  flex: 0 0 auto;
 }
 
 /* Positive change (increase) */
