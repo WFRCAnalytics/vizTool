@@ -7,6 +7,13 @@ class VizDashboard {
     this.modelEntity = modelEntity;
     this.templateType = 'vizDashboard';
     this.title = modelEntity.submenuText;
+    // Optional, config-driven (templateSettings.disclaimerText) - a methodology caveat that
+    // applies to the whole dashboard rather than any one card/measure (e.g. "VMT here is
+    // facility-based"). Unlike vizMap/vizTrends' own per-jsonName disclaimer (disclaimers.js,
+    // shown in their Definitions popup), a dashboard fans out across many jsonNames at once
+    // (getNeededJsonNames() below) with no single Definitions popup of its own, so this is a
+    // plain opt-in string instead of being derived from jsonName.
+    this.disclaimerText = data.disclaimerText || null;
 
     // Reference to the container div in your HTML
     this.divDashboard = document.getElementById("dashboardContent");
@@ -161,6 +168,22 @@ class VizDashboard {
       const cardEl = card.render(); // Card.render() returns its DOM element
       wrapper.appendChild(cardEl);
     });
+
+    // Config-driven methodology caveat (templateSettings.disclaimerText) - rendered once below
+    // every card rather than up in the header, so it reads as a footnote on the numbers above it
+    // instead of a warning before anyone's looked at them. Kept as its own sibling (not rebuilt
+    // along with wrapper's innerHTML above) purely so re-renders don't recreate the element for
+    // no reason; its content still gets refreshed every time in case disclaimerText ever becomes
+    // scenario-dependent.
+    if (this.disclaimerText) {
+      let footerDiv = this.divDashboard.querySelector('.dashboard-disclaimer-footer');
+      if (!footerDiv) {
+        footerDiv = document.createElement('div');
+        footerDiv.className = 'dashboard-disclaimer-footer';
+        this.divDashboard.appendChild(footerDiv);
+      }
+      footerDiv.innerHTML = '<div class="vmt-disclaimer-note dashboard-disclaimer-note"><p><span class="disclaimer-important-tag">Important</span> ' + this.disclaimerText + '</p></div>';
+    }
   }
 
   renderSidebar() {

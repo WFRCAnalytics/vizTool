@@ -1254,6 +1254,19 @@ td {
   padding: 0;
 }
 
+/* Filter-tile title text, whichever widget built it (WijRadio's titleContainer, WijCheckboxes'
+   _filterName, WijSelect's title div - all three carry this class). None of the three is
+   actually wrapped in a calcite-label (despite an older comment near .title claiming
+   WijSelect/WijCheckboxes' titles were - they're plain divs now, for their own centering/height
+   reasons), so none gets calcite's near-black slotted-text color for free; without this they all
+   fall back to calcite-shell's lighter ambient grey (~#4a4a4a). WijRadio's title happened to also
+   carry the standalone `.title` class (which sets this same color for its own, unrelated reason),
+   so only WijCheckboxes/WijSelect's filter tiles were actually showing the lighter grey - this
+   closes that gap so every filter tile's title reads the same near-black. */
+.filter-toggle-title {
+  color: #151515;
+}
+
 /* Collapsible filter sections: chevron+name row is the click target, summary is a
    truncated one-line readout of the current selection shown only while collapsed - living
    inside this same row (not a separate one below) so collapsed reads as one line, "Name: value",
@@ -1691,10 +1704,10 @@ td {
   margin-bottom: 10px;
   font-size: 105%;
   color: #151515; /* matches calcite-label's own slotted-text color (--calcite-ui-text-1) -
-                      without this, a bare .title span (WijRadio's title isn't wrapped in a
-                      calcite-label like WijSelect/WijCheckboxes' titles are) falls back to the
-                      page's ambient text color instead, rendering noticeably lighter grey next
-                      to filter names/other titles right beside it. */
+                      without this, a bare .title span falls back to the page's ambient text
+                      color instead, rendering noticeably lighter grey next to filter names/other
+                      titles right beside it. (WijSelect/WijCheckboxes' own filter-tile titles hit
+                      the same fallback for the same reason - see .filter-toggle-title above.) */
 }
 
 .info-icon {
@@ -2198,6 +2211,38 @@ td {
 .dashboard-compare-hint {
   color: #666;
   font-size: 0.9rem;
+}
+
+/* Rendered as a footnote below every card (.dashboard-disclaimer-footer, a sibling of .dashboard
+   appended in vizdashboard.js's updateDisplay(), config-driven via templateSettings.
+   disclaimerText) rather than a popup like vizMap/vizTrends' own .vmt-disclaimer-note - reuses
+   that same class for the identical light-orange callout look, just needs its own top margin
+   since here it follows the card grid instead of sitting at the top of a popup body. */
+.dashboard-disclaimer-note {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.dashboard-disclaimer-footer {
+  padding: 0 16px 16px;
+}
+
+/* Same pill look as .dashboard-under-dev-badge, just inline at the front of the disclaimer
+   paragraph (vizdashboard.js) instead of next to the page title, so the note reads as "Important:
+   <caveat>" rather than a plain paragraph someone could skim past. */
+.disclaimer-important-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 3px 10px;
+  margin-right: 6px;
+  white-space: nowrap;
+  background-color: #C85327;
+  vertical-align: middle;
 }
 
 /* Dashboard grid */

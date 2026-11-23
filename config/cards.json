@@ -12,28 +12,32 @@
     "measures": ["mTotEmp","mOthEmp","mRetEmp","mIndEmp"]
   },
   "cardVmt": {
-    "title": "Daily Vehicle Miles Traveled",
+    "title": "Daily VMT",
     "measures": ["mVmt","mPersonalVmt","mHbwVmtProduced","mVmtPerHh","mVmtPerCapita","mHbwVmtPerWorker"]
   },
   "cardVmtTruck": {
-    "title": "Medium and Heavy Truck Daily Vehicle Miles Traveled",
+    "title": "Truck Daily VMT",
     "measures": ["mCvVmt","mCvVmtFwy"]
   },
   "cardVht": {
-    "title": "Daily Vehicle Hours Traveled",
+    "title": "Daily VHT",
     "measures": ["mVht","mPersonalVht","mHbwVhtProduced","mVhtPerHh","mVhtPerCapita","mHbwVhtPerWorker"]
   },
   "cardVhtTruck": {
-    "title": "Medium and Heavy Truck Daily Vehicle Hours Traveled",
+    "title": "Truck Daily VHT",
     "measures": ["mCvVht","mCvVhtFwy"]
   },
   "cardVhd": {
-    "title": "Daily Vehicle Hours of Delay",
+    "title": "Daily VHD",
     "measures": ["mVhd","mPersonalVhd","mHbwVhdProduced","mVhdPerHh","mVhdPerCapita","mHbwVhdPerWorker"]
   },
   "cardVhdTruck": {
-    "title": "Medium and Heavy Truck Daily Vehicle Hours of Delay",
+    "title": "Truck Daily VHD",
     "measures": ["mCvVhd","mCvVhdFwy"]
+  },
+  "cardTruckSpeedFwy": {
+    "title": "Truck PM Peak Average Freeway Speed",
+    "measures": ["mCvSpeedFwy"]
   },
   "cardTrips": {
     "title": "Personal Trips",

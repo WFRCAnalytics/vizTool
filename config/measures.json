@@ -172,6 +172,29 @@
       "fVehTypeFacility": ["MD","HV"]
     }
   },
+  "mCvSpeedFwy": {
+    "textIcon": "MPH",
+    "iconColor": "#1B9E8E",
+    "iconHoverText": "Medium and Heavy Commercial Average Freeway PM Speed (I-15, I-80, I-84, I-215) - total Vehicle Miles Traveled divided by total Vehicle Hours Traveled",
+    "jsonName": "j-zone-facility-metrics",
+    "baseGeoJsonKey": "taz",
+    "baseGeoJsonId": "TAZID",
+    "displayFormat": "0.0",
+    "attribute": "aVMT",
+    "selected_filters" : {
+      "fFuncType": [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["PM"],
+      "fVehTypeFacility": ["MD","HV"]
+    },
+    "divide_attribute": "aVHT",
+    "divide_selected_filters" : {
+      "fFuncType": [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
+      "fAreaType": ["Rural", "Transition", "Suburban", "Urban", "CBD-like"],
+      "fTod4pDy": ["PM"],
+      "fVehTypeFacility": ["MD","HV"]
+    }
+  },
   "mHbwVmtProduced": {
     "faIcon": "fa-solid fa-briefcase",
     "iconColor": "#1B9E8E",
