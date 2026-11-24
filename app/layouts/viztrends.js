@@ -1411,6 +1411,32 @@ class VizTrends {
       return this.sidebar.getListOfSelectedFilterOptionsForGroup(_dividerFilterGroupArray);
     };
 
+    // Same combo-resolution approach as selectedDividerFilterOptionsFor above, applied to the
+    // weight attribute(s) instead of the divider - a weight like Volume can vary across the same
+    // TOD/vehicle-type/direction/funcgroup dimensions as the thing it's weighting (e.g. Speed), so
+    // a fixed config-string combo (the old getWeightCodeFilter()/agWeightCodeFilter) would
+    // silently stop matching the instant the user changed a filter; this resolves it from
+    // whatever the sidebar's filter widgets are currently set to instead. agWeightCode can be a
+    // single code or an array of codes summed together (getWeightValue() already sums across an
+    // array on the data row) - each code can have its own filterGroup/combos, so each needs its
+    // own getDataForFilterOptionsList call, merged into one {id: {code: value}} object.
+    const getDataWeightFor = (_scenario, weightCode) => {
+      if (!weightCode) return null;
+      const codes = Array.isArray(weightCode) ? weightCode : [weightCode];
+      const merged = {};
+      codes.forEach(code => {
+        const _wtFilterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, code);
+        const _wtFilterGroupArray = _wtFilterGroup ? _wtFilterGroup.split("_") : [];
+        const combos = this.sidebar.getListOfSelectedFilterOptionsForGroup(_wtFilterGroupArray);
+        const data = _scenario.getDataForFilterOptionsList(this.jsonName, combos, "sum", code);
+        Object.keys(data).forEach(id => {
+          if (!merged[id]) merged[id] = {};
+          Object.assign(merged[id], data[id]);
+        });
+      });
+      return merged;
+    };
+
     _trendsSelected.forEach(trend => {
       const _scnTrendCode = trend.scnTrendCode;
 
@@ -1434,7 +1460,7 @@ class VizTrends {
           const _wtCode = this.sidebar.getWeightCode() || "";
           const _hasWeight = Array.isArray(_wtCode) ? _wtCode.length > 0 : _wtCode !== "";
           const _dataForFilterOptionsWeight = _hasWeight
-            ? _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getWeightCodeFilter())
+            ? getDataWeightFor(_scenario, _wtCode)
             : null;
 
           _aggregatorOptionsSelected.forEach(_agId => {

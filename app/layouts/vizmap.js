@@ -320,11 +320,48 @@ require([
       }
     }
 
+    // Resolves ONE weight code's own combo list from whatever the sidebar's filter widgets are
+    // currently set to - NOT a fixed config string (the old getWeightCodeFilter()/
+    // agWeightCodeFilter approach). A weight like aHP/aH/aJ has no filterGroup of its own, so this
+    // comes back as [''] (the single unfiltered combo) same as before; but a weight that DOES vary
+    // by the same dimensions as the attribute being weighted (e.g. Volume, by TOD/vehicle-type/
+    // direction/funcgroup, for Speed) now gets summed over the matching combo for whatever the
+    // user currently has selected, instead of one hardcoded slice that silently stopped matching
+    // the instant they changed a filter. getListOfSelectedFilterOptionsForGroup (already used by
+    // vizTrends for the analogous cross-scenario-filterGroup-mismatch problem) reads each
+    // dimension's own filter widget directly rather than this.aCode's filterGroup, so it works
+    // whether or not the weight code shares the main attribute's own filterGroup.
+    getWeightCombosFor(_scenario, weightCode) {
+      const filterGroup = _scenario.getFilterGroupForAttribute(this.jsonName, weightCode);
+      const dimensions = filterGroup ? filterGroup.split('_').filter(Boolean) : [];
+      return this.sidebar.getListOfSelectedFilterOptionsForGroup(dimensions);
+    }
+
+    // agWeightCode (config/attributes.json) can be a single code or an array of codes summed
+    // together (e.g. Access to Jobs' ["aAggHbw","aAggNhbw"]) - getWeightValue() already sums
+    // across an array on the per-feature data row, but each code can have its own filterGroup
+    // (different dimensions, different combos), so each needs its own getDataForFilterOptionsList
+    // call; this merges them into one {id: {code: value, ...}} object for getWeightValue() to read.
+    getDataWeightFor(_scenario) {
+      const weightCode = this.sidebar.getWeightCode();
+      if (!weightCode || !_scenario) return undefined;
+      const codes = Array.isArray(weightCode) ? weightCode : [weightCode];
+      const merged = {};
+      codes.forEach(code => {
+        // Always "sum" regardless of this attribute's own agFilterOptionsMethod - a weight
+        // (volume, population, jobs) is additive even when the thing it's weighting isn't,
+        // mirroring the dashboard's own weighted-average aggregation (measure.js).
+        const data = _scenario.getDataForFilterOptionsList(this.jsonName, this.getWeightCombosFor(_scenario, code), "sum", code);
+        Object.keys(data).forEach(id => {
+          if (!merged[id]) merged[id] = {};
+          Object.assign(merged[id], data[id]);
+        });
+      });
+      return merged;
+    }
+
     getDataWeightMain() {
-      const _scenario = this.getMain()
-      if (_scenario) {
-        return _scenario.getDataForFilter(this.jsonName, this.sidebar.getWeightCodeFilter());
-      }
+      return this.getDataWeightFor(this.getMain());
     }
 
     getDataComp() {
@@ -333,12 +370,9 @@ require([
         return _scenario.getDataForFilterOptionsList(this.jsonName, this.sidebar.getListOfSelectedFilterOptions(), this.sidebar.getAgFilterOptionsMethod());
       }
     }
-    
+
     getDataWeightComp() {
-      const _scenario = this.getComp()
-      if (_scenario) {
-        return _scenario.getDataForFilter(this.jsonName, this.sidebar.getWeightCodeFilter());
-      }
+      return this.getDataWeightFor(this.getComp());
     }
 
     getScenario(_modVersion, _scnGroup, _scnYear) {

@@ -390,6 +390,8 @@
     "aFS": {
         "alias": "Free-flow Speed",
         "definition": "is the speed vehicles can travel under ideal, congestion-free conditions as measured in mph.",
+        "agWeightCode": "aVl",
+        "agFilterOptionsMethod": "average",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Free-flow Speed (miles per hour)",
@@ -454,6 +456,8 @@
     "aRS": {
         "alias": "Congested Speed",
         "definition": "is the modeled travel speed accounting for traffic conditions.",
+        "agWeightCode": "aVl",
+        "agFilterOptionsMethod": "average",
         "rendererCollection": {
         "main": {
                 "legendTitle": "Congested Speed (miles per hour)",
@@ -554,7 +558,6 @@
     "aTelPct": {
         "alias": "Telecommute % Trips",
         "agWeightCode": ["aAggHbw", "aAggNhbw"],
-        "agWeightCodeFilter": "",
         "filterOverride": [
             {
                 "filterOut": "fVehTypePcLiMdHv",
@@ -1143,7 +1146,6 @@
         "alias": "Average Income",
         "definition": "is the mean income level of individuals or households within the area.",
         "agWeightCode": "aHP",
-        "agWeightCodeFilter": "",
         "rendererCollection": {
             "main": {
                 "legendTitle": "Average Income",
@@ -2405,7 +2407,6 @@
         "alias": "Access to Jobs",
         "definition": "is the average number of jobs that are reachable to a resident within a typical commute.",
         "agWeightCode": "aH",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {
@@ -2439,7 +2440,6 @@
         "alias": "Access to Households",
         "definition": "is the average number of households that are reachable to a business within a typical commute.",
         "agWeightCode": "aJ",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {
@@ -2473,7 +2473,6 @@
         "alias": "Relative Access to Jobs",
         "definition": "is the average number of jobs that are reachable to a resident within a typical commute divided by the average for the selected geography filter.",
         "agWeightCode": "aH",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {
@@ -2521,7 +2520,6 @@
         "alias": "Relative Access to Households",
         "definition": "is the average number of households that are reachable to a business within a typical commute divided by the average for the selected geography filter.",
         "agWeightCode": "aJ",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {
@@ -2569,7 +2567,6 @@
         "alias": "Auto Access to Jobs Loss",
         "definition": "shows a comparison between congested auto access to jobs compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency).",
         "agWeightCode": "aH",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {
@@ -2619,7 +2616,6 @@
         "alias": "Auto Access to Households Loss",
         "definition": "shows a comparison between congested auto access to households compared to freeflow access (Roadway Congestion) and straightline (Network Inefficiency).",
         "agWeightCode": "aJ",
-        "agWeightCodeFilter": "",
         "stackable": false,
         "rendererCollection": {
             "main": {

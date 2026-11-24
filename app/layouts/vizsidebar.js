@@ -414,17 +414,6 @@ class VizSidebar {
     return ""; // Or return a default value or `undefined` as needed
   }
 
-  getWeightCodeFilter() {
-    const attributeCode = this.getACode();
-    const item = this.attributes.find(item => item.attributeCode === attributeCode);
-  
-    if (item && item.agWeightCodeFilter) {
-      return item.agWeightCodeFilter;
-    }
-  
-    return ""; // Or return a default value or `undefined` as needed
-  }
-
   getAgFilterOptionsMethod() {
     const attributeCode = this.getACode();
     const item = this.attributes.find(item => item.attributeCode === attributeCode);
